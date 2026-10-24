@@ -1,0 +1,33 @@
+{
+  "method": "soft",
+  "run_signature": "98628476111071a7157499036f1692a6626412a119baca6c044738476a353bd3",
+  "status": "complete",
+  "stop_reason": "epochs_completed",
+  "state": {
+    "epoch": 2,
+    "cursor": 0,
+    "step": 2,
+    "best": {
+      "macro_em": 0.0,
+      "macro_nll": 11.950963497161865,
+      "step": 2
+    },
+    "bad_epochs": 1,
+    "elapsed_seconds": 1.1158868999991682,
+    "field_exposures": {
+      "name": 4,
+      "birth_date": 4,
+      "address": 4,
+      "diagnosis": 4
+    }
+  },
+  "partial_dataset": true,
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  },
+  "validation_predictions_directory": "D:\\Stepby\\kv-cache研究\\medical_privacy_prompt\\runs\\implementation_checks\\validation_csv_smoke_server_4_57_1\\soft\\validation_predictions",
+  "best_checkpoint": "D:\\Stepby\\kv-cache研究\\medical_privacy_prompt\\runs\\implementation_checks\\validation_csv_smoke_server_4_57_1\\soft\\best.pt"
+}

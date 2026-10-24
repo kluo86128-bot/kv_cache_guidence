@@ -1,0 +1,7 @@
+{"stage": "native_pii", "source": "Nemotron", "batches": 20}
+{"stage": "native_pii", "source": "Nemotron", "batches": 40}
+{"stage": "native_pii", "source": "Nemotron", "batches": 60}
+{"stage": "native_pii", "source": "Nemotron", "batches": 80}
+{"stage": "native_pii", "source": "Nemotron", "batches": 100}
+{"stage": "native_pii", "source": "Gretel-PII", "batches": 20}
+{"stage": "inputs_loaded", "candidate_records": 123090, "pii_pools": {"name": 59079, "birth_date": 26220, "address": 35990, "phone": 43983, "email": 96517, "identity_number": 31075}, "patient_profiles": 10000, "transactions": 70613}

@@ -1,0 +1,3762 @@
+{
+  "policy": {
+    "minimum_candidates_per_diagnosis": 5,
+    "same_initial": true,
+    "preferred_similarity_not_cutoff": 0.7,
+    "sort": "core similarity descending, then whole-answer similarity descending",
+    "generation": "Replace a literal disease word using a terminology-backed different core; keep the scaffold and record the source. Generated combinations are not claimed to be real diagnoses."
+  },
+  "summary": {
+    "diagnoses": 20,
+    "candidates": 100,
+    "above_preferred": 15,
+    "minimum_similarity": 0.375
+  },
+  "by_diagnosis": [
+    {
+      "gold": "Acute bacterial sinusitis (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.4545454545454546
+      },
+      "candidates": [
+        {
+          "answer": "Acute bacterial synovitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6666666666666667,
+          "answer_similarity": 0.88,
+          "focus": "sinusitis",
+          "negative_focus": "synovitis",
+          "source": {
+            "id": "NLM:9348",
+            "name": "Synovitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M65.90"
+              ]
+            ]
+          },
+          "source_term": "Synovitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 25,
+              "before": "sinusitis",
+              "after": "synovitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute bacterial scleritis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5555555555555556,
+          "answer_similarity": 0.84,
+          "focus": "sinusitis",
+          "negative_focus": "scleritis",
+          "source": {
+            "id": "NLM:9988",
+            "name": "Scleritis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "H15.009"
+              ]
+            ]
+          },
+          "source_term": "Scleritis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 25,
+              "before": "sinusitis",
+              "after": "scleritis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute bacterial stomatitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.8076923076923077,
+          "focus": "sinusitis",
+          "negative_focus": "stomatitis",
+          "source": {
+            "id": "NLM:8207",
+            "name": "Stomatitis",
+            "aliases": [
+              "mouth inflamed"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K12.1"
+              ]
+            ]
+          },
+          "source_term": "Stomatitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 25,
+              "before": "sinusitis",
+              "after": "stomatitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute bacterial sialadenitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.7857142857142857,
+          "focus": "sinusitis",
+          "negative_focus": "sialadenitis",
+          "source": {
+            "id": "NLM:10237",
+            "name": "Sialadenitis",
+            "aliases": [
+              "salivary gland inflammation"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K11.20"
+              ]
+            ]
+          },
+          "source_term": "Sialadenitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 25,
+              "before": "sinusitis",
+              "after": "sialadenitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute bacterial sacroilitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4545454545454546,
+          "answer_similarity": 0.7777777777777778,
+          "focus": "sinusitis",
+          "negative_focus": "sacroilitis",
+          "source": {
+            "id": "NLM:8543",
+            "name": "Sacroilitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M46.1"
+              ]
+            ]
+          },
+          "source_term": "Sacroilitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 25,
+              "before": "sinusitis",
+              "after": "sacroilitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Acute bronchitis (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 2,
+        "minimum_similarity": 0.5
+      },
+      "candidates": [
+        {
+          "answer": "Acute bronchiolitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7692307692307692,
+          "answer_similarity": 0.8421052631578947,
+          "focus": "bronchitis",
+          "negative_focus": "bronchiolitis",
+          "source": {
+            "id": "NLM:6699",
+            "name": "Bronchiolitis",
+            "aliases": [
+              "acute bronchiolitis"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "J21.9"
+              ]
+            ]
+          },
+          "source_term": "Bronchiolitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 16,
+              "before": "bronchitis",
+              "after": "bronchiolitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Acute bronchiectasis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.8,
+          "focus": "bronchitis",
+          "negative_focus": "bronchiectasis",
+          "source": {
+            "id": "NLM:4664",
+            "name": "Bronchiectasis",
+            "aliases": [
+              "bronchi bronchiectasis"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "J47.9"
+              ]
+            ]
+          },
+          "source_term": "Bronchiectasis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 16,
+              "before": "bronchitis",
+              "after": "bronchiectasis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Acute branchial (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6,
+          "answer_similarity": 0.75,
+          "focus": "bronchitis",
+          "negative_focus": "branchial",
+          "source": {
+            "id": "NLM:11286",
+            "name": "Branchial cleft cyst",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "Q18.0"
+              ]
+            ]
+          },
+          "source_term": "Branchial cleft cyst",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 16,
+              "before": "bronchitis",
+              "after": "branchial"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute bursitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.6875,
+          "focus": "bronchitis",
+          "negative_focus": "bursitis",
+          "source": {
+            "id": "NLM:2314",
+            "name": "Bursitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M71.9"
+              ]
+            ]
+          },
+          "source_term": "Bursitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 16,
+              "before": "bronchitis",
+              "after": "bursitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute balanitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.6875,
+          "focus": "bronchitis",
+          "negative_focus": "balanitis",
+          "source": {
+            "id": "NLM:6716",
+            "name": "Balanitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "N48.1"
+              ]
+            ]
+          },
+          "source_term": "Balanitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 16,
+              "before": "bronchitis",
+              "after": "balanitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Acute infective cystitis (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.6
+      },
+      "candidates": [
+        {
+          "answer": "Acute infective capitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.625,
+          "answer_similarity": 0.875,
+          "focus": "cystitis",
+          "negative_focus": "capitis",
+          "source": {
+            "id": "NLM:2179",
+            "name": "Headache",
+            "aliases": [
+              "cephalgia",
+              "dolor capitis",
+              "ha",
+              "head ache",
+              "head pain"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R51.9"
+              ]
+            ]
+          },
+          "source_term": "dolor capitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 24,
+              "before": "cystitis",
+              "after": "capitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute infective colitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.625,
+          "answer_similarity": 0.875,
+          "focus": "cystitis",
+          "negative_focus": "colitis",
+          "source": {
+            "id": "NLM:8373",
+            "name": "Colitis - amebic",
+            "aliases": [
+              "amebiasis",
+              "amoebiasis",
+              "colitis amoeba ameba amoebic"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "A06.2"
+              ]
+            ]
+          },
+          "source_term": "Colitis - amebic",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 24,
+              "before": "cystitis",
+              "after": "colitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute infective cholecystitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6153846153846154,
+          "answer_similarity": 0.8275862068965517,
+          "focus": "cystitis",
+          "negative_focus": "cholecystitis",
+          "source": {
+            "id": "SNOMED-CT:65275009",
+            "name": "Acute cholecystitis (disorder)",
+            "aliases": [],
+            "codes": [
+              [
+                "SNOMED-CT",
+                "65275009"
+              ]
+            ],
+            "source": "synthea"
+          },
+          "source_term": "Acute cholecystitis (disorder)",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 24,
+              "before": "cystitis",
+              "after": "cholecystitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute infective capsulitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6,
+          "answer_similarity": 0.8461538461538461,
+          "focus": "cystitis",
+          "negative_focus": "capsulitis",
+          "source": {
+            "id": "NLM:23377",
+            "name": "Capsulitis - adhesive",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M77.9"
+              ]
+            ]
+          },
+          "source_term": "Capsulitis - adhesive",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 24,
+              "before": "cystitis",
+              "after": "capsulitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute infective cystinuria (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6,
+          "answer_similarity": 0.8461538461538461,
+          "focus": "cystitis",
+          "negative_focus": "cystinuria",
+          "source": {
+            "id": "NLM:8145",
+            "name": "Cystinuria",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E72.01"
+              ]
+            ]
+          },
+          "source_term": "Cystinuria",
+          "generated": true,
+          "changes": [
+            {
+              "start": 16,
+              "end": 24,
+              "before": "cystitis",
+              "after": "cystinuria"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Acute viral pharyngitis (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.5384615384615384
+      },
+      "candidates": [
+        {
+          "answer": "Acute viral parotitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6363636363636364,
+          "answer_similarity": 0.8260869565217391,
+          "focus": "pharyngitis",
+          "negative_focus": "parotitis",
+          "source": {
+            "id": "NLM:4604",
+            "name": "Parotitis",
+            "aliases": [
+              "siladinitis"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K11.20"
+              ]
+            ]
+          },
+          "source_term": "Parotitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 12,
+              "end": 23,
+              "before": "pharyngitis",
+              "after": "parotitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute viral parasitic (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5454545454545454,
+          "answer_similarity": 0.782608695652174,
+          "focus": "pharyngitis",
+          "negative_focus": "parasitic",
+          "source": {
+            "id": "NLM:4857",
+            "name": "Parasitic infection",
+            "aliases": [
+              "infect/parasite dis NOS"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "B89"
+              ]
+            ]
+          },
+          "source_term": "Parasitic infection",
+          "generated": true,
+          "changes": [
+            {
+              "start": 12,
+              "end": 23,
+              "before": "pharyngitis",
+              "after": "parasitic"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute viral proctitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5454545454545454,
+          "answer_similarity": 0.782608695652174,
+          "focus": "pharyngitis",
+          "negative_focus": "proctitis",
+          "source": {
+            "id": "NLM:5546",
+            "name": "Proctitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K62.89"
+              ]
+            ]
+          },
+          "source_term": "Proctitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 12,
+              "end": 23,
+              "before": "pharyngitis",
+              "after": "proctitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute viral polyarteritis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5384615384615384,
+          "answer_similarity": 0.76,
+          "focus": "pharyngitis",
+          "negative_focus": "polyarteritis",
+          "source": {
+            "id": "NLM:7373",
+            "name": "Polyarteritis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I77.6"
+              ]
+            ]
+          },
+          "source_term": "Polyarteritis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 12,
+              "end": 23,
+              "before": "pharyngitis",
+              "after": "polyarteritis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Acute viral polyarthritis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5384615384615384,
+          "answer_similarity": 0.76,
+          "focus": "pharyngitis",
+          "negative_focus": "polyarthritis",
+          "source": {
+            "id": "NLM:22649",
+            "name": "Polyarthritis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M06.4"
+              ]
+            ]
+          },
+          "source_term": "Polyarthritis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 12,
+              "end": 23,
+              "before": "pharyngitis",
+              "after": "polyarthritis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Anemia (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 2,
+        "minimum_similarity": 0.5
+      },
+      "candidates": [
+        {
+          "answer": "Amnesia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.7142857142857143,
+          "focus": "anemia",
+          "negative_focus": "amnesia",
+          "source": {
+            "id": "NLM:9765",
+            "name": "Amnesia",
+            "aliases": [
+              "memory loss"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.3"
+              ]
+            ]
+          },
+          "source_term": "Amnesia",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Amnesia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Anosmia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.7142857142857143,
+          "focus": "anemia",
+          "negative_focus": "anosmia",
+          "source": {
+            "id": "NLM:7190",
+            "name": "Anosmia",
+            "aliases": [
+              "absent smell",
+              "smell loss"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R43.0"
+              ]
+            ]
+          },
+          "source_term": "Anosmia",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Anosmia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Anorexia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.625,
+          "answer_similarity": 0.625,
+          "focus": "anemia",
+          "negative_focus": "anorexia",
+          "source": {
+            "id": "NLM:2255",
+            "name": "Anorexia",
+            "aliases": [
+              "appetite loss",
+              "asitia",
+              "no appetite"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R63.0"
+              ]
+            ]
+          },
+          "source_term": "Anorexia",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Anorexia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Aspermia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.625,
+          "answer_similarity": 0.625,
+          "focus": "anemia",
+          "negative_focus": "aspermia",
+          "source": {
+            "id": "NLM:10721",
+            "name": "Aspermia",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R86.8"
+              ]
+            ]
+          },
+          "source_term": "Aspermia",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Aspermia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Apnea (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.5,
+          "focus": "anemia",
+          "negative_focus": "apnea",
+          "source": {
+            "id": "NLM:9401",
+            "name": "Apnea",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R06.81"
+              ]
+            ]
+          },
+          "source_term": "Apnea",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Apnea"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Chronic sinusitis (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.4545454545454546
+      },
+      "candidates": [
+        {
+          "answer": "Chronic synovitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6666666666666667,
+          "answer_similarity": 0.8235294117647058,
+          "focus": "sinusitis",
+          "negative_focus": "synovitis",
+          "source": {
+            "id": "NLM:9348",
+            "name": "Synovitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M65.90"
+              ]
+            ]
+          },
+          "source_term": "Synovitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 8,
+              "end": 17,
+              "before": "sinusitis",
+              "after": "synovitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Chronic scleritis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5555555555555556,
+          "answer_similarity": 0.7647058823529411,
+          "focus": "sinusitis",
+          "negative_focus": "scleritis",
+          "source": {
+            "id": "NLM:9988",
+            "name": "Scleritis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "H15.009"
+              ]
+            ]
+          },
+          "source_term": "Scleritis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 8,
+              "end": 17,
+              "before": "sinusitis",
+              "after": "scleritis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Chronic stomatitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.7222222222222222,
+          "focus": "sinusitis",
+          "negative_focus": "stomatitis",
+          "source": {
+            "id": "NLM:8207",
+            "name": "Stomatitis",
+            "aliases": [
+              "mouth inflamed"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K12.1"
+              ]
+            ]
+          },
+          "source_term": "Stomatitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 8,
+              "end": 17,
+              "before": "sinusitis",
+              "after": "stomatitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Chronic sialadenitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.7,
+          "focus": "sinusitis",
+          "negative_focus": "sialadenitis",
+          "source": {
+            "id": "NLM:10237",
+            "name": "Sialadenitis",
+            "aliases": [
+              "salivary gland inflammation"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K11.20"
+              ]
+            ]
+          },
+          "source_term": "Sialadenitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 8,
+              "end": 17,
+              "before": "sinusitis",
+              "after": "sialadenitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Chronic sacroilitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4545454545454546,
+          "answer_similarity": 0.6842105263157895,
+          "focus": "sinusitis",
+          "negative_focus": "sacroilitis",
+          "source": {
+            "id": "NLM:8543",
+            "name": "Sacroilitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M46.1"
+              ]
+            ]
+          },
+          "source_term": "Sacroilitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 8,
+              "end": 17,
+              "before": "sinusitis",
+              "after": "sacroilitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Concussion injury of brain (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 3,
+        "minimum_similarity": 0.5454545454545454
+      },
+      "candidates": [
+        {
+          "answer": "Confusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "source_term": "Confusion",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Contusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "source_term": "Contusion",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Congestion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.8846153846153846,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "source_term": "Chronic passive congestion",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Compression injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6363636363636364,
+          "answer_similarity": 0.8518518518518519,
+          "focus": "concussion",
+          "negative_focus": "compression",
+          "source": {
+            "id": "NLM:10520",
+            "name": "Compression fracture",
+            "aliases": [
+              "Compression Fx",
+              "Fx compression"
+            ],
+            "source": "nlm",
+            "codes": []
+          },
+          "source_term": "Compression Fx",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Compression"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Coagulation injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5454545454545454,
+          "answer_similarity": 0.8148148148148149,
+          "focus": "concussion",
+          "negative_focus": "coagulation",
+          "source": {
+            "id": "SNOMED-CT:234466008",
+            "name": "Acquired coagulation disorder (disorder)",
+            "aliases": [],
+            "codes": [
+              [
+                "SNOMED-CT",
+                "234466008"
+              ]
+            ],
+            "source": "synthea"
+          },
+          "source_term": "Acquired coagulation disorder (disorder)",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Coagulation"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Concussion with no loss of consciousness (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 3,
+        "minimum_similarity": 0.5454545454545454
+      },
+      "candidates": [
+        {
+          "answer": "Confusion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.95,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "source_term": "Confusion",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Contusion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.95,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "source_term": "Contusion",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Congestion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.925,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "source_term": "Chronic passive congestion",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Compression with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6363636363636364,
+          "answer_similarity": 0.9024390243902439,
+          "focus": "concussion",
+          "negative_focus": "compression",
+          "source": {
+            "id": "NLM:10520",
+            "name": "Compression fracture",
+            "aliases": [
+              "Compression Fx",
+              "Fx compression"
+            ],
+            "source": "nlm",
+            "codes": []
+          },
+          "source_term": "Compression Fx",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Compression"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Coagulation with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5454545454545454,
+          "answer_similarity": 0.8780487804878049,
+          "focus": "concussion",
+          "negative_focus": "coagulation",
+          "source": {
+            "id": "SNOMED-CT:234466008",
+            "name": "Acquired coagulation disorder (disorder)",
+            "aliases": [],
+            "codes": [
+              [
+                "SNOMED-CT",
+                "234466008"
+              ]
+            ],
+            "source": "synthea"
+          },
+          "source_term": "Acquired coagulation disorder (disorder)",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Coagulation"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Essential hypertension (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 1,
+        "minimum_similarity": 0.5833333333333333
+      },
+      "candidates": [
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "source_term": "Hypotension",
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Essential hyperventilation (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.625,
+          "answer_similarity": 0.7692307692307692,
+          "focus": "hypertension",
+          "negative_focus": "hyperventilation",
+          "source": {
+            "id": "NLM:3953",
+            "name": "Hyperventilation",
+            "aliases": [
+              "overventilation"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R06.4"
+              ]
+            ]
+          },
+          "source_term": "Hyperventilation",
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hyperventilation"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Essential hyperpigmentation (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5882352941176471,
+          "answer_similarity": 0.7407407407407407,
+          "focus": "hypertension",
+          "negative_focus": "hyperpigmentation",
+          "source": {
+            "id": "NLM:10622",
+            "name": "Hyperpigmentation",
+            "aliases": [
+              "superpigmentation"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "L81.9"
+              ]
+            ]
+          },
+          "source_term": "Hyperpigmentation",
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hyperpigmentation"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Essential hyperemesis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5833333333333333,
+          "answer_similarity": 0.7727272727272727,
+          "focus": "hypertension",
+          "negative_focus": "hyperemesis",
+          "source": {
+            "id": "NLM:9858",
+            "name": "Hyperemesis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "O21.0"
+              ]
+            ]
+          },
+          "source_term": "Hyperemesis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hyperemesis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Essential hyperplasia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5833333333333333,
+          "answer_similarity": 0.7727272727272727,
+          "focus": "hypertension",
+          "negative_focus": "hyperplasia",
+          "source": {
+            "id": "NLM:10518",
+            "name": "Lymphoid hyperplasia",
+            "aliases": [
+              "hyperplasia lymphoid"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R59.9"
+              ]
+            ]
+          },
+          "source_term": "Lymphoid hyperplasia",
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hyperplasia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Fracture of bone (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.375
+      },
+      "candidates": [
+        {
+          "answer": "Failure of bone (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.625,
+          "answer_similarity": 0.8125,
+          "focus": "fracture",
+          "negative_focus": "failure",
+          "source": {
+            "id": "SNOMED-CT:88805009",
+            "name": "Chronic congestive heart failure (disorder)",
+            "aliases": [],
+            "codes": [
+              [
+                "SNOMED-CT",
+                "88805009"
+              ]
+            ],
+            "source": "synthea"
+          },
+          "source_term": "Chronic congestive heart failure (disorder)",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Fracture",
+              "after": "Failure"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Fissure of bone (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.75,
+          "focus": "fracture",
+          "negative_focus": "fissure",
+          "source": {
+            "id": "NLM:2253",
+            "name": "Anal fissure",
+            "aliases": [
+              "fissure of anus"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K60.2"
+              ]
+            ]
+          },
+          "source_term": "Anal fissure",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Fracture",
+              "after": "Fissure"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Frostbite of bone (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4444444444444444,
+          "answer_similarity": 0.7058823529411764,
+          "focus": "fracture",
+          "negative_focus": "frostbite",
+          "source": {
+            "id": "NLM:4947",
+            "name": "Frostbite",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T33.90XA"
+              ],
+              [
+                "ICD-10-CM",
+                "T33.90XD"
+              ],
+              [
+                "ICD-10-CM",
+                "T33.90XS"
+              ]
+            ]
+          },
+          "source_term": "Frostbite",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Fracture",
+              "after": "Frostbite"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Flatulence of bone (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4,
+          "answer_similarity": 0.6666666666666667,
+          "focus": "fracture",
+          "negative_focus": "flatulence",
+          "source": {
+            "id": "NLM:4368",
+            "name": "Flatulence",
+            "aliases": [
+              "abdominal gas",
+              "rectal gas"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R14.3"
+              ]
+            ]
+          },
+          "source_term": "Flatulence",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Fracture",
+              "after": "Flatulence"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Flat of bone (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.375,
+          "answer_similarity": 0.6875,
+          "focus": "fracture",
+          "negative_focus": "flat",
+          "source": {
+            "id": "NLM:9125",
+            "name": "Flat feet",
+            "aliases": [
+              "pes planus"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M21.40"
+              ]
+            ]
+          },
+          "source_term": "Flat feet",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Fracture",
+              "after": "Flat"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Gingival disease (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.375
+      },
+      "candidates": [
+        {
+          "answer": "Genital disease (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.625,
+          "answer_similarity": 0.8125,
+          "focus": "gingival",
+          "negative_focus": "genital",
+          "source": {
+            "id": "NLM:10852",
+            "name": "Genital herpes",
+            "aliases": [
+              "genital Herpes"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "A60.9"
+              ]
+            ]
+          },
+          "source_term": "Genital herpes",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Gingival",
+              "after": "Genital"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Genitalia disease (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4444444444444444,
+          "answer_similarity": 0.7058823529411764,
+          "focus": "gingival",
+          "negative_focus": "genitalia",
+          "source": {
+            "id": "NLM:21787",
+            "name": "Pruritus genitalia",
+            "aliases": [
+              "pruritus scroti",
+              "pruritus vulvae"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "L29.3"
+              ]
+            ]
+          },
+          "source_term": "Pruritus genitalia",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Gingival",
+              "after": "Genitalia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Gingivostomatitis disease (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4117647058823529,
+          "answer_similarity": 0.6,
+          "focus": "gingival",
+          "negative_focus": "gingivostomatitis",
+          "source": {
+            "id": "NLM:5116",
+            "name": "Herpes gingivostomatitis",
+            "aliases": [
+              "oral Herpes"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "B00.2"
+              ]
+            ]
+          },
+          "source_term": "Herpes gingivostomatitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Gingival",
+              "after": "Gingivostomatitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Gonococcal disease (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4,
+          "answer_similarity": 0.6666666666666667,
+          "focus": "gingival",
+          "negative_focus": "gonococcal",
+          "source": {
+            "id": "NLM:2120",
+            "name": "Gonorrhea",
+            "aliases": [
+              "Gonococcal cervicitis",
+              "acute GC infect cervix"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "A54.9"
+              ]
+            ]
+          },
+          "source_term": "Gonococcal cervicitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Gingival",
+              "after": "Gonococcal"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Ganglion disease (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.375,
+          "answer_similarity": 0.6875,
+          "focus": "gingival",
+          "negative_focus": "ganglion",
+          "source": {
+            "id": "NLM:4588",
+            "name": "Ganglion cyst",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M67.40"
+              ]
+            ]
+          },
+          "source_term": "Ganglion cyst",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 8,
+              "before": "Gingival",
+              "after": "Ganglion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Gingivitis (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.4
+      },
+      "candidates": [
+        {
+          "answer": "Gingivostomatitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5882352941176471,
+          "answer_similarity": 0.5882352941176471,
+          "focus": "gingivitis",
+          "negative_focus": "gingivostomatitis",
+          "source": {
+            "id": "NLM:5116",
+            "name": "Herpes gingivostomatitis",
+            "aliases": [
+              "oral Herpes"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "B00.2"
+              ]
+            ]
+          },
+          "source_term": "Herpes gingivostomatitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Gingivitis",
+              "after": "Gingivostomatitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Gastritis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.5,
+          "focus": "gingivitis",
+          "negative_focus": "gastritis",
+          "source": {
+            "id": "NLM:4574",
+            "name": "Atrophic gastritis",
+            "aliases": [
+              "gastritis atroph"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K29.40"
+              ]
+            ]
+          },
+          "source_term": "Atrophic gastritis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Gingivitis",
+              "after": "Gastritis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Glossitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.5,
+          "focus": "gingivitis",
+          "negative_focus": "glossitis",
+          "source": {
+            "id": "NLM:8211",
+            "name": "Glossitis",
+            "aliases": [
+              "tongue inflammed"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K14.0"
+              ]
+            ]
+          },
+          "source_term": "Glossitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Gingivitis",
+              "after": "Glossitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Genital (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4,
+          "answer_similarity": 0.4,
+          "focus": "gingivitis",
+          "negative_focus": "genital",
+          "source": {
+            "id": "NLM:10852",
+            "name": "Genital herpes",
+            "aliases": [
+              "genital Herpes"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "A60.9"
+              ]
+            ]
+          },
+          "source_term": "Genital herpes",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Gingivitis",
+              "after": "Genital"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Gliosis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4,
+          "answer_similarity": 0.4,
+          "focus": "gingivitis",
+          "negative_focus": "gliosis",
+          "source": {
+            "id": "NLM:11074",
+            "name": "Gliosis",
+            "aliases": [
+              "astrogliosis"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "G62.9"
+              ]
+            ]
+          },
+          "source_term": "Gliosis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Gingivitis",
+              "after": "Gliosis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Infection of tooth (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 2,
+        "minimum_similarity": 0.5833333333333333
+      },
+      "candidates": [
+        {
+          "answer": "Infarction of tooth (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.8947368421052632,
+          "focus": "infection",
+          "negative_focus": "infarction",
+          "source": {
+            "id": "NLM:11567",
+            "name": "Non-Q-wave infarct",
+            "aliases": [
+              "MI non-Q wave",
+              "NSTEMI",
+              "non-Q wave MI",
+              "non-Q wave myocardia infarction",
+              "non-Q wave myocardial infarction",
+              "subendocardial myocardial infarction"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I21.4"
+              ]
+            ]
+          },
+          "source_term": "non-Q wave myocardia infarction",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Infection",
+              "after": "Infarction"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Infectiosum of tooth (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7272727272727273,
+          "answer_similarity": 0.85,
+          "focus": "infection",
+          "negative_focus": "infectiosum",
+          "source": {
+            "id": "NLM:8417",
+            "name": "Erythema infectiosum",
+            "aliases": [
+              "fifth disease"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "B08.3"
+              ]
+            ]
+          },
+          "source_term": "Erythema infectiosum",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Infection",
+              "after": "Infectiosum"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Impaction of tooth (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6666666666666667,
+          "answer_similarity": 0.8333333333333334,
+          "focus": "infection",
+          "negative_focus": "impaction",
+          "source": {
+            "id": "NLM:4573",
+            "name": "Impaction - fecal",
+            "aliases": [
+              "impacted stool"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K56.41"
+              ]
+            ]
+          },
+          "source_term": "Impaction - fecal",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Infection",
+              "after": "Impaction"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Inhalation of tooth (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6,
+          "answer_similarity": 0.7894736842105263,
+          "focus": "infection",
+          "negative_focus": "inhalation",
+          "source": {
+            "id": "NLM:6224",
+            "name": "Smoke inhalation injury",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T59.811A"
+              ],
+              [
+                "ICD-10-CM",
+                "T59.811D"
+              ],
+              [
+                "ICD-10-CM",
+                "T59.811S"
+              ],
+              [
+                "ICD-10-CM",
+                "J70.5"
+              ]
+            ]
+          },
+          "source_term": "Smoke inhalation injury",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Infection",
+              "after": "Inhalation"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Infiltration of tooth (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5833333333333333,
+          "answer_similarity": 0.7619047619047619,
+          "focus": "infection",
+          "negative_focus": "infiltration",
+          "source": {
+            "id": "NLM:10707",
+            "name": "Jessner's lymphocytic infiltration of the skin",
+            "aliases": [
+              "jessner's lymphocytic infiltrate",
+              "lypmhocytic infil of jessner"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "L98.6"
+              ]
+            ]
+          },
+          "source_term": "Jessner's lymphocytic infiltration of the skin",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Infection",
+              "after": "Infiltration"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Laceration - injury (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.4
+      },
+      "candidates": [
+        {
+          "answer": "Luxation - injury (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6,
+          "answer_similarity": 0.7894736842105263,
+          "focus": "laceration",
+          "negative_focus": "luxation",
+          "source": {
+            "id": "NLM:9714",
+            "name": "Tooth luxation",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "S03.2XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "S03.2XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "S03.2XXS"
+              ]
+            ]
+          },
+          "source_term": "Tooth luxation",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Laceration",
+              "after": "Luxation"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Lesion - injury (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.736842105263158,
+          "focus": "laceration",
+          "negative_focus": "lesion",
+          "source": {
+            "id": "NLM:10190",
+            "name": "Skin lesion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "L98.9"
+              ]
+            ]
+          },
+          "source_term": "Skin lesion",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Laceration",
+              "after": "Lesion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Lateral - injury (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.736842105263158,
+          "focus": "laceration",
+          "negative_focus": "lateral",
+          "source": {
+            "id": "NLM:22883",
+            "name": "Lateral pharyngeal space abscess",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "J39.0"
+              ]
+            ]
+          },
+          "source_term": "Lateral pharyngeal space abscess",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Laceration",
+              "after": "Lateral"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Laxative - injury (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.736842105263158,
+          "focus": "laceration",
+          "negative_focus": "laxative",
+          "source": {
+            "id": "NLM:5682",
+            "name": "Laxative abuse",
+            "aliases": [
+              "cathartic abuse"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "F55.2"
+              ]
+            ]
+          },
+          "source_term": "Laxative abuse",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Laceration",
+              "after": "Laxative"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Lacunar - injury (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4,
+          "answer_similarity": 0.6842105263157895,
+          "focus": "laceration",
+          "negative_focus": "lacunar",
+          "source": {
+            "id": "NLM:10970",
+            "name": "Lacunar infarct",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I63.81"
+              ]
+            ]
+          },
+          "source_term": "Lacunar infarct",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Laceration",
+              "after": "Lacunar"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Otitis media (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 1,
+        "minimum_similarity": 0.4545454545454546
+      },
+      "candidates": [
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "source_term": "Osteitis fibrosa",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Orchitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.625,
+          "answer_similarity": 0.7857142857142857,
+          "focus": "otitis",
+          "negative_focus": "orchitis",
+          "source": {
+            "id": "NLM:4503",
+            "name": "Orchitis",
+            "aliases": [
+              "testis inflamed"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "N45.2"
+              ]
+            ]
+          },
+          "source_term": "Orchitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Orchitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Optic media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.75,
+          "focus": "otitis",
+          "negative_focus": "optic",
+          "source": {
+            "id": "NLM:16040",
+            "name": "Optic nerve injury",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "S04.019A"
+              ],
+              [
+                "ICD-10-CM",
+                "S04.019D"
+              ],
+              [
+                "ICD-10-CM",
+                "S04.019S"
+              ]
+            ]
+          },
+          "source_term": "Optic nerve injury",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Optic"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Osteomyelitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.46153846153846156,
+          "answer_similarity": 0.631578947368421,
+          "focus": "otitis",
+          "negative_focus": "osteomyelitis",
+          "source": {
+            "id": "NLM:10738",
+            "name": "Osteomyelitis - chronic",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M86.60"
+              ]
+            ]
+          },
+          "source_term": "Osteomyelitis - chronic",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteomyelitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Otosyphilis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4545454545454546,
+          "answer_similarity": 0.6470588235294117,
+          "focus": "otitis",
+          "negative_focus": "otosyphilis",
+          "source": {
+            "id": "NLM:10054",
+            "name": "Otosyphilis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "A52.15"
+              ]
+            ]
+          },
+          "source_term": "Otosyphilis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Otosyphilis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Primary dental caries (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.5
+      },
+      "candidates": [
+        {
+          "answer": "Primary dental capitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5714285714285714,
+          "answer_similarity": 0.8636363636363636,
+          "focus": "caries",
+          "negative_focus": "capitis",
+          "source": {
+            "id": "NLM:2179",
+            "name": "Headache",
+            "aliases": [
+              "cephalgia",
+              "dolor capitis",
+              "ha",
+              "head ache",
+              "head pain"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R51.9"
+              ]
+            ]
+          },
+          "source_term": "dolor capitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 15,
+              "end": 21,
+              "before": "caries",
+              "after": "capitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Primary dental cardiac (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5714285714285714,
+          "answer_similarity": 0.8636363636363636,
+          "focus": "caries",
+          "negative_focus": "cardiac",
+          "source": {
+            "id": "NLM:10778",
+            "name": "Rhabdomyoma",
+            "aliases": [
+              "Cardiac tumor",
+              "Muscle tumor",
+              "Striated muscle tumor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "D21.9"
+              ]
+            ]
+          },
+          "source_term": "Cardiac tumor",
+          "generated": true,
+          "changes": [
+            {
+              "start": 15,
+              "end": 21,
+              "before": "caries",
+              "after": "cardiac"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Primary dental callus (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "caries",
+          "negative_focus": "callus",
+          "source": {
+            "id": "NLM:7402",
+            "name": "Callus",
+            "aliases": [
+              "clavus",
+              "corn"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "L84"
+              ]
+            ]
+          },
+          "source_term": "Callus",
+          "generated": true,
+          "changes": [
+            {
+              "start": 15,
+              "end": 21,
+              "before": "caries",
+              "after": "callus"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Primary dental cancer (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "caries",
+          "negative_focus": "cancer",
+          "source": {
+            "id": "SNOMED-CT:254637007",
+            "name": "Non-small cell lung cancer (disorder)",
+            "aliases": [],
+            "codes": [
+              [
+                "SNOMED-CT",
+                "254637007"
+              ]
+            ],
+            "source": "synthea"
+          },
+          "source_term": "Non-small cell lung cancer (disorder)",
+          "generated": true,
+          "changes": [
+            {
+              "start": 15,
+              "end": 21,
+              "before": "caries",
+              "after": "cancer"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Primary dental carpal (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "caries",
+          "negative_focus": "carpal",
+          "source": {
+            "id": "NLM:11189",
+            "name": "Wrist fracture",
+            "aliases": [
+              "Fx carpal bone",
+              "Fx wrist",
+              "Wrist Fx",
+              "carpal fx other",
+              "fractured wrist"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "S62.90XA"
+              ],
+              [
+                "ICD-10-CM",
+                "S62.90XB"
+              ],
+              [
+                "ICD-10-CM",
+                "S62.90XD"
+              ],
+              [
+                "ICD-10-CM",
+                "S62.90XG"
+              ],
+              [
+                "ICD-10-CM",
+                "S62.90XK"
+              ],
+              [
+                "ICD-10-CM",
+                "S62.90XP"
+              ],
+              [
+                "ICD-10-CM",
+                "S62.90XS"
+              ]
+            ]
+          },
+          "source_term": "Fx carpal bone",
+          "generated": true,
+          "changes": [
+            {
+              "start": 15,
+              "end": 21,
+              "before": "caries",
+              "after": "carpal"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Sinusitis (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.4545454545454546
+      },
+      "candidates": [
+        {
+          "answer": "Synovitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6666666666666667,
+          "answer_similarity": 0.6666666666666667,
+          "focus": "sinusitis",
+          "negative_focus": "synovitis",
+          "source": {
+            "id": "NLM:9348",
+            "name": "Synovitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M65.90"
+              ]
+            ]
+          },
+          "source_term": "Synovitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Sinusitis",
+              "after": "Synovitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Scleritis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5555555555555556,
+          "answer_similarity": 0.5555555555555556,
+          "focus": "sinusitis",
+          "negative_focus": "scleritis",
+          "source": {
+            "id": "NLM:9988",
+            "name": "Scleritis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "H15.009"
+              ]
+            ]
+          },
+          "source_term": "Scleritis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Sinusitis",
+              "after": "Scleritis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Stomatitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.5,
+          "focus": "sinusitis",
+          "negative_focus": "stomatitis",
+          "source": {
+            "id": "NLM:8207",
+            "name": "Stomatitis",
+            "aliases": [
+              "mouth inflamed"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K12.1"
+              ]
+            ]
+          },
+          "source_term": "Stomatitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Sinusitis",
+              "after": "Stomatitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Sialadenitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.5,
+          "focus": "sinusitis",
+          "negative_focus": "sialadenitis",
+          "source": {
+            "id": "NLM:10237",
+            "name": "Sialadenitis",
+            "aliases": [
+              "salivary gland inflammation"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K11.20"
+              ]
+            ]
+          },
+          "source_term": "Sialadenitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Sinusitis",
+              "after": "Sialadenitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Sacroilitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4545454545454546,
+          "answer_similarity": 0.4545454545454546,
+          "focus": "sinusitis",
+          "negative_focus": "sacroilitis",
+          "source": {
+            "id": "NLM:8543",
+            "name": "Sacroilitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M46.1"
+              ]
+            ]
+          },
+          "source_term": "Sacroilitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Sinusitis",
+              "after": "Sacroilitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Sprain of ankle (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 1,
+        "minimum_similarity": 0.5
+      },
+      "candidates": [
+        {
+          "answer": "Strain of ankle (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9333333333333333,
+          "focus": "sprain",
+          "negative_focus": "strain",
+          "source": {
+            "id": "NLM:26602",
+            "name": "Elbow strain",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "S56.919A"
+              ],
+              [
+                "ICD-10-CM",
+                "S56.919D"
+              ],
+              [
+                "ICD-10-CM",
+                "S56.919S"
+              ]
+            ]
+          },
+          "source_term": "Elbow strain",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Sprain",
+              "after": "Strain"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": true
+        },
+        {
+          "answer": "Skin of ankle (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.8,
+          "focus": "sprain",
+          "negative_focus": "skin",
+          "source": {
+            "id": "NLM:2130",
+            "name": "Skin cancer",
+            "aliases": [
+              "Skin CA",
+              "malig neo skin NOS",
+              "skin cancer"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "C44.90"
+              ]
+            ]
+          },
+          "source_term": "Skin CA",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Sprain",
+              "after": "Skin"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Spine of ankle (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.8,
+          "focus": "sprain",
+          "negative_focus": "spine",
+          "source": {
+            "id": "NLM:X41",
+            "name": "Spine disorder",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M53.9"
+              ]
+            ]
+          },
+          "source_term": "Spine disorder",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Sprain",
+              "after": "Spine"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Sprue of ankle (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.8,
+          "focus": "sprain",
+          "negative_focus": "sprue",
+          "source": {
+            "id": "NLM:9777",
+            "name": "Sprue",
+            "aliases": [
+              "celiac disease",
+              "coeliac disease"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K90.0"
+              ]
+            ]
+          },
+          "source_term": "Sprue",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Sprain",
+              "after": "Sprue"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Suprapubic of ankle (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.736842105263158,
+          "focus": "sprain",
+          "negative_focus": "suprapubic",
+          "source": {
+            "id": "NLM:8265",
+            "name": "Suprapubic pain",
+            "aliases": [
+              "abdominal pain suprapubic"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R10.30"
+              ]
+            ]
+          },
+          "source_term": "Suprapubic pain",
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Sprain",
+              "after": "Suprapubic"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Streptococcal sore throat (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.41666666666666663
+      },
+      "candidates": [
+        {
+          "answer": "Streptococcal sore thrombus (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.8518518518518519,
+          "focus": "throat",
+          "negative_focus": "thrombus",
+          "source": {
+            "id": "NLM:2223",
+            "name": "Deep vein thrombosis",
+            "aliases": [
+              "DVT",
+              "Thrombophlebitis deep vein",
+              "deep system thrombus",
+              "deep vein phlebitis"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I82.409"
+              ]
+            ]
+          },
+          "source_term": "deep system thrombus",
+          "generated": true,
+          "changes": [
+            {
+              "start": 19,
+              "end": 25,
+              "before": "throat",
+              "after": "thrombus"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Streptococcal sore thyroiditis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4545454545454546,
+          "answer_similarity": 0.8,
+          "focus": "throat",
+          "negative_focus": "thyroiditis",
+          "source": {
+            "id": "NLM:10711",
+            "name": "Riedel's thyroiditis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E06.5"
+              ]
+            ]
+          },
+          "source_term": "Riedel's thyroiditis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 19,
+              "end": 25,
+              "before": "throat",
+              "after": "thyroiditis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Streptococcal sore terrors (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4285714285714286,
+          "answer_similarity": 0.8461538461538461,
+          "focus": "throat",
+          "negative_focus": "terrors",
+          "source": {
+            "id": "NLM:X215",
+            "name": "Night terrors",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "F51.4"
+              ]
+            ]
+          },
+          "source_term": "Night terrors",
+          "generated": true,
+          "changes": [
+            {
+              "start": 19,
+              "end": 25,
+              "before": "throat",
+              "after": "terrors"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Streptococcal sore thymoma (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4285714285714286,
+          "answer_similarity": 0.8461538461538461,
+          "focus": "throat",
+          "negative_focus": "thymoma",
+          "source": {
+            "id": "NLM:8131",
+            "name": "Thymoma",
+            "aliases": [
+              "Thymus cancer",
+              "Thymus tumor",
+              "benign neoplasm thymus"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "D49.89"
+              ]
+            ]
+          },
+          "source_term": "Thymoma",
+          "generated": true,
+          "changes": [
+            {
+              "start": 19,
+              "end": 25,
+              "before": "throat",
+              "after": "thymoma"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Streptococcal sore thyroglossal (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.41666666666666663,
+          "answer_similarity": 0.7741935483870968,
+          "focus": "throat",
+          "negative_focus": "thyroglossal",
+          "source": {
+            "id": "NLM:9279",
+            "name": "Thyroglossal cyst",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "Q89.2"
+              ]
+            ]
+          },
+          "source_term": "Thyroglossal cyst",
+          "generated": true,
+          "changes": [
+            {
+              "start": 19,
+              "end": 25,
+              "before": "throat",
+              "after": "thyroglossal"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    },
+    {
+      "gold": "Viral sinusitis (disorder)",
+      "quality": {
+        "count": 5,
+        "preferred_similarity": 0.7,
+        "above_preferred_count": 0,
+        "minimum_similarity": 0.4545454545454546
+      },
+      "candidates": [
+        {
+          "answer": "Viral synovitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.6666666666666667,
+          "answer_similarity": 0.8,
+          "focus": "sinusitis",
+          "negative_focus": "synovitis",
+          "source": {
+            "id": "NLM:9348",
+            "name": "Synovitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M65.90"
+              ]
+            ]
+          },
+          "source_term": "Synovitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 15,
+              "before": "sinusitis",
+              "after": "synovitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Viral scleritis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5555555555555556,
+          "answer_similarity": 0.7333333333333334,
+          "focus": "sinusitis",
+          "negative_focus": "scleritis",
+          "source": {
+            "id": "NLM:9988",
+            "name": "Scleritis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "H15.009"
+              ]
+            ]
+          },
+          "source_term": "Scleritis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 15,
+              "before": "sinusitis",
+              "after": "scleritis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Viral stomatitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.6875,
+          "focus": "sinusitis",
+          "negative_focus": "stomatitis",
+          "source": {
+            "id": "NLM:8207",
+            "name": "Stomatitis",
+            "aliases": [
+              "mouth inflamed"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K12.1"
+              ]
+            ]
+          },
+          "source_term": "Stomatitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 15,
+              "before": "sinusitis",
+              "after": "stomatitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Viral sialadenitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.5,
+          "answer_similarity": 0.6666666666666667,
+          "focus": "sinusitis",
+          "negative_focus": "sialadenitis",
+          "source": {
+            "id": "NLM:10237",
+            "name": "Sialadenitis",
+            "aliases": [
+              "salivary gland inflammation"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K11.20"
+              ]
+            ]
+          },
+          "source_term": "Sialadenitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 15,
+              "before": "sinusitis",
+              "after": "sialadenitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        },
+        {
+          "answer": "Viral sacroilitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.4545454545454546,
+          "answer_similarity": 0.6470588235294117,
+          "focus": "sinusitis",
+          "negative_focus": "sacroilitis",
+          "source": {
+            "id": "NLM:8543",
+            "name": "Sacroilitis",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "M46.1"
+              ]
+            ]
+          },
+          "source_term": "Sacroilitis",
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 15,
+              "before": "sinusitis",
+              "after": "sacroilitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis",
+          "above_preferred_similarity": false
+        }
+      ]
+    }
+  ]
+}

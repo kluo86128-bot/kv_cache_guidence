@@ -1,0 +1,8 @@
+{
+  "dataset_id": "multiscene_privacy_v2_reduced",
+  "source_directory": "data/dataset_multiscene_v1",
+  "output_directory": "data/dataset_multiscene_v2_reduced",
+  "excluded_target_fields": ["phone", "sender_account", "recipient_account"],
+  "private_prefix_policy": "Unchanged original input, including any non-target phone/account text.",
+  "split_policy": "Preserve every record, record ID, split, source link and isolation group."
+}

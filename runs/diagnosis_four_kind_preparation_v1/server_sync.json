@@ -1,0 +1,36 @@
+{
+  "server_root": "/data/kevin/medical_privacy_prompt",
+  "files": {
+    "medical_kv/__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+    "medical_kv/__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "medical_kv/backend.py": "2f1bfa06e41eaea9f41a51832f629ec20a84fdf2d28f3de65a00401251a6b699",
+    "medical_kv/cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+    "medical_kv/cli.py": "44883434f97461ae79f7488a1f32d915d2c49573d01efe91059e88253d5e250f",
+    "medical_kv/config.py": "39b26b9f7a8c0770f1edf8877f5d125fa1d8ff2b386535ee71c5f32f79c1c1c5",
+    "medical_kv/data.py": "a87989179dfa2fb983beee4dcd7d954e5dc312314590807799f19fd929047512",
+    "medical_kv/diagnosis_contrastive.py": "132e39479be05550c7e2c80d39de0dff6abc49f78f814bbdfd4568d26ed6f8f4",
+    "medical_kv/diagnosis_noise.py": "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+    "medical_kv/discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+    "medical_kv/distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+    "medical_kv/evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+    "medical_kv/io.py": "e85f0a0a4bdb11cb1185f302be78b78b08e58073cefc89dc2e5b63fccb60941d",
+    "medical_kv/launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+    "medical_kv/name_policy.py": "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a",
+    "medical_kv/negative_resources.py": "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d",
+    "medical_kv/plotting.py": "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+    "medical_kv/tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+    "medical_kv/training.py": "e2551921a50787cece9d022efbbc5a205ef4e00078bf12b745b5be5dc1ffb9fb",
+    "configs/experiment_v3_diagnosis_contrastive.json": "7a4a84dda4f7e62cc7575fee3f20bfa710350d7231a6e8ded9fa75f6c3b03235",
+    "configs/diagnosis_negative_rules.json": "8b58620340e441e31c538a836ae30ca4320a07ded51f0caa590873fda73682f3",
+    "data/negative_resources/diagnosis_v1.json": "c4f61fe7b0f28f686bd508eac038790e39d3b3ba3ba1ca35b6312763863f81f0",
+    "data/negative_pools/four_kind_v1/377f033c9f78bccb2b0c7281dc6d299b19a3dce9b781303987024cefab405420.json": "0b5ba8181c48838b4c292d46798a5ccbf13c1aa7f5bd91df6d05e8ae9dabb28d",
+    "scripts/train_diagnosis_four_kind_background.sh": "b5707223b8cbfa6c9f2ae050ec36c42f4b8c4af3ebb352b872ffd9c44bf8109c",
+    "scripts/prepare_diagnosis_four_kind_background.sh": "dce300eace68c72c113f730d6e5c5f39fbcad399f80551afdd8655a2cc38fc57"
+  },
+  "launch_background": "bash /data/kevin/medical_privacy_prompt/scripts/train_diagnosis_four_kind_background.sh 0,1",
+  "notes": [
+    "Keep existing frozen datasets and requirements.",
+    "Code, configs, terminology snapshot, and shared cache must be synchronized together.",
+    "Launch creates a new four-kind run; do not resume old five-kind checkpoints."
+  ]
+}

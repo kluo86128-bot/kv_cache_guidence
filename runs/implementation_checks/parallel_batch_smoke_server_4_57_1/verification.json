@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "implementation_only": true,
+  "model": "random tiny Qwen3; CPU",
+  "source_records": "dev only; training subset dev[:2], selection dev[64:65], eval dev[:2]",
+  "soft_training": "PASS",
+  "hard_training": "disabled",
+  "preflight": "PASS",
+  "local_AutoModel_AutoTokenizer_loading": "PASS",
+  "paired_comparison": "PASS",
+  "loss_curve": "PASS",
+  "conditions": {
+    "soft": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "random": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "blocked": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "full": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "manual": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "none": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    }
+  },
+  "code_sha256": {
+    "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+    "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "backend.py": "3062d2e7e2307be38b9dceeb19f2fc01633fd050b550298a6805e8c496d1692d",
+    "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+    "cli.py": "f41b7f33c9be504a0a24ce3b1db04e41584825ac0924ea415a9c609a5be4913b",
+    "config.py": "8c6e927a0bf9918d2771faee2efc2ea1ec60d4a3899b52ee2b7e265cde277e10",
+    "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+    "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+    "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+    "evaluation.py": "1b290d68c6cec2c5b460d39d465313dc03f551e2b0b5991b6fe112cdc1be8473",
+    "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+    "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+    "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+    "training.py": "121f169ae0da19ab670954d82a0deffc43604578456fa5cfb6ac7bd3fdd73976"
+  },
+  "formal_4b_run": false
+}

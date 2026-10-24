@@ -1,0 +1,6153 @@
+[
+  {
+    "record_id": "train_000001",
+    "gold": "Fracture of bone (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Fracture (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 8,
+              "end": 16,
+              "before": " of bone",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [
+        {
+          "answer": "Fracture of elbow (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "elbow",
+          "evidence": [
+            "Elbow fracture"
+          ]
+        },
+        {
+          "answer": "Fracture of femoral neck (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "femoral neck",
+          "evidence": [
+            "Femur neck fracture"
+          ]
+        },
+        {
+          "answer": "Fracture of mandible (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "mandible",
+          "evidence": [
+            "Fracture of mandible (disorder)",
+            "Jaw fracture"
+          ]
+        },
+        {
+          "answer": "Fracture of thoracic vertebra (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "thoracic vertebra",
+          "evidence": [
+            "Thoracic vertebra fracture"
+          ]
+        },
+        {
+          "answer": "Fracture of c1 ring (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "c1 ring",
+          "evidence": [
+            "C1 ring fracture"
+          ]
+        }
+      ],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Fractumre of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractumre"
+            }
+          ]
+        },
+        {
+          "answer": "Fractuore of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractuore"
+            }
+          ]
+        },
+        {
+          "answer": "Fractur of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 7,
+              "before": "Fracture",
+              "after": "Fractur"
+            }
+          ]
+        },
+        {
+          "answer": "Frcaature of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 2,
+              "before": "Fracture",
+              "after": "Frcature"
+            },
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 3,
+              "before": "Frcature",
+              "after": "Frcaature"
+            }
+          ]
+        },
+        {
+          "answer": "Fratcuer of bnoe (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractuer"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 1,
+              "before": "bone",
+              "after": "bnoe"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 0,
+              "position": 3,
+              "before": "Fractuer",
+              "after": "Fratcuer"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Fracture (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 8,
+              "end": 16,
+              "before": " of bone",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Fracture of femoral neck (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "femoral neck",
+          "evidence": [
+            "Femur neck fracture"
+          ]
+        },
+        {
+          "answer": "Fractumre of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractumre"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Fracture (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 8,
+              "end": 16,
+              "before": " of bone",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Fracture of c1 ring (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "c1 ring",
+          "evidence": [
+            "C1 ring fracture"
+          ]
+        },
+        {
+          "answer": "Fratcuer of bnoe (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractuer"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 1,
+              "before": "bone",
+              "after": "bnoe"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 0,
+              "position": 3,
+              "before": "Fractuer",
+              "after": "Fratcuer"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Fracture (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 8,
+              "end": 16,
+              "before": " of bone",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Fracture of mandible (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "mandible",
+          "evidence": [
+            "Fracture of mandible (disorder)",
+            "Jaw fracture"
+          ]
+        },
+        {
+          "answer": "Frcaature of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 2,
+              "before": "Fracture",
+              "after": "Frcature"
+            },
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 3,
+              "before": "Frcature",
+              "after": "Frcaature"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000002",
+    "gold": "Essential hypertension (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ],
+      "spelling_error": [
+        {
+          "answer": "Essential hypertensqon (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 9,
+              "before": "hypertension",
+              "after": "hypertensqon"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypertfnsion (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertfnsion"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hyperitension (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 5,
+              "before": "hypertension",
+              "after": "hyperitension"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypmretension (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 3,
+              "before": "hypertension",
+              "after": "hypmertension"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "hypmertension",
+              "after": "hypmretension"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypertsenslin (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertsension"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 11,
+              "before": "hypertsension",
+              "after": "hypertsensiln"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 1,
+              "position": 10,
+              "before": "hypertsensiln",
+              "after": "hypertsenslin"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Essential hypmretension (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 3,
+              "before": "hypertension",
+              "after": "hypmertension"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "hypmertension",
+              "after": "hypmretension"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Essential hyperitension (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 5,
+              "before": "hypertension",
+              "after": "hyperitension"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Essential hypertensqon (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 9,
+              "before": "hypertension",
+              "after": "hypertensqon"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000003",
+    "gold": "Essential hypertension (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ],
+      "spelling_error": [
+        {
+          "answer": "Essential hypertensqon (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 9,
+              "before": "hypertension",
+              "after": "hypertensqon"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypertfnsion (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertfnsion"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hyperitension (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 5,
+              "before": "hypertension",
+              "after": "hyperitension"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypmretension (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 3,
+              "before": "hypertension",
+              "after": "hypmertension"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "hypmertension",
+              "after": "hypmretension"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypertsenslin (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertsension"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 11,
+              "before": "hypertsension",
+              "after": "hypertsensiln"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 1,
+              "position": 10,
+              "before": "hypertsensiln",
+              "after": "hypertsenslin"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Essential hypertfnsion (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertfnsion"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Essential hypertensqon (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 9,
+              "before": "hypertension",
+              "after": "hypertensqon"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Essential hypertsenslin (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertsension"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 11,
+              "before": "hypertsension",
+              "after": "hypertsensiln"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 1,
+              "position": 10,
+              "before": "hypertsensiln",
+              "after": "hypertsenslin"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000004",
+    "gold": "Concussion with no loss of consciousness (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Concussion (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 10,
+              "end": 40,
+              "before": " with no loss of consciousness",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [
+        {
+          "answer": "Confusion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.95,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Contusion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.95,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Congestion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.925,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ],
+      "spelling_error": [
+        {
+          "answer": "Concuhsion with no loss of consciousness (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 5,
+              "before": "Concussion",
+              "after": "Concuhsion"
+            }
+          ]
+        },
+        {
+          "answer": "Concussion with no loss of consctiousness (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 5,
+              "position": 5,
+              "before": "consciousness",
+              "after": "consctiousness"
+            }
+          ]
+        },
+        {
+          "answer": "Conussion with no loss of consciousness (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 3,
+              "before": "Concussion",
+              "after": "Conussion"
+            }
+          ]
+        },
+        {
+          "answer": "Concussoix with no loss of consciousness (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 9,
+              "before": "Concussion",
+              "after": "Concussiox"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 7,
+              "before": "Concussiox",
+              "after": "Concussoix"
+            }
+          ]
+        },
+        {
+          "answer": "Concussion with no lyss of conscixousnegss (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 5,
+              "position": 6,
+              "before": "consciousness",
+              "after": "conscixousness"
+            },
+            {
+              "operation": "insert",
+              "word_index": 5,
+              "position": 12,
+              "before": "conscixousness",
+              "after": "conscixousnegss"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 3,
+              "position": 1,
+              "before": "loss",
+              "after": "lyss"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Concussion (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 10,
+              "end": 40,
+              "before": " with no loss of consciousness",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Contusion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.95,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Concussion with no lyss of conscixousnegss (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 5,
+              "position": 6,
+              "before": "consciousness",
+              "after": "conscixousness"
+            },
+            {
+              "operation": "insert",
+              "word_index": 5,
+              "position": 12,
+              "before": "conscixousness",
+              "after": "conscixousnegss"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 3,
+              "position": 1,
+              "before": "loss",
+              "after": "lyss"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Concussion (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 10,
+              "end": 40,
+              "before": " with no loss of consciousness",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Congestion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.925,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Concussoix with no loss of consciousness (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 9,
+              "before": "Concussion",
+              "after": "Concussiox"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 7,
+              "before": "Concussiox",
+              "after": "Concussoix"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Concussion (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 10,
+              "end": 40,
+              "before": " with no loss of consciousness",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Confusion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.95,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Concuhsion with no loss of consciousness (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 5,
+              "before": "Concussion",
+              "after": "Concuhsion"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000005",
+    "gold": "Acute viral pharyngitis (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Acute pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 6,
+              "end": 11,
+              "before": "viral",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Viral pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 2,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            },
+            {
+              "start": 6,
+              "end": 11,
+              "before": "viral",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Acute viral phharyngitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 2,
+              "position": 1,
+              "before": "pharyngitis",
+              "after": "phharyngitis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral pahryngitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 1,
+              "before": "pharyngitis",
+              "after": "pahryngitis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral pharyngijis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 2,
+              "position": 8,
+              "before": "pharyngitis",
+              "after": "pharyngijis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral pharyniatis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 8,
+              "before": "pharyngitis",
+              "after": "pharyngiatis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 6,
+              "before": "pharyngiatis",
+              "after": "pharyniatis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral phryitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 5,
+              "before": "pharyngitis",
+              "after": "pharygitis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 2,
+              "before": "pharygitis",
+              "after": "phrygitis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 4,
+              "before": "phrygitis",
+              "after": "phryitis"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 2,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            },
+            {
+              "start": 6,
+              "end": 11,
+              "before": "viral",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral pahryngitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 1,
+              "before": "pharyngitis",
+              "after": "pahryngitis"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Viral pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral phryitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 5,
+              "before": "pharyngitis",
+              "after": "pharygitis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 2,
+              "before": "pharygitis",
+              "after": "phrygitis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 4,
+              "before": "phrygitis",
+              "after": "phryitis"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Acute pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 6,
+              "end": 11,
+              "before": "viral",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral phharyngitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 2,
+              "position": 1,
+              "before": "pharyngitis",
+              "after": "phharyngitis"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000006",
+    "gold": "Concussion injury of brain (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Concussion injury (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 17,
+              "end": 26,
+              "before": " of brain",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [
+        {
+          "answer": "Confusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Contusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Congestion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.8846153846153846,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ],
+      "spelling_error": [
+        {
+          "answer": "Concussion injury of bpain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 3,
+              "position": 1,
+              "before": "brain",
+              "after": "bpain"
+            }
+          ]
+        },
+        {
+          "answer": "Concussion ijjury of brain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "ijjury"
+            }
+          ]
+        },
+        {
+          "answer": "Concussioj injury of brain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 9,
+              "before": "Concussion",
+              "after": "Concussioj"
+            }
+          ]
+        },
+        {
+          "answer": "Concussion iajury of brian (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 3,
+              "position": 2,
+              "before": "brain",
+              "after": "brian"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "iajury"
+            }
+          ]
+        },
+        {
+          "answer": "Congusion injury of brcain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 3,
+              "before": "Concussion",
+              "after": "Congussion"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 6,
+              "before": "Congussion",
+              "after": "Congusion"
+            },
+            {
+              "operation": "insert",
+              "word_index": 3,
+              "position": 2,
+              "before": "brain",
+              "after": "brcain"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Concussion injury (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 17,
+              "end": 26,
+              "before": " of brain",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Confusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Concussioj injury of brain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 9,
+              "before": "Concussion",
+              "after": "Concussioj"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Concussion injury (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 17,
+              "end": 26,
+              "before": " of brain",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Congestion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.8846153846153846,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Congusion injury of brcain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 3,
+              "before": "Concussion",
+              "after": "Congussion"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 6,
+              "before": "Congussion",
+              "after": "Congusion"
+            },
+            {
+              "operation": "insert",
+              "word_index": 3,
+              "position": 2,
+              "before": "brain",
+              "after": "brcain"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Concussion injury (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 17,
+              "end": 26,
+              "before": " of brain",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Contusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Concussion injury of bpain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 3,
+              "position": 1,
+              "before": "brain",
+              "after": "bpain"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000007",
+    "gold": "Otitis media (disorder)",
+    "pools": {
+      "detail_omission": [],
+      "detail_substitution": [
+        {
+          "answer": "Otitis externa (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "otitis",
+          "before_site": "middle ear",
+          "after_site": "external ear",
+          "evidence": [
+            "Otitis externa"
+          ]
+        }
+      ],
+      "label_confusion": [
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ],
+      "spelling_error": [
+        {
+          "answer": "Ottiis media (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 2,
+              "before": "Otitis",
+              "after": "Ottiis"
+            }
+          ]
+        },
+        {
+          "answer": "Oittis media (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 1,
+              "before": "Otitis",
+              "after": "Oittis"
+            }
+          ]
+        },
+        {
+          "answer": "Oitis media (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 1,
+              "before": "Otitis",
+              "after": "Oitis"
+            }
+          ]
+        },
+        {
+          "answer": "Otieis mledia (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 1,
+              "before": "media",
+              "after": "mledia"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 3,
+              "before": "Otitis",
+              "after": "Otieis"
+            }
+          ]
+        },
+        {
+          "answer": "Otitsi mdea (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 4,
+              "before": "Otitis",
+              "after": "Otitsi"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 3,
+              "before": "media",
+              "after": "medea"
+            },
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 1,
+              "before": "medea",
+              "after": "mdea"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Otitis externa (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "otitis",
+          "before_site": "middle ear",
+          "after_site": "external ear",
+          "evidence": [
+            "Otitis externa"
+          ]
+        },
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Otitsi mdea (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 4,
+              "before": "Otitis",
+              "after": "Otitsi"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 3,
+              "before": "media",
+              "after": "medea"
+            },
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 1,
+              "before": "medea",
+              "after": "mdea"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Otitis externa (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "otitis",
+          "before_site": "middle ear",
+          "after_site": "external ear",
+          "evidence": [
+            "Otitis externa"
+          ]
+        },
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Otieis mledia (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 1,
+              "before": "media",
+              "after": "mledia"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 3,
+              "before": "Otitis",
+              "after": "Otieis"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Otitis externa (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "otitis",
+          "before_site": "middle ear",
+          "after_site": "external ear",
+          "evidence": [
+            "Otitis externa"
+          ]
+        },
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Oitis media (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 1,
+              "before": "Otitis",
+              "after": "Oitis"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000008",
+    "gold": "Laceration - injury (disorder)",
+    "pools": {
+      "detail_omission": [],
+      "detail_substitution": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Laceration - izjury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "izjury"
+            }
+          ]
+        },
+        {
+          "answer": "Laceration - ijury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "ijury"
+            }
+          ]
+        },
+        {
+          "answer": "Lacerption - injury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 5,
+              "before": "Laceration",
+              "after": "Lacerption"
+            }
+          ]
+        },
+        {
+          "answer": "Laceation - injuyr (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 4,
+              "before": "Laceration",
+              "after": "Laceation"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "injury",
+              "after": "injuyr"
+            }
+          ]
+        },
+        {
+          "answer": "Laceratin - inoqjury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 2,
+              "before": "injury",
+              "after": "inojury"
+            },
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 3,
+              "before": "inojury",
+              "after": "inoqjury"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 8,
+              "before": "Laceration",
+              "after": "Laceratin"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Lacerption - injury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 5,
+              "before": "Laceration",
+              "after": "Lacerption"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Laceratin - inoqjury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 2,
+              "before": "injury",
+              "after": "inojury"
+            },
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 3,
+              "before": "inojury",
+              "after": "inoqjury"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 8,
+              "before": "Laceration",
+              "after": "Laceratin"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Laceration - ijury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "ijury"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000009",
+    "gold": "Streptococcal sore throat (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Sore throat (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 13,
+              "before": "Streptococcal",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Streptococcal sore thaort (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 2,
+              "before": "throat",
+              "after": "thaort"
+            }
+          ]
+        },
+        {
+          "answer": "Streptococcal sore thqroat (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 2,
+              "before": "throat",
+              "after": "thqroat"
+            }
+          ]
+        },
+        {
+          "answer": "Streptococcal sore thrtao (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 3,
+              "before": "throat",
+              "after": "thrtao"
+            }
+          ]
+        },
+        {
+          "answer": "Streptococcal soer thorat (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 2,
+              "before": "sore",
+              "after": "soer"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 2,
+              "before": "throat",
+              "after": "thorat"
+            }
+          ]
+        },
+        {
+          "answer": "Streptococcal sroe trhota (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 1,
+              "before": "throat",
+              "after": "trhoat"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 4,
+              "before": "trhoat",
+              "after": "trhota"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 1,
+              "before": "sore",
+              "after": "sroe"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Sore throat (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 13,
+              "before": "Streptococcal",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Streptococcal soer thorat (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 2,
+              "before": "sore",
+              "after": "soer"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 2,
+              "before": "throat",
+              "after": "thorat"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Sore throat (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 13,
+              "before": "Streptococcal",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Streptococcal sore thaort (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 2,
+              "before": "throat",
+              "after": "thaort"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Sore throat (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 13,
+              "before": "Streptococcal",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Streptococcal sore thrtao (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 3,
+              "before": "throat",
+              "after": "thrtao"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000010",
+    "gold": "Primary dental caries (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Dental caries (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Primary",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Primary dnetal caries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 1,
+              "before": "dental",
+              "after": "dnetal"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dentas caries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 5,
+              "before": "dental",
+              "after": "dentas"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dental caies (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 2,
+              "before": "caries",
+              "after": "caies"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dental craiess (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 2,
+              "position": 5,
+              "before": "caries",
+              "after": "cariess"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 1,
+              "before": "cariess",
+              "after": "craiess"
+            }
+          ]
+        },
+        {
+          "answer": "Primary denytal cares (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 3,
+              "before": "caries",
+              "after": "cares"
+            },
+            {
+              "operation": "duplicate",
+              "word_index": 1,
+              "position": 3,
+              "before": "dental",
+              "after": "denttal"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 3,
+              "before": "denttal",
+              "after": "denytal"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Dental caries (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Primary",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dnetal caries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 1,
+              "before": "dental",
+              "after": "dnetal"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Dental caries (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Primary",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dental craiess (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 2,
+              "position": 5,
+              "before": "caries",
+              "after": "cariess"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 1,
+              "before": "cariess",
+              "after": "craiess"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Dental caries (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Primary",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dentas caries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 5,
+              "before": "dental",
+              "after": "dentas"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000011",
+    "gold": "Laceration - injury (disorder)",
+    "pools": {
+      "detail_omission": [],
+      "detail_substitution": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Laceration - izjury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "izjury"
+            }
+          ]
+        },
+        {
+          "answer": "Laceration - ijury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "ijury"
+            }
+          ]
+        },
+        {
+          "answer": "Lacerption - injury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 5,
+              "before": "Laceration",
+              "after": "Lacerption"
+            }
+          ]
+        },
+        {
+          "answer": "Laceation - injuyr (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 4,
+              "before": "Laceration",
+              "after": "Laceation"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "injury",
+              "after": "injuyr"
+            }
+          ]
+        },
+        {
+          "answer": "Laceratin - inoqjury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 2,
+              "before": "injury",
+              "after": "inojury"
+            },
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 3,
+              "before": "inojury",
+              "after": "inoqjury"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 8,
+              "before": "Laceration",
+              "after": "Laceratin"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Laceration - ijury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "ijury"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Laceratin - inoqjury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 2,
+              "before": "injury",
+              "after": "inojury"
+            },
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 3,
+              "before": "inojury",
+              "after": "inoqjury"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 8,
+              "before": "Laceration",
+              "after": "Laceratin"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Laceration - izjury (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "izjury"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000012",
+    "gold": "Chronic sinusitis (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Sinusitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Chronic",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Chronic sinusiis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 6,
+              "before": "sinusitis",
+              "after": "sinusiis"
+            }
+          ]
+        },
+        {
+          "answer": "Chronic sinwsitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 3,
+              "before": "sinusitis",
+              "after": "sinwsitis"
+            }
+          ]
+        },
+        {
+          "answer": "Chronic sunisitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "reverse_segment",
+              "word_index": 1,
+              "position": 1,
+              "before": "sinusitis",
+              "after": "sunisitis"
+            }
+          ]
+        },
+        {
+          "answer": "Chronic sinuusiti (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 1,
+              "position": 3,
+              "before": "sinusitis",
+              "after": "sinuusitis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 9,
+              "before": "sinuusitis",
+              "after": "sinuusiti"
+            }
+          ]
+        },
+        {
+          "answer": "Chronic sranusitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 1,
+              "before": "sinusitis",
+              "after": "sanusitis"
+            },
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 1,
+              "before": "sanusitis",
+              "after": "sranusitis"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Sinusitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Chronic",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Chronic sinwsitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 3,
+              "before": "sinusitis",
+              "after": "sinwsitis"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Sinusitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Chronic",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Chronic sinuusiti (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 1,
+              "position": 3,
+              "before": "sinusitis",
+              "after": "sinuusitis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 9,
+              "before": "sinuusitis",
+              "after": "sinuusiti"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Sinusitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Chronic",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Chronic sunisitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "reverse_segment",
+              "word_index": 1,
+              "position": 1,
+              "before": "sinusitis",
+              "after": "sunisitis"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000013",
+    "gold": "Acute infective cystitis (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Infective cystitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute cystitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 6,
+              "end": 15,
+              "before": "infective",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Cystitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 2,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            },
+            {
+              "start": 6,
+              "end": 15,
+              "before": "infective",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Acute infective cystisit (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 5,
+              "before": "cystitis",
+              "after": "cystisit"
+            }
+          ]
+        },
+        {
+          "answer": "Acute infective cystivtis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 5,
+              "before": "cystitis",
+              "after": "cystivtis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute infective cysttitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 2,
+              "position": 3,
+              "before": "cystitis",
+              "after": "cysttitis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute infective cyttsiis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 4,
+              "before": "cystitis",
+              "after": "cysttiis"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 2,
+              "before": "cysttiis",
+              "after": "cyttsiis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute infective cysteiis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 4,
+              "before": "cystitis",
+              "after": "cysttiis"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 2,
+              "position": 4,
+              "before": "cysttiis",
+              "after": "cysteiis"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Infective cystitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute infective cyttsiis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 4,
+              "before": "cystitis",
+              "after": "cysttiis"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 2,
+              "position": 2,
+              "before": "cysttiis",
+              "after": "cyttsiis"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Acute cystitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 6,
+              "end": 15,
+              "before": "infective",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute infective cysttitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 2,
+              "position": 3,
+              "before": "cystitis",
+              "after": "cysttitis"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Cystitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 2,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            },
+            {
+              "start": 6,
+              "end": 15,
+              "before": "infective",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute infective cystivtis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 5,
+              "before": "cystitis",
+              "after": "cystivtis"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000014",
+    "gold": "Concussion injury of brain (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Concussion injury (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 17,
+              "end": 26,
+              "before": " of brain",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [
+        {
+          "answer": "Confusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Contusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Congestion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.8846153846153846,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ],
+      "spelling_error": [
+        {
+          "answer": "Concussion injury of bpain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 3,
+              "position": 1,
+              "before": "brain",
+              "after": "bpain"
+            }
+          ]
+        },
+        {
+          "answer": "Concussion ijjury of brain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "ijjury"
+            }
+          ]
+        },
+        {
+          "answer": "Concussioj injury of brain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 9,
+              "before": "Concussion",
+              "after": "Concussioj"
+            }
+          ]
+        },
+        {
+          "answer": "Concussion iajury of brian (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 3,
+              "position": 2,
+              "before": "brain",
+              "after": "brian"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "iajury"
+            }
+          ]
+        },
+        {
+          "answer": "Congusion injury of brcain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 3,
+              "before": "Concussion",
+              "after": "Congussion"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 6,
+              "before": "Congussion",
+              "after": "Congusion"
+            },
+            {
+              "operation": "insert",
+              "word_index": 3,
+              "position": 2,
+              "before": "brain",
+              "after": "brcain"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Concussion injury (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 17,
+              "end": 26,
+              "before": " of brain",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Confusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Concussioj injury of brain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 9,
+              "before": "Concussion",
+              "after": "Concussioj"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Concussion injury (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 17,
+              "end": 26,
+              "before": " of brain",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Contusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Concussion ijjury of brain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 1,
+              "before": "injury",
+              "after": "ijjury"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Concussion injury (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 17,
+              "end": 26,
+              "before": " of brain",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Congestion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.8846153846153846,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Congusion injury of brcain (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 3,
+              "before": "Concussion",
+              "after": "Congussion"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 6,
+              "before": "Congussion",
+              "after": "Congusion"
+            },
+            {
+              "operation": "insert",
+              "word_index": 3,
+              "position": 2,
+              "before": "brain",
+              "after": "brcain"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000015",
+    "gold": "Fracture of bone (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Fracture (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 8,
+              "end": 16,
+              "before": " of bone",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [
+        {
+          "answer": "Fracture of elbow (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "elbow",
+          "evidence": [
+            "Elbow fracture"
+          ]
+        },
+        {
+          "answer": "Fracture of femoral neck (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "femoral neck",
+          "evidence": [
+            "Femur neck fracture"
+          ]
+        },
+        {
+          "answer": "Fracture of mandible (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "mandible",
+          "evidence": [
+            "Fracture of mandible (disorder)",
+            "Jaw fracture"
+          ]
+        },
+        {
+          "answer": "Fracture of thoracic vertebra (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "thoracic vertebra",
+          "evidence": [
+            "Thoracic vertebra fracture"
+          ]
+        },
+        {
+          "answer": "Fracture of c1 ring (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "c1 ring",
+          "evidence": [
+            "C1 ring fracture"
+          ]
+        }
+      ],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Fractumre of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractumre"
+            }
+          ]
+        },
+        {
+          "answer": "Fractuore of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractuore"
+            }
+          ]
+        },
+        {
+          "answer": "Fractur of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 7,
+              "before": "Fracture",
+              "after": "Fractur"
+            }
+          ]
+        },
+        {
+          "answer": "Frcaature of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 2,
+              "before": "Fracture",
+              "after": "Frcature"
+            },
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 3,
+              "before": "Frcature",
+              "after": "Frcaature"
+            }
+          ]
+        },
+        {
+          "answer": "Fratcuer of bnoe (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractuer"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 1,
+              "before": "bone",
+              "after": "bnoe"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 0,
+              "position": 3,
+              "before": "Fractuer",
+              "after": "Fratcuer"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Fracture (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 8,
+              "end": 16,
+              "before": " of bone",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Fracture of c1 ring (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "c1 ring",
+          "evidence": [
+            "C1 ring fracture"
+          ]
+        },
+        {
+          "answer": "Frcaature of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 2,
+              "before": "Fracture",
+              "after": "Frcature"
+            },
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 3,
+              "before": "Frcature",
+              "after": "Frcaature"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Fracture (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 8,
+              "end": 16,
+              "before": " of bone",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Fracture of thoracic vertebra (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "thoracic vertebra",
+          "evidence": [
+            "Thoracic vertebra fracture"
+          ]
+        },
+        {
+          "answer": "Fractumre of bone (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractumre"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Fracture (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 8,
+              "end": 16,
+              "before": " of bone",
+              "after": "",
+              "axis": "detail_clause"
+            }
+          ]
+        },
+        {
+          "answer": "Fracture of mandible (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "fracture",
+          "before_site": "bone",
+          "after_site": "mandible",
+          "evidence": [
+            "Fracture of mandible (disorder)",
+            "Jaw fracture"
+          ]
+        },
+        {
+          "answer": "Fratcuer of bnoe (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 6,
+              "before": "Fracture",
+              "after": "Fractuer"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 1,
+              "before": "bone",
+              "after": "bnoe"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 0,
+              "position": 3,
+              "before": "Fractuer",
+              "after": "Fratcuer"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000016",
+    "gold": "Gingival disease (disorder)",
+    "pools": {
+      "detail_omission": [],
+      "detail_substitution": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Gingiavl disease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 5,
+              "before": "Gingival",
+              "after": "Gingiavl"
+            }
+          ]
+        },
+        {
+          "answer": "Gingpival disease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 4,
+              "before": "Gingival",
+              "after": "Gingpival"
+            }
+          ]
+        },
+        {
+          "answer": "Gingivl disease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 6,
+              "before": "Gingival",
+              "after": "Gingivl"
+            }
+          ]
+        },
+        {
+          "answer": "Gingival disees (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 4,
+              "before": "disease",
+              "after": "disese"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "disese",
+              "after": "disees"
+            }
+          ]
+        },
+        {
+          "answer": "Ginugiival drisease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 3,
+              "before": "Gingival",
+              "after": "Ginugival"
+            },
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 1,
+              "before": "disease",
+              "after": "drisease"
+            },
+            {
+              "operation": "duplicate",
+              "word_index": 0,
+              "position": 5,
+              "before": "Ginugival",
+              "after": "Ginugiival"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Gingival disees (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 4,
+              "before": "disease",
+              "after": "disese"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "disese",
+              "after": "disees"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Gingiavl disease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 5,
+              "before": "Gingival",
+              "after": "Gingiavl"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Ginugiival drisease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 3,
+              "before": "Gingival",
+              "after": "Ginugival"
+            },
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 1,
+              "before": "disease",
+              "after": "drisease"
+            },
+            {
+              "operation": "duplicate",
+              "word_index": 0,
+              "position": 5,
+              "before": "Ginugival",
+              "after": "Ginugiival"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000017",
+    "gold": "Anemia (disorder)",
+    "pools": {
+      "detail_omission": [],
+      "detail_substitution": [],
+      "label_confusion": [
+        {
+          "answer": "Amnesia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.7142857142857143,
+          "focus": "anemia",
+          "negative_focus": "amnesia",
+          "source": {
+            "id": "NLM:9765",
+            "name": "Amnesia",
+            "aliases": [
+              "memory loss"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.3"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Amnesia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Anosmia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.7142857142857143,
+          "focus": "anemia",
+          "negative_focus": "anosmia",
+          "source": {
+            "id": "NLM:7190",
+            "name": "Anosmia",
+            "aliases": [
+              "absent smell",
+              "smell loss"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R43.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Anosmia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ],
+      "spelling_error": [
+        {
+          "answer": "Anumia (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 2,
+              "before": "Anemia",
+              "after": "Anumia"
+            }
+          ]
+        },
+        {
+          "answer": "Anegmia (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 3,
+              "before": "Anemia",
+              "after": "Anegmia"
+            }
+          ]
+        },
+        {
+          "answer": "Amnemia (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 1,
+              "before": "Anemia",
+              "after": "Amnemia"
+            }
+          ]
+        },
+        {
+          "answer": "Anmea (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 4,
+              "before": "Anemia",
+              "after": "Anema"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 2,
+              "before": "Anema",
+              "after": "Anmea"
+            }
+          ]
+        },
+        {
+          "answer": "Anemira (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 5,
+              "before": "Anemia",
+              "after": "Anemira"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Amnesia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.7142857142857143,
+          "focus": "anemia",
+          "negative_focus": "amnesia",
+          "source": {
+            "id": "NLM:9765",
+            "name": "Amnesia",
+            "aliases": [
+              "memory loss"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.3"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Amnesia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Anmea (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 4,
+              "before": "Anemia",
+              "after": "Anema"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 2,
+              "before": "Anema",
+              "after": "Anmea"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Anosmia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.7142857142857143,
+          "focus": "anemia",
+          "negative_focus": "anosmia",
+          "source": {
+            "id": "NLM:7190",
+            "name": "Anosmia",
+            "aliases": [
+              "absent smell",
+              "smell loss"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R43.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Anosmia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Anemira (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 5,
+              "before": "Anemia",
+              "after": "Anemira"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Amnesia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.7142857142857143,
+          "focus": "anemia",
+          "negative_focus": "amnesia",
+          "source": {
+            "id": "NLM:9765",
+            "name": "Amnesia",
+            "aliases": [
+              "memory loss"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.3"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Amnesia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Amnemia (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 1,
+              "before": "Anemia",
+              "after": "Amnemia"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000018",
+    "gold": "Acute viral pharyngitis (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Acute pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 6,
+              "end": 11,
+              "before": "viral",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Viral pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 2,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            },
+            {
+              "start": 6,
+              "end": 11,
+              "before": "viral",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Acute viral phharyngitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 2,
+              "position": 1,
+              "before": "pharyngitis",
+              "after": "phharyngitis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral pahryngitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 1,
+              "before": "pharyngitis",
+              "after": "pahryngitis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral pharyngijis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 2,
+              "position": 8,
+              "before": "pharyngitis",
+              "after": "pharyngijis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral pharyniatis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 8,
+              "before": "pharyngitis",
+              "after": "pharyngiatis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 6,
+              "before": "pharyngiatis",
+              "after": "pharyniatis"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral phryitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 5,
+              "before": "pharyngitis",
+              "after": "pharygitis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 2,
+              "before": "pharygitis",
+              "after": "phrygitis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 4,
+              "before": "phrygitis",
+              "after": "phryitis"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 2,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            },
+            {
+              "start": 6,
+              "end": 11,
+              "before": "viral",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral pahryngitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 2,
+              "position": 1,
+              "before": "pharyngitis",
+              "after": "pahryngitis"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Acute pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 6,
+              "end": 11,
+              "before": "viral",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral pharyniatis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 8,
+              "before": "pharyngitis",
+              "after": "pharyngiatis"
+            },
+            {
+              "operation": "delete",
+              "word_index": 2,
+              "position": 6,
+              "before": "pharyngiatis",
+              "after": "pharyniatis"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Viral pharyngitis (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 5,
+              "before": "Acute",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Acute viral phharyngitis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 2,
+              "position": 1,
+              "before": "pharyngitis",
+              "after": "phharyngitis"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000019",
+    "gold": "Essential hypertension (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "label_confusion": [
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ],
+      "spelling_error": [
+        {
+          "answer": "Essential hypertensqon (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 9,
+              "before": "hypertension",
+              "after": "hypertensqon"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypertfnsion (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertfnsion"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hyperitension (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 5,
+              "before": "hypertension",
+              "after": "hyperitension"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypmretension (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 3,
+              "before": "hypertension",
+              "after": "hypmertension"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "hypmertension",
+              "after": "hypmretension"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypertsenslin (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertsension"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 11,
+              "before": "hypertsension",
+              "after": "hypertsensiln"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 1,
+              "position": 10,
+              "before": "hypertsensiln",
+              "after": "hypertsenslin"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Essential hypertfnsion (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertfnsion"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Essential hypertensqon (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 9,
+              "before": "hypertension",
+              "after": "hypertensqon"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Hypertension (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Essential",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Essential hypertsenslin (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 6,
+              "before": "hypertension",
+              "after": "hypertsension"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 11,
+              "before": "hypertsension",
+              "after": "hypertsensiln"
+            },
+            {
+              "operation": "reverse_segment",
+              "word_index": 1,
+              "position": 10,
+              "before": "hypertsensiln",
+              "after": "hypertsenslin"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "train_000020",
+    "gold": "Otitis media (disorder)",
+    "pools": {
+      "detail_omission": [],
+      "detail_substitution": [
+        {
+          "answer": "Otitis externa (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "otitis",
+          "before_site": "middle ear",
+          "after_site": "external ear",
+          "evidence": [
+            "Otitis externa"
+          ]
+        }
+      ],
+      "label_confusion": [
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ],
+      "spelling_error": [
+        {
+          "answer": "Ottiis media (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 2,
+              "before": "Otitis",
+              "after": "Ottiis"
+            }
+          ]
+        },
+        {
+          "answer": "Oittis media (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 1,
+              "before": "Otitis",
+              "after": "Oittis"
+            }
+          ]
+        },
+        {
+          "answer": "Oitis media (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 1,
+              "before": "Otitis",
+              "after": "Oitis"
+            }
+          ]
+        },
+        {
+          "answer": "Otieis mledia (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 1,
+              "before": "media",
+              "after": "mledia"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 3,
+              "before": "Otitis",
+              "after": "Otieis"
+            }
+          ]
+        },
+        {
+          "answer": "Otitsi mdea (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 4,
+              "before": "Otitis",
+              "after": "Otitsi"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 3,
+              "before": "media",
+              "after": "medea"
+            },
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 1,
+              "before": "medea",
+              "after": "mdea"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Otitis externa (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "otitis",
+          "before_site": "middle ear",
+          "after_site": "external ear",
+          "evidence": [
+            "Otitis externa"
+          ]
+        },
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Oittis media (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 1,
+              "before": "Otitis",
+              "after": "Oittis"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Otitis externa (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "otitis",
+          "before_site": "middle ear",
+          "after_site": "external ear",
+          "evidence": [
+            "Otitis externa"
+          ]
+        },
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Otieis mledia (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 1,
+              "before": "media",
+              "after": "mledia"
+            },
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 3,
+              "before": "Otitis",
+              "after": "Otieis"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Otitis externa (disorder)",
+          "kind": "detail_substitution",
+          "rule": "shared_compatible_body_pool",
+          "family": "otitis",
+          "before_site": "middle ear",
+          "after_site": "external ear",
+          "evidence": [
+            "Otitis externa"
+          ]
+        },
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Ottiis media (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 2,
+              "before": "Otitis",
+              "after": "Ottiis"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

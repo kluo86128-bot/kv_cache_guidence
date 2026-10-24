@@ -1,0 +1,24 @@
+{
+  "dataset_id": "multiscene_privacy_v1",
+  "schema_version": "multiscene_privacy_v1",
+  "seed": 17,
+  "prepared_date": "2026-10-20",
+  "source_cache": "../tmp/field_overlap_audit_20261019/raw",
+  "synthea_source": "data/source/multiscene_synthea_v1/csv",
+  "output_directory": "data/dataset_multiscene_v1",
+  "work_directory": "data/_build_multiscene_v1",
+  "ordinary_split_sizes": {"train": 1000, "validation": 200, "test": 1000},
+  "scenes": {
+    "medical": ["structured", "narrative", "dialogue", "mixed"],
+    "finance": ["structured", "narrative", "dialogue", "mixed"],
+    "hr": ["structured", "narrative"]
+  },
+  "financial_dialogue_policy": "Use all eligible original bank/payment dialogues; additional support logs require a financial subject and a valid extractable target.",
+  "selection_policy": "Prefer new target values; never use model predictions or performance. Reject cross-split source-case, name, address, identity, phone, email, account, birth-date, hire-date or salary collisions. Select unique name/birth/hire/salary values in structured records when available. Report finite-category overlap.",
+  "augmentation_policy": "Keep native text unchanged. Add only missing targets, mark every addition as cross-source synthetic augmentation, preserve original donor values and source references. Do not use the restricted AI4Privacy source.",
+  "name_policy": "Every name has three reversible components. Use source components when present; otherwise add explicitly labelled rule-based source-order segmentation. Never invent a missing name component.",
+  "question_policy": "English extractive questions. Training uses name components and unambiguous ISO birth-date components. Evaluation retains components and adds an independent full-name question. No answer choices or private values in questions.",
+  "source_routing_policy": "Use source domain plus explicit document purpose. Employment contracts, payroll, employment verification, onboarding and employee records may be routed to HR even when their publisher domain is broader.",
+  "minimum_native_targets": 1,
+  "overwrite_existing_final_dataset": false
+}

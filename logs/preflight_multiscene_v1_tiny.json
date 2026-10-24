@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "public_cache_length": 56,
+  "public_start": 524,
+  "question_absolute_start": 580,
+  "prompt_gradient_norm": 0.01149655506014824,
+  "initial_answer_nll": 11.958353042602539,
+  "frozen_model_gradients": false,
+  "query_cache_isolation": true,
+  "backend": {
+    "model": "random-tiny-Qwen3",
+    "seed": 17,
+    "warning": "Implementation checks only, not a trained model"
+  }
+}

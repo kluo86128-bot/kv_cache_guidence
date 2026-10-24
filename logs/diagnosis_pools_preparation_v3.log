@@ -1,0 +1,426 @@
+{
+  "generator_version": "diagnosis_pools_v3_multiedit",
+  "seed": 17,
+  "records": 1000,
+  "positive_labels": 20,
+  "max_negatives_per_record": 5,
+  "candidates_per_kind": 5,
+  "rules_file": "configs/diagnosis_negative_rules.json",
+  "rules_sha256": "c0d6de741435d93a0b6256c97dca9abc119d94497c10b75ec4ace5c64e14f360",
+  "source": {
+    "scope": "actual_training_patients_full_condition_history",
+    "source_csv": "data/source/candidates_5000/csv/conditions.csv",
+    "source_csv_sha256": "f4918a119f3e9b2644fef2995d321b7c6ee61f3327a0344c9700691dbe4afd3f",
+    "patients": 1000,
+    "distinct_labels_before_exclusion": 173,
+    "condition_rows_before_exclusion": 34111,
+    "distinct_labels_after_exclusion": 47,
+    "excluded_distinct_labels": 126,
+    "permitted_catalog_sha256": "a4485a9c4a6deac8dd7fb76f89f44a84d2b23b11b81b7ffc03a5ea1726dec565"
+  },
+  "confusion_mining": {
+    "file": null,
+    "mode": "fixed_confusion_pairs_only; no measured hardness claim"
+  },
+  "count_policy": "one per available kind per patient per epoch; no padding",
+  "negative_answers": 1550,
+  "negative_count_histogram": {
+    "2": 550,
+    "1": 450
+  },
+  "pool_candidates_by_unique_positive": {
+    "detail_omission": 14,
+    "spelling_error": 100
+  },
+  "pool_candidates_by_record": 5700,
+  "unique_negative_answers": 114,
+  "exclusions": [
+    {
+      "dataset_directory": "data/dataset_v1",
+      "dataset_id": "synthea_medical_privacy_natural_names_v1",
+      "manifest_sha256": "6233ef37c89f830d3363ae6172517ae5e9ab4d438c756e84883fd2b6ddaff102",
+      "test_sha256": "c78829832affb00d9893012b8de09ffc4916c41aa2dbf07e9ead78ba225e47ff",
+      "records": 1000
+    },
+    {
+      "dataset_directory": "data/dataset_diagnosis_overlap10",
+      "dataset_id": "synthea_medical_privacy_natural_names_diagnosis_overlap10_v1",
+      "manifest_sha256": "7fba97a83d874d9c8794bf56c6342bd39735c703ddf43b7545ff6e33afd9915a",
+      "test_sha256": "6759838701555ac7cb479dacadad7b46a4fac099cd7fea2a82ec3f5ea6d54a36",
+      "records": 1000
+    }
+  ],
+  "excluded_distinct_normalized_labels": 131,
+  "excluded_labels_sha256": "82f515b8b6a1099f2a85cca040b38b055e0b103760794518526b40a66cc537d4",
+  "excluded_codes_sha256": "074e877ff0d701451537269f9146a65fc6a49798b9db302e060a20d467f2b649",
+  "rejected_candidates_by_unique_positive": {
+    "test_label_or_code": 2
+  },
+  "selected_kinds_by_unique_positive": {
+    "detail_omission": 11,
+    "spelling_error": 20
+  },
+  "selected_kinds_by_record": {
+    "detail_omission": 550,
+    "spelling_error": 1000
+  },
+  "all_five_kinds_covered": false,
+  "missing_kinds_by_positive": {
+    "Acute bacterial sinusitis (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Acute bronchitis (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Acute infective cystitis (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Acute viral pharyngitis (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Anemia (disorder)": [
+      "detail_omission",
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Chronic sinusitis (disorder)": [
+      "detail_omission",
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Concussion injury of brain (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Concussion with no loss of consciousness (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Essential hypertension (disorder)": [
+      "detail_omission",
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Fracture of bone (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Gingival disease (disorder)": [
+      "detail_omission",
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Gingivitis (disorder)": [
+      "detail_omission",
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Infection of tooth (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Laceration - injury (disorder)": [
+      "detail_omission",
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Otitis media (disorder)": [
+      "detail_omission",
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Primary dental caries (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Sinusitis (disorder)": [
+      "detail_omission",
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Sprain of ankle (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Streptococcal sore throat (disorder)": [
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ],
+    "Viral sinusitis (disorder)": [
+      "detail_omission",
+      "detail_substitution",
+      "qualifier_change",
+      "label_confusion"
+    ]
+  },
+  "missing_kind_reasons": {
+    "Acute bacterial sinusitis (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Acute bronchitis (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Acute infective cystitis (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Acute viral pharyngitis (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Anemia (disorder)": {
+      "detail_omission": "no_applicable_transform_after_exclusion",
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Chronic sinusitis (disorder)": {
+      "detail_omission": "no_applicable_transform_after_exclusion",
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Concussion injury of brain (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Concussion with no loss of consciousness (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Essential hypertension (disorder)": {
+      "detail_omission": "no_applicable_transform_after_exclusion",
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Fracture of bone (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Gingival disease (disorder)": {
+      "detail_omission": "no_applicable_transform_after_exclusion",
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Gingivitis (disorder)": {
+      "detail_omission": "no_applicable_transform_after_exclusion",
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Infection of tooth (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Laceration - injury (disorder)": {
+      "detail_omission": "no_applicable_transform_after_exclusion",
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Otitis media (disorder)": {
+      "detail_omission": "no_applicable_transform_after_exclusion",
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Primary dental caries (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Sinusitis (disorder)": {
+      "detail_omission": "no_applicable_transform_after_exclusion",
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Sprain of ankle (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Streptococcal sore throat (disorder)": {
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    },
+    "Viral sinusitis (disorder)": {
+      "detail_omission": "no_applicable_transform_after_exclusion",
+      "detail_substitution": "no_matching_diagnosis_in_allowed_training_history",
+      "qualifier_change": "no_matching_diagnosis_in_allowed_training_history",
+      "label_confusion": "no_matching_diagnosis_in_allowed_training_history"
+    }
+  },
+  "test_overlap_negative_answers": 0,
+  "selection": "seed + record_id + kind + epoch cycle; shuffled round robin; epoch is zero-based",
+  "preview_epoch": 1,
+  "sampling_audit_epochs": 100,
+  "sampled_answer_distribution": {
+    "detail_omission": {
+      "Fracture (disorder)": 5000,
+      "Concussion (disorder)": 5000,
+      "Viral pharyngitis (disorder)": 2500,
+      "Concussion injury (disorder)": 5000,
+      "Sore throat (disorder)": 5000,
+      "Dental caries (disorder)": 5000,
+      "Acute cystitis (disorder)": 2500,
+      "Acute pharyngitis (disorder)": 2500,
+      "Sprain (disorder)": 5000,
+      "Infection (disorder)": 5000,
+      "Bacterial sinusitis (disorder)": 2500,
+      "Bronchitis (disorder)": 5000,
+      "Acute sinusitis (disorder)": 2500,
+      "Infective cystitis (disorder)": 2500
+    },
+    "detail_substitution": {},
+    "qualifier_change": {},
+    "label_confusion": {},
+    "spelling_error": {
+      "Fracutre of bone (disorder)": 1000,
+      "Essenital hyperrtension (disorder)": 1000,
+      "Esseential hypertension (disorder)": 1000,
+      "Concussnoi with no lsos of consciousnfess (disorder)": 1000,
+      "Acute viral pharyngidis (disorder)": 1000,
+      "Concussion ijjury of brain (disorder)": 1000,
+      "Oteitis medxia (disorder)": 1000,
+      "Lacertion - injury (disorder)": 1000,
+      "Streptococcal sroe tfroat (disorder)": 1000,
+      "Primary dental cvaries (disorder)": 1000,
+      "Laceration - injurwy (disorder)": 1000,
+      "Chronic sinustiis (disorder)": 1000,
+      "Acute infective cystiitijs (disorder)": 1000,
+      "Fraxture of boen (disorder)": 1000,
+      "Ginival diseaese (disorder)": 1000,
+      "Alneia (disorder)": 1000,
+      "Otitis medwia (disorder)": 1000,
+      "Streptococcal soer throut (disorder)": 1000,
+      "Cxcussion with no loss of consciousness (disorder)": 1000,
+      "Essnetial hpyertencion (disorder)": 1000,
+      "Viral sintusitis (disorder)": 1000,
+      "Primary dntal caurhies (disorder)": 1000,
+      "Chronic sinusitcs (disorder)": 1000,
+      "Otitiis media (disorder)": 1000,
+      "Acute viral pharyngitigcs (disorder)": 1000,
+      "Acute infective cyvstitqs (disorder)": 1000,
+      "Sprain of anke (disorder)": 1000,
+      "Infection of twooth (disorder)": 1000,
+      "Primary deental caries (disorder)": 1000,
+      "Acute bacterial sinsuitis (disorder)": 1000,
+      "Otisit meida (disorder)": 1000,
+      "Sinusitkks (disorder)": 1000,
+      "Gingivawl disease (disorder)": 1000,
+      "Acute bornchitis (disorder)": 1000,
+      "Concussion with no loss of conicsousness (disorder)": 1000,
+      "Concusison ijury of brain (disorder)": 1000,
+      "Gingivtiis (disorder)": 1000,
+      "Concussion with no loss of consicousness (disorder)": 1000,
+      "Fractuure of bone (disorder)": 1000,
+      "Chronic sinwsitis (disorder)": 1000,
+      "Anemmi (disorder)": 1000,
+      "Acute bronchitsti (disorder)": 1000,
+      "Acute bacterial sinvusitis (disorder)": 1000,
+      "Essentail hypertension (disorder)": 1000,
+      "Sinuxitis (disorder)": 1000,
+      "Inkfectnooi of tooth (disorder)": 1000,
+      "Otitis medkia (disorder)": 1000,
+      "Streptococcal sore theroat (disorder)": 1000,
+      "Concussion with no lioss of consciousness (disorder)": 1000,
+      "Sprain of ankfle (disorder)": 1000,
+      "Conucssion innjumry of brain (disorder)": 1000,
+      "Primary dental caribis (disorder)": 1000,
+      "Fcture of bonie (disorder)": 1000,
+      "Acute bronhcitis (disorder)": 1000,
+      "Sinusiti (disorder)": 1000,
+      "Gnigipal disesae (disorder)": 1000,
+      "Chronic snuitis (disorder)": 1000,
+      "Sinulitis (disorder)": 1000,
+      "Sparin of annkle (disorder)": 1000,
+      "Sprain of alkne (disorder)": 1000,
+      "Sprrgain of afkle (disorder)": 1000,
+      "Concussion injuiry of brain (disorder)": 1000,
+      "Acute bacterial sinusiti (disorder)": 1000,
+      "Acute viral pharungitis (disorder)": 1000,
+      "Gifngivitis (disorder)": 1000,
+      "Anemiaa (disorder)": 1000,
+      "Acute bronciatis (disorder)": 1000,
+      "Gingvial disease (disorder)": 1000,
+      "Idnfection of toth (disorder)": 1000,
+      "Guingiviths (disorder)": 1000,
+      "Acute viral pharyigntis (disorder)": 1000,
+      "Acute bacterial sinusits (disorder)": 1000,
+      "Acute infective cysttitis (disorder)": 1000,
+      "Viral snusitis (disorder)": 1000,
+      "Viral sinusiptis (disorder)": 1000,
+      "Infection of toothh (disorder)": 1000,
+      "Locsration - inujry (disorder)": 1000,
+      "Acute infective cystttis (disorder)": 1000,
+      "Streptococcal shre throat (disorder)": 1000,
+      "Primary dental cqries (disorder)": 1000,
+      "Gnigivizis (disorder)": 1000,
+      "Gingpival disease (disorder)": 1000,
+      "Acute viral phaaymrngitis (disorder)": 1000,
+      "Viral sinusitids (disorder)": 1000,
+      "Concussion injury of brai (disorder)": 1000,
+      "Chronic sinusitiks (disorder)": 1000,
+      "Laceration - ijnury (disorder)": 1000,
+      "Gingivitsi (disorder)": 1000,
+      "Anemba (disorder)": 1000,
+      "Viral sinuaitis (disorder)": 1000,
+      "Streptococcal soe throat (disorder)": 1000,
+      "Fracture of bong (disorder)": 1000,
+      "Esseetial hypertension (disorder)": 1000,
+      "Laceration - inkjurjy (disorder)": 1000,
+      "Acute bacterial sinufetis (disorder)": 1000,
+      "Sinrusiis (disorder)": 1000,
+      "Acute infective cystitig (disorder)": 1000,
+      "Infection of tootvh (disorder)": 1000,
+      "Anemka (disorder)": 1000,
+      "Acute bronohitis (disorder)": 1000
+    }
+  },
+  "sampled_spelling_edit_counts": {
+    "1": 62000,
+    "2": 24000,
+    "3": 14000
+  },
+  "scope": "wrong answers only; positives/prefixes unchanged; whole-value test exclusion",
+  "limitations": "Source-attested slot matches and fixed confusion pairs are heuristic, not measured model-hard negatives. Missing categories are reported. Negative diversity does not replace diverse positive diagnoses.",
+  "fingerprint": "82f38325292d902714c615a511cc926aa7c1426d6efa87cc8a1b2f02ff0d988c",
+  "status": "PASS"
+}

@@ -1,0 +1,117 @@
+{"stage": "inputs_loaded", "candidate_records": 123577, "pii_pools": {"name": 59079, "birth_date": 26220, "address": 35990, "phone": 43983, "email": 96517, "identity_number": 31075}, "patient_profiles": 10000, "transactions": 70613}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 200, "target": 2200, "remaining": {"train": 909, "validation": 182, "test": 909}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 400, "target": 2200, "remaining": {"train": 819, "validation": 163, "test": 818}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 600, "target": 2200, "remaining": {"train": 728, "validation": 145, "test": 727}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 800, "target": 2200, "remaining": {"train": 636, "validation": 127, "test": 637}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 1000, "target": 2200, "remaining": {"train": 545, "validation": 109, "test": 546}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 1200, "target": 2200, "remaining": {"train": 455, "validation": 91, "test": 454}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 1400, "target": 2200, "remaining": {"train": 364, "validation": 72, "test": 364}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 1600, "target": 2200, "remaining": {"train": 273, "validation": 54, "test": 273}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 1800, "target": 2200, "remaining": {"train": 182, "validation": 36, "test": 182}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 2000, "target": 2200, "remaining": {"train": 91, "validation": 18, "test": 91}}
+{"stage": "select", "scene": "hr", "form": "narrative", "accepted": 2200, "target": 2200, "remaining": {"train": 0, "validation": 0, "test": 0}}
+{"stage": "cell_complete", "scene": "hr", "form": "narrative", "target": {"train": 1000, "validation": 200, "test": 1000}, "actual": {"test": 1000, "train": 1000, "validation": 200}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 2621}
+{"stage": "select", "scene": "finance", "form": "dialogue", "accepted": 200, "target": 1243, "remaining": {"train": 474, "validation": 94, "test": 475}}
+{"stage": "select", "scene": "finance", "form": "dialogue", "accepted": 400, "target": 1243, "remaining": {"train": 384, "validation": 76, "test": 383}}
+{"stage": "select", "scene": "finance", "form": "dialogue", "accepted": 600, "target": 1243, "remaining": {"train": 293, "validation": 58, "test": 292}}
+{"stage": "select", "scene": "finance", "form": "dialogue", "accepted": 800, "target": 1243, "remaining": {"train": 201, "validation": 40, "test": 202}}
+{"stage": "select", "scene": "finance", "form": "dialogue", "accepted": 1000, "target": 1243, "remaining": {"train": 111, "validation": 22, "test": 110}}
+{"stage": "select", "scene": "finance", "form": "dialogue", "accepted": 1200, "target": 1243, "remaining": {"train": 19, "validation": 4, "test": 20}}
+{"stage": "cell_complete", "scene": "finance", "form": "dialogue", "target": {"train": 565, "validation": 113, "test": 565}, "actual": {"validation": 113, "train": 565, "test": 565}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 1243}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 200, "target": 2200, "remaining": {"train": 909, "validation": 181, "test": 910}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 400, "target": 2200, "remaining": {"train": 818, "validation": 163, "test": 819}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 600, "target": 2200, "remaining": {"train": 727, "validation": 145, "test": 728}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 800, "target": 2200, "remaining": {"train": 636, "validation": 127, "test": 637}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 1000, "target": 2200, "remaining": {"train": 545, "validation": 109, "test": 546}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 1200, "target": 2200, "remaining": {"train": 455, "validation": 90, "test": 455}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 1400, "target": 2200, "remaining": {"train": 364, "validation": 72, "test": 364}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 1600, "target": 2200, "remaining": {"train": 273, "validation": 54, "test": 273}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 1800, "target": 2200, "remaining": {"train": 182, "validation": 36, "test": 182}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 2000, "target": 2200, "remaining": {"train": 91, "validation": 18, "test": 91}}
+{"stage": "select", "scene": "medical", "form": "structured", "accepted": 2200, "target": 2200, "remaining": {"train": 0, "validation": 0, "test": 0}}
+{"stage": "cell_complete", "scene": "medical", "form": "structured", "target": {"train": 1000, "validation": 200, "test": 1000}, "actual": {"test": 1000, "validation": 200, "train": 1000}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 9851}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 200, "target": 2200, "remaining": {"train": 909, "validation": 181, "test": 910}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 400, "target": 2200, "remaining": {"train": 818, "validation": 163, "test": 819}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 600, "target": 2200, "remaining": {"train": 728, "validation": 145, "test": 727}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 800, "target": 2200, "remaining": {"train": 636, "validation": 127, "test": 637}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 1000, "target": 2200, "remaining": {"train": 546, "validation": 109, "test": 545}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 1200, "target": 2200, "remaining": {"train": 455, "validation": 91, "test": 454}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 1400, "target": 2200, "remaining": {"train": 364, "validation": 72, "test": 364}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 1600, "target": 2200, "remaining": {"train": 273, "validation": 54, "test": 273}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 1800, "target": 2200, "remaining": {"train": 182, "validation": 36, "test": 182}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 2000, "target": 2200, "remaining": {"train": 91, "validation": 18, "test": 91}}
+{"stage": "select", "scene": "finance", "form": "structured", "accepted": 2200, "target": 2200, "remaining": {"train": 0, "validation": 0, "test": 0}}
+{"stage": "cell_complete", "scene": "finance", "form": "structured", "target": {"train": 1000, "validation": 200, "test": 1000}, "actual": {"test": 1000, "validation": 200, "train": 1000}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 25000}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 200, "target": 2200, "remaining": {"train": 910, "validation": 181, "test": 909}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 400, "target": 2200, "remaining": {"train": 818, "validation": 163, "test": 819}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 600, "target": 2200, "remaining": {"train": 727, "validation": 145, "test": 728}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 800, "target": 2200, "remaining": {"train": 637, "validation": 127, "test": 636}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 1000, "target": 2200, "remaining": {"train": 545, "validation": 109, "test": 546}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 1200, "target": 2200, "remaining": {"train": 455, "validation": 90, "test": 455}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 1400, "target": 2200, "remaining": {"train": 364, "validation": 72, "test": 364}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 1600, "target": 2200, "remaining": {"train": 273, "validation": 54, "test": 273}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 1800, "target": 2200, "remaining": {"train": 182, "validation": 36, "test": 182}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 2000, "target": 2200, "remaining": {"train": 91, "validation": 18, "test": 91}}
+{"stage": "select", "scene": "hr", "form": "structured", "accepted": 2200, "target": 2200, "remaining": {"train": 0, "validation": 0, "test": 0}}
+{"stage": "cell_complete", "scene": "hr", "form": "structured", "target": {"train": 1000, "validation": 200, "test": 1000}, "actual": {"test": 1000, "validation": 200, "train": 1000}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 34266}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 200, "target": 2200, "remaining": {"train": 909, "validation": 181, "test": 910}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 400, "target": 2200, "remaining": {"train": 819, "validation": 163, "test": 818}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 600, "target": 2200, "remaining": {"train": 727, "validation": 145, "test": 728}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 800, "target": 2200, "remaining": {"train": 636, "validation": 127, "test": 637}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 1000, "target": 2200, "remaining": {"train": 545, "validation": 109, "test": 546}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 1200, "target": 2200, "remaining": {"train": 455, "validation": 91, "test": 454}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 1400, "target": 2200, "remaining": {"train": 364, "validation": 72, "test": 364}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 1600, "target": 2200, "remaining": {"train": 273, "validation": 54, "test": 273}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 1800, "target": 2200, "remaining": {"train": 182, "validation": 36, "test": 182}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 2000, "target": 2200, "remaining": {"train": 91, "validation": 18, "test": 91}}
+{"stage": "select", "scene": "medical", "form": "mixed", "accepted": 2200, "target": 2200, "remaining": {"train": 0, "validation": 0, "test": 0}}
+{"stage": "cell_complete", "scene": "medical", "form": "mixed", "target": {"train": 1000, "validation": 200, "test": 1000}, "actual": {"test": 1000, "validation": 200, "train": 1000}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 11942}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 200, "target": 2200, "remaining": {"train": 909, "validation": 181, "test": 910}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 400, "target": 2200, "remaining": {"train": 818, "validation": 163, "test": 819}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 600, "target": 2200, "remaining": {"train": 728, "validation": 145, "test": 727}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 800, "target": 2200, "remaining": {"train": 637, "validation": 127, "test": 636}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 1000, "target": 2200, "remaining": {"train": 545, "validation": 109, "test": 546}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 1200, "target": 2200, "remaining": {"train": 455, "validation": 91, "test": 454}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 1400, "target": 2200, "remaining": {"train": 364, "validation": 72, "test": 364}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 1600, "target": 2200, "remaining": {"train": 273, "validation": 54, "test": 273}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 1800, "target": 2200, "remaining": {"train": 182, "validation": 36, "test": 182}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 2000, "target": 2200, "remaining": {"train": 91, "validation": 18, "test": 91}}
+{"stage": "select", "scene": "medical", "form": "dialogue", "accepted": 2200, "target": 2200, "remaining": {"train": 0, "validation": 0, "test": 0}}
+{"stage": "cell_complete", "scene": "medical", "form": "dialogue", "target": {"train": 1000, "validation": 200, "test": 1000}, "actual": {"test": 1000, "validation": 200, "train": 1000}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 8274}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 200, "target": 2200, "remaining": {"train": 910, "validation": 181, "test": 909}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 400, "target": 2200, "remaining": {"train": 819, "validation": 163, "test": 818}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 600, "target": 2200, "remaining": {"train": 728, "validation": 145, "test": 727}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 800, "target": 2200, "remaining": {"train": 637, "validation": 127, "test": 636}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 1000, "target": 2200, "remaining": {"train": 546, "validation": 109, "test": 545}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 1200, "target": 2200, "remaining": {"train": 455, "validation": 91, "test": 454}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 1400, "target": 2200, "remaining": {"train": 364, "validation": 72, "test": 364}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 1600, "target": 2200, "remaining": {"train": 273, "validation": 54, "test": 273}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 1800, "target": 2200, "remaining": {"train": 182, "validation": 36, "test": 182}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 2000, "target": 2200, "remaining": {"train": 91, "validation": 18, "test": 91}}
+{"stage": "select", "scene": "medical", "form": "narrative", "accepted": 2200, "target": 2200, "remaining": {"train": 0, "validation": 0, "test": 0}}
+{"stage": "cell_complete", "scene": "medical", "form": "narrative", "target": {"train": 1000, "validation": 200, "test": 1000}, "actual": {"validation": 200, "test": 1000, "train": 1000}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 5302}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 200, "target": 2200, "remaining": {"train": 909, "validation": 181, "test": 910}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 400, "target": 2200, "remaining": {"train": 819, "validation": 163, "test": 818}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 600, "target": 2200, "remaining": {"train": 727, "validation": 145, "test": 728}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 800, "target": 2200, "remaining": {"train": 636, "validation": 127, "test": 637}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 1000, "target": 2200, "remaining": {"train": 546, "validation": 109, "test": 545}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 1200, "target": 2200, "remaining": {"train": 455, "validation": 91, "test": 454}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 1400, "target": 2200, "remaining": {"train": 364, "validation": 72, "test": 364}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 1600, "target": 2200, "remaining": {"train": 273, "validation": 54, "test": 273}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 1800, "target": 2200, "remaining": {"train": 181, "validation": 36, "test": 183}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 2000, "target": 2200, "remaining": {"train": 91, "validation": 18, "test": 91}}
+{"stage": "select", "scene": "finance", "form": "narrative", "accepted": 2200, "target": 2200, "remaining": {"train": 0, "validation": 0, "test": 0}}
+{"stage": "cell_complete", "scene": "finance", "form": "narrative", "target": {"train": 1000, "validation": 200, "test": 1000}, "actual": {"validation": 200, "test": 1000, "train": 1000}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 13235}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 200, "target": 2200, "remaining": {"train": 910, "validation": 181, "test": 909}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 400, "target": 2200, "remaining": {"train": 825, "validation": 162, "test": 813}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 600, "target": 2200, "remaining": {"train": 727, "validation": 145, "test": 728}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 800, "target": 2200, "remaining": {"train": 636, "validation": 127, "test": 637}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 1000, "target": 2200, "remaining": {"train": 545, "validation": 109, "test": 546}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 1200, "target": 2200, "remaining": {"train": 454, "validation": 91, "test": 455}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 1400, "target": 2200, "remaining": {"train": 369, "validation": 72, "test": 359}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 1600, "target": 2200, "remaining": {"train": 273, "validation": 54, "test": 273}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 1800, "target": 2200, "remaining": {"train": 182, "validation": 36, "test": 182}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 2000, "target": 2200, "remaining": {"train": 91, "validation": 18, "test": 91}}
+{"stage": "select", "scene": "finance", "form": "mixed", "accepted": 2200, "target": 2200, "remaining": {"train": 0, "validation": 0, "test": 0}}
+{"stage": "cell_complete", "scene": "finance", "form": "mixed", "target": {"train": 1000, "validation": 200, "test": 1000}, "actual": {"test": 1000, "validation": 200, "train": 1000}, "remaining": {"train": 0, "validation": 0, "test": 0}, "candidate_rows_scanned_at_most": 10954}
+{"status": "complete", "output": "D:\\Stepby\\kv-cache研究\\medical_privacy_prompt\\data\\dataset_multiscene_v1", "records": 21043, "validation": "PASS"}

@@ -1,0 +1,134 @@
+{
+  "records": 2,
+  "qa_pairs": 8,
+  "field_em": {
+    "name": 0.0,
+    "birth_date": 0.0,
+    "address": 0.0,
+    "diagnosis": 0.0
+  },
+  "macro_em": 0.0,
+  "all_fields_em": 0.0,
+  "name_diagnosis_joint_em": 0.0,
+  "field_nll": {
+    "name": 11.941726207733154,
+    "birth_date": 11.96699571609497,
+    "address": 11.977474689483643,
+    "diagnosis": 11.914865493774414
+  },
+  "truncated_answers": 8,
+  "macro_nll": 11.950265526771545,
+  "birth_date_subgroups": {
+    "train_seen": {
+      "records": 0,
+      "em": null
+    },
+    "train_unseen": {
+      "records": 2,
+      "em": 0.0
+    }
+  },
+  "status": "complete",
+  "seconds": 0.17259159999957774,
+  "metadata": {
+    "condition": "none",
+    "split": "dev",
+    "partial_evaluation": true,
+    "tiny_implementation_check": true,
+    "dataset": {
+      "dataset_id": "synthea_medical_privacy_v1",
+      "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+      "split_sha256": {
+        "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+        "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+        "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+        "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    },
+    "backend": {
+      "model": "random-tiny-Qwen3",
+      "seed": 17,
+      "warning": "Implementation checks only, not a trained model"
+    },
+    "resolved_config": {
+      "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+      "model_revision": null,
+      "local_files_only": true,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "eager",
+      "dataset_directory": "data/dataset_v1",
+      "output_directory": "D:\\Stepby\\kv-cache研究\\医疗隐私引导实验\\runs\\implementation_checks\\release_smoke\\eval_none",
+      "seed": 17,
+      "prompt_length": 32,
+      "initialization_words": [
+        "data",
+        "record",
+        "clinic",
+        "information",
+        "general",
+        "note",
+        "text",
+        "public",
+        "patient",
+        "document",
+        "read",
+        "answer"
+      ],
+      "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+      "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+      "separator": "\n\n",
+      "question_format": "chat",
+      "enable_thinking": false,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0,
+      "batch_records": 8,
+      "epochs": 20,
+      "warmup_fraction": 0.05,
+      "grad_clip": 1.0,
+      "patience": 3,
+      "max_new_tokens": 2,
+      "max_runtime_seconds": 86400,
+      "train_limit": null,
+      "validation_limit": null,
+      "max_updates": null,
+      "hard": {
+        "steps": 2000,
+        "gradient_records": 8,
+        "candidate_records": 8,
+        "top_k": 32,
+        "candidate_count": 16,
+        "validate_every": 50,
+        "ascii_only": true
+      }
+    },
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2,
+      "stop_token_ids": [
+        151645
+      ]
+    },
+    "evaluation_code_sha256": {
+      "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+      "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "backend.py": "47e0a98b7ca66af789636a7cc7ba215f0811f148cb7097fa95e38c4cd60c40ea",
+      "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "cli.py": "45de537d5184228f2a8d2bb6c6048f6a86d637b971f0014bea38dbc0ac14b1d9",
+      "config.py": "6a96f21ad722e815d11b6b5e7c8797782379308fe10d57f43a4e02f704ca51dd",
+      "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+      "discrete.py": "39e9973da77a1dc4877d6bc25ffd24b9a8fc367e9c5f9daac2436911685a555b",
+      "evaluation.py": "2b071900be7dfd7b932cab59f79f9bc7ac009484bbd641d25f869dfa0345f79c",
+      "io.py": "84b2871925b2a89b1db3578e8090b0b9cea127a556f000c4985e7912fb9ad125",
+      "training.py": "2c4251d525f2cc1665adbff243ae2714a2ae96f3a20e7d0ecd9f419c1db2e0f4"
+    },
+    "checkpoint": null,
+    "checkpoint_run_signature": null,
+    "checkpoint_selected_by_validation": null,
+    "public_tokens": 56,
+    "prompt_positions": 0,
+    "position_convention": "Retain original C RoPE positions; q starts at original encoder end; cache slots compacted."
+  }
+}

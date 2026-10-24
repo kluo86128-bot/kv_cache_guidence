@@ -1,0 +1,1 @@
+{"step": 1, "epoch": 1, "records_seen_in_epoch": 2, "loss": 11.953192234039307, "gradient_norm": 0.030292892828583717, "prompt_norm": 0.731604278087616, "prompt_change_norm": 0.3199564814567566, "learning_rate_next_step": 0.01, "elapsed_seconds": 0.17386679999981425, "cuda_peak_allocated_bytes": 0}

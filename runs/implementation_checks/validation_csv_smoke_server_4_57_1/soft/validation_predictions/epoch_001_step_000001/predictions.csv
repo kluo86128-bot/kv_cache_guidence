@@ -1,0 +1,5 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train
+1,1,development_validation,soft,dev_000065,name,What is the patient's full name? Return only the field value.,Chong355 Victor265 Schaden604, göreInvestigators,False,11.936680793762207,2,max_new_tokens,True,
+1,1,development_validation,soft,dev_000065,birth_date,What is the patient's date of birth? Return only the field value.,1961-05-17, göreInvestigators,False,11.985489845275879,2,max_new_tokens,True,False
+1,1,development_validation,soft,dev_000065,address,What is the patient's home street address? Return only the field value.,460 Auer Skyway Unit 98, göreInvestigators,False,11.918099403381348,2,max_new_tokens,True,
+1,1,development_validation,soft,dev_000065,diagnosis,What diagnosis is recorded? Return only the field value.,Anemia (disorder), göreInvestigators,False,11.985644340515137,2,max_new_tokens,True,

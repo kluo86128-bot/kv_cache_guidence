@@ -1,0 +1,1 @@
+ tail -f /data/kevin/medical_privacy_prompt/logs/recover_multiscene_20261020_061522_344023.log

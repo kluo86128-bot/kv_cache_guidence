@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "implementation_only": true,
+  "real_cuda_tested": false,
+  "epochs": 2,
+  "training_records": 2,
+  "negative_count_histogram": {
+    "2": 2
+  },
+  "generator_version": "diagnosis_corruptions_v2_spelling",
+  "removed_kinds_absent": true,
+  "tests": "61 passed, 3 deselected on transformers 4.57.1 and 4.57.6"
+}

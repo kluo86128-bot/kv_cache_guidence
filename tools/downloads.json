@@ -1,0 +1,14 @@
+[
+  {
+    "file": "synthea-with-dependencies.jar",
+    "url": "https://github.com/synthetichealth/synthea/releases/download/master-branch-latest/synthea-with-dependencies.jar",
+    "size": 197025542,
+    "sha256": "018ad7f04f7aacb995804d7d4781c76d5fc714f7f23257ba50daa9eefae224ac"
+  },
+  {
+    "file": "temurin21-jre.zip",
+    "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jre_x64_windows_hotspot_21.0.12.1_1.zip",
+    "size": 48999141,
+    "sha256": "d35f31e712f0fcf6ac5a093edc90204fbff22f720ba3950bd09d331d5e621636"
+  }
+]

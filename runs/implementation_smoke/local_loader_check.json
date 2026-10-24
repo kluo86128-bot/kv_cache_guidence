@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "public_cache_length": 56,
+  "public_start": 107,
+  "question_absolute_start": 163,
+  "prompt_gradient_norm": 0.0366034172475338,
+  "initial_answer_nll": 11.949896812438965,
+  "frozen_model_gradients": false,
+  "query_cache_isolation": true,
+  "backend": {
+    "model": "D:\\Stepby\\kv-cache\u7814\u7a76\\\u533b\u7597\u9690\u79c1\u5f15\u5bfc\u5b9e\u9a8c\\runs\\implementation_smoke\\local_tiny_checkpoint",
+    "requested_revision": null,
+    "resolved_revision": null,
+    "config_sha256": "cc7826679b4bea6e90660913b40ce497a4eedb5956c93ed0159f5e41490c9a63",
+    "local_weight_inventory": {
+      "model.safetensors": {
+        "bytes": 38942960,
+        "mtime_ns": 1792133768586209500
+      }
+    },
+    "weight_identity_scope": "config/revision and file size+mtime inventory, not a full weight-byte checksum",
+    "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+  }
+}

@@ -1,0 +1,69 @@
+# 此方案的工作目录
+
+最新用户授权（2026-10-24，直接清理v2输入与服务器重训）：在既有data/dataset_multiscene_v2_reduced原目录更新private_prefix，删除phone/sender_account/recipient_account实际字段内容及明确标注的其他电话，按删除区间重映射native_text_length、field_annotations/QA/augmentation_blocks证据位置；原发布者文本只保留在selected_native_sources.jsonl作溯源，不作为模型输入。input_revision=private_fields_removed_v1，input_sanitization_report.json记录完整审计。两条金融自然叙述把电话误标为identity_number（train_000166、train_000297），移除其错误身份号码问答，其余有效答案保持。scripts/clean_reduced_private_inputs.py [--rebuild]从冻结v1父版本重算并在验证后直接发布到当前v2目录；含原生区间编辑溯源独立验证。三个场景的输入token缓存须在Linux服务器通过scripts/prepare_scene_input_caches_background.sh重建到data/input_cache_multiscene_v2_clean，缓存绑定新数据/分词器/分隔符并实际接入Backend；这仅是token ID缓存，模型KV在训练/测试时实时重新计算，不能宣称离线KV已在本地生成。旧本地token缓存已移出活动路径为data/input_cache_multiscene_v2_stale_20261024，不上传或使用。当前v6训练和v2评估配置指向新输入缓存；运行/日志统一改soft_{scene}_v2_clean_seed17_100epochs、test_{scene}_v2_clean_best，旧输入断点不能续训新输入。医疗后台入口仍train_scene_background.sh medical <GPU列表>，100轮末自动验证和本场景测试。用户明确允许本地少量样本/CPU小模型验证，禁止在Windows运行完整正式实验或准备完整模型KV；正式Qwen3-4B和GPU作业只在服务器运行。
+
+最新用户授权（2026-10-23，评估断点换卡）：evaluation_control.py recover --evaluation-directory <旧阶段评估输出目录> --gpus 0 1 2核对原checkpoint.pt快照及metadata，按/proc精确匹配本项目、输出目录的evaluate启动器/工作进程，停止后后台启动evaluate --resume-evaluation。原目录保留，新恢复结果与日志按时间戳独立保存。medical_kv/evaluation_resume.py校验检查点哈希、数据/模型/提问/生成配置，跨所有旧rank.partial与reused_predictions合并，仅复用字段齐全的记录；各卡末尾不完整记录整条重算，JSONL仅容忍被截断的最后一行，其余损坏/冲突拒绝。只对剩余记录按新卡数分片，CSV/JSONL/汇总包含原已完成和新增结果。支持再次中断后递归恢复，完成标记与最终合并文件原子保存。当前仅支持带快照的完整interim soft test（包括既有25轮联合实验），普通最终测试旧目录无快照不自动放宽限制。必须同步medical_kv/和configs/resume_compatibility_v1.json，保留旧训练代码审核迁移。仅CPU逻辑模拟和tiny验证，不声称已执行CUDA/NCCL换卡恢复。
+
+最新用户授权（2026-10-23，删减目标与分场景训练）：新数据data/dataset_multiscene_v2_reduced从v1逐记录移除phone/sender_account/recipient_account的fields、field_annotations及三套QA；包含人事phone。原private_prefix、其他目标/问题、ID、source/donor关系、连接组和划分严格保持。旧v1仅供历史25轮检查点核对，不覆盖旧实验。派生脚本scripts/build_reduced_multiscene_dataset.py，构建配置configs/dataset_multiscene_v2_reduced.json，独立验证/字典/CSV/模板/token统计/哈希同步。后续默认分medical/finance/hr各自从头训练一份U，同场景各形式共享，禁止当成跨场景测试；configs/experiment_v6_{scene}_no_negatives.json与evaluation_v2_{scene}.json，runs/soft_{scene}_v2_seed17_100epochs及test_{scene}_v2_best。后台入口scripts/train_scene_background.sh <scene> <GPU逗号列表>，默认--no-epoch-validation、最终轮保留验证及自动测试；手工复测evaluate_scene_background.sh输出独立_manual目录。100轮、seed17、全局batch8、U32、LR0.01、无早停/负例/离散搜索保持。pause/recover支持新场景目录并自动选取匹配配置/测试目录；不得用旧联合训练断点冒充分场景训练。只做CPU/tiny检查，不在本机启动正式实验，不新增Markdown报告或ZIP。
+
+最新用户授权（2026-10-23，阶段测试与验证频率）：evaluate --interim-test --split test --condition soft使用安全暂停的latest.pt完整测试，禁止limit/form/tiny/development，scene必须与断点训练范围一致；分场景阶段测试入口scripts/evaluate_scene_interim_background.sh <scene> <GPU列表>，每次按时间戳独立保存日志和结果；单独输出检查点副本和准确completed_epochs/cursor/step。原默认正式测试仍需完整训练与验证选优。train-soft及pipeline/recover支持--no-epoch-validation，跳过中间逐轮验证、最终轮仍验证；后续恢复继承该选项，--epoch-validation可重新开启。只在实际验证过的候选中选best，跳过轮次不可宣称完成验证选优。旧版本代码通过configs/resume_compatibility_v1.json的严格审核哈希迁移，仍校验数据/配置/模型。当前暂停只在优化步边界检查；正在进行验证时需等该轮验证结束。
+
+最新用户授权（2026-10-20，暂停与换卡续训）：新增根目录training_control.py，pause --run-root [--wait]写请求文件，新训练在完整优化步边界保存latest.pt后退出；当前已在运行的旧进程通过/proc核对本目录及精确输出目录，仅向真正train-soft工作进程发送其已有处理器可接收的安全停止信号，不信号torchrun启动器。resume/recover --run-root --gpus 0 1（也接受0,1）在Linux服务器自动后台启动，日志独立命名，继续原全局batch8、epoch/cursor/step/Adam/调度器，按新卡数切分每个全局批，不重复样本。覆盖下文“续训卡数须一致”的旧限制。新版断点resume_format=2，GPU拓扑不进入训练语义身份；旧v5代码仅通过configs/resume_compatibility_v1.json中已审核完整文件哈希迁移，保留模型/数据/配置/划分/代码身份检查。原run_signature贯穿恢复，保留换卡前验证选优best.pt用于最终测试；run.json记录恢复历史与随机状态策略，新增rank采用确定性种子，拓扑变化不保证浮点逐位相同。暂停不自动测试，完整恢复到100轮后仍自动测试。旧断点必须连同原runs目录保留，不覆盖数据，不在本机运行正式4B实验。CPU模拟单卡→四卡→双卡验证已通过，真实NCCL恢复未执行；不新增Markdown报告或ZIP。
+
+最新用户授权（2026-10-20，自动测试）：scripts/train_multiscene_background.sh现通过scripts/run_multiscene_experiment.py后台串行执行训练与测试；完整训练成功且run_summary确认epochs_completed、达到配置轮数、非partial_dataset后，释放训练进程显存，再用相同GPU及best.pt运行完整测试集。测试日志logs/test_multiscene_v1_best.log，结果runs/test_multiscene_v1_best。训练失败、中断或提前结束不自动测试。支持后台脚本第二参数--resume以恢复latest.pt后继续自动测试。该规则覆盖下文“训练后不自动测试”；不在用户电脑自动启动正式实验。
+
+最新用户授权（2026-10-20，实验适配，覆盖下文“加载器尚未适配”的旧状态）：已接入multiscene_privacy_v1训练/评估，使用configs/experiment_v5_multiscene_no_negatives.json及configs/evaluation_multiscene_v1.json。默认全部场景/形式联合训练同一份共享U；可用--scene和--record-form选择子集，独立实验须指定独立输出目录。100轮、无早停、seed17、全局batch8、U32、LR0.01；负例及离散搜索关闭。姓名/ISO生日按冻结training_qa拆问，非ISO生日保留原问；evaluation_qa保留组件并增加name_full_direct真实生成，其成绩不重复计入主指标。损失及主macro指标按每记录有效原始字段等权，再平均记录；另报field_macro、字段有效样本数、场景/形式和训练已见/未见值指标。max_new_tokens128；公共文本改为中性的56token文本，manual基线32token。每次最多合批4问并重计算解码图；固定私有前文先无梯度prefill，再对U和公共段保留梯度，回答仍只使用公共C的KV。保留全程/前20轮检查点、每轮CSV及损失图。新版无dev文件，development仅从train连接组隔离地派生，禁止用正式验证/测试做tiny检查。累计运行上限30天，正式测试使用完整训练的验证选优best.pt并检查数据和筛选身份。后台脚本scripts/train_multiscene_background.sh及evaluate_multiscene_background.sh，训练后不自动测试，不自动启动正式训练。113项CPU测试及真实样本tiny训练/验证/独立评估流程已通过；未验证真实4B/CUDA多卡。旧配置保留，不用旧四字段检查点恢复新版训练。不新增Markdown报告或ZIP。
+
+最新用户授权（2026-10-20）：已新增三场景数据集方案，医疗保留structured/narrative/dialogue/mixed四形式，金融四形式、人事仅structured/narrative。普通组合各train1000/validation200/test1000，金融对话取全部已核实的SGD银行支付1243条（565/113/565）。新版目录data/dataset_multiscene_v1，配置configs/dataset_multiscene_v1.json；旧dataset_v1和dataset_diagnosis_overlap10保持不变。允许跨来源补充合成字段，必须保留原文本与逐字段来源，并明确association_is_synthetic；不得声称为真实人物跨库关联。姓名全部使用三组件训练：优先来源组件，其余补加可逆的source_order_segments，单名及无中间段保留空字符串；新增分段不声称为真实文化名姓结构。测试保留组件问答与预测重组，另加name_full_direct独立完整姓名问答，单独报告，完整姓名问答不进入训练。生日仅对未改变的ISO完整日期拆年月日。每条记录只对存在的独立字段生成问题，按原字段分组等权；额外原生医疗史/家庭史及金融余额等字段见data_dictionary.json。按primary/donor来源、姓名/住址/证件/电话/邮箱/账户及生日/入职日期/薪资连接分组隔离，有限类别重叠必须实报。构建scripts/build_multiscene_dataset.py，独立复核scripts/validate_multiscene_dataset.py，token与CSV汇总scripts/audit_multiscene_tokens.py。原medical_kv四字段加载器尚未适配此新schema，不能直接用旧入口声称可训练新版；此次授权仅整理数据，不自动启动训练。不新增Markdown报告，不打包ZIP。
+
+最新用户授权（2026-10-18）：姓名改为name_mode=parts，使用source_name_fields中的FIRST/MIDDLE/LAST原字符串生成name_first/name_middle/name_last三问；MIDDLE空字符串训练EOS-only，禁止填造名字或以金标准决定拼接时忽略预测。姓名三项NLL先平均，生日三项先平均，再与地址、诊断四组等权；每患者8次生成，CSV另保存name和birth_date两条reconstructed行，共10行，宏EM仍四字段。数据及private_prefix不改。默认旧配置name_mode=full，旧检查点评估默认继承full；新检查点在无显式配置时继承训练name_mode，显式跨提问协议须记录name_protocol_transfer及比较标记。新配置configs/experiment_v4_name_birth_parts_no_negatives.json、评估configs/evaluation_name_birth_parts_overlap10.json均diagnosis_contrastive.enabled=false，完全跳过候选池/抽样/负例前反向。100轮无早停、seed17、全局batch8、学习率0.01、U32及前20轮/全程检查点不变；正式新目录runs/soft_name_birth_parts_no_negatives_seed17_100epochs。新后台脚本scripts/train_name_birth_parts_no_negatives_background.sh及evaluate_name_birth_parts_no_negatives_background.sh；不自动启动正式训练，不新增Markdown报告，不打包ZIP。
+
+最新用户修订（2026-10-18，数量优先，覆盖下述70%硬阈值）：每种诊断的相近候选至少5个，同首字母仍为硬条件，按实际核心词相似度、整句相似度降序。lexical_candidates_per_diagnosis默认5且可增大；lexical_preferred_similarity=0.70仅标记质量，不再作为截断门槛，低于此值需明确报告。检索源主名及别名，但候选核心词必须出现在某个源主名中，排除别名独有错字/缩写、显式同义词/共享编码及简单词形派生；候选只替换原诊断中一个实际单词，生成组合不声称源诊断。每种诊断必须有指定数量不同核心词，不足则报错，禁止重复或伪造占位。训练仍每类每轮抽一个，独立洗牌循环。生成器diagnosis_four_kind_v6_topk_same_initial；缓存data/negative_pools/four_kind_v3_top5，准备runs/diagnosis_four_kind_preparation_v3_top5，正式新目录runs/soft_natural_names_diag_four_kind_top5_seed17_100epochs。20种诊断各5个，共100个不同的诊断级候选，覆盖1000位训练患者；其他三类候选、数据、损失及100轮配置不变。
+
+最新用户修订（2026-10-18，优先于下述旧词形方案）：相近病名负例必须同首字母，核心词编辑相似度默认至少0.70，按核心词相似度、整句相似度降序。允许自行生成组合：将原答案中的疾病核心词替换为词表支持的不同核心词，其他字符保持不变；generated=true并保存修改区间及核心词来源，不声称组合为真实来源诊断。显式同义词/共享编码仍排除，不用弱候选补齐。生成器diagnosis_four_kind_v5_same_initial；缓存data/negative_pools/four_kind_v2_same_initial，准备结果runs/diagnosis_four_kind_preparation_v2_same_initial，正式新目录runs/soft_natural_names_diag_four_kind_same_initial_seed17_100epochs。1000条训练记录新覆盖：遗漏700、部位200、相近病名400、拼写1000，每轮2300负例；相近病名缺项必须报告。其他三类、数据、损失及100轮训练配置不变。
+
+最新用户授权（2026-10-18，覆盖旧五类及测试排除约定）：负例改为四类：完整成分遗漏、疾病适配共享部位替换、拼写相近但不同真实诊断、非规范多位置错字。原①③合并，不再限定值互换；真实病名按词形近邻，不按预设医学相似词对。允许负例与测试答案重叠，但建池不读测试答案/预测。离线源快照 data/negative_resources/diagnosis_v1.json（Synthea全部源病名＋NLM条件词表，剔除procedure及已知显示错字），不需训练时联网或读取conditions.csv。共享部位池 sprain9/fracture38/infection5/otitis2/concussion1，仅使用疾病适配子池，排除原部位及别名；组合不要求完整源记录存在。候选池按不同诊断缓存于 data/negative_pools/four_kind_v1/<身份哈希>.json；池身份含生成代码/资源/规则/正例病名与编码/pool_seed及候选参数，不含训练种子/轮数/LR/GPU/患者其他字段。训练直接加载命中缓存，pool_seed与cfg.seed分开；每患者每轮各类最多一个，共1至4个，固定池内候选上限5不补齐。cfg仍为configs/experiment_v3_diagnosis_contrastive.json，新输出runs/soft_natural_names_diag_four_kind_seed17_100epochs。原数据、v2、100轮无早停及原损失外层/检查点/CSV不变。后台脚本scripts/train_diagnosis_four_kind_background.sh、prepare_diagnosis_four_kind_background.sh，不自动启动正式训练。用户要求后续不新增Markdown报告；候选、审计和复核只用JSON，直接在对话说明。
+
+用户最新授权（2026-10-17，优先于下述旧负例约定）：五类候选池加患者/轮次抽样已实施，生成器 diagnosis_pools_v3_multiedit。第②③④类仅匹配实际训练子集患者的原始 conditions.csv 历史中、排除测试完整答案及编码后的源诊断；必须是完整源诊断且只变化一个成分，不任意拼接。规则在 configs/diagnosis_negative_rules.json。每类上限五候选，每轮每患者每个可用类别抽一个，不补齐缺项；固定种子/record_id/类别/轮次周期的洗牌遍历，续训及 rank 划分不改变抽样。拼写随机1至3次替换/遗漏/插入/重复/换位/局部倒序，可多词多位置，轻度为主。训练患者历史173种，测试排除后47种；当前严格匹配实际仅细节遗漏550条和拼写1000条，每轮1550负例，第②③④类均0，不能宣称五类全覆盖。保留缺项及全轮抽样分布，绝不将拼写当其他类别。可选 training_predictions_csv 仅接受实际训练子集，为已有合法混淆候选排序，默认为null并标记未验证困难度。新输出 runs/soft_natural_names_diag_pools_seed17_100epochs，准备产物 runs/diagnosis_pools_preparation_v3。保留原数据、v2、100轮超参数、损失外层系数及检查点/CSV流程；服务器需额外同步原始 conditions.csv，不自动在本地或服务器启动正式训练。
+
+用户最新授权（2026-10-17）：原文改写负例换成拼写错误，第6类续写/重复负例已取消。诊断负例现为细节遗漏、部位替换、限定词变化、病名混淆、拼写错误五类，每类最多一个，缺项明确报告，不用重复拼写或格式变体补齐。生成器diagnosis_corruptions_v2_spelling，配置max_negatives_per_record=5；实际每条1至5个负例，损失按患者实际个数取均值后再平均患者。当前1000条正例有2050条负例（其中1000条拼写错误），不是固定5000条；部位替换/病名混淆仍受训练材料与测试排除约束而缺失，必须报告。新目录runs/soft_natural_names_diag_spelling_seed17_100epochs，新候选runs/diagnosis_contrastive_spelling_preparation_v2。原数据、v2配置、其他字段、原100轮超参数、验证选优与前20轮快照不改；仅诊断组加weight/4*mean hinge，weight/margin0.2。排除两套测试全部131种完整诊断值及有源编码时的相同编码；不读取测试预测生成候选。旧6000条候选不再使用，恢复需原候选指纹一致。评估仍自由生成六问，不启用CAD、蒸馏或离散搜索。
+
+用户最新授权（2026-10-17）：允许用既有编号姓名训练得到的best.pt评估当前自然姓名测试集。使用evaluate --condition soft --allow-name-format-transfer显式执行，结果必须标注name_format_transfer=true及训练/评估姓名格式；保持模型、分词器、缓存及生日提问模式兼容检查和正式测试验证选优检查。该选项仅用于迁移评估，不允许恢复旧训练；下文“必须重新训练/旧检查点不能评估”仅指姓名格式匹配的训练结果，不能阻止此次已授权的迁移评估。不改数据或旧预测。
+
+用户最新授权（2026-10-17）优先于下述旧约定：所有既有训练、验证、测试、开发、预览及本实验源患者数据中的FIRST/MIDDLE/LAST/MAIDEN末尾数字已直接移除，不保留编号姓名的数据集或旧ZIP。保留其他字符、重音及内部空格；生日、地址、诊断、患者和划分不改。姓名QA、private_prefix、源患者行、token长度、清单和哈希同步更新。格式为natural_no_numeric_suffix_v1，已纳入数据加载与检查点协议；必须重新训练，旧编号检查点/预测不可混用于当前数据。历史输出仅保留为旧格式证据，不改写原分数，标记见runs/LEGACY_NAME_FORMAT.json。新默认训练目录runs/soft_natural_names_birth_parts_seed17_100epochs。迁移报告data/name_naturalization_report.json。原源患者CSV已按授权修改，encounters和conditions未改；预览改读data/source/preview_csv，原ZIP已删除。生成开关为false，禁止再引入带数字的姓名训练/测试数据。
+
+用户最新确认本实验所有项目配置统一保存在根目录configs/；CLI默认值、脚本、测试和说明统一使用configs/。不得另建config/造成两套配置。
+
+用户2026-10-17授权仅调整测试集诊断，使按患者统计的训练已见完整诊断值比例不超过10%，其他三个目标字段不改。已单独生成data/dataset_diagnosis_overlap10：同1000位测试患者及顺序，900位改选同一患者原始病史中的训练未见disorder诊断，100位保留原诊断；对应SYSTEM+CODE也是10%。诊断修订本身不改变其他字段；所有版本的姓名按上文最新授权同步去号。构建配置configs/diagnosis_overlap10.json，评估配置configs/evaluation_diagnosis_overlap10.json，构建/只读复核脚本scripts/build_diagnosis_overlap.py。private_prefix仅允许在新版中更新诊断行，QA仅更新诊断答案，同时同步真实condition/encounter溯源及token长度。禁止翻译、编造病名或把他人的诊断移给该患者。选择不读取预测或模型成绩。10%指患者比例，去重病名类别比例需另报（当前17/128=13.28%）。必须使用自然姓名版新训练的best.pt评估；改变诊断会影响缓存，必须重新生成六问，不能拼接旧预测。此版本作为补充评估保留原结果。
+
+当前方法使用configs/experiment_v2_birth_parts.json：100轮，early_stopping=false，生日拆为birth_year/birth_month/birth_day三个独立问题，目标直接截取原日期字符串，保留前导零。现有数据已执行一次授权姓名去号，随后保持冻结；新版诊断补充测试按对应规则生成。训练每个答案token均值后，年月日三问取均值作为生日组，再与姓名、地址、诊断四组等权。每条实际6问；CSV保存6条实际生成及1条标记reconstructed的完整生日评分行，200位患者共1400行。宏平均仍为原四字段，生日使用独立预测拼接后的严格EM，不补零或纠错。
+
+连续训练保存best.pt（全程验证最佳）、final.pt（完整训练最后）、best_first20.pt（前20轮验证最佳）、last_first20.pt（第20轮结束），另有每步latest.pt用于恢复。第21轮以后不得覆盖前20轮快照。checkpoint_results.json记录各检查点轮次、指标与已保存CSV路径。新方法必须新开目录，不能恢复旧方法继续训练。保留experiment_v1.json用于历史配置；100轮余弦调度的前20轮不等于旧20轮调度，严谨拆问对照采用同100轮配置加--birth-date-mode full。后续训练、测试示例均使用nohup后台命令及明确路径，不打包ZIP。
+
+每轮验证必须保存每位患者每个问题的完整CSV回答到validation_predictions/epoch_XXX_step_XXXXXX/predictions.csv，并保留JSONL、元数据、汇总及validation.jsonl中的文件路径；不得只存准确率。各卡先写中间结果，rank 0汇总CSV；已有尝试不得覆盖。独立evaluate也输出CSV。服务器使用从hijackkv克隆的medical_privacy独立环境安装依赖，不直接改原hijackkv环境。
+
+当前用户要求暂不启用离散文本搜索，以节省时间。保持hard.enabled=false，不自动运行train-hard或hard评估；默认测试及烟测只走连续训练路线。待用户明确恢复离散路线后再启用。
+
+用户只在与kv_priv相同的Linux/CUDA服务器运行，不提供或调试Windows分布式路线。模型路径沿用/home/kevin/models/Qwen3-4B；服务器依赖requirements-server.txt保留原CUDA PyTorch及transformers 4.57.1，CPU验证环境4.57.6也保留支持。支持--gpus自选卡号，当前六问默认合批；多卡全局batch仍为8，不得因卡数扩大训练目标或重复样本。仅同步共享U梯度；rank 0写主产物，各rank随机状态进入检查点；续训卡数须一致。真实多卡NCCL检查未执行不得写为已验证。
+
+用户指定本目录为医疗就诊记录通用引导方案后续的工作目录。默认将本方案的数据、代码、配置、文档及结果放在本目录；已有其他实验目录仅作参考。
+
+先阅读 README.md 和 data/preview_100/manifest.json。用户已确认场景为个人医疗档案，四个目标字段为姓名、出生日期、家庭住址和诊断。源患者Id、就诊Id及就诊START仅用于溯源和分组，不作为目标，也不进入private_prefix。
+
+用户明确要求不替换、不翻译，尽量保持源样本内容。去除Synthea姓名末尾数字，保留原BIRTHDATE、原ADDRESS和英文诊断。禁止中文姓名、诊断译名和新增MR编号。完整姓名仅拼接原FIRST/MIDDLE/LAST，原分量也须保留。保持逐记录溯源、原快照哈希及当前去号源文件哈希。
+
+当前10条仅供格式审阅，不作为最终验证或测试。正式划分以患者为单位；同一患者及其改写、反事实样本不得跨集合。
+
+正式数据还应对同名或同住址患者分组，避免身份/家庭在训练、验证、测试间交叉；出生日期和诊断允许重复，但应核对分布。
+
+预览已扩展为data/preview_100中的100位患者，包含原10位，不能合并计数。全部已展示源患者不进入最终验证或测试；进一步工作同时读取data/preview_100/manifest.json。
+
+训练所有记录共享一份引导。回答时仅保留公共文本C的KV，不保留私有记录P和引导U的KV。未运行的实验不得描述为已验证。
+
+正式2,328条数据已构建于data/dataset_v1，验收报告validation_report.json为PASS。先读取该目录数据集说明.md、manifest.json及validation_report.json。开发128、训练1,000、验证200、测试1,000，每条4问。
+
+正式源CSV位于data/source/candidates_5000/csv，生成器及运行时在tools，固定生成和划分配置在configs。源快照、正式划分及标签表已冻结；修改方法不得根据测试输出适应性改数据或挑样本。重建以build_dataset.py、validate_dataset.py、finalize_dataset.py为准，避免覆盖生成源CSV。
+
+实验入口为python -m medical_kv，先阅读实验代码使用说明_v3.md。实现验证用tests/和--tiny --development；正式4B在服务器运行，不将随机tiny模型分数称为恢复实验结果。支持transformers 4.57.1及4.57.6、Qwen3全注意力、eager attention，显式区分物理cache_position和RoPE position_ids。
+
+训练使用四隐私组等权监督，只更新一份共享U；生日拆问及检查点规则以上文当前方法为准。允许训练时读取训练标签，不继承其他目录逐样本恢复方法的无标签约定。代码不从其他实验目录导入运行逻辑。精确恢复须核对配置、代码、数据、模型身份；异常不得自动重试或静默记0分。

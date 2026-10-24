@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "generator": "diagnosis_pools_v3_multiedit",
+  "tests": {
+    "transformers_4_57_6": {
+      "passed": 67,
+      "discrete_deselected": 3
+    },
+    "transformers_4_57_1": {
+      "passed": 67,
+      "discrete_deselected": 3
+    }
+  },
+  "full_pool_fingerprint": "82f38325292d902714c615a511cc926aa7c1426d6efa87cc8a1b2f02ff0d988c",
+  "dataset_identities": [
+    {
+      "dataset_id": "synthea_medical_privacy_natural_names_v1",
+      "manifest_sha256": "6233ef37c89f830d3363ae6172517ae5e9ab4d438c756e84883fd2b6ddaff102",
+      "split_sha256": {
+        "dev": "2416bd829160b5899d6f915a5e6eba340ec59c60c85cf4ceaf5832d6793fec58",
+        "train": "19ed4edcc99f5ded311b502593cce35eb09367838a3d5de25632932c81d31a79",
+        "validation": "14aa21e15f21fcb47b636db20a78006e44307fa9f52ec38a4045710d95a4064b",
+        "test": "c78829832affb00d9893012b8de09ffc4916c41aa2dbf07e9ead78ba225e47ff"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    },
+    {
+      "dataset_id": "synthea_medical_privacy_natural_names_diagnosis_overlap10_v1",
+      "manifest_sha256": "7fba97a83d874d9c8794bf56c6342bd39735c703ddf43b7545ff6e33afd9915a",
+      "split_sha256": {
+        "dev": "2416bd829160b5899d6f915a5e6eba340ec59c60c85cf4ceaf5832d6793fec58",
+        "train": "19ed4edcc99f5ded311b502593cce35eb09367838a3d5de25632932c81d31a79",
+        "validation": "14aa21e15f21fcb47b636db20a78006e44307fa9f52ec38a4045710d95a4064b",
+        "test": "6759838701555ac7cb479dacadad7b46a4fac099cd7fea2a82ec3f5ea6d54a36"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    }
+  ],
+  "source_conditions_sha256": "f4918a119f3e9b2644fef2995d321b7c6ee61f3327a0344c9700691dbe4afd3f",
+  "full_pool_test_overlap": 0,
+  "source_evidence_training_patients_only": true,
+  "tiny_smoke_epochs": 2,
+  "free_generation_csv_rows_per_patient": 7,
+  "real_4b_cuda_nccl_tested": false,
+  "active_kinds": {
+    "detail_omission": 550,
+    "spelling_error": 1000
+  },
+  "missing_active_kinds": [
+    "detail_substitution",
+    "qualifier_change",
+    "label_confusion"
+  ]
+}

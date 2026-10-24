@@ -1,0 +1,1528 @@
+
+=== PAGE 1 ===
+Depth Gives a False Sense of Privacy:
+LLM Internal States Inversion
+Tian Dong and Yan Meng, Shanghai Jiao Tong University;
+Shaofeng Li, Southeast University; Guoxing Chen, Zhen Liu,
+and Haojin Zhu, Shanghai Jiao Tong University
+https://www.usenix.org/conference/usenixsecurity25/presentation/dong-tian
+This paper is included in the Proceedings of the
+34th USENIX Security Symposium.
+August 13–15, 2025 • Seattle, WA, USA
+978-1-939133-52-6
+Open access to the Proceedings of the
+34th USENIX Security Symposium is sponsored by USENIX.
+
+=== PAGE 2 ===
+Depth Gives a False Sense of Privacy: LLM Internal States Inversion
+TianDong1,YanMeng1,(cid:66) ,ShaofengLi2,GuoxingChen1,ZhenLiu1,andHaojinZhu1,(cid:66)
+1ShanghaiJiaoTongUniversity,{tian.dong,yan_meng,guoxingchen,zhu-hj}@sjtu.edu.cn
+2SoutheastUniversity,shaofengli@seu.edu.cn
+Abstract application in sensitive domains and commercial coopera-
+tion[1].Moreover,asthemodelscalecontinuestogrow(e.g.,
+LargeLanguageModels(LLMs)areincreasinglyintegrated
+Llama-3hasasizeupto405B[2]),asingleservercanmerely
+intodailyroutines,yettheyraisesignificantprivacyandsafety
+loadthemodelinonepiece,letaloneswiftinference.
+concerns.Recentresearchproposescollaborativeinference,
+Therefore,collaborativeinference[3,4,5]hasbeenwidely
+whichoutsourcestheearly-layerinferencetoensuredatalo-
+appliedtoenforcedatalocality,wheretheshallowlayersare
+cality,andintroducesmodelsafetyauditingbasedoninner
+storedonthelocaldeviceandonlytheInternalStates(ISs)
+neuronpatterns.BothtechniquesexposetheLLM’sInternal
+aretransmittedtothecloudforcontinuousinferenceonrest
+States(ISs),whicharetraditionallyconsideredirreversible
+layers.Meanwhile,tomeettherequirementsoftrustworthy
+toinputsduetooptimizationchallengesandthehighlyab-
+Artificial Intelligence (AI) [6],ISs can also be exposed to
+stractrepresentationsindeeplayers.Inthiswork,wechal-
+a third party for safety auditing,as ISs of deep layers can
+lenge this assumption by proposing four inversion attacks
+be leveragedto robustly identify factualerrors [7, 8, 9, 10,
+thatsignificantlyimprovethesemanticsimilarityandtoken
+11],defendjailbreaks,backdoors[12,13,14],ormanipulate
+matchingrateofinvertedinputs.Specifically,wefirstdevelop
+internalrepresentationsofthemodel’sconcepts[15,16,17].
+two white-box optimization-based attacks tailored for low-
+depthandhigh-depthISs.Theseattacksavoidlocalminima ThepotentialexposureofincreasinglyusedISsraisesour
+convergence,alimitationobservedinpriorwork,througha researchquestion: Can we invertthe inputquerybasedon
+two-phaseinversionprocess.Then,weextendouroptimiza- the ISs,even in highly deep LLMs? Current embedding in-
+tionattackundermorepracticalblack-boxweightaccessby version[18]assignstrainablevariablestoeachinputtoken
+leveragingthetransferabilitybetweenthesourceandthede- andselectsthecandidatetokensviaoptimization,whichis
+rivedLLMs.Additionally,weintroduceageneration-based proven effective on conventional Language Models (LMs)
+attackthattreatsinversionasatranslationtask,employingan (e.g.,BERT). Recent works show that text embeddings or
+inversionmodeltoreconstructinputs.Extensiveevaluationof modeloutputs[18,19,20]canbeusedtoinvertinputs.These
+shortandlongpromptsfrommedicalconsultingandcoding attackstraingenerativeinversionmodelsconditionedonob-
+assistancedatasetsand6LLMsvalidatestheeffectivenessof servedembeddingsoroutputs.
+ourinversionattacks. Notably,a4,112-tokenlongmedical Yet,simpleadoptioncannotworkwellforISsbecauseof
+consultingpromptcanbenearlyperfectlyinvertedwith86.88 twonewchallenges. First,ISsaredesignedforsubsequent
+F1tokenmatchingfromthemiddlelayerofLlama-3model. inference and contain abstract logical representations [17],
+Finally,we evaluate four practical defenses that we found whichareinherentlydifferentfrompreviouslystudiedembed-
+cannotperfectlypreventISsinversionanddrawconclusions dingsormodeloutputsofhighsemanticallyrelevancewith
+forfuturemitigationdesign. inputs.Second,LLMshavesignificantlymorelayers,higher
+width,andlargerdictionarythanLMsstudiedinpriorwork,
+whichfurtherhinderstheinversion,especiallyforISsofdeep
+1 Introduction
+layersbecauseoffeaturelossbasedontheinformationbot-
+tleneck [21]. Therefore,we need more powerful inversion
+Despite its widespread application,the large size of Large
+attackstoevaluatetheprivacyriskofISs.
+LanguageModels(LLMs)prohibitsfastinferenceonlocal
+Inthiswork,wearethefirsttoexploretheinversionfea-
+devices,forcing users to sendtheirinputs (a.k.a.,prompts)
+sibility of ISs by proposing both optimization-based and
+tothecloudandriskprivacyleakage.Thisalsoimpedesthe
+generation-basedattacksadaptingtowhite-boxaccessand
+(cid:66)YanMengandHaojinZhuarecorrespondingauthors. black-boxaccesstomodelweights.Specifically,ourwhite-
+USENIX Association 34th USENIX Security Symposium 1629
+
+=== PAGE 3 ===
+boxattacksaredesignedfortheadversary(e.g.,curious-but- • We are the firstto systematicallyinvestigate the input
+honestinferenceserver)whocanexploittheweightstoop- inversion risk of LLM ISs. Our work reveals that an
+timizetheinputtextwithnearlyexactandcorrectlyordered attackercansuccessfullyrecoversensitivepromptsof
+tokens without any assumption on input distribution. Our LLMs,spanningupto4,112tokens,fromtheirISs.
+black-boxattacksaresuitableforathird-partyadversary(e.g.,
+• Toovercomethechallengesofsemanticspasticityand
+LLM auditor) who can probe the ISs for analysis and can
+feature loss from high-depth layers, we propose four
+trainaninversionmodelbasedonherownsurrogatedataof
+novelinversionattacksadaptingtobothwhite-boxand
+similardistributiontothevictim’squeries.
+black-boxattacksettings.
+Since searching forthe optimal token sequence through
+bruteforceisinfeasible,weintroduceanoveltwo-phasein- • Weextensivelyevaluateourattacksonsensitiveinputs
+versionfortheoptimization-basedattack:wefirstinvertthe includingmedicaldialoguesandcodingassistance.We
+inputembeddingsandthenrecoverthecorrectinputtokens. alsoevaluatedDP-baseddefenseandfoundourattack
+Forshallow layers,ourattack,Embedding Recovery (ER), canstillinvertinputofhighsemanticsimilarityevensig-
+producesembeddingsofcandidateinputsbyminimizingthe nificantlysacrificingthedownstreaminferencequality.
+distance of its ISs to the target. Then,the tokens with the
+closestinputembeddingtotheoptimizedembeddingarese-
+2 Preliminaries&Motivation
+lected.Thistacklesthelarge-dictionarychallengebyavoiding
+searchingoversignificantlyhugetokencombinationspace.
+In this section,we first briefly introduce the modern LLM
+Fordeeplayers,ERcanfailbecauseofgradientexplosion.
+implementation,theriskofISexposureandoverviewexisting
+We propose Token Basis Selection (TBS) that determines
+inversiontechniques.
+the optimal combination among base vectors of input em-
+beddingspaceastheinvertedembeddingsforfurthertoken
+inversion.Thistacklesthehigh-depthchallengebyreducing 2.1 LanguageModeling
+optimizedvariablesandavoidinglocalminimaencountered
+WebeginwithabriefrecapofhowmodernLLMsprocesses
+intheprevioussolution[18].
+the texts. Formally, an input text (a.k.a., prompt) x is first
+Withoutaccesstothetargetmodelweights,wefirstextend
+tokenized by the tokenizer T of an LLM f into a string
+f
+ouroptimization attacks to the black-boxsetting byidenti- of tokens T (x):=tx =[tx] where each token is
+fying whether the target is derived from adversary-known f i {i=0,···,N T }
+markedwithanIDt boundedbythemaximumtokennumber
+i
+LLMs,basedonourinsightsthatalargenumberofLLMsare
+N , i.e.,t ∈ [0,···,N ]. The token IDs are then mapped
+T i T
+derivedfromexistingonesinsteadofpretrainedfromscratch. by the input embedding layerEf of weight w f ∈RN T ×din
+Forthegeneration-basedattack,weregardtheISsasanen- in
+intothesub-matrixofcorrespondingrowvectorsEf(tx):=
+codedlanguageandusetheencoder-decodermodels,which
+[w f (tx)] .Wedenotethefirstl Transformerlayers
+arecommonlyusedin machinetranslation,forinputinver- in i {i=0,···,Nt}
+sion. Totacklethechallengeofrepresentationdiscrepancy ofanLLM f isψ f .TheISsofthel-thlayerofanLLMare
+l
+betweenISsandsemanticmeaning,weproposeaprojection h f .Puttogether,giveninputtextx,theISsatl-thlayerofan
+l
+modulethatalignstheISswiththeencoderforinversionwith LLM f areh f(x)=ψ f(Ef(T (x)).
+l l f
+thedecoder.
+Ourevaluationsinclude6real-worldhigh-rankingLLMs,
+2.2 Motivation
+bothshort-contextprompts,asadoptedinexistingworks,and
+additionallong-contextpromptsonmedicalconsultingand InLLMservice,maintainingtheconfidentialityofISsisnot
+codingassistance.Theresultsdemonstratetheinversionef- alwaysguaranteed.WeidentifytwoscenariosinwhichISs
+fectiveness.Forexample,givenISsfromthemiddlelayerof maybeexposedtoanuntrustedpartyforinversion.
+Llama-3-8B-Instruct,ourTBSattackcaninvertinputof LLM Alignment & Concept Engineering. LLMs are
+4,112tokenswith86.88F1tokenmatchingand95.19seman- notorious for hallucination, which can deceive and misin-
+tic similarity which cannot be reached by prior work. Our form the user. Therefore,LLMs are persistently surveilled
+generation-basedattackcan alsoachieve81.6F1scorefor for safety reasons. Recently, a growing number of stud-
+inputsofmediumlength(i.e.,∼1ktokens)whichiscompa- ies[8,9,10,12,17,28]showthattheISsarerobustindicators
+rabletothewhite-boxattack. Lastly,wetestfourdefenses ofhallucination.ThisprovidesLLMholderswithapromis-
+includingquantization,dropout,noisyinputembedding,and ing solution to correct model behaviorin the runtime [11].
+Differential Privacy (DP) through the Laplace mechanism. Forinstance,insteadofdirectlyexaminingtheprompts,Ope-
+Ourblack-boxattackcannotbemitigatedwithoutgreatlydete- nAImayrunanautomatedsafetyclassifiertoimprovetheir
+rioratingthemodelutility,callingformoreeffectivedefenses servicesbasedontheclassifier-generatedmetadatabasedon
+inthefuture. policy[29].Besides,ISsarealsorequiredinrepresentation
+Insummary,ourcontributionsare: engineering[15]tocontrolthemodelconcept.
+1630 34th USENIX Security Symposium USENIX Association
+
+=== PAGE 4 ===
+Table1:Comparisonwithpreviousinversionattacksagainst(large)languagemodels.
+Weight InversionGoal Evaluation
+InversionTarget Method
+Access Semantic-preserving TokenMatching AttributeInference Max.ModelSize1 DataTypes Max.DataLength
+Generation ✓ ✗ ✗
+Embeddings[18,19,22,23] Optimization (cid:32) ✗ ✓ ✓ 110M Chats,Medicine 422
+Outputs[20,24] Generation (cid:35) ✓ ✗ ✗ 7B SystemPrompts,Chats 256
+Gradients2[25,26,27] Optimization (cid:32) ✓ ✓ ✗ 7B Chats,Code,Math 512
+InternalStates(Ours) O G p e ti n m er iz a a ti t o io n n (cid:35) (cid:32) ✓ ✗ ✓ ✗ ✗ 70B Medicine,Code 4,112
+1Onlyformodelswithpubliclyknow(cid:35)nsize.2Attackstargetingtrainingdatainsteadofinputtexts.
+Collaborative&TEE-shieldedLLMInference.Several trainable parameters, causing previous optimization-based
+solutions[3,4,5,30]havebeenproposedforlayer-wiseLLM inversion[18]tofailbecauseoffallingintolocalminimaon
+splittingandpartitioningtoaccelerateLLMservingcapacity. highlycompressedISs(seeSection4).
+Forinstance,EdgeShard[5]dynamicallyshardsmodelsonto
+Inference-orientedandcomplexrepresentations.Previous
+edgedevicesforcloserLLMdeploymenttothedatasource.
+embeddinginversionattacksfocusedonsentenceembeddings
+PETAL[30]allowsseveralserverstocollaborativelyinferor
+whicharetypicallyoptimizedforsemanticrelevancebased
+finetunemodelsupto405Bthroughlayer-wisemodelsplit-
+on mean-pooled encoder outputs [33]. On the contrary,in
+ting.HELIX[4]exploitsheterogeneousGPUsfromdifferent
+the context of LLMs,the ISs are generated for continuous
+regionsintheglobe.Besides,thesplitmodelcanbeloaded
+inference,thus contain more sparse semanticfeatures than
+inTrustedExecutionEnvironment(TEE)toprotectinputpri-
+semantically-enhancedembeddings. Inaddition,theISsof
+vacy[31,32].Inbothsettings,thepartyholdingrestmodel
+deeplayerscontainahigherlevelofconceptabstraction[15,
+layersreceivesandinfersISs.
+34]likereasoning,whichfurtherincreasesthedifficultyof
+accurateinputinversion.
+2.3 Challenges Inthiswork,wesystematicallyanalyzetheinversionrisk
+ofISsbyaddressingtheaforementionedchallengesthrough
+TherehasbeenalineofworkstudyinghowtheLMsleakthe noveloptimization-basedandgeneration-basedattacks.More
+userinputtexts.Forexample,thetextembeddingsareshown importantly,wevalidatetheeffectivenessoftheseattacksin
+atriskofleakingtheinputtextthroughinversionattacksin practicalsettings,assummarizedinTable1.
+bothwhite-boxandblack-boxsettings[18,19].Recently,it
+hasbeenshownthattheuser’sinputpromptcanbeaccurately
+reconstructedwithonlytheLLMlogits[24]oroutputs[20].
+Thegradientsinfederatedlearning[25,26,27]canalsoleak
+3 ThreatModel
+the training texts by inversion attacks. Technically,the in-
+versioneitherattemptstolocatethecandidateinputtokens
+(without considering their relative positions) through opti-
+We consider a curious-but-honest adversary. For example,
+mization(Optimization-based),ortrainsagenerativemodel
+amaliciousthird-partyauditorauthorizedtoaccessISsfor
+with surrogate data for inversion conditioned on observed
+safetyauditing[7,8]canstealthilystoretheobservedISsfor
+embeddings(Generation-based).
+theofflineinversion.Inthecontextofcollaborativeinference,
+Ourworkisthefirsttoexplorethefeasibilityofinputinver- theadversaryserverhostingmiddlelayersorbottomlayers
+sionthroughISsasanLLMinnerrepresentation.Applying ofthedeployedLLM,receivesISsofthesplittinglayerand
+existingembeddinginversiontechniquesonISscanresultin sends results to the next party following the protocol with
+poorinversionduetothedifferencebetweentextembeddings theclientandotherservers[4,30].Theservercanallocate
+andLLMISs.Weidentifytwonewchallenges: partialcomputationalpowertoinverttheuserqueriesbased
+Increasedmodelscaleandtokendictionarysize.Ingeneral, onknowledgeofsplittinglayersandobservedISs.
+LLMshaveadeeperlayeredarchitecture,highermodelwidth,
+andlargertokendictionarythanconventionalpretrainedLMs, AdversaryGoals.TheadversaryA aimstoinverttheinput
+f
+makingitalmostimpossibletogettheexactinputasthevic- texts/promptsofvictimV basedontheobservedISsh V(x)
+l
+timthroughthedictionaryattack.Forexample,typicalbase ofgroundtruthinputsxandhermodel f .Theinvertedtexts
+A
+BERTonlycontains110Mparameters,12layerswithwidth shouldpreservethesemanticsandexacttokensasthevictim’s
+768andaround30kdictionarysize,whilemodern8BLlama-3 input.Notethatthisgoalisharderthanprivacyattributeinfer-
+contains32layersofwidth4,096andmorethan120kdictio- enceandcanbeappliedforfurtheranalysis(e.g.,Personally
+narytokens. Thelargermodelscalesignificantlyincreases IdentifiableInformation(PII)oruseridentification[35]).For-
+USENIX Association 34th USENIX Security Symposium 1631
+
+=== PAGE 5 ===
+reyaL
+gniddebmE
+User: This is the content of
+an email: I was told to
+RSVP to you for the Christmas Party. My wife Ann South and Myself Steve South Will attend. I am ENA gas trading. What was the subject line for this email?
+1
+reyaL
+remrofsnarT
+2
+reyaL
+remrofsnarT
+k
+reyaL
+remrofsnarT
+n
+reyaL
+remrofsnarT
+detcennoc
+-ylluF
+Hallucination Detection For good For bad T w h a i s s t i o s l d th t e o c R o S n V te P nt t o o f y a o n u e \\ m \\ a th il e : I
+Jailbreak Detection Christmas Party. My wife Ann
+Inversion South and Myself Steve South Will 1. Weight Over-refusal Prevention attend. I am ENA gas trading What Access?
+was the subject line for this email?
+LLM confidence
+0.04
+0.02
+0.05 . Next token … … . Answer: 0 0 . . . . 2 6 E t b h o v y e i f r n r y i k e o n n a d c b e fr o a o u n m d t f a o m u w r y h y i e l e e a x , r s I - ago…
+Figure1:Acurious-but-honestLLMsafetyauditororcollab-
+orativeinferencepartycanobserveISsandrecoverthenearly
+exactuserinputsevenindeeplayers(falseinvertedtokens
+areinred).
+mally,theISsinversionis
+xˆ=argmind(h fA(x′),h f V(x)),
+l l x′∈domT (1)
+s.t.S(x′,x)≥τ
+S
+, (cid:12) (cid:12)T
+fA
+(x′)∩T
+fA
+(x) (cid:12) (cid:12)/ (cid:12) (cid:12)T
+fA
+(x) (cid:12) (cid:12)≥τ
+tm
+wheredomT denotesthetokenizer’sinputdomain,disthe
+distancemetricbetweentwoISs,Sevaluatessemanticsimilar-
+ity,τ (resp.,τ )isathresholdofS(resp.,tokenmatching).
+S tm
+AdversaryKnowledge.Weassumetheadversaryknowsthe
+layer l of ISs and consider two settings: 1) The adversary
+haswhite-boxaccesstotheweights(i.e., f = f ).Forin-
+A V
+stance,thecollaborativeinferencePETAL[30]requiresthe
+adversaryservertoknowthewholeweightssoastoselect
+itslayersduringtheloadbalancing[4],thusknowthelayer
+indexforattacks;2)Theadversaryhasnoknowledge(black-
+boxaccess)ofthemodelweightsandcanonlyobservethe
+ISs. A typical example can be third-party model behavior
+auditing[7,8,9,36]byprobingISsofspecificlayers1forthe
+layer-specificdetectortraining[37].
+AdversaryCapacities.Weconsiderpassiveattacksthusthe
+adversary cannot interact with user or manipulate the de-
+ployedmodel.However,theadversarycanstoretheobserved
+ISsh (weomit f andxforsimplicity)fromthetargetmodel
+l V
+f andhavecomputationalresourcesenoughforinversion
+V
+but insufficient for brute force search. The adversary can
+alsoquerythetargetmodeltoobtainISsofherowneddata
+X whichisofdistributionsimilartobutnotexactlyasthe
+A
+victim’squery.Forexample,theadversarymayhavegeneral
+instructiontuningdatabutthevictimqueriesarefromspecific
+domains(e.g.,coding),whicharenotknownbytheadversary
+becauseofnointeraction.
+4 InternalStatesInversion
+Inthissection,wefirstoverviewtheattacksandclarifytheter-
+minology.Then,weelaborateourattackinsightandmethod.
+1https://github.com/microsoft/TaskTracker/blob/main/
+task_tracker/utils/activations.py
+resU
+yb
+dellortnoC
+Optimization-
+based
+Yes Inversion
+Model
+No Replication Yes Surrogate 2. Derived Data Model?
+Collection
+sreyaL
+remrofsnarT
+Generation-
+based
+Inversion
+Inversion Model
+Training
+Figure2:Overviewprocedureofourattacks.Dependingon
+themodelaccess,theadversarycanadoptouroptimization-
+basedorgeneration-basedattackstoachieveattackgoals.
+4.1 Overview
+Ourattackframeworkproceedsaccordingtotheadversary’s
+knowledge to the target LLM. Figure 2 shows the overall
+workflowofourattacksbasedontheadversary’scapacities.In
+particular,incasesofwhite-boxaccesstothemodelweights,
+ouroptimization-basedattackiterativelyupdatestheinverted
+input by matching the observed target ISs. One important
+advantageisthat,thereisnoassumptionontheknowledge
+ofvictim’s promptdomain andlength(i.e.,data-agnostic).
+Weproposetwoattacks,EmbeddingRecovery(ER)andTo-
+ken Basis Selection (TBS),targeting shallowanddeepISs
+respectively.
+Withoutaccesstotheweights,theadversaryfollowsour
+black-boxattacks.Duetohighcostofpretraining,thetarget
+LLMislikelytobederivedfrompublicopen-sourcemodels
+throughfinetuning ormerging. As a result,the firststep is
+to determine whetherthe targetmodelis derivedfrom any
+known base LLMs type. If it is,the adversary trains a sur-
+rogate model and apply our optimization-based attacks. If
+not,ourgeneration-based attacktrains an inversion model
+basedon the ISs queriedbythe adversary’s surrogate data.
+Totacklethechallengeofsemanticirrelevance,weintroduce
+aprojectionmodulebasedonsparseencoder[20]andtrans-
+lation modelto enhance the inversion. This can be weaker
+than previous white-boxattacks because the knowledge of
+querydatacanlimittheinversionaccuracyincaseofdistinct
+datadistribution.Notethattheblack-boxgeneration-based
+attackcanalsoworkonopen-sourcedLLMs,aslongasthe
+adversaryonlyneedstoobserveISstotraininversionmodels.
+4.2 White-boxInversion
+Wefirstintroducethestrawmanapproach,thenpresentour
+proposedtwowhite-boxattacks,EmbeddingRecovery(ER)
+andTokenBasisSelection(TBS),forinvertingISsofshallow
+layersanddeeplayers,respectively.
+Strawman Approach. Inspired by previous optimization-
+based embedding inversion [18, 38], the strawman attack,
+Token Selection (TS),typically assigns trainable variables
+1632 34th USENIX Security Symposium USENIX Association
+
+=== PAGE 6 ===
+Algorithm1:ER(blue)andTBS(red)attacks
+Input:Theadversary’smodel f withinputembedding
+A
+weightw fA andthefirstlTransformerlayersψ fA,
+in l
+(cid:12)
+theto
+(cid:12)
+kenizerTfA ,targethiddenstatesh
+l
+fA
+oflength
+(cid:12)h fA(cid:12),learningrateµ,optimizeroptim,distance
+Figure 3: Evaluation of strawman attack TS on (cid:12) l (cid:12)
+metricdist,stepsE
+Llama-3-8B-Instruct. The strawman approach, TS,
+Output:Invertedpromptxˆ.
+failstoconvergeonthedeeperlayersevenunderimproved
+1 InitializeL←[],Z←[];
+settings.Moreover,whenattackingthefirstlayer,theinverted
+textscontainnooverlappingtokenswiththeinputtexts. 2 Initializew (cid:98) ←0wherew (cid:98) ∈R (cid:12) (cid:12) (cid:12) h l fV (cid:12) (cid:12) (cid:12) ×din;
+U,∆,V⊤←SVD(w fA)whereV∈Rdin×din.SetB←V⊤;
+in
+Z=[z 1 ,···,z |h|
+]∈R|h
+l
+|×N
+T ofeachembeddingstoinvert 3
+ifAp
+B
+pl
+←
+yU
+V
+nb
+;
+iasedBasisthen
+l
+i-thinputtokenofbyargmax (cid:98) z i ,where (cid:98) z i aretherowsof Initializeprojectionweightsz←[ 1 ]andz∈R (cid:12) (cid:12) (cid:12) h l fV (cid:12) (cid:12) (cid:12) ×din;
+(cid:13) (cid:13)
+din
+Z(cid:98)=argmax(cid:13)
+(cid:13)
+ψ
+l
+(softmax(Z/T)·w
+i
+f
+n
+A)−h
+l
+f V(cid:13)
+(cid:13)
+, (2) // 1. Optimization.
+Z 2 4 fori←1toEdo
+whichisobtainedthroughgradient-basedoptimization.Nev- 5 w (cid:98) ←ϕz (z·B);
+ertheless,TS can fail to locate candidate tokens forLLMs 6 ComputeLinvwithEquation(3)andsaveasL[i].
+withhigherdepthandlargertokendictionaryduetoconver- 7 w (cid:98) ←optim(L[i],w (cid:98) ,µ);Z[i]←w (cid:98) ;
+genceintolocalminimum.InFigure3,weapplyTSonISs z←optim(L[i],z,µ);Z[i]←z;
+fromdifferentlayersofLlama-3-8B-Instructandevaluate
+// 2. Prompt Inversion.
+differentsettings.WeobservethatTSgetshaltedfordeeper
+layersandoutputnon-readableinvertedtexts(morequantita- 8 w (cid:98) ←Z[argmin i L];
+tiveevaluationinSection5.2). 9 w (cid:98) ←ϕz (Z[argmin i L]·B);
+OurApproach.Insteadofdirecttokeninversion,ourintuition 10 w (cid:98) ←W[argmin i L];
+(cid:13) (cid:13)
+istofirstapproximatethedummyinputembeddingsw (cid:98) that 11 t←argmax row [w (cid:98) ·(w i f n A)⊤/(∥w (cid:98) ∥ RN ⊙(cid:13) (cid:13) w i f n A(cid:13) (cid:13) )];
+f RN
+matcheswiththeadversary-observedISsh l V,andtheninvert 12 returnTfA .decode(t);
+thecandidatetokensasthoseofhighestcosinesimilaritywith
+w.Algorithm1showstheoverviewofERandTBSattacks,
+(cid:98)
+wheretheblue(resp.,red)blocksrefertotheER(resp.,TBS)
+whereλbalancestheinversionandthepenalty.
+attack,and the rest is shared by two attacks. Note that the
+modelweightsarefixedduringoptimization. TokenBasisSelection(TBS).Ondeeplayers,thegradientson
+Embedding Recovery (ER). As shown in Figure 6 of Sec- thedummyembedding∇w (cid:98) haveincreasedmagnitudebecause
+ofmoreback-propagatedgradientsfrompreviouslayersac-
+tion 5.2, for shallow layers, the gradients on dummy em-
+cumulatedbythechainrule,whichdestabilizestheinversion.
+bedding∇wareofsmallermagnitude,thuscanavoidlocal
+(cid:98)
+Therefore,ourideaistofindthecorrectprojectionvaluesz
+minimum with stable convergence. Therefore,we directly (cid:98)
+optimize w (cid:98) for ISs matching with L im := d(ψ l fA(w (cid:98) ),h l f V). ofanorthogonalbasisofw i f n A tocomposew (cid:98) ,asillustratedin
+Figure4.IncontrasttoTS,ourTBShasmuchsmallersearch
+CommonchoicesofdincludeL normandcosinedistance.
+p
+space.Forexample,onLlama-3-8B-Instruct,thesearch
+In experiments, we notice overfitting during inversion,
+spaceisreducedby30times(i.e.,4kforTBSv.s.120k+for
+which results in the optimized w of higher norm than em-
+(cid:98)
+beddings from w
+fA
+andcauses incorrecttoken recovery in
+TStorecoveronetoken).ComparedwithER,thegradients
+in onzisstabilizedbecauseofanadditionalgradienttermfrom
+thesecondphase.Thus,toensurewissimilarlydistributedto (cid:98)
+(cid:98) thechainrule∂w/∂zwhichisclosetothesmall-scaledbasis.
+w
+fA,weintroduceapenaltytermbasedondistributionmatch- (cid:98) (cid:98)
+in InspiredbyTS,wealsointroduceavariablechangefunction
+(cid:13) (cid:13)
+ing[39]:L dm =E ϕ∼Pϕ (cid:13) (cid:13) ϕ(w (cid:98) )−ϕ(w i f n A)(cid:13) (cid:13)
+2
+,whereϕdenotes ϕ z thatboundthescaleofz.Forexample,inourexperiments,
+randomGaussianneuralnetworkasuniversalfeatureextrac- weusearctanforϕ z toboundthez·B.Moredetailedanalysis
+torandtheoverlinedenotesaveraging.Inpractice,wesample canbefoundinAppendixA.
+random embedding batches of equal size from w and w f V As the orthogonal basis is not unique, we propose two
+beforeaveragingineachstep.Intotal,theinversi
+(cid:98)
+onlossis
+in
+: strategies:usethebasisVfromSVDdecompositionofw
+fA
+in
+ortheV⊤ asanunbiasedbasis.Figure5comparesthetwo
+L =L +λ·L , (3) strategieswhereweobserveinputembeddingsaremorecen-
+inv im dm
+USENIX Association 34th USENIX Security Symposium 1633
+
+=== PAGE 7 ===
+Embedding rivedfromadversary-knownopen-sourcedones.Specifically,
+Space Input Embeddings theadversaryqueriesapretrainedLLM f withX andobtains
+�� A
+Basis Vectors correspondingISsh f(X ).Theadversarytrainsanautoen-
+l A
+�� � Norm Bound coderonh f(X )todetectthisLLMtype.Byrepeatingthis
+�� Singular Direction processon l vari A ouspretrainedmodels,theadversarytrainsa
+�� �� Projection setofautoencoders{φ} fordetectingLLMs f.Inthetest
+i i i
+time,theadversaryqueries f withX toobtaingiventhe
+�� V A
+f
+Figure4:IntuitionbehindourTBSinversionattack.Instead targetISsh V(X )andharnessestheautoencoders{φ} to
+l A i i
+ofdirectlyselectingcandidatetokensfromalargedictionary, predictinanensembleway:
+ourTBSattackoptimizesweightsamongmuchfewersingular
+basisvectors(e.g.,v i ,v j andv k )torestorethecandidateinput y:=argmin{φ(h f V(X ))|φ(h f V(X ))≤τ}. (4)
+embeddings(e.g.,⃗v). i l A i l A
+i
+Therearetwopossibleoutcomes.First,thetargetLLMis
+derivedfromoneofmainstreamLLMsviafinetuning,adapter
+ormodelmerging. The adversary adopts this LLM forfur-
+ther attack. Second,there is no such LLM,and the model
+parameter is close-sourced. Then,the adversary can reuse
+(X ,h(X ))totrainagenerativeinversionmodel.
+A A
+ExtendedOptimization-basedAttack.Theadversaryaims
+toreplicatethetargetmodelwithasurrogateLLM f that
+A
+satisfies h fA(x)≈h f V(x) for any input x. Inspired by the
+l l
+modeldistillation,weproposetoreplicatetheISswiththe
+pretrainedbasemodel f oftheidentifiedtype:
+base
+Figure5:Comparisonbetweenunbiasedbasisandsingular f :=argmin (cid:13) (cid:13)h fbase(x)−h f V(x) (cid:13) (cid:13) ,∀x ∈X . (5)
+basisofLLM’sinputembeddingmatrixforTBSattack.We A fbase (cid:13) l i l i (cid:13) 2 i A
+showthehistogram ofmaximum andminimum projection
+Then,theadversarythenappliesourwhite-boxattacks(e.g.,
+valuesofinputembeddingonthebasisandfoundthesingular
+TBS)ontothereplicatedmodel f toinvertinputtokensof
+A
+basisismorebiasedtowardsparticulartokengroupsbecause f
+observedISsh V.
+ofhigherprojectedvalues. l
+Generation-basedAttack.Incasewherethemodelisdras-
+ticallydifferentfromtheknownLLMtypes,suchasthetar-
+teredaroundcertainbasisvectorsofV(i.e.,higherprojection getLLMisclose-sourced,weproposetotrainaninversion
+values)wheretheprojectionsofw fA onunbiasedbasisV⊤are modelthattranslatestheobservedISsh f V intoinputs.Sec-
+in l
+moreuniformlydistributed(i.e.,maximumprojectionvalues tion3assumestheadversarydataX ={x} areofsimilar
+A i i
+areboundedaround0.1).Weprovidevisualizationtosupport distributiontothevictim’squery,thus,beforetheattack,the
+theclaiminFigure17ofAppendixA,andfurthercompare adversary firsttrains an inversion modelθ withpreviously
+twobasischoicesinSection5.2. obtained(X ,h f V(X )).
+A l A
+Weuseanencoder-decodermodelθforinversionbecause
+ofitswideusagefortranslationandthattheinversionessen-
+4.3 Black-boxInversion
+tiallytranslatestheobservedISsintoinputtokens.However,
+ThetargetLLMshouldbeeitherfinetunedormergedfrom the ISs are generated forcontinuous inference and deviate
+anopen-sourcedbasemodelorpretrainedasaclose-sourced fromthesemanticmeaning.Besides,thetargetISsmayhave
+model.Theadversaryfirstidentifiesthemodeltypebasedon incompatiblerepresentationspacewiththeencoder(e.g.,dif-
+theobservedISsandthenproceedstheextendedoptimization- ferentdimension).Therefore,weproposetouseaprojection
+basedorgeneration-basedinversion. module ϕ θ :Rdin →Rdenc on top of the inversion model to
+project the ISs into the encoder’s embedding space (width
+ModelTypeIdentification.OurinsightisthattheISsofde-
+f
+d ).Intotal,theinvertedinputisxˆ∼θ(ϕ (h V)).Notethat
+rivedmodelsremainproximatetotheirbasemodelsbecause enc θ l
+theprojectionmoduleisnecessaryforaligningISs.Forin-
+ofminorweightperturbationsduringfinetuningormerging.
+stance,on the middle ISs ofGPT-2,the projection module
+AsevidencedinFigure15,ISsexhibittightintra-modelclus-
+brings32.81%inversionimprovement(F1score).
+teringandclearinter-modelseparationacrosspretrainedar-
+chitectures.Torealizefine-graineddetection,wedesignan AnalysisfromBayesianPerspective.Tobetterunderstand
+ensembleautoencodertocheckifthedeployedmodelisde- our generation-based inversion, we analyze the inversion
+1634 34th USENIX Security Symposium USENIX Association
+
+=== PAGE 8 ===
+Table2:ThestatisticsofLLMconsideredinthiswork. Table3:ComparisonwithpreviousattacksbasedontheISs,
+logitsandoutputs.Wereportthemeanforeachmetricand
+LLM #Params(B) #Token Width Depth thestandarderrorofthemean(SEM).
+LLama-2-7B-chat 6.74 32,000 4096 32
+Llama-3-8B-Instruct 8.03 128,000 4096 32 Attack CS BLEU ROUGE EM F1
+Llama-3.1-8B-Instruct 8.03 128,000 4096 32 TS[18](L=2) 44.24±0.32 0.00±0.00 0.00 0.00±0.00 0.00±0.00
+Llama-3.3-70B-Instruct 70.55 128,000 8192 80 logit2text[24] 88.12±0.57 56.74±1.44 0.72 25.40±0.02 75.22±1.00
+output2text[20] 93.26±0.33 55.00±1.46 0.77 16.21±0.02 75.94±0.99
+Qwen2.5-7B-Instruct 7.62 151,643 3584 28
+Qwen2.5-Coder-7B-Instruct 7.62 151,646 3584 28 ER(L=2) 94.24±0.47 74.89±1.56 0.87 52.61±0.02 88.22±0.90
+ER(L=8) 95.74±0.38 72.91±0.94 0.89 6.05±0.01 87.86±0.69
+TBS(L=8) 90.96±0.82 77.38±1.55 0.83 48.23±0.02 82.61±1.44
+TBS(L=16) 83.70±0.99 59.89±1.88 0.70 31.73±0.02 69.13±1.72
+basedonBayes’theorem.Theinversioncanbeformulated TBS(L=24) 88.07±0.83 65.47±1.69 0.77 27.35±0.02 75.32±1.53
+TBS(L=32) 81.34±0.60 32.67±1.19 0.62 3.97±0.01 55.97±1.02
+as argmax p(x|h,θ),where we omit the projection ϕ for
+x θ
+simplicity.WecanapplytheBayes’stheoremandobtain
+reproducibility, we use an open-source embedding model
+p(h|x,θ)p(x|θ)
+p(x|h,θ)= . (6) bge-large-en-v1.5 [43] of edge-cutting performance on
+p(h|θ)
+MassiveTextEmbeddingBenchmark[44,45].Inaddition,
+weuseExactMatching(EM)rateamongthetestdatasetto
+Notice that the observed ISs h and θ are known, thus the
+evaluatetheprecisionofourattacks.WealsouseF1scoreto
+inversioncanbeformulatedas:
+evaluatethematchedtokensbyLlama-3’stokenizer.Besides,
+wealsoconsiderwidelyusedmetricsBLEUandROUGEto
+argmaxp(h|x,θ)p(x|θ), (7)
+x evaluatethesemanticsimilarity.
+where p(h|x,θ) means the posteriorprobability of h given
+5.2 White-boxInversionAttack
+promptinputxthusdependsonthedeployedLLM.Therefore,
+thekeyistomaximize p(x|θ)whereθisdependentonthe
+Inthissection,wefirstevaluateourwhite-boxattackonthe
+adversary’strainingdata{(x,h)}.Consequently,theadver-
+i i i Instruction-2Mtestdataandcomparewithpriorwork.Then,
+saryshouldminimizethedistributiondiscrepancybetween
+we show that our attacks can nearly fully invert the long
+theadversary’sdataX andthevictim’spromptinput.
+A promptthroughcasestudiesonlong-contextqueriesofmedi-
+calconsultandcodingassistance.
+5 Evaluation
+AttackSettings.Weconsiderthelayersofindex2,4,8,16,
+24forthe32-layeredLlama-3modelsandconsiderthelayer
+In this section,we evaluate the effectiveness of our attack
+ofindex14forthe28-layeredQwen2.5models.Weusethe
+andcomparewithpreviousapproaches.Thenweinvestigate
+optimizer AdamW [46] with learning rate µ∈{10−3,5×
+variousattacksettings.Finally,westudypotentialmitigation.
+10−4,1×10−4}.Wesetthepenaltyweightλ∈{0,10−3}.In
+default,weusetheMeanSquaredError(MSE)tomeasure
+5.1 ExperimentalSetup. thedistancebetweenISsandtheunbiasedbasisforourTBS
+attack.Weusescipy[47]tocalculatethesingularvectorsin
+Models. Throughout the evaluation, we mainly ourTBSattack.Inourattacks,weinitializethedummyinput
+use the Llama-3-8B-Instruct (Llama-3) [2], embeddings with zero for ER and with 1/d for the base-
+in
+Qwen2.5-7B-Instruct (Qwen2.5) [40] and lineTSandourTBSattacks.Wealsoconsidertwodistance
+Qwen2.5-Coder-7B-Instruct (Qwen2.5-Coder) as metricsbetweenISsintheloss:MSEandcosinesimilarity
+the most popular open-source LLMs. In addition, we (COS).Forsimplicity,thedefaultsettingusesMSEasthedis-
+also use Llama-2-7B-Chat (Llama-2) to fairly compare tancemetric,setsµ=5×10−4 andλ=0,andE=5×104.
+with prior work. To evaluate our black-box attacks, we For TBS attack, we use unbiased basis in default and set
+adopt Bio-Medical-Llama-3-8B [41] (Llama-3-Doctor), ϕ =αarctan(·)withα=5/πtoaccelerateconvergence.In
+z
+which is a highly-downloaded model finetuned from latersections,wewillseethattheoptimalsettingmayvary
+Llama-3-8B-Instructwithmedicalinstructionfollowing accordingtotheinputdataandthedeployedmodel.
+data and Llama-3.1-8B-Instruct (Llama-3.1), which
+enhances Llama-3 in terms of multilingual capacities and
+5.2.1 Comparison
+context length via post-training [42]. For larger models,
+we use Llama-3.3-70B-Instruct (Llama-3.3-70B). The Wefirstcompareourwhite-boxattackswithpreviousattacks
+detailedstatisticsofbasemodelsareprovidedinTable2. andlatercomparewithourTable3showstheresults.
+Metrics. We compute Cosine Similarity (CS) between the Baselines. We compare with output2text [20] and
+embeddings of original and inverted sentences. To ensure logit2text [24] as two recent state-of-the-art inversion
+USENIX Association 34th USENIX Security Symposium 1635
+
+=== PAGE 9 ===
+timization curve by preserving the gradient magnitude. In
+Figure6,wetestifythisthroughdistributionofthegradient
+normonthetesttexts,wherewecanobservethatERondeep
+layer(L=8)generatesgradientofmagnitude1012whileour
+TBSondeeplayerscanmaintainthegradientnormofthesim-
+ilarmagnitudeasonshallowlayers.Therefore,theexploded
+Figure 6: Distribution ofgradientnorm ∥w∥ and∥z∥ for
+(cid:98) 2 (cid:98) 2 gradientscausetheconvergenceonlocalminimumandlead
+ERandTBSattacks,respectively.
+tolowinversionquality.NotethatthegradientsofTBSon
+L=8havesightlylargernormthanL=2,whichexplainswhy
+inversionondeeperlayershoulduselowerlearningrates.As
+attacks against LLMs, because the adversary (e.g., collab-
+forqualitativeresultsonthemiddlelayer(L=16),onarandom
+orative inference server) can also exploit the output and
+subsetfromInstruction-2Mof200samples,ERonlyachieves
+logits for inversion. For fair comparison,we use their test
+CSscore50.35andF1score7.56,whichissignificantlylower
+datasetofInstruction-2Mandmanuallyverify479common
+thanourTBSattackshowninTable3.
+samplesfromthetwoofficialimplementations[20,24].The
+maximum length of test samples is 63. Besides, we also ResultsonMiddleLayer.Wenotethattheinversionbyour
+comparewithTSbaseline[18]. TBSattackonthemiddlelayer,althoughevaluatedbetterin
+terms ofEM rates,are worse than the deeperlayer(L=24)
+InTable3,wecompareourproposedattackswithprevious
+in terms of semantic similarity scores and F1 scores. We
+black-box and white-box attacks on different layer depths
+investigate the inverted texts and found that there are also
+L=2,8,16,24ona32-layeredLlama-2.OurERattackcan
+numerousnoisytokensfromotherlanguages(e.g.,Russian
+achieve high similarity scores on low layers and our TBS
+andKorean)replacedfortheoriginalEnglishwords.More
+attackcanremaineffectiveevenindeeplayerslikeL=24.
+noisy tokens cause the readability degradation of inverted
+Wesetµ=0.001forlayerindexlowerthan8andµ=0.01
+texts,thuslowerthesemanticsimilarityscoresandtokenF1
+forthedeeperlayertoacceleratetheconvergence.Notably,
+score.Althoughwetriedlowerlearningrateµ=0.001,the
+our attacks achieve significant higher EM rates than prior
+inversion on the middle layer does not get improved. We
+work,indicatingthattheISscanreveal(almost)identicaltext
+suspectthereasonliesintheoptimizationdynamics:theTBS
+informationastherawinputtext.
+inversiononL=16getssaturatedafter20,000stepsbutkeeps
+CauseAnalysis.Wethenproceeddetailedanalysisofinver-
+improvinguntilsteps30,000forL=24. In futurework,we
+sion results. As discussedin Section 4,TS directly selects
+willinvestigaterealcausesfromtheperspectiveoftraining
+candidatetokensforinvertedinputtext,whichdoesnotwork
+dynamics.
+asthesimilarityscoresbetweeninvertedandrealinputtexts
+InversiononLastLayer.WeapplyTBSattackonthelastlayer
+areclosetozero.Infact,theinversionlossconvergesaround
+10−2 andcannotbe improvedbytuning learning rates. On L=32.AsTable3shows,thedepthfurtherdegradesinverted
+texts,whichpartiallyalignswithpriorwork[34]thatdeep
+theotherhand,previousblack-boxattacks,exploitingtheout-
+layerscapturemorecomplicatedconceptsinsteadofsimple
+putlogitsortexts,resultincomparableinversionintermsof
+features of input texts. Nonetheless,our attack validates a
+semanticsandtokenmatching,andslightlylowerEMscore,
+counterintuitivefinding:high-depthlatentlayercanstillleak
+becauseoftherandomnessduringinversionmodelgeneration
+theoriginalinputsinentirety(EM≈4).
+andhigherinformationlossinthemodeloutput.
+As forourattacks,ER performs betteratshallow layers
+andTBScanremaineffectiveindeeporeventheclose-to- Takeaway:Onshort-contextinputs,ouroptimization
+lastlayers. Notably,the ER attackcan exactly invert more attacksoutperformTS,achievecomparableinversionas
+thanhalfinputtextsontheshallowlayerL=2.Thiscanbe previousgenerativeinversion.
+realisticinsplitlearningwithresource-constraintedgedevices
+orsmall-sizedenclave(e.g.,SGX-v1)wherethevictimcan
+onlyinferoneortwoshallowlayers.
+Asfordeeplayers,theISscontainlessinputtextfeatures
+5.2.2 CaseStudies:Long-contextInversion
+andaremoredifficulttoinvert.Thus,eventhoughtheseman-
+ticsarepreserved,ourERattack’sondeeperlayerL=8has In the remainder of the paper, we evaluate how our inver-
+significantly lower EM rate because of more noisy tokens sionattackperformonlong-contextpromptthroughtwocase
+(e.g.,inversion as “två017"” for “2/2/2017”) added during studiesofprivacy-sensitivetasks:healthcareconsultingand
+inversion. Fromtheoptimizationperspective,higherdepth codingassistance.WeuseLlama-3foritssupportoflonger
+canleadtogradientexplodingcausingthedirectlyrecovered contextandchoose the middle layer(i.e.,L=16) as itis re-
+inputembeddingdissimilartotheactualtoken. portedbesttoprobetheLLM[7,16]andbalancestheinfer-
+On the other hand,our TBS attack can stabilize the op- encecostbetweentwopartsincollaborativeinference.Thus,
+1636 34th USENIX Security Symposium USENIX Association
+
+=== PAGE 10 ===
+Figure7:Distributionoftokenlengthfromourtestdata(top100longestinputsoflong-contextbenchmarks).Therightmost
+correspondstotheevaluationsetforourTBSattackwhichcontainslongest25promptsfromeachbenchmarks.Weshowthe
+totaltokenamountalonginthefiguretitle.
+wemainlyinvestigateourTBSattack.Inaddition,weinvesti- groundtruth token “friend” is the third mostsimilartoken
+gateoptimaloptimizationstrategies(e.g.,distancemetricin (whichisapparentlysimilartotheembeddingof“boyfriend”),
+loss)fordifferenttasks. thusismissedduringtokengeneration.Thatiswhysmaller
+learning rates could benefit the inversion because of more
+Datasets.Weconsiderdatasetsoftwoprivacy-sensitivetasks:
+refinedupdating.Onepotentialimprovementcouldbebeam
+healthcaredialogueandcodingassistance.Formedicaldata,
+searchingtocoverallthepossiblepaths.
+weusethesymptomdescriptionsfromAimedical[48]and
+Mentalhealth(MH) [49].Forcodingassistance,weusetwo Learning Rates & Distance Metric. To begin with, we in-
+codingproblemdatasetsEvolcode(EC) [50]andCodeparro- vestigatedifferentlearningratesanddistancemetricsofour
+tApps(CA)[51]thatcontainpromptsaskingLLMtosolve TBSattackinFigure9.Theresultsareexpectedbecausethe
+codingproblem.Figure7plotsthedistributionoflengthof self-attention leverages innerproductto compute attention
+top100longpromptsforthefourbenchmarks,fromwhich andsubsequentISs,whichmakesCOSmorereliabledistance
+we can find that Aimedical contains the longest prompt of metricthanMSE.However,computingCOSrequireshigher
+4,112tokensandCodeparrotAppshaslongercodingprompts VRAMbecausethematrixcomputationhasspacecomplexity
+thanEvolcode.Weusethetop25longestpromptsfromeach O(n2)foran-lengthprompts.Besides,asmentionedearlier,
+datasettoevaluateourTBS(right-mostofFigure7). wefoundsmallerlearningratesimprovetheinversionondeep
+Ourattackcanscaletolong-contextinversion.Figure9 layers.Thepotentialreasoncanbemorefine-grainedinput
+comparesthesimilaritymetricsfordifferentattacksettings. embedding inversion,which leads to more accurate candi-
+Notethatduetolonglengthandnoisyinvertedtokens,the datetokenrecovery.Next,weexploretoimprovetheattack
+EM rates are allzero,thus we omitthe EM results to save performancebyadditionalsettings.
+space.Specifically,theoptimalsettingsarereportedforlower
+ImprovedAttackSettings.Table4showsinversionwithappli-
+learning rate µ=0.0001 with COS as the distance metric,
+cationofourtokendistributionmatchingpenaltyandusageof
+whichleadsto99.4CSand97.88F1onMentalhealth,and
+SVDsingularbasis.Wemaketwoobservations:1)thepenalty
+98.12CSand96.7F1onAimedical.Bothresultin0.99Rouge
+canimprovetheinversionatlargerlearningrate0.0005which
+score.Next,weshowexamplesoflong-contextinversion.
+maybeusefultoaccelerateinversionthroughfasterconver-
+Example:HealthcareDialogue.Webeginwithexamplesof gence(i.e.,fewersteps).2)usageofSVDsingularbasiscan
+healthcaredialogues.Figure8showsaninversionexampleof alsoimprovetheinversionperformanceregardlessoflearning
+384tokenssampledfromMentalhealth.Themissingtokens rates,possiblybecauseitenablesmorepreciseinputembed-
+arehighlightedincolor.Thisexampleshowsthatourinver- dinginversionthanunbiasedbasis.Nevertheless,SVDsingu-
+sionattackcannearlyinvertthewholeprompttextexceptfor larbasismaynotworkifapplyingoptimization-basedattack
+asmallproportionoftokens. toderivativesundertheblack-boxsetting(seeSection5.3).
+Comparison&QualitativeAnalysis.Priorworkcanfailfor LargerModels.Ourwhite-boxattacksaresize-agnosticthus
+long-contextinputs.FortheaboveexampleinFigure8,we canscaletolargermodels,attheexpenseofhigherVRAM
+testpreviousstate-of-the-artoutput2text[20]pretrainedon costandoptimizationtime.AsshownintheTable4,ourTBS
+Llama-2andunbridlethemaximumsequenceto4,096.The attackremainseffectiveforLlama-3.3-70BonMentalhealth.
+outputis“Howdoyoumanagethetensionandtensionthatis Notably,comparedtosmaller7BLlamamodel,theinverted
+causingyoutogocrazy?”,whichiscompletelydifferent.On textsareclosertothegroundtruthasindicatedbyhigherCS
+thecontrary,oursonlymissescertaintokens. andF1scores,possiblybecauseofmoreinformationretained
+Wefoundthatthemissedtokensaresynonymoftheground inwiderISs(i.e.,8192for70Band4096for7B).However,
+truthtokensandhavesimilarinputembeddings.Takethefirst astheTBSattackrequiresforwardingandbackpropagation
+missed token in Figure 8 as an example, the ground truth to iteratively update the inverted input, larger models can
+tokenis“friend”whiletheinversionis“boyfriend”becauseits significantlyincreasetheoptimizationtimeandGPUmemory.
+embeddingisthemostsimilartotheinvertedinputembedding. Forexample,attacking70Bis7timesslowerandcosts10
+After a manual checking, we found the embedding of the timesmorememorythan7B.
+USENIX Association 34th USENIX Security Symposium 1637
+
+=== PAGE 11 ===
+Figure8:AninversionexamplefromMentalhealthconsistingof384tokens.Themissedtokensarehighlightedincolor.
+Table4:EvaluationofdifferentTBSattacksettingsforLlama- Table5:EvaluationresultsofQwen2.5andQwen2.5-Coder.
+3model.
+Dataset Model Distance CS BLEU ROUGE EM F1
+Dataset Size Basis Penalty µ CS BLEU ROUGE F1 Qwen2.5 MSE 99.03±0.26 98.90±0.18 1.00 12.90±0.06 98.90±0.21
+Unbiased 0 1e-4 95.49±0.59 64.93±2.90 0.90 76.22±2.11 EC Qw Co en d 2 er .5- MSE 99.78±0.12 99.60±0.13 1.00 64.00±0.07 99.80±0.06
+5e-4 88.79±0.83 27.06±2.04 0.66 49.56±1.65
+Qwen2.5-
+EC 8B Unbiased 1e-3 1e-4 94.73±1.28 58.09±6.56 0.87 72.48±3.70 Coder COS 99.96±0.03 99.12±0.34 1.00 45.00±0.11 99.47±0.14
+5e-4 90.82±1.05 34.20±3.03 0.71 54.70±2.29 Qwen2.5-
+MSE 99.86±0.08 99.78±0.05 1.00 50.00±0.07 99.82±0.04
+1e-4 95.87±0.95 64.34±3.05 0.88 73.90±2.60 CA Coder
+SVD 0
+5e-4 98.20±0.49 72.09±3.14 0.91 80.73±2.22 Qwen2.5- COS 99.72±0.28 99.46±0.37 1.00 40.00±0.16 99.76±0.08
+Coder
+1e-4 95.02±0.70 80.36±1.47 0.95 90.63±0.75
+Unbiased 0
+5e-4 88.59±1.66 56.69±3.04 0.87 78.53±1.99
+MH 8B 1e-4 94.79±0.77 77.55±2.00 0.94 88.92±1.20
+Unbiased 1e-3 Surprisingly,weobservethattheISsofQwen2.5iseasierto
+5e-4 89.09±0.79 59.03±2.25 0.88 80.30±1.08
+1e-4 97.64±0.39 86.70±1.85 0.96 93.27±1.05 invertthanLlama-3models.Wehypothesizenoimpactfrom
+SVD 0
+5e-4 98.00±0.57 90.24±1.24 0.97 94.99±0.61 theirpretrainingdataandinvestigatethearchitecturediffer-
+70B Unbiased 0 5e-4 95.80±1.17 74.17±9.44 0.94 88.34±5.17
+ence.Weexcludethecausesfrommodelwidthandtrainable
+parametersuptothemiddlelayerbecausetheyaresimilar
+fortwomodels:Qwen2.5isofwidth3,584and3.8Bparam-
+Input Data Type. We observe that the input data type can
+eters while Llama-3 is of width 4,096 and 4B parameters.
+influencetheinversionperformance.InFigure9,thecoding
+Aftercarefullyexaminingtheirimplementations,wefound
+dataaremoredifficulttobeinvertedcomparingtomedical
+the main difference lies in the attention module: Qwen2.5
+texts. Notably,the F1 score on coding datasets (92.05 and
+applies QKV bias [53] while Llama-3 does not by default.
+94.50)areslightlylowerthanhealthcaredialoguedataunder
+Therefore,wesuspectthatattentionbiasmayamplifythefea-
+theoptimalattacksetting.Aftermanualcheckingofinverted
+turerepresentationofISsthus,asasideeffect,enablebetter
+inputs,wefoundthattheadditionalerrorsappearinthede-
+inversion.Duetothehugecostofpretrainingtoobtainsimilar
+scriptionofcodingpromptsinsteadofthemaincode.This
+biasforLlama-3,weleavemoredetailedimpactanalysisof
+mayindicatethatthemodelknowledgemayalsoinfluenceour
+attentionbiasforfuturework.
+optimization-basedinversionattackbecauseoftheattention
+assignmenttotokensofdifferenttopicsisunequal.Therefore,
+inthefollowingweinvestigatewhetherthecoding-enhanced Takeaway:Onlong-contextinputs,ouroptimization-
+modelcanleadtohigherinversionrisk. based attack TBS can invert nearly all tokens in the
+correctordertopreserversemantics.
+Evaluation of Domain-specialized Models. We consider
+Qwen2.5-Coderasthecoding-specializedmodelbecauseof
+itshighrankingontheleaderboard[52]. Hereweevaluate
+thetop50longestcodingpromptsfromtwobenchmarks.We
+alsoevaluateQwen2.5asageneral-purposemodel.Table5 5.3 Black-boxInversionAttack
+presents the results on two coding benchmarks. First, we
+Inthissection,weevaluateandcompareourreplication-based
+observethatinversionissignificantlybetter:theEMscores
+andgeneration-basedblack-boxinversionattacks.
+arearound50%forthetoplongpromptsofbothbenchmarks
+andtheinvertedtokensF1scoresarearound99%.Second, AttackSettings.WeusethepromptsfromMentalhealthand
+comparedtothegeneral-purposemodelQwen2.5,thecoding- Evolcodefortest.Forbothblack-boxattacks,weassumethe
+specializedmodelQwen2.5-CoderhasISsmoresusceptible adversaryusesNoRobots[54]astrainingdataforreplication
+toinversionattackbecauseofhigherEMrates. modelandinversionmodeltraining.NoRobotsiscomposed
+1638 34th USENIX Security Symposium USENIX Association
+
+=== PAGE 12 ===
+Figure9:EvaluationofourTBSattackwithdifferentlearningratesanddistancefunctions(MSEandCOS).
+Table6:Resultsofthereplication-inversionattack.
+TestDataset Attack Target Basis lr CS BLEU ROUGE F1
+Doctor SVD 1e-4 52.87±1.30 0.98±0.25 0.22 14.79±1.77
+Llama-3.1 56.21±1.24 1.85±0.47 0.29 19.33±1.66
+Transferred Doctor 1e-4 64.50±2.70 6.64±1.62 0.45 32.12±3.05
+MH Unbiased 5e-4 58.36±1.12 0.90±0.08 0.23 17.91±0.54
+Llama-3.1 1e-4 61.19±2.14 4.72±0.76 0.40 27.53±1.85
+5e-4 63.60±2.10 2.45±0.51 0.30 22.10±1.35
+F er i r g o u r r t e o 1 d 0 e : te T c h t e d d er is iv tr a i t b iv u e ti s o o n f o L f l a a u m to a- e 3 n . coder’sreconstruction Re ( p O l u ic r a s t ) ed Doctor Unbiased 1 5 e e - - 4 4 7 6 2 6 . . 3 7 2 4 ± ± 2 1 . . 6 7 4 9 1 5 6 . . 5 3 4 3 ± ± 1 2 . . 3 2 0 3 0 0 . . 4 5 2 8 4 3 3 0 . . 3 5 5 9± ± 1 2 . . 9 3 3 1
+Llama-3.1 1e-4 68.33±2.33 4.91±0.71 0.45 30.76±1.01
+5e-4 61.90±1.57 0.87±0.16 0.25 17.53±0.82
+Transferred Doctor Unbiased 1e-4 62.01±1.70 3.60±0.68 0.27 18.56±1.60
+EC Llama-3.1 1e-4 63.05±3.08 2.13±0.46 0.23 15.63±1.60
+Re ( p O l u ic r a s t ) ed Ll D am oc a t - o 3 r .1 Unbiased 1 1 e e - - 4 4 7 6 6 2 . . 9 2 2 2± ± 2 2 . . 0 3 0 1 1 9 . . 9 7 1 1± ± 1 0 . . 6 4 3 3 0 0 . . 4 2 7 6 2 1 9 6 . . 6 7 0 4± ± 1 2 . . 2 1 1 7
+additionallycrawlthederivativesofLlama-2andQwen2.5in
+asimilarmannerandensembletheautoencodersofmiddle-
+Figure11:Evaluationofmodeltypeidentification. layer ISs of three LLMs. Figure 11 exhibits the confusion
+matrixofmodeltypeclassification(left)andtheROCcurve
+withAUCscore(right).Wefoundourensembleautoencoder
+of9.5k+supervisedfinetuningsamplesfromgeneraltopics, canalmostperfectlyclassifythetargetmodetype.Therefore,
+whichalignswithourassumptionthattheadversaryhasdata theadversarycanleveragethepubliclyavailablebaseLLM
+ofsimilardistribution.WeconsiderLlama-3ownedbythe toapplythemodelreplication-basedinversion.
+adversaryandtargetLlama-3-DoctorandLlama-3.1astwo
+Replication-basedInversion.WeuseLlama-3replicateto
+black-boxdeployedmodels.InthissectionwealsotestISs
+thetargetmodels(ChatDoctorandLlama-3.1)onNoRobots
+ofthemiddlelayerasabove.
+forthreeepochswithQlora[55]withlearningrate0.0001.
+ModelTypeIdentification.GivenunknownISs,theadver- Asfortheinversionattack,weuseMSEasthelossdistance.
+saryfirstidentifiesthedeployedmodeltype.Totesttheiden- Table 6 presents the evaluation ofourreplication-basedin-
+tifymodeltype,wetrainedandcrawledfromHuggingFace75 versiononMentalhealthandEvolcode,fromwhichwecan
+finetunedmodels,70mergedmodelsand56adaptersofmost make four findings: 1) The use of SVD singular basis can
+downloading of Llama-3. In addition,we select 13 LLMs degradetheattackbecauseofthediscrepancybetween the
+independentmodels(i.e.,thosenotderivedfromLlama-3)as inversionandthetargetinputembeddingspaces.2)Therepli-
+negatives,whicharelistedintheAppendixA. cated model with a low attack learning rate leads to better
+Figure10demonstratesthedistributionofautoencoder’s inputinversionbecauseofbetterinputembeddingalignment.
+Reconstruction MSE (RMSE) on three tested layers. For 3)Thepost-trainingcanofferbetterprotectionagainstinver-
+eachtestedlayer,weusethetestdatasetof500samplesof sionthanfinetuning,asLlama-3.1ismoredifficulttoinvert
+NoRobotsastheprobingdata,andtrainthe3-layerautoen- input information (e.g.,fewermatched tokens as indicated
+coder for 10 epochs. We found that most derivatives have bylowerF1).4)Thedistributiongapbetweentheadversary
+separateerrorrangestotheindependentmodels,whichen- dataandthevictim’squeriescandegradetheinversion.On
+ablesbinaryclassificationsbythresholding.Notethatthere codingdata,theimprovementfrommodelreplicationislower
+areasmallnumberofoutliersthatcanbeidentifiedasinde- than on medical texts,as shown under the optimal setting
+pendentmodel(FalseNegative).Wecheckthefalsenegatives (ChatDoctorwithunbiasedbasisand1e-4).
+andfoundtheyarecausedbylabelingerrorsbasedoncrawled Insum,theoptimization-basedattackperformanceisdete-
+modelname.Therefore,inthefollowingtest,wecheckthe rioratedbylimitedattackinformationintheblack-boxsetting
+topdownloadingderivativestoremovepotentialerrors. andcanbedifficulttoimprove.Asdiscussedearlier,thetoken
+Toevaluatetheidentificationofensembleautoencoders,we recoverycanbesensitivetothecosinedifferencebetweenthe
+USENIX Association 34th USENIX Security Symposium 1639
+
+=== PAGE 13 ===
+Table7:Black-boxinversiononshort-contextinputtext.
+Dataset AverageLength CS BLEU ROUGE EM F1
+Instruct-2M 26.16 97.85±0.24 92.73±0.58 0.97 61.38±0.02 96.87±0.27
+Norobot-test 89.04 83.90±0.84 51.34±1.55 0.64 13.00±0.02 65.76±1.44
+SyntheticGPT 177.48 93.62±0.61 46.98±1.25 0.67 0.0 72.90±0.88
+Figure13:Evaluationofconvergedinversionmodels.
+Table8:Evaluationofgenerativeinversionon70Bmodel.
+Dataset MaxSeq.Length CS BLEU ROUGE EM F1
+256 87.92±0.45 21.50±0.57 0.50 0.0 55.56±0.57
+MH 512 97.76±0.22 79.39±1.84 0.88 2.00±0.01 90.75±0.90
+1024 97.44±0.23 76.26±1.82 0.87 1.00±0.01 88.72±0.90
+256 74.85±0.81 3.69±0.22 0.16 0.00 28.52±0.89
+EC 512 94.18±0.42 20.98±0.67 0.42 0.0 60.44±1.15
+1024 91.74±0.55 18.08±0.81 0.38 0.0 55.62±1.26
+Figure12:Generativeinversiononlong-contextdatasets.
+from Mentalhealth and Evolcode with greedy sampling of
+maximumlength4,096toensurefullgeneration.Figure12
+showstheresultsfromwhichwecanmakethreeobservations.
+invertedandthegroundtruthembeddings.TheTransformer
+First,we found that the maximum sequence length 256 is
+andinputembeddingweightsofthederivedmodelenlarge
+the optimal setting forNoRobots dataset,where shorteror
+this inverted difference,resulting in worse token recovery.
+longerlimitscanresultinworseinversion.Second,toolong
+Next,weevaluatethegenerativemodel-basedinversionat-
+sequencelimit1024canhindertheinversionquality.Third,
+tackwhichisbasedon observedISsascontextandcan be
+the data type plays a central role to accurately invert ISs:
+morerobusttotheembeddinggap.
+themodelcannotgeneratemeaningfulinvertedtextsoncod-
+Generation-based Inversion. As for inversion model,the ingprompts(Evolcode)butachievesimilarperformanceas
+adversaryadoptstherecentT5-base(T5)[56]asitisoneof optimization-basedattackonthesimilardata(Mentalhealth).
+themostcommonlyusedencoder-decodermodel.Wetrain LongerTrainingEpochs.Wealsoobservethattheinversion
+T5 with learning rate 0.0002 and trains on Instruction-2M
+modelonlygeneratespromptsuntilthethirdepoch,which
+andNoRobotsforshort-contextandlong-contextinputs,re-
+mayindicatethatthatmoreepochscanimprovetheperfor-
+spectively.WealsouseSyntheticGPT[20]forshort-context
+mance.InFigure13,weextendtheepochsto10formodel
+inversionevaluation.Toalignwithreplication-basedblack-
+convergencewhilekeepingmaximumsequencelength256.
+boxattack,thedeployedmodelisLlama-3.1asourtarget.
+WefoundthattheconvergedperformanceonMentalhealth
+Inversion ofShort-contextInput. We train inversion model islowerthanthebestperformanceofoptimization-basedin-
+on Instruction-2M for 1 epoch. Table 7 presents the inver- versionasshowninFigure9(e.g.,94.99BLEUand96.7F1
+sionevaluationonshort-contextdatasets.Theattackperforms onMentalhealth). Ontheotherhand,theinversiononcod-
+bestonthesame-distributiontestdatasetofInstruction-2M ingdatadoesnotgetimprovedasmedicaltextsbecauseof
+and achieves even better performance than our white-box thedistributiongap,whichfurtherhighlightsimportanceof
+optimization-basedinversionattack.However,thedownside thesamedistributionassumption.AppendixBincludesmore
+for generative model is that it can hardly scale to longer analysisonfailurecasesduetothedistributionmismatch.
+prompts and the performance is susceptible to distribution LargerModels.Table8validatestheeffectivenessofthegen-
+shift.Asthelengthincreases,thesemanticsimilarityscores erativeinversiononLlama-3.3-70Bmodel.Comparedtopre-
+dropsignificantlyonlongerSyntheticGPTdataset. vioussmallerLLMs,theoptimalmaximumsequencelength
+InversionofLong-contextInputs.Tounderstandthelimitof forinversionof70Bmodelsisdoubled:from256to512.In
+particular,thereareevenexactmatchingcases(e.g.,inversion
+inputlengthforgenerativeinversion,wetrainwithNoRobots
+trained with maximum sequence length 512). We observe
+thatcontainslong-contextpromptsofupto3,384tokens(de-
+that,despitedeeperandwiderISs,moreinputtokenscanbe
+tailedlengthdistributionisshowninFigure16).Toinvesti-
+invertedassignifiedbyhigherF1scoresandCSscores.This
+gatetheimpactoftrainingsequencelength,wesetmaximum
+resultalignswithourpreviouswhite-boxinversionevaluation
+sequencelengthto128,256,512and1,024. AsNoRobots
+onthe70Bmodel.
+only contains 9,485 samples,we train inversion model up
+to 3 epochs that counts for similar model update steps to Comparison withOptimization-basedInversion. We exam-
+Instruction-2Mforensuringmodelconvergence. inethegeneratedinversioninputsandqualitativelycompare
+Aftertraining,weevaluateonthetop100longestprompts themwiththoseoptimizedbyourwhite-boxattack.Although
+1640 34th USENIX Security Symposium USENIX Association
+
+=== PAGE 14 ===
+Table9:TransferabilityofgenerativeinversiontoLlama-3. Dropout. We apply the dropout on ISs of probability p∈
+{0.1,···,0.8} that nullifies p elements and scales the rest
+Dataset Max.Seq.Length CS BLEU ROUGE F1 by1/(1−p). As pincreases,theMMLUscorewillfirstly
+128 86.67±0.43 10.35±0.66 0.45 54.06±0.68 decrease. Meanwhile,wecan seethatMMLUdropsfaster
+Mentalhealth
+256 94.53±0.30 53.12±1.71 0.77 78.56±0.74
+thantheCSscore.Amongthehighestdropoutprobabilities
+512 90.03±0.36 32.71±1.05 0.64 63.32±0.62
+wetested p≥0.7,theMMLUscoreisclosetotherandom
+128 76.97±0.81 0.13±0.05 0.15 28.37±1.01
+Evolcode guess (∼0.25) while we can still achieve inversion of CS
+256 84.04±0.76 2.10±0.19 0.23 40.63±1.19
+512 74.78±0.83 1.57±0.16 0.15 31.45±1.00 scorehigherthan70.Thisindicatesthatdropoutcannotfail
+ourgenerativeinversionwhilepreservingtheutility.
+NoisyInputEmbedding. The defendercan blurthe input
+bothachievesimilarsemanticsimilarityandtokenmatching
+embeddingtoobfuscatetheISs.Therefore,weaddthenoise
+score,thereasonforfailedinversiontokensisdifferent.As followingGaussiandistributionofvarianceσ2,andshowthe
+mentioned previously, the optimized inversion inputs may
+evaluationresultsinthemiddleofFigure14.Forlownoise
+introduceorreplacethetruetokenwithnoisytokensofdif-
+scaleσ≤0.005,thereisnegligibleaffectovertheinference
+ferent languages or Unicode which hinders the readability
+andinversion.However,weobservethatσ=0.01isaturning
+butalsopartiallyrevealsthemeaningoftrueinputs.Onthe
+point: the MMLU score become lower than 0.4 while the
+otherhand,generativeinvertedtextscontainnonoisytokens
+inversionisalmostunaffected.Ourattackcanbeeffectively
+butmaymissentirelysomesentences,especiallythoseinthe
+defendedathighnoisescaleσ∈{0.05,0.1},buttheMMLU
+middleortheendoftheoriginalinput.Thisisadisadvantage
+alsodecreasestotherandomguesslevel.Towrapup,noisy
+totheadversarybecauseofpotentialkeyinformationloss.
+inputembeddingcannotachieveaperfecttrade-offbetween
+Transferability.Weexplorewhetherthegenerativeinversion theinferenceutilityandISsprivacy.
+modelcandirectlytransfertothederivedtargetmodel.We Differential Privacy. We add Laplacian noise to the IS to
+evaluatetheT5modeltrainedonLlama-3.1’sISsandevaluate achieveε-DP:δ∼Lap(0,ε/∆ ),where∆ isthesensitivity.
+s s
+onLlama-3(seeTable9).Theinversionperformanceisclose f
+AsthemaximumvalueofISsisnotbounded,wecliptheh V
+tothenon-transfercaseasshowninFigure12.Thisvalidates l
+byC ∈{200,500},becauseweobservethehighestISsare
+our claim that the generation-based can better tolerate the
+∆s
+withinthisrangeonMentalhealth.Thismakes∆ =2C .
+embeddinggapthantheoptimization-basedattack.
+s ∆s
+TherightmostfigureofFigure14showstheinversionper-
+formance (measuredby CS) andmodelutility on different
+εandtwoclippingcases,wherethehorizontaldottedlines
+5.4 DefenseEvaluation
+representnoDPprotection.Weobservethatthebluecurves
+(invertedtextsimilarity)increaseearlierthanorangecurves
+Inthissection,wetestfourpracticaldefensesincludingDP,
+(modelutility)inbothclippingcases.Thisindicatesthatthe
+pruning,quantization,dropoutandnoisyinputembedding.In
+adversarycangainadvantagewithlowεthatalmostnullifies
+Section7,wediscussandprovidemitigationsuggestions.
+the model. In otherwords,withmilddrop ofmodelutility
+Setting.WeuseMentalhealthandconsiderthecollaborative (e.g.,ε=5,000forC =200),ourgeneration-basedattack
+f
+∆s
+inferenceserverwhoreceivestheISsh V atthemiddlelayer remainsequallyeffective.
+l
+l=16forLlama-3-8B.Theclientappliesdefensesbeforethe
+releaseofISsforthefirst-roundinference.Forattack,wetest
+Takeaway:Ourgeneration-basedinversioncanachieve
+thegeneration-basedinversionattacktrainedfor10epochs
+accurate inversion on data of similardistribution and
+on NoRobots with the optimal maximum sequence length
+bypasspracticaldefensesdirectlyappliedonISs.
+256.Intermsofutility,weevaluatethemodelwithfive-shot
+MassiveMultitaskLanguageUnderstanding(MMLU)[57],
+which refers to accuracy on the benchmark questions. We
+fix the random seed to ensure reproducibility for defenses 6 RelatedWork
+involvingrandomness.
+In this section,we review applications of IS and inversion
+Quantization.Wefirsttestthe4-bitand8-bitmodelquanti-
+attacksinNaturalLanguageProcessing(NLP).
+zationwhich,asacommontechniquetoreducememorycost,
+canaltertheadversary-observedISsthroughthroughforward- ApplicationofInternalStates.Recently,severalworkshave
+propagatederrortodegradeinversionperformance.Wetest shown that the IS are strong indicatorof hallucination fac-
+the model quantization and present the results in Table 10 tualerrorandsafetystatus,whichprovideapracticalstrategy
+of Appendix A. We note that only 4-bit slightly effect the forLLMholderandregulatortosurveilthemodelbehavior.
+MMLUbuttheinversionqualityremainsnearlyunaffected, Azaria and Mitchell first discovered that the ISs can indi-
+indicatingthatquantizationcannotdefendourattack. catefactualerrorsandfoundthatdeeplayer’sISscantrain
+USENIX Association 34th USENIX Security Symposium 1641
+
+=== PAGE 15 ===
+Figure14:Evaluationofdefensesincludingnoisyinputembedding,dropoutanddifferentialprivacywithLaplacemechanism.
+accurate hallucination detector [7]. The ISs-based halluci- rentimplementationsgenerateunacceptablecomputational
+nation detection can also be achieved by eigenvalues [8], overheadfordeployment[64].Anothercountermeasurethat
+unsupervisedclustering [9] andlinearprobing [10] tostop canbeimmediatelytakenisexploitingtheconfidentialvir-
+the mistakes on the fly [11]. The middle layerhas ISs that tualmachineinCPU(e.g.,AMDSEV[66])andGPU(e.g.,
+canindicatemaliciousandbenignqueriesandcanbeused H100[67])whichcanprovideconfidentialityguaranteeand
+assafetylayertodefendjailbreakattacks[12].Additionally, allow addition obfuscation schemes inside the enclaves to
+ISs can reveal latent knowledge [16],membership privacy hindersidechannelattacks.
+ofquerydata[36],emotion[15,28],internalsymboliccal-
+culations [17] and potential backdoors [13, 14]. As more Architecture-basedMitigation.Wesuspecttheequal-width
+applicationsofISsemerge,thepotentialprivacyriskshould architecturedesignmaycauseourprivacyinversionattacks.
+be carefully examined and our work takes the first step to Typically,thelayerwidthinconventionalclassificationmod-
+testifytheISsinversionfeasibility. elsdecreaseswithdepth,enablingthecompressionofinput
+InversionAttacks.Inadditiontotheembedding[19]andout- dataandcontributingtotheemergenceofHarmlessSpace
+puts[20,24],theriskofdatainversionalsoexistsforshared (HS)[68].Incontrast,Transformer-basedlanguagemodels
+gradientindecentralizedlearning[58,59],unlearning[60], haveauniformlayerwidth.Thisarchitecturaldifferencemay
+outsourcedshallow-layerinference[61]andKVcache[62] explainwhyourattackmethodsaresuccessful.Thus,apo-
+whicharethemostrelatedworkstoours.Nevertheless,our tentialarchitecture-baseddefensecouldinvolveamodelwith
+methodscanextendtomiddleorlastlayersandcangeneralize varyingsizesofinputembeddings,intermediatestates,and
+toKVcache.Notethattheside-channelattacktoLLMserv- output embeddings,which,by exploiting information loss,
+ing[63]isalsosimilartoourinversion,butleveragestiming couldincreasethedifficultyofaccurateinversion.
+differenceinacceleratedinference.Thereisalsofinetuning-
+baseddefenses[38]butislimitedtosmallLMsbecauseof UnavailableGroundTruth.InSection3,theadversaryaims
+performancedropforLLMs.Recently,thereareconcurrent torecovertheexactinput,butoriginalinputsaregenerallyun-
+works[64,65]attemptingtoinvertpromptfromthemalicious availableinpractice,whichcanmakeitinfeasibletocheckthe
+serverincollaborativelearning.Asforcomparison,ourwork inversioncorrectness.Inpractice,fortheopen-sourcemodels,
+includesmorecomprehensiveattacks(white-boxandblack- theadversarycantestwithsurrogateinputsasreferenceto
+box)andhasvalidatedtheattackeffectivenessonlonginputs ensureconstraint.Forclosed-sourcedmodels,theadversary
+(4k+tokens)andlargemodels(upto70B). cancollectinputdatafromtheirinteresteddistributionsfor
+queryingandtrainingtheinversionmodel.Theconvergence
+canguaranteetheinversionforin-distributiondata.
+7 Discussion&Conclusion
+Limitation.Ouroptimization-attackissensitivetothehyper-
+Weconcludewithdiscussionandfuturework.
+parameterandaddednoises.Forexample,TBScannotrecover
+Practical Mitigation. As we witnessed in section 5.4, di- meaningfulinputsevenunderthehighestεwetestedbecause
+rectlyprotectingISsisstilllimitedtosimultaneouslyoffer ofnoisesensitivity.Futureworkcanenhancethisattackby
+bothmodelutilityandprivacy.Thefundamentalreasonisthat denoisingonDP-protectedISs.Anotherlimitationisthelin-
+the inference of subsequent layers depends on meaningful earcomplexity(i.e.,O(E))duringoptimization,whichcan
+IS values,hence the noise-induced representation obfusca- causelongerattacktimeforlargermodels.Also,itispossible
+tionmustpreservesufficientutilitybymaintainingsemantic toadoptrandominitializationforoptimization-basedattacks
+coherence.TomitigateprivacyleakagecausedbyISs,itises- to avoid local optima. Appendix B includes more detailed
+sentialtosafeguardtheentiremodelratherthanconcentrating analysisoffailurecasesandboundaryconditions.Toimprove
+solelyonindividuallayers.Onepossibledirectioncanbethe the attack, one of the future direction is to come up with
+exploitationofcryptographictoolsorconfidentialcomputing. black-box inversion attack that can also be as context-free
+Thehomomorphicencryptionisapromisingsolution,butcur- andlength-freeasthewhite-boxoptimization-basedattack.
+1642 34th USENIX Security Symposium USENIX Association
+
+=== PAGE 16 ===
+8 Ethicalconsiderations Acknowledgments
+Our attacks exploit ISs of models to invert nearly original Wethankourshepherdandanonymousreviewersforinsight-
+sensitiveinput,posingsignificantthreatstouserprivacyand fulfeedback.WealsothankYimingWangforinsightfuldis-
+datasecurity.Asourresearchdonotinvolvehumanpartic- cussions thatinspiredthis project. The workhas been sup-
+ipants andonly use public medicaldialogue,Mentalhealth portedinpartbytheNationalNaturalScienceFoundationof
+andcodingdatasets,theIRBofauthors’intuition,afterour China(62325207,62132013,62302298).ShaofengLiissup-
+consultation,determinedthatourresearchdoesnotrequire portedbytheStart-upResearchFundofSoutheastUniversity
+furtherreview. We acknowledge that exemption from IRB (No.RF1028624178).
+reviewmaynotfullyaddressallethicalconsiderations,and
+havethereforetakenthefollowingsteps. References
+Ensuringnoharmiscausedtostakeholders.Thepotential
+[1] Robert Hart. X fact checks elon musk after he blasts
+stakeholders include LLM userand LLM service provider
+apple-openai partnership as ‘creepy’ privacy nightmare.
+andbroaderprivacycommunity.Tomitigatepotentialharms
+https://www.forbes.com/sites/roberthart/2024/06/11/x-fact-
+toindividuals,byfollowingexistingprivacywork,weonly checks-elon-musk-after-he-blasts-apple-openai-partnership-
+selectpublicdatasetsthatarehighly-downloadedandappro- as-creepy-privacy-nightmare/,2024.
+priatelyanonymized.Inaddition,wealsomanuallychecked
+alldatasetsusedinourresearchtoensurethereisnosensitive [2] AbhimanyuDubey,AbhinavJauhri,AbhinavPandey,Abhishek
+Kadian,AhmadAl-Dahle,AieshaLetman,AkhilMathur,Alan
+information(e.g.,PII)exposedinourresearch.Wedidnot
+Schelten,AmyYang,AngelaFan,etal. Thellama3herdof
+attackreal-worldcollaborativeinferencesystems,sonoindi-
+models. arXivpreprintarXiv:2407.21783,2024.
+vidualprivacyisleakedbyourresearch.Asforthemodels,
+weonlyusedopensourcemodelsincludingLlama,Qwenand [3] ZhengLin,XuanjieHu,YuxinZhang,ZheChen,ZihanFang,
+T5inourworkforcompliancewithmodel-uselicense. XianhaoChen,AngLi,PraneethVepakomma,andYueGao.
+Splitlora: A splitparameter-efficientfine-tuning framework
+Responsibledisclosetoserviceproviders.Wealsoshareour
+forlargelanguagemodels. arXivpreprintarXiv:2407.00952,
+findingswithmaincloudLLMserviceprovidersthatmight
+2024.
+deploycollaborativeinferenceincludingOpenAI,MetaAI
+andQwen.Werecognizethatthiscannotperfectlymitigate [4] YixuanMei,YonghaoZhuang,XupengMiao,JunchengYang,
+privacyrisks,becauseourattacks,ifknowntothepublic,may ZhihaoJia,andRashmiVinayak. Helix:Distributedserving
+stillbemisusedbytheactualcollaborativeinferenceserver oflargelanguagemodelsviamax-flowonheterogeneousgpus.
+InProceedingsofInternationalConferenceonArchitectural
+orISauditortorecovertheuserinputs.However,webelieve
+SupportforProgrammingLanguagesandOperatingSystems,
+thebenefitsofpublicizingourattacksoutweightthepotential
+ASPLOS2025,2025.
+harm.Asourworkdemonstratesthepotentialprivacyrisks
+ofLLMISs,itwilldrawincreasedattentionto,notonlythe [5] MingjinZhang,JiannongCao,XiaomingShen,andZeyang
+ISsinversionthreat,butalsothegeneralprivacyconcernssur- Cui. Edgeshard:Efficientllminferenceviacollaborativeedge
+roundingLLMservicesystems.ThiswillencouragetheLLM computing. arXivpreprintarXiv:2405.14371,2024.
+practitionerstoproactivelyimplementwell-establishedsolu-
+[6] Fact sheet: President biden issues executive order on
+tionslikeconfidentialvirtualmachinewithintheirsystemsto
+safe, secure, and trustworthy artificial intelligence.
+offerbetterprivacyprotection.
+https://www.whitehouse.gov/briefing-room/statements-
+releases/2023/10/30/fact-sheet-president-biden-issues-
+executive-order-on-safe-secure-and-trustworthy-artificial-
+9 OpenScience intelligence/,2023.
+[7] Amos Azaria and Tom Mitchell. The internal state of an
+IncompliancewiththeUSENIXSecurity’sOpenSciencepol-
+LLMknowswhenit‘slying. InFindingsoftheAssociation
+icy,wecommittopubliclyreleasingthesourcecodetoimple-
+forComputationalLinguistics:EMNLP2023,pages967–976,
+menttheattacks,pretrainedinversionmodelsonnon-sensitive December2023. doi:10.18653/v1/2023.findings-emnlp.68.
+datainourstudyuponacceptanceofthispaperandinversion
+logsofmainresults.Asthedatasetsusedinourpaperareall [8] ChaoChen,KaiLiu,ZeChen,YiGu,YueWu,MingyuanTao,
+downloadablefromHuggingFace,inourartifactwedirect ZhihangFu,andJiepingYe. INSIDE:LLMs’internalstates
+retainthepowerofhallucinationdetection. InTheTwelfth
+userstothedatasetsdownloadinglinkandprovideprocessing
+InternationalConferenceonLearningRepresentations,2024.
+scripts.Wealsoprovideinstructionsonhowtotestourattacks
+onuser’sowndata,detailedconfiguration,programscripts, [9] Weihang Su,Changyue Wang,Qingyao Ai,Yiran Hu,Zhi-
+hyperparametersandhardwarerequirements.Ourcodeisre- jingWu,YujiaZhou,andYiqunLiu. Unsupervisedreal-time
+leasedathttps://doi.org/10.5281/zenodo.15605325. hallucination detection basedon the internalstates oflarge
+USENIX Association 34th USENIX Security Symposium 1643
+
+=== PAGE 17 ===
+languagemodels. InFindingsoftheAssociationforComputa- [21] NaftaliTishbyandNogaZaslavsky. Deeplearningandthe
+tionalLinguisticsACL2024,pages14379–14391,Bangkok, informationbottleneckprinciple. In2015IEEEInformation
+Thailandandvirtualmeeting,August2024.Associationfor TheoryWorkshop(ITW),pages1–5,2015. doi:10.1109/ITW.
+ComputationalLinguistics. 2015.7133169.
+[10] JannikKossen,JiatongHan,MuhammedRazzak,LisaSchut, [22] XudongPan,MiZhang,ShoulingJi,andMinYang. Privacy
+ShreshthA.Malik,andYarinGal. Semanticentropyprobes: risks of general-purpose language models. In 2020 IEEE
+Robust and cheap hallucination detection in llms. CoRR, SymposiumonSecurityandPrivacy(SP),pages1314–1331,
+abs/2406.15927,2024. doi:10.48550/ARXIV.2406.15927. 2020. doi:10.1109/SP40000.2020.00095.
+[11] Tian Ye, Zicheng Xu, Yuanzhi Li, and Zeyuan Allen-
+[23] Haoran Li,Mingshi Xu,and Yangqiu Song. Sentence em-
+Zhu. Physics of language models: Part 2.1, grade-school
+beddingleaksmoreinformationthanyouexpect:Generative
+math and the hidden reasoning process. arXiv preprint
+embedding inversion attack to recover the whole sentence.
+arXiv:2407.20311,2024.
+arXivpreprintarXiv:2305.03010,2023.
+[12] ShenLi,LiuyiYao,LanZhang,andYaliangLi. Safetylayers
+[24] John Xavier Morris, Wenting Zhao, Justin T Chiu, Vitaly
+of aligned large language models: The key to llm security.
+Shmatikov,andAlexanderMRush. Languagemodelinver-
+arXivpreprintarXiv:2408.17003,2024.
+sion. InTheTwelfthInternationalConferenceonLearning
+[13] MLamparthandAReuel. Analyzingandeditinginnermecha- Representations,2024.
+nismsofbackdooredlanguage353models. InThe2024ACM
+[25] JierenDeng,YijueWang,JiLi,ChenghongWang,ChaoShang,
+Conference on Fairness, Accountability, and Transparency
+HangLiu,SanguthevarRajasekaran,andCaiwenDing. TAG:
+(FAccT),page354,2024.
+gradient attack on transformer-based language models. In
+[14] TianDong,MinhuiXue,GuoxingChen,RayneHolland,Yan Findings of the Association for Computational Linguistics:
+Meng,ShaofengLi,ZhenLiu,andHaojinZhu. Thephiloso- EMNLP 2021,pages 3600–3610,2021. doi: 10.18653/V1/
+pher’sstone:Trojaningpluginsoflargelanguagemodels. In 2021.FINDINGS-EMNLP.305.
+NetworkandDistributedSystemSecuritySymposium,NDSS
+2025.TheInternetSociety,2025. [26] Xinguo Feng,Zhongkui Ma,Zihan Wang,Eu Joe Chegne,
+MengyaoMa,AlsharifAbuadbba,andGuangdongBai. Un-
+[15] AndyZou,LongPhan,SarahChen,JamesCampbell,Phillip coveringgradientinversionrisksinpracticallanguagemodel
+Guo, Richard Ren, Alexander Pan, Xuwang Yin, Mantas training. InProceedingsofthe2024onACMSIGSACCon-
+Mazeika,Ann-Kathrin Dombrowski,et al. Representation ference on Computer and Communications Security,pages
+engineering:Atop-downapproachtoaitransparency. arXiv 3525–3539,2024.
+preprintarXiv:2310.01405,2023.
+[27] GuanzhongChen,ZhenghanQin,MingxinYang,YajieZhou,
+[16] CollinBurns,HaotianYe,DanKlein,andJacobSteinhardt. TaoFan,TianyuDu,andZenglinXu. Unveilingthevulner-
+Discovering latent knowledge in language models without ability of private fine-tuning in split-based frameworks for
+supervision. In The Eleventh International Conference on largelanguagemodels:Abidirectionallyenhancedattack. In
+LearningRepresentations,2023. Proceedingsofthe2024onACMSIGSACConferenceonCom-
+puterandCommunicationsSecurity,page2904–2918.Associ-
+[17] JunhaoChen,ShengdingHu,ZhiyuanLiu,andMaosongSun.
+ationforComputingMachinery,2024. ISBN9798400706363.
+States hidden in hidden states: Llms emerge discrete state
+doi:10.1145/3658644.3690295.
+representationsimplicitly. arXivpreprintarXiv:2407.11421,
+2024.
+[28] ZhenhongZhou,HaiyangYu,XinghuaZhang,RongwuXu,
+Fei Huang,and Yongbin Li. How alignment and jailbreak
+[18] CongzhengSongandAnanthRaghunathan. Informationleak-
+ageinembeddingmodels. InProceedingsofthe2020ACM work:ExplainLLMsafetythroughintermediatehiddenstates.
+SIGSACconferenceoncomputerandcommunicationssecurity,
+InFindingsoftheAssociationforComputationalLinguistics:
+EMNLP2024,pages2461–2488,November2024. doi: 10.
+pages377–390,2020.
+18653/v1/2024.findings-emnlp.139.
+[19] John Morris, Volodymyr Kuleshov, Vitaly Shmatikov, and
+AlexanderRush. Textembeddingsreveal(almost)asmuch [29] OpenAI. Enterprise privacy at openai - does ope-
+astext. InProceedingsofthe2023ConferenceonEmpirical nai review my business data? https://openai.com/
+MethodsinNaturalLanguageProcessing,pages12448–12460, enterprise-privacy/,2024.
+Singapore,December2023. Association forComputational
+[30] AlexanderBorzunov,DmitryBaranchuk,TimDettmers,Mak-
+Linguistics. doi:10.18653/v1/2023.emnlp-main.765.
+simRiabinin,YounesBelkada,ArtemChumachenko,Pavel
+[20] CollinZhang,JohnX.Morris,andVitalyShmatikov. Extract- Samygin,andColinRaffel. Petals:Collaborativeinference
+ingpromptsbyinvertingLLMoutputs. InProceedingsofthe andfine-tuningoflargemodels. InProceedingsofthe61st
+2024ConferenceonEmpiricalMethodsinNaturalLanguage AnnualMeetingoftheAssociationforComputationalLinguis-
+Processing,EMNLP2024,pages14753–14777.Association tics(Volume3:SystemDemonstrations),pages558–568,July
+forComputationalLinguistics,2024. 2023. doi:10.18653/v1/2023.acl-demo.54.
+1644 34th USENIX Security Symposium USENIX Association
+
+=== PAGE 18 ===
+[31] Zhichuang Sun,Ruimin Sun,Changming Liu,Amrita Roy [42] MetaAI. Introducingllama3.1:Ourmostcapablemodelsto
+Chowdhury,Long Lu,and Somesh Jha. Shadownet: A se- date. https://ai.meta.com/blog/meta-llama-3-1/,2024.
+cureandefficienton-devicemodelinferencesystemforcon-
+[43] Shitao Xiao,Zheng Liu,Peitian Zhang,and Niklas Muen-
+volutional neural networks. In 2023 IEEE Symposium on
+nighoff. C-pack:Packagedresourcestoadvancegeneralchi-
+Security and Privacy (SP), pages 1596–1612, 2023. doi:
+neseembedding,2023.
+10.1109/SP46215.2023.10179382.
+[44] NiklasMuennighoff,NouamaneTazi,LoïcMagne,andNils
+[32] Z. Zhang,C.Gong,Y. Cai,Y. Yuan,B. Liu,D.Li,Y.Guo,
+Reimers. Mteb:Massivetextembeddingbenchmark. arXiv
+andX. Chen. No privacyleftoutside: On the (in-)security
+preprintarXiv:2210.07316,2022. doi:10.48550/ARXIV.2210.
+oftee-shieldeddnnpartitionforon-deviceml. In2024IEEE
+07316.
+SymposiumonSecurityandPrivacy(SP),pages55–55,may
+2024.
+[45] MTEB Leaderboard. Massive text em-
+bedding benchmark (mteb) leaderboard.
+[33] JianmoNi,ChenQu,JingLu,ZhuyunDai,GustavoHernán-
+https://huggingface.co/spaces/mteb/leaderboard,2024.
+dezÁbrego,JiMa,VincentYZhao,YiLuan,KeithBHall,
+Ming-WeiChang,etal. Largedualencodersaregeneralizable
+[46] IlyaLoshchilovandFrankHutter. Decoupledweightdecay
+retrievers. arXivpreprintarXiv:2112.07899,2021.
+regularization. InInternationalConferenceonLearningRep-
+resentations,2019.
+[34] Mingyu Jin,Qinkai Yu,Jingyuan Huang,Qingcheng Zeng,
+ZhentingWang,WenyueHua,HaiyanZhao,KaiMei,Yanda [47] PauliVirtanen,RalfGommers,TravisE.Oliphant,MattHaber-
+Meng,Kaize Ding,Fan Yang,Mengnan Du,andYongfeng land,TylerReddy,DavidCournapeau,EvgeniBurovski,Pearu
+Zhang. Exploringconceptdepth:Howlargelanguagemodels Peterson,WarrenWeckesser,JonathanBright,StéfanJ.vander
+acquireknowledgeatdifferentlayers? InProceedingsofthe Walt,MatthewBrett,JoshuaWilson,K.JarrodMillman,Niko-
+2025JointInternationalConferenceonComputationalLin-
+layMayorov,AndrewR.J.Nelson,EricJones,RobertKern,
+guistics,LanguageResourcesandEvaluation(LREC-COLING EricLarson,CJCarey,˙IlhanPolat,YuFeng,EricW.Moore,
+2025),2025.
+JakeVanderPlas,DenisLaxalde,JosefPerktold,RobertCimr-
+man,IanHenriksen,E.A.Quintero,CharlesR.Harris,AnneM.
+[35] BaixiangHuang,CanyuChen,andKaiShu. Authorshipat-
+Archibald,AntônioH. Ribeiro,FabianPedregosa,Paulvan
+tribution in the era of llms: Problems,methodologies,and
+Mulbregt,andSciPy1.0Contributors.SciPy1.0:Fundamental
+challenges. arXivpreprintarXiv:2408.08946,2024.
+AlgorithmsforScientificComputinginPython. NatureMeth-
+[36] Ziwei Ji,Delong Chen,Etsuko Ishii,Samuel Cahyawijaya, ods,17:261–272,2020. doi:10.1038/s41592-019-0686-2.
+Yejin Bang,Bryan Wilie,andPascale Fung. LLM internal
+[48] RuslanMaganaVsevolodovna.Aimedicaldataset,2023.URL
+states revealhallucination riskfacedwith a query. In Pro-
+https://github.com/ruslanmv/ai-medical-chatbot.
+ceedingsofthe7thBlackboxNLPWorkshop:Analyzingand
+InterpretingNeuralNetworksforNLP,pages88–104,Miami, [49] Amod. mental_health_counseling_conversations (re-
+Florida,US,November2024.AssociationforComputational vision 9015341), 2024. URL https://huggingface.
+Linguistics. doi:10.18653/v1/2024.blackboxnlp-1.6. co/datasets/Amod/mental_health_counseling_
+conversations.
+[37] Sahar Abdelnabi, Aideen Fay, Giovanni Cherubin, Ahmed
+Salem,MarioFritz,andAndrewPaverd.Getmydrift?catching [50] ZiyangLuo,CanXu,PuZhao,QingfengSun,XiuboGeng,
+llmtaskdriftwithactivationdeltas. InSaTML,2025. Wenxiang Hu,Chongyang Tao,Jing Ma,Qingwei Lin,and
+DaxinJiang. Wizardcoder:Empoweringcodelargelanguage
+[38] MinxinDu,XiangYue,ShermanS.M.Chow,TianhaoWang,
+modelswithevol-instruct,2023.
+ChenyuHuang,andHuanSun. Dp-forward:Fine-tuningand
+inferenceonlanguagemodelswithdifferentialprivacyinfor- [51] Dan Hendrycks, Steven Basart, Saurav Kadavath, Mantas
+wardpass. InProceedingsofthe2023ACMSIGSACConfer- Mazeika,AkulArora,EthanGuo,CollinBurns,SamirPuranik,
+enceonComputerandCommunicationsSecurity,CCS2023, HoraceHe,DawnSong,andJacobSteinhardt. Measuringcod-
+pages2665–2679.ACM,2023. ingchallengecompetencewithapps. NeurIPS,2021.
+[39] Bo Zhao andHakan Bilen. Datasetcondensation withdis- [52] bigcode. Big code models leaderboard.
+tributionmatching. InProceedingsoftheIEEE/CVFWinter https://huggingface.co/spaces/bigcode/bigcode-models-
+ConferenceonApplicationsofComputerVision.2023,2023. leaderboard,2025.
+[40] BinyuanHui,JianYang,ZeyuCui,JiaxiYang,DayihengLiu, [53] Jianlin Su. The magical effect of the bias term: Rope +
+Lei Zhang,Tianyu Liu,Jiajun Zhang,Bowen Yu,Keming bias=betterlengthextrapolation. https://spaces.ac.cn/
+Lu,etal. Qwen2. 5-codertechnicalreport. arXivpreprint archives/9577,2023.
+arXiv:2409.12186,2024.
+[54] NazneenRajani,LewisTunstall,EdwardBeeching,Nathan
+[41] ContactDoctor. Bio-medical:Ahigh-performancebiomedical Lambert,AlexanderM.Rush,andThomasWolf. Norobots.
+languagemodel. https://huggingface.co/ContactDoctor/Bio- https://huggingface.co/datasets/HuggingFaceH4/
+Medical-Llama-3-8B,2024. no_robots,2023.
+USENIX Association 34th USENIX Security Symposium 1645
+
+=== PAGE 19 ===
+[55] Tim Dettmers,Artidoro Pagnoni,Ari Holtzman,and Luke
+Zettlemoyer. QLoRA:EfficientfinetuningofquantizedLLMs.
+InThirty-seventhConferenceonNeuralInformationProcess-
+ingSystems(NeurIPS),2023.
+[56] ColinRaffel,NoamShazeer,AdamRoberts,KatherineLee,
+Sharan Narang,Michael Matena,Yanqi Zhou,Wei Li,and
+PeterJLiu. Exploringthelimitsoftransferlearningwitha
+unifiedtext-to-texttransformer. Journalofmachinelearning
+research,21(140):1–67,2020.
+Figure 15: Visualisation of internal states for mainstream
+[57] DanHendrycks,CollinBurns,StevenBasart,AndyZou,Man-
+LLMs. The selected LLMs have the same width 4096 for
+tasMazeika,DawnSong,andJacobSteinhardt. Measuring
+massivemultitasklanguageunderstanding. InICLR,2021. dimensionreductionusingt-SNE.
+[58] ZiangLi,MengdaYang,YaxinLiu,JuanWang,HongxinHu, Table10:Evaluationofquantizationasdefense.
+WenzheYi,andXiaoyangXu. GANyouseeme?enhanced
+Defense MMLU CS F1
+datareconstructionattacksagainstsplitinference.InAdvances
+inNeuralInformationProcessingSystems36:AnnualConfer- NoQuant 0.65 97.33±0.25 88.77±0.83
+8-bit 0.65 97.40±0.24 88.84±0.83
+enceonNeuralInformationProcessingSystems2023,NeurIPS 4-bit 0.62 97.22±0.24 88.57±0.83
+2023,2023.
+[59] GuanzhongChen,ZhenhanQin,MingxinYang,YajieZhou,
+[67] Rob Nertney. Confidential Compute on NVIDIA Hopper
+TaoFan,TianyuDu,andZenglinXu. Unveilingthevulnera-
+H100. https://images.nvidia.cn/aem-dam/en-zz/
+bilityofprivatefine-tuninginsplit-basedframeworksforlarge
+Solutions/data-center/HCC-Whitepaper-v1.0.pdf,
+languagemodels:Abidirectionallyenhancedattack. InPro-
+2023.
+ceedingsofthe2024ACMSIGSACConferenceonComputer
+andCommunicationsSecurity,CCS2024.ACM,2024. [68] LuChen,ShaofengLi,BenhaoHuang,FanYang,ZhengLi,Jie
+Li,andYuanLuo. Seeingisnotalwaysbelieving:Thespace
+[60] Hongsheng Hu, Shuo Wang, Tian Dong,and Minhui Xue.
+ofharmlessperturbations. arXivpreprintarXiv:2402.02095,
+Learnwhatyouwanttounlearn:Unlearninginversionattacks
+2024.
+againstmachine unlearning. In 2024 IEEE Symposium on
+SecurityandPrivacy(SP),pages3257–3275,may2024. doi:
+10.1109/SP54263.2024.00248.
+A AdditionalResults
+[61] FeiZheng. Inputreconstructionattackagainstverticalfeder-
+atedlargelanguagemodels. arXivpreprintarXiv:2311.07585, VisualizationofInternalStates.Weappliesthet-SNEontothe
+2023. ISs of various open-source LLMs across different scales. As vi-
+sualized in Figure 15,LLMs rooted from a common pretrained
+[62] Huan Yang,Deyu Zhang,Yudong Zhao,Yuanchun Li,and
+LLM,have similar ISs. For example,Llama-3 and Llama-2 are
+YunxinLiu. Afirstlookatefficientandsecureon-devicellm
+twopretrainedmodelsandhaveseparableISs.Thatsaid,itispos-
+inferenceagainstkvleakage,2024.
+sible to train classify the target LLM type simply using the ISs.
+[63] Guanlong Wu,Zheng Zhang,Weili Wang,Jianyu Niu,Yao To evaluate model type identification of Llama-3,we select the
+Zhang,YeWu,andYinqianZhang. Iknowwhatyouasked: total13 LLMs open-sourcedbefore orafterLlama-3:Vicuna-7B-
+Promptleakageviakv-cachesharinginmulti-tenantllmserv- v1.5,GLM-4-9B-chat,Qwen2.5-14B-Instruct,Meta-Llama-3.1-8B-
+ing. InNetworkandDistributedSystemSecuritySymposium, Instruct,Qwen2.5-7B-Instruct,Qwen2.5-3B-Instruct,Meta-Llama-
+NDSS2025.TheInternetSociety,2025. 3.1-8B(Qlora),gemma-2-9B-it,Llama-3.2-3B-Instruct,Yi-1.5-9B-
+Chat,Mistral-7B-Instruct-v0.3,Llama-2-7b-chat-hf,andMistral-7B-
+[64] WenjieQu,YuguangZhou,YongjiWu,TingsongXiao,Bin- Instruct-v0.2.
+hang Yuan,Yiming Li,andJiaheng Zhang. PromptInver-
+TokenlengthofNoRobots.Figure16showsthehistogramoftoken
+sionAttackagainstCollaborativeInferenceofLargeLanguage
+lengthofNoRobots.ComparedtoInstruction2M,wenotethereare
+Models. In2025IEEESymposiumonSecurityandPrivacy
+certainlong-contexttrainingsampleswhichcanbeindispensableto
+(SP),pages1602–1619.IEEEComputerSociety,May2025.
+trainlong-contextinversionmodel,atexpenseofincreasedtraining
+doi:10.1109/SP61157.2025.00160.
+timeandmemoryusage.
+[65] XinjianLuo,TingYu,andXiaokuiXiao. Promptinferenceat- QuantizationDefense.Table10showstheevaluationofourgenera-
+tackondistributedlargelanguagemodelinferenceframeworks. tiveinversiononquantizedmodel.WeusebitsandbytesforLLM
+arXivpreprintarXiv:2503.09291,2025. quantization.
+[66] AMD Sev-Snp. Strengthening vm isolation with integrity TheoreticalAnalysis.Weinvestigatethegradientmagnitudefor
+protectionandmore. WhitePaper,January,53:1450–1465, ERandTSB.Tosimplynotation,wedenotethetargetISoflayerl,
+f
+2020. h V(x))byh,andconsidertheadversaryoptimizeswtoapproximate
+l (cid:98)
+1646 34th USENIX Security Symposium USENIX Association
+
+=== PAGE 20 ===
+dimensionreduction.Figure17demonstratesthatthesingularbasis
+vectorsandinputembeddingsexhibittightclusteringintherepre-
+sentationspace,whereastheunbiasedbasisdisplayssignificantly
+greaterdispersion.
+B AnalysisofFailureCases
+In this section, we analyze the failure cases caused by non-
+convergenceforouroptimization-basedattackTBSandbythedis-
+tributionmismatchforourgeneration-basedinversionattack.
+Thefailurecasesforourwhite-boxattackarecommonlycaused
+byinappropriatesettings.Forexample,toohighlearningratemay
+Figure16:DistributionoftokenlengthofNoRobots.
+acceleratetheoptimizationatthebeginningbutfallintolocalmin-
+imum afterwards,as validated by the worse inversion quality in
+Figure9.Afailureexampleofhighlearningrate0.001isshownin
+Figure18,wherewecanseemostinvertedtokensareunreadable.
+Eventherearesomekeywordsrecovered,theadversarycannotguess
+originalinputs.
+Besides,duetothecomplexityofoptimizationspace,wealso
+observefailureexampleevenunderappropriatesetting.InFigure20,
+weprovidethelosscurvesforthefirstfoursamplesofMentalhealth
+Figure17:Visualizationofsampledinputembeddingsfrom duringTBSonLlama-3.3-70B.WeobservethattheSample3en-
+Llama-3-8B(left),thesingularbasisobtainedthroughSVD counteredlossdivergence,leadingtoinversionF1score72.91.We
+decompositionofinputembeddings(middle)andunbiased observethatSample3exhibitslossdivergence,resultingintheF1
+basis(right). scoreof72.91.Incontrast,theremainingsamplessuccessfullyes-
+capelocaloptimadespitesimilarinitiallossincreases,ultimately
+achievingsmoothconvergence.Givenourfixedinitializationscheme,
+ψl (w (cid:98) )toh.Withoutlossofgenerality,weconsiderthesquaredL 2 weexplorerandominitializationforasapotentialalternative.Em-
+normforthedistancedandw∈Rd.Thelossfunctionis: piricalevaluationrevealsthatstandardGaussiannoiseinitialization
+(cid:98) in
+degrades convergence speed and ultimately yields inferiorinver-
+L=d(ψl (w
+(cid:98)
+),h)=∥ψl (w
+(cid:98)
+)−h∥2
+2
+. (8) sion performance. Future researchdirections include developing
+boundedrandominitializationstrategiesorincorporatingdynamic
+Thegradientwithrespecttow (cid:98) is: noiseinjectionduringoptimization.
+Figure19illustratesafailurecaseofgeneration-basedinversion
+∂ ∂ L w =2(ψl (w (cid:98) )−h)⊤· ∂ ∂ ψ w l. (9) arisingfromdistributionalmismatch.ThetargettextcontainsSQL
+(cid:98) (cid:98) tablecodethatliesoutsidetheinversionmodel’strainingdistribution,
+Here,thegradientmagnitudeofERdependsdirectlyontheresidual resultinginuninterpretable“<unk>”tokens.Thisdemonstratesthat
+error ∥ψl (w (cid:98) )−h∥ and the Jacobian ∂ψl /∂w (cid:98) of the first l Trans- a necessary condition for successful inversion is comprehensive
+formerlayers.ForTBS,asw (cid:98) =ϕz ( (cid:98) z·B),thegradientwithrespect trainingdatacoverageofalltargetinputtokens.Furthermore,the
+tozbecomes: discrepancyintokendistributionsbetweentheinversionmodel’s
+training data andtargetinputs may lead to suboptimal inversion
+∂L
+=
+∂L
+·
+∂w
+(cid:98) =
+∂L
+·
+∂ϕz (
+(cid:98)
+z·B)
+. (10) performance,particularlywhensignificantfrequencymismatches
+∂z ∂w ∂z ∂w ∂z
+(cid:98) (cid:98) (cid:98) (cid:98) (cid:98) existforcriticaltokens.
+In the experiments,we setϕz (
+(cid:98)
+z·B)=αarctan(
+(cid:98)
+z·B),thus the
+derivativeis
+∂w α
+(cid:98) = ·B⊤. (11)
+∂
+(cid:98)
+z 1+(
+(cid:98)
+zB)2
+For small z,the scaling factor α/(1+(zB)2)≈α,leading to
+(cid:98)
+largergradientmagnitudescomparedtothebaseline.Aszincreases,
+thefactorα/(1+(
+(cid:98)
+zB)2)→0,whichstabilizesthegradientonb(cid:98)z,
+especiallyfordeepmodelwheretheJacobiancanvarygreatly.
+Inconclusion,TBSintroducesanonlinearscalingofgradients
+throughϕz,creatingadynamicwhere:
+(cid:13) (cid:13) (cid:13) (cid:13)
+(cid:13)∂L(cid:13) 1 (cid:13)∂L(cid:13)
+(cid:13) (cid:13)∝ ·(cid:13) (cid:13). (12)
+(cid:13)∂ (cid:98) z(cid:13) 1+( (cid:98) zB)2 (cid:13)∂w (cid:98)(cid:13)
+VisualizationofInputEmbeddingandBasis.Tosupportthefind-
+ingsofFigure5,wealsovisualizethevectorsthroughuniformt-SNE
+USENIX Association 34th USENIX Security Symposium 1647
+
+=== PAGE 21 ===
+Figure18:FailureinversionexampleofTBSattackinMentalHealth.
+Figure19:Failureinversionexampleofgeneration-basedinversioninEvolCode.
+Figure20:LosscurvesofTBSattackinMentalhealth.
+1648 34th USENIX Security Symposium USENIX Association

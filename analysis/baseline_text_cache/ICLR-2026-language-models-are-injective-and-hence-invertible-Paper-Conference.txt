@@ -1,0 +1,4226 @@
+
+=== PAGE 1 ===
+PublishedasaconferencepaperatICLR2026
+LANGUAGE MODELS ARE INJECTIVE
+AND HENCE INVERTIBLE
+GiorgosNikolaou1,5,∗ TommasoMencattini1,2,∗
+DonatoCrisostomi2 AndreaSantilli2 YannisPanagakis4,5 EmanueleRodola`2,3
+1EPFL 2SapienzaUniversityofRome 3Paradigma
+4UniversityofAthens 5Archimedes/AthenaRC,Greece
+ABSTRACT
+Transformercomponentssuchasnon-linearactivationsandnormalizationarein-
+herentlynon-injective,suggestingthatdifferentinputscouldmaptothesameout-
+put and prevent exact recovery of the input from a model’s representations. In
+this paper, we challenge this view. First, we prove mathematically that trans-
+formerlanguagemodelsmappingdiscreteinputsequencestotheircorresponding
+sequenceofcontinuousrepresentationsareinjectiveandthereforelossless,aprop-
+ertyestablishedatinitializationandpreservedduringtraining.Second,weconfirm
+thisresultempiricallythroughbillionsofcollisiontestsonsixstate-of-the-artlan-
+guagemodels,andobservenocollisions. Third,weoperationalizeinjectivity: we
+introduce SIPIT, thefirstalgorithmthatprovablyandefficientlyreconstructsthe
+exactinputtextfromhiddenactivations, establishinglinear-timeguaranteesand
+demonstratingexactinvertibilityinpractice. Overall,ourworkestablishesinjec-
+tivityasafundamentalandexploitablepropertyoflanguagemodels, withdirect
+implicationsfortransparency,interpretability,andsafedeployment.
+1 INTRODUCTION
+Acorequestioninunderstandinglargelanguagemod-
+els is whether their internal representations faithfully PROMPT SPACE LLM LATENT SPACE
+preserve the information in their inputs. Since Trans-
+Rd
+former architectures rely heavily on non-linearities, δ
+x(cid:31) z(cid:31)
+ε
+x
+normalization,andmany-to-oneattentionmechanisms, z
+it is often assumed that they discard information: dif- SIPIT
+ferent inputs could collapse to the same hidden state,
+making exact recovery of the input impossible. This δ>0 = ε>0
+⇒
+view motivates concerns around transparency, robust-
+ness, and safe deployment, as it suggests that the link Figure1: Themapfrompromptstolatent
+betweentextandrepresentationisinherentlylossy. spaceisinjective. SIPITinvertsit.
+Inthispaper,weshowthatthisintuitionismisleading. Despitetheirapparentcomplexity,standard
+decoder-only Transformer language models (seen as maps from prompts to hidden states) are in
+factalmost-surelyinjective;foressentiallyallparametersettingsandduringthecourseoftraining,
+differentpromptsyielddifferentlast-tokenrepresentations(e.g.,seeFigure1).
+Building upon this property, we further provide a practical algorithm, SIPIT, that reconstructs the
+exactinputfromhiddenactivations. Toourknowledge,itisthefirsttoguaranteeexactrecoveryin
+provablelineartime(worstcasebound),oftenfasterinpractice,turninginjectivityfromatheoretical
+propertyintoanoperationaltool.
+Our approach. To establish our result, we take a rigorous mathematical view of Transformers
+as functions. The key idea is that their components (embeddings, LayerNorm, causal attention,
+∗Equalcontribution;authorordersettledviaMarioKart.
+Correspondingauthors: georgios.nikolaou,tommaso.mencattini @epfl.ch
+{ }
+1
+
+=== PAGE 2 ===
+PublishedasaconferencepaperatICLR2026
+MLPs,andresidualwiring)aresmoothandstructuredenoughthatthemodel,asawhole,behaves
+predictably with respect to its parameters. Using tools from real analysis, we show that collisions
+(twodifferentpromptsproducingtheexactsamerepresentation)canonlyoccuronasetofparameter
+valuesthathasmeasurezero;thatis,theyaremathematicalexceptionsratherthanpossibilitiesone
+shouldexpectinpractice. Moreover, weprovethatcommontrainingprocedures(gradientdescent
+withstandardstepsizes)nevermoveparametersintothisexceptionalset. Inlayman’sterms,almost
+allmodelsatinitializationareinjective,andtrainingpreservesthisproperty.
+Technically, our proofs rely on two ingredients. First, we establish that Transformers are real-
+analytic functions of their parameters, which allows us to reason precisely about when and where
+collisionscouldoccur. Second,weconstructparametersettingswherenotwopromptscollide,and
+showthatgradientdescent(GD)doesnotcollapsesuchseparation,i.e.,collisionsremainameasure-
+zeroevent.Theendresultisafinite-horizonguarantee:afteranyfixednumberoftrainingsteps,and
+undermildassumptions,injectivityholdswithprobabilityone. Weprovidecompleteformalproofs
+ofthesestatements.
+Main result. Our central finding is that causal decoder-only Transformer language models are
+injective almost surely. Formally, consider one such model with embedding width d, at least one
+attentionheadperblock,real-analyticcomponents,finitevocabulary ,andfinitecontextlengthK.
+Initialize its parameters θ at random, using any distribution that has V a density1 (such as Gaussian,
+uniform,orXavier/Glorot),andtrainforanyfinitenumberT ofGDstepswithstepsizesin(0,1).
+Then,withprobabilityoneovertherandominitialization,
+s=s′ = r(s; θ )=r(s′; θ ),
+T T
+̸ ⇒ ̸
+i.e.,themapfrompromptsstolast-tokenrepresentationsr(s; θ )isinjectiveacrossallpromptsin
+T
+≤K. Inshort,collisionsinpracticalsettingsformameasure-zeroset,andneitherinitializationnor
+V
+trainingwilleverplaceamodelinsidethatset.
+Significance. Ourresultshowsthatinstandarddecoder-onlyTransformers,differentpromptsal-
+most surely yield different last-token representations across all practically relevant parameter set-
+tings and training procedures. The guarantee is both generic (it fails only on a measure-zero set
+of pathological parameters) and practical (it holds at finite width, depth, and training time under
+commoninitializations).
+Conceptually,wereplacealong-assumedpropertywitharigoroustheorem,showingthatinjectivity
+is not an asymptotic idealization but a structural consequence of the architecture itself. Techni-
+cally, our analytic framework pinpoints when collisions can arise (through deliberate non-analytic
+choicessuchasquantizationortying),andclarifiesthatotherwisethemodelisinherentlylossless.
+Importantly,itestablishesthatlast-tokenstatesalmosteverywhereidentifytheinput.
+Finally, we turn this theoretical guarantee into an operational tool: our algorithm SIPIT uses
+gradient-based reconstruction to recover prompts exactly from internal activations, efficiently and
+with provable linear-time guarantees. This confirms empirically that collisions do not occur in
+practice. Beyondtransparencyandsafety,thiselevatesinvertibilitytoafirst-classpropertyofTrans-
+formerlanguagemodels,enablingstrongerinterpretability,probing,andcausalanalyses.
+2 TRANSFORMERS ARE INJECTIVE
+Summary. In this section we show that decoder-only Transformers almost surely map different
+promptstodifferenthiddenstates.Collisionscanonlyoccurundermeasure-zeroparameterchoices,
+and gradient-based training never creates them. In simple terms, Transformer representations are
+structurallylossless.
+Approach. We consider causal decoder-only Transformer language models with vocabulary ,
+finitecontextwindowK,andembeddingdimensiond. Foraninputsequences ≤K,letr(s; θ V )
+denotethefinalhiddenrepresentationatthelasttokenposition2,givenparamete ∈ rs V θ.
+1Putsimply,parametersarenotdrawnfromadegenerateorhand-craftedset.
+2Wefocusonthelast-tokenstate,sinceitalonedrivesnext-tokenprediction;earlierrowsmatteronlyinsofar
+astheyshapethisfinalstate.Injectivityatthelasttokenisthepropertyofrealoperationalinterest.
+2
+
+=== PAGE 3 ===
+PublishedasaconferencepaperatICLR2026
+Ouranalysisreliesonthreefacts:
+(i) Real-analyticity. Each component of the architecture (embeddings, positional encodings,
+LayerNormwithε>0,causalattention,MLPswithanalyticactivations,residuals)isreal-
+analytic in its parameters (see Appendix A.2 for the mathematical background). This
+smoothness implies that the set of parameter values causing two distinct prompts to col-
+lideisextremelythin(measurezero).
+(ii) Initialization. Standard initialization schemes (Gaussian, uniform, Xavier/Glorot, etc.)
+drawparametersfromcontinuousdistributionswithdensities,sotheyavoidmeasure-zero
+setswithprobabilityone.
+(iii) Training. Gradient-basedupdates(includingSGDandmini-batch/full-batchGD)preserve
+absolute continuity of the parameter distribution after any finite number of steps; thus,
+trainingcannotgeneratecollisions.
+Thesefactsallowustostateandproveinjectivityresultswithoutrelyingonasymptotics. Webegin
+byestablishingtheanalyticstructureofthearchitecture.
+Theorem2.1(Transformersarereal-analytic). FixembeddingdimensiondandcontextlengthK.
+AssumetheMLPactivationisreal-analytic(e.g. tanh, GELU).Thenforeveryinputsequences
+≤K,themap ∈
+V
+(s,θ) r(s; θ) R d (1)
+(cid:55)→ ∈
+isreal-analyticjointlyintheparametersθandtheinputembeddings.
+Sketchofproof(fullproofinAppendixB,PropositionB.3). Each building block is real-analytic:
+polynomials(embeddings,projections),exponentialandsoftmax(attention),reciprocalsquareroot
+(LayerNormwithε > 0),analyticactivationsintheMLP,andaffinemaps. Real-analyticfunctions
+are closed under addition, multiplication, quotient, and composition. Since the Transformer is a
+finitecompositionofsuchblocks,theentiremapisreal-analytic.
+This smoothness result drives everything that follows:
+it ensures that collisions, if they exist, are confined to
+measure-zeroparametersets. Wenowask: whathappens
+atinitialization?
+Theorem 2.2 (Almost-sure injectivity at initialization).
+Letθ bedrawnfromanydistributionwithadensity(e.g. f f
+1 2
+Gaussianoruniform). Thenforanytwodistinctprompts
+s,s′ ≤K,
+∈V
+Pr[r(s; θ)=r(s′; θ)]=0. (2)
+f f
+2 1
+−
+Sketchofproof(fullproofinAppendixC,TheoremC.2).
+Fixs=s′andconsider Figure 2: Two real-analytic functions
+̸ f and f and their difference f
+1 2 1
+h(θ)= ∥ r(s; θ) − r(s′; θ) ∥ 2 2 . (3) f 2 . Black contours show the zero set − s,
+which form thin curves (measure zero)
+By Theorem 2.1, h is real-analytic. A fundamental di-
+ratherthanregionsofpositivemeasure.
+chotomy of real-analytic functions states that either h is
+identicallyzero,oritszerosethasLebesguemeasurezero(seeFigure2foranillustration). There-
+fore, toruleoutthepathologicalcaseh 0itsufficestoexhibitasingleparametersettingwhere
+r(s; θ)=r(s′; θ). ≡
+̸
+Thiscanalwaysbedone: ifsands′differatthelastposition(symbolorlength),freezethenetwork
+so that the last state reduces to embedding plus position, and choose distinct rows; this already
+separatesr(s)andr(s′).Ifinsteadtheydifferearlier,leti⋆bethefirstmismatchandsetoneattention
+head so the last position attends almost entirely to i⋆, encoding its token in the value; this forces
+differentoutputsforsands′.
+Hence h is not identically zero, and so the collision set θ : h(θ) = 0 has Lebesgue measure
+{ }
+zero. Since standard initializations have densities, the probability of sampling such θ is zero, and
+r(s; θ)=r(s′; θ)(injectivity)holdsalmostsurelyatinitialization.
+̸
+3
+
+=== PAGE 4 ===
+PublishedasaconferencepaperatICLR2026
+According to Theorem 2.2, at initialization, collisions are mathematically impossible except on a
+vanishinglysmallsetofparametervalues. Finally,withthefollowingTheoremweensuretraining
+doesnotbreakinjectivity.
+Theorem2.3(Injectivitypreservedundertraining). Letθ beinitializedfromadistributionwitha
+0
+density,andletθ betheparametersafterT stepsofgradientdescentwithstepsizesin(0,1).Then
+T
+withprobabilityone,
+s=s′ = r(s; θ )=r(s′; θ ), (4)
+T T
+̸ ⇒ ̸
+Sketchofproof(fullproofinTheoremsC.1andC.5). Atinitialization,θ isdrawnfromadistribu-
+0
+tion with a density, hence absolutely continuous. To break injectivity during training, GD would
+needtomapthiscontinuouslawontothemeasure-zerocollisionsetidentifiedinTheorem2.2. We
+showthiscannothappen.
+AsingleGDstepisthemapϕ(θ)=θ η (θ),where isthetrainingloss.Becausethenetwork
+− ∇L L
+andthesoftmaxcross-entropylossarereal-analytic,ϕisalsoreal-analytic.ItsJacobiandeterminant
+detDϕ(θ) is itself real-analytic and not identically zero (one can check this by evaluating at a
+simpleparametersetting). HencethesetwheredetDϕ = 0hasmeasurezero. Awayfromthatset,
+theInverseFunctionTheoremapplies: ϕisasmooth,locallyinvertiblechangeofcoordinatesthat
+can stretch or bend space but cannot collapse regions of positive volume onto lower-dimensional
+sets. Therefore, pushing forward an absolutely continuous distribution through ϕ yields another
+absolutelycontinuousdistribution.
+Sincethisargumentholdsforeachstep,anyfinitesequenceofGDupdatespreservesabsolutecon-
+tinuity of the parameter law. Combining with Theorem 2.2, which shows that collision sets are
+measure-zero,weconcludethatr(s; θ )=r(s′; θ )almostsurelyforalls=s′.
+T T
+̸ ̸
+Thusinjectivityisnotjustaninitializationpropertybutremainstruethroughouttraining. Asimple
+butimportantcorollaryfollows.
+Corollary2.3.1(SGDandmini-batchGD). UndertheassumptionsofTheorem2.3,thesamecon-
+clusionholdswhentheupdatesareθ = θ η (θ )witharbitrary(possiblyrandomor
+t+1 t
+−
+t
+∇
+θ
+L
+Bt t
+adversarial)batchselections ,thusincludingthesingletoncaseofSGDandthefulldataset.
+t
+B
+Proof. TheproofargumentofTheorem2.3isunchanged: foreachfixedbatch , theupdatemap
+B
+ϕ (θ) = θ η (θ) is real-analytic with a Jacobian that is not identically zero. Indeed, the
+B B
+batchlossis − thea ∇ ve L rage = 1 (cid:80)|B| ,soatthepointθ fromthesingle-sampleproof(where
+L B |B| i=1L i ⋆
+theJacobiandeterminantissample-independentandnonzero)thebatchJacobiancoincideswiththe
+single-sampleonebylinearityofdifferentiation,anditsdeterminantisthereforealsononzero.Thus,
+thefinitecompositionofsuchmapspreservesabsolutecontinuityoftheparameterlaw.
+Together with this robustness to different training regimes, we can also strengthen the guarantee
+itself: injectivityholdsnotjustpairwise,butgloballyacrossfinitesetsofprompts.
+Corollary2.3.2(Distinctnessforfinitesets). Foranyfinitesetofprompts ≤K,therepresen-
+S ⊆V
+tations r(s; θ ):s arealmostsurelyalldistinct.
+T
+{ ∈S}
+Proof. SeeAppendixC,CorollaryC.2.1.
+These results show that decoder-only Transformer language models are structurally injective: dif-
+ferent prompts almost surely yield different last-token states. Collisions can be manufactured,
+e.g.,throughdeliberatenon-analyticchoices(quantization,non-smoothactivations),butinpractical
+trainingpipelines,injectivityisguaranteed;extensiveexperimentsin§4.1confirmthisempirically.
+Failurecases. Weshowedthatnon-injectivetransformersareoverwhelminglyunlikely,thoughit
+is still possible for an adversary to construct collisions by hand. For instance, if two vocabulary
+itemsv = v areassignedexactlythesameembeddingvector,thenanypromptsdifferingonlyby
+i j
+̸
+swappingv andv yieldidenticalrepresentations. Likewise,iftwoabsolutepositionalembeddings
+i j
+are made exactly equal and the remaining weights are tuned to suppress other positional signals,
+4
+
+=== PAGE 5 ===
+PublishedasaconferencepaperatICLR2026
+103
+101
+10− 1
+10− 3
+10− 5
+Gemma-3/1
+G
+B emma-3/
+G
+4B emma-3/12B GPT-2/S GPT-2/M GPT-2/L
+)nim(ecnatsiD2L
+103
+101
+10− 1
+10− 3
+Collisionthreshold
+10− 5
+1 2 3 4 5 6 7 8 9 10 11 12
+Layer
+ecnatsiD2L
+Collisionthreshold
+Figure3:Seekingcollisionsinalarge-scalepromptset:Theminimumdistancesbetweenlast-token
+states are far above the collision threshold 10−6: (left) across layers for GPT-2 and Gemma-3
+families(onedotperlayer),(right)acrossdepthforGPT-2 Small;distancesgrowwithdepth.
+one can force collisions between sequences that differ only at those positions. These scenarios,
+however,requiredeliberatelyengineeredparameterchoices: undercontinuousrandominitialization
+andstandardtraining,theprobabilityofsuchcoincidencesiszero.
+3 EXACT PROMPT RECOVERY VIA SIPIT
+Intheprevioussection,wehaveproventhatdecoder-onlyTransformersarealmostsurelyinjective,
+i.e.,differentpromptsmaptodifferenthiddenstates. Wenowshowhowthispropertycanbeused
+inpracticetoreconstructtheexactinputpromptgivenhiddenstatesatsomelayer. Wecallthis
+algorithmSIPIT(SequentialInversePromptviaITerativeupdates).3
+Threatmodel. Thispaperfocusesontheinjectivityresultanditsalgorithmicconsequence;wedo
+notdefineafulladversarialmodel. AnaturalsettingwhereSIPITappliesisoneinwhichanadver-
+saryobtainsthehidden-statesequence—forinstance,throughaleakedKV-cache,ashared-inference
+pipeline,oranAPIthatexposesintermediaterepresentations. Ourinjectivityresultguaranteesthat
+exactrecoveryfromonlythefinalembeddingispossibleinprinciple,butdesigninganefficientalgo-
+rithmforthatsettingisnontrivialandlefttofuturework;hereweassumeaccesstoallper-position
+statesatagivenlayerℓ.
+Recall from §2 that the mapping from a prompt s to its last-token state is almost surely injective.
+Since the last state is itself a deterministic function of the hidden matrix at any layer ℓ, injectivity
+extendstothefullrepresentation
+s H(ℓ)(s) R T×d. (5)
+(cid:55)→ ∈
+Wedenotebyh (s)therowofH(ℓ)(s)atpositiont. Inthefollowing,theparametersθ andtarget
+t
+layerℓareconsideredfixedandomittedforsimplicity.
+ThealgorithmexploitsthecausalstructureofTransformers: thehiddenstateatpositiontdepends
+onlyontheprefix s ,...,s andthecurrenttokens . Thismeansthatifwealreadyknowthe
+1 t−1 t
+⟨ ⟩
+prefix,thenthehiddenstateatpositiontuniquelyidentifiess .
+t
+Example. Supposethevocabularyisa,b,candthetruepromptis a,b . Att=1,thehiddenstate
+⟨ ⟩
+depends only on s . By comparing the observed state with the three candidate states produced by
+1
+tryinga,b,andc,wecantellexactlywhichonematches,thusrecoverings =a. Thenatt=2,we
+1
+knowtheprefix a ,sowetryappendingeachcandidatetokenandagainmatchtheresultinghidden
+⟨ ⟩
+statetorecovers =b. Iteratingthisprocedurereconstructsthefullsequence.
+2
+Moregenerally,wecanlookatthe“one-step”map
+v h (π v ), v , (6)
+j t j j
+(cid:55)→ ⊕ ∈V
+which gives the hidden state at step t for each possible next token, given the fixed prefix π =
+s ,...,s (here denotesconcatenation).
+1 t−1
+⟨ ⟩ ⊕
+3Implementationavailableathttps://github.com/giorgosnikolaou/SIPIT.
+5
+
+=== PAGE 6 ===
+PublishedasaconferencepaperatICLR2026
+Remark. Bytheanalyticargumentsof§2,theone-stepmapisalmostsurelyinjective: withafixed
+prefix,anytwodistincttokensalmostsurelyyielddistincthiddenstates.
+Thispropertymakessequencerecoverystraightforward.Ateachstept,giventhehiddenstateh(cid:98)t and
+thealreadyrecoveredprefix, wesimplycheckwhichcandidatetokenproducesamatchinghidden
+state. Thattokenmustbethetrues . Repeatingthisprocessrecoverstheentiresequence.
+t
+This leads to the SIPIT algorithm, shown in Algorithm 1. At every position, the algorithm cycles
+throughvocabularycandidates(accordingtosomepolicysuchasrandomorderorgradient-guided
+search)untilitfindstheuniquematch4,thenappendsittothereconstructedprefixandmoveson.
+Algorithm1SIPIT:SequentialInversePromptviaITerativeupdates
+Require: Observedlayer-ℓstatesH(cid:98)(ℓ) R T×d;vocabulary ;toleranceε 0.
+∈ V ≥
+Ensure: Recoveredsequences= ˆs ,...,ˆs .
+(cid:98) 1 T
+⟨ ⟩
+1: s
+(cid:98)
+←⟨⟩
+2: fort=1toT do
+3: ▷testedcandidates
+C ←∅
+4: forj =1to do
+|V|
+5: v j POLICY( , , (cid:98) s,ℓ) ▷newcandidatetokenv j (seeAlg.2and3)
+← V C
+6: ifh(cid:98)t π,t (v j ; ε)then ▷verifyv j (seeDef.D.2)
+∈A
+7: (cid:98) s (cid:98) s v j ▷hit!
+← ⊕
+8: break
+9: else
+10: v j
+C ←C∪{ }
+11: endif
+12: endfor
+13: endfor
+14: returns
+(cid:98)
+ToruleoutedgecasesandanalyzethecomputationalcostofSIPIT,wenowstateaformalguarantee.
+Theorem3.1(CorrectnessofSIPIT). UndertheassumptionsofTheorem2.3,givenobservedhidden
+statesH(cid:98)(ℓ),SIPITrecoversthetrueinputsequenceswithprobabilityoneinatmostT steps.
+|V|
+Sketchofproof(fullproofinAppendixD,Thm.D.2,Prop.D.4). At each step, local injectivity en-
+suresauniquetokenmatchestheobservedstate. Asthepolicyspansthevocabulary,thistokenwill
+befoundinatmost trials. Inductionovert=1,...,T completestheargument.
+|V|
+Theorem3.2(RobustnessofSIPIT). UndertheassumptionsofTheorem2.3,fixalayerℓanddefine,
+foranyprefixπandtimet,
+∆ π,t := v̸= m v i ′ n ∈V (cid:13) (cid:13)h t (π ⊕ v) − h t (π ⊕ v′) (cid:13) (cid:13) 2 .
+Let s = s ,...,s , define the prefixes π = s ,...,s and suppose access to the perturbed
+1 T t 1 t−1
+⟨ ⟩ ⟨ ⟩
+hiddenstates
+h(cid:98)t (π
+t ⊕
+s
+t
+)=h
+t
+(π
+t ⊕
+s
+t
+)+e
+t
+,
+∥
+e
+t ∥ 2
+< ∆π
+2
+t,t, t
+∈
+[T].
+ThenSIPITrecoversthetruesequenceswithprobabilityone,andterminatesinatmostT steps.
+|V|
+ProofinAppendixD,Thm.D.2,Prop.D.2.
+In short, SIPIT turns the almost-sure injectivity of Transformer representations into a constructive
+procedure: not only are hidden states unique identifiers of prompts, but the exact input sequence
+canbeefficientlyrecoveredinlineartime,andoftenfasterinpractice. Itisastructuralpropertyof
+Transformerrepresentations,notaquirkofinitializationortraining.
+4Inpractice,weacceptmatchesiftheobservedhiddenstateiswithinanε-ballaroundthepredictedone.
+6
+
+=== PAGE 7 ===
+PublishedasaconferencepaperatICLR2026
+102
+10−1
+10−7
+0 1 2 3 4 5 6 7 8 9
+SampleIndex
+ecnatsiD2L
+GPT-2 Small
+104
+10−1
+Collisionthreshold
+10−7
+0 1 2 3 4 5 6 7 8 9
+SampleIndex
+ecnatsiD2L
+Gemma3-1B
+Collisionthreshold
+Figure4: Exhaustivecollisionsearchonthe10closestprefixprompts. Theboxplotslookflatand
+uneventful, andthatisthepoint: evenunderstress-testconditionswithbillionsofcandidatepairs,
+allminimastaywellabovethecollisionthreshold,showingthatnothingcollapses.
+4 EXPERIMENTS
+Wepreviouslyprovedthatdecoder-onlyTransformersareinjective(§2)andintroducedanalgorithm,
+SIPIT, that leverages this property to recover the exact input prompt from hidden states at a given
+layer (§3). We now provide extensive empirical evidence supporting our theory by showing that
+distinct prompts yield distinct embeddings, i.e., no collisions occur by a large margin (§4.1). We
+thendemonstratethatSIPITsuccessfullyreconstructstheoriginalinputprompt(§4.2).
+Environment. All experiments were run on a single NVIDIA A100-SXM (64GB) GPU.
+Python 3.11, CUDA 12.2, PyTorch 2.8.0, and transformers 4.50.0 were used for all experi-
+ments. Reportedruntimesrefertothissetup.
+4.1 SEARCHINGFORCOLLISIONS
+We collected 100k prompts by uniformly sampling
+fromamixtureoffourdatasets: wikipedia-en5, Model
+ℓ2Distance(min)
+layer1 layerL layerL
+C4 (Raffel et al., 2020), The Pile (Gao et al., 2
+Llama-3.1-8B 0.001 0.129 0.620
+2020), and python-github-code6. For each Mistral-7B-v0.1 0.002 0.187 1.274
+prompt, we extracted the last-token representation Phi-4-mini-ins 0.014 1.336 9.020
+TinyStories-33M 0.029 1.434 2.793
+andsystematicallycheckedwhetheranytwodistinct
+prompts produced identical embeddings. This pro-
+Table 1: Minimum pairwise distance be-
+cessrequiredaround5billionpairwisecomparisons.
+tween last-token states in the first, middle,
+Weobservednocollisionsacrossallmodelsandlay- and final layers of four models. All values
+ers: distinct prompts always yielded distinct last-
+arewellabovethecollisionthreshold10−6.
+token states. Figure 3 (left) shows the per-layer minimum distances for the Gemma3 pretrained
+(Teametal.,2025)andGPT-2(Radfordetal.,2019)families,withstrictlypositivevaluesthrough-
+out.Table1complementsthisbyreportingthesamestatisticforLlama-3.1-8B(Grattafiorietal.,
+2024), Mistral-7B-v0.1 (Jiang et al., 2023), Phi-4-mini-instruct (Microsoft et al.,
+2025) and TinyStories-33M (Eldan & Li, 2023), again showing clear separation at the first,
+middle,andlastlayers. Finally,Figure3(right)zoomsinonGPT-2 Small,revealingthatthese
+distances typically increase with depth. Additional results for GPT-2 Medium, GPT-2 Large
+andGemma3(1B,4B,12B)appearinAppendixE,confirmingthesametrend.
+Model
+ℓ2Distance(min)
+Model Size
+ℓ2Distance(min)
+FP4 INT8 FP32 layer1 layerL/2 layerL
+Llama-3.1-8B 2.281 6.597 1.274 phi-4 14B 0.010 1.025 8.759
+Mistral-7B-v0.1 1.748 2.692 1.136 Llama-3.1-70B 70B 0.005 0.465 3.975
+Phi-4-mini-instruct 18.368 20.956 8.780
+Table2:QuantizedModels:Minimumpair- Table 3: Large Models: Minimum pairwise
+wisedistancebetweenlast-tokenstatesinthe distance between last-token states in the first,
+finallayerofthreequantizedmodels. middle,andfinallayersoftwolargemodels.
+5https://huggingface.co/datasets/wikimedia/wikipedia
+6https://huggingface.co/datasets/angie-chen55/python-github-code
+7
+
+=== PAGE 8 ===
+PublishedasaconferencepaperatICLR2026
+103
+101
+10−1
+10−3
+10−5
+0 100 200 300 400 500
+Sequencelength
+ecnatsiD2L
+Figure 5 shows how pairwise distances between last-
+token states vary with prompt length in GPT-2
+Small. Three patterns emerge: (i) the minimum dis-
+tance is never close to zero at all lengths, and (ii) it
+mean
+min grows rapidly at short lengths but then levels off, sug-
+max gestingthatbeyondamoderatecontextsize,addingto-
+kensdoesnotaffectseparability;(iii)theoverallspread
+Collisionthreshold (min-max) stays bounded, with no sign of pathologi-
+calcollapses. SimilarbehaviorisseeninGemma3(see
+AppendixE,Figure9). Overall, clearmarginsemerge
+quicklyandthenstabilize,makingcollisionsunlikelyat
+Figure 5: Sequence length vs. pairwise
+anysequencelength.
+distanceforGPT-2. Min,mean,andmax
+distancesriseatshortlengthsandthensta-
+Exhaustivecollisiontest. Differentfrompreviousex-
+bilize,indicatingconsistentseparability.
+periments, in this setting (Figure 4), we restrict our
+analysis to the 10 prompts from the dataset mixture whose embeddings have the smallest last-
+token distances. For each of these prompts, we appended every vocabulary token and com-
+puted all pairwise distances between the resulting last-token states, effectively performing an ex-
+haustive search over continuations and yielding more than 343 billion prompt pairs per model.
+Thisexhaustiveexperimenthelpsruleoutthepossibilitythatearlierobservationsweresimplydue
+tochanceinrandomsamplingratherthanatrueabsenceofcollisions. Whileacompletesearchover
+allpossiblepromptswouldbeideal,itiscomputationallyinfeasible. Thenumberofuniqueprompts
+grows exponentially with sequence length, and the number of pairwise comparisons grows even
+faster. Forcontext,evenwithsingle-tokenpromptsandthevocabularysizeofGemma3-1B,there
+arealreadyover34billionpossiblepromptpairs,makingexhaustiveevaluationentirelyimpractical.
+Ourcompromisestillrevealedstructure: weidentified5promptpairswithhighlysimilarlast-token
+embeddings,suggestingoverlappingsemanticcontentandmotivatingustoaskwhetherdistinctnext
+tokenscouldpreservemeaning,i.e.,yieldessentiallyidenticallast-tokenhiddenstates.
+Figure 4 reports the resulting distributions as boxplots for both 1
+GPT-2 SmallandGemma3-1B,withdistancesfarfromzero(no
+2
+collision),confirminglocalinjectivityaspredictedbyourtheory. 3
+4
+FP4andINT8weightquantization. Toassesshowweightquan- 5
+tization affects pairwise representation distances, we conducted 6
+additional experiments with FP4 and INT8 quantization on sev- 7
+eral models (Llama-3.1-8B, Phi-4-mini-instruct, and 8
+Mistral-7B-v0.1). WefurtherextendedthisanalysistoFP4- 9
+quantized 14B and 70B parameter models, namely Phi-4 (14B) 10
+and Llama-3.1-70B. As shown in Tables 2 and 3, across all 11
+testedmodelsquantization(1)doesnotintroduceanycollisions,(2) 12
+0 50 100 150
+morethandoublestheminimumdistancebetweenrepresentations,
+Inversiontime(s)
+therebypreservingtheintegrityoftherepresentationspace,and(3)
+Figure 6: Inversion time as a
+maintainsthisseparationevenasmodelsizeincreasessubstantially.
+function of depth. Runtimes
+riseonlymildlyacrosslayers.
+4.2 INVERTIBILITYRESULTS
+Wenowtestwhetherthetheoreticalinjectivitytranslatesintoexactrecoveryonpre-trainedmodels.
+Using SIPIT withonlythehiddenstatesatafixedlayer, weattempttoreconstructthefullprompt
+token-by-tokenforGPT-2 Small.Wesample100prompts,witha90%-10%splitbetweenmean-
+ingfulsentencesandrandomtokensequences(totestrobustnessinunstructuredcases),andattempt
+to reconstruct them from hidden states. We compare against HARDPROMPTS (Wen et al., 2023),
+whichleveragesgradientsignalsforapproximatepromptdiscovery,andagainstaSIPITablationthat
+replacesthegradient-guidedcandidatepolicywiththeuniformlyrandompolicy(BRUTEFORCE).
+Other inversion approaches (Morris et al., 2023a;b; Nazir et al., 2025) tackle a different setting
+altogether: they operate in black box access, using sequences of next-token logprobs or encoder
+logitsratherthanhiddenstates,andtrainauxiliaryinverterstoreconstructtext,athighcomputational
+cost. Their outputs are typically approximate and not guaranteed exact. These differences make
+8
+
+=== PAGE 9 ===
+PublishedasaconferencepaperatICLR2026
+InversionPerformance
+Model Vocabsize
+Accuracy Time(s) Vocabexplored(%)
+Mistral-7B-v0.1 32000 100% 111.78 46.50 0.19 0.08%
+Llama-3.1-8B 128255 100% 549.48±265.75 0.21±0.10%
+± ±
+Table4: InversionperformanceonFP4-quantizedmodelswithdifferentvocabularysizes. SIPITre-
+coversalltokenswith100%accuracywhileexploringlessthan0.22%ofthevocabularyonaverage.
+them complementary but not directly comparable to our setting of training-free, exact inversion
+fromhiddenstatesindecoder-onlyLMs.
+Results are reported in Table 5. Across all prompts
+Method MeanTime(s) Accuracy
+(20 tokens each), SIPIT recovers the exact sequence
+with 100% token-level accuracy (no errors, no colli- HARDPROMPTS 6132.59 ± 104.61 0.00
+BRUTEFORCE(ours) 3889.61 691.17 1.00
+sions), matching the theoretical guarantee of linear- ±
+SIPIT(ours) 28.01 35.87 1.00
+timeconvergence. Incontrast, HARDPROMPTS com- ±
+pletelyfailstorecovertheinput,whileBRUTEFORCE
+Table 5: SIPIT ensures efficient exact re-
+eventuallysucceedsbutataprohibitivecomputational
+covery,unlike HARDPROMPTS (norecov-
+cost,requiringseveralordersofmagnitudelonger.
+ery)orBRUTEFORCE(infeasibleruntime).
+Robustnessandvocabularyscaling. ThetheoreticalanalysisinTheorem3.2showsthatourin-
+versionalgorithmisrobusttoacertainlevelofnoisewhilemaintaininglinearscalinginvocabulary
+size. Toempiricallyvalidatethis,weuseFP4-quantizedversionsofMistral-7B-v0.1( 32K
+vocabulary size) and Llama-3.1-8B ( 128K). We sample 50 prompts (10 tokens eac ≈ h) and
+≈
+attempttoreconstructthemfromhiddenstatescorruptedbyFP4weightquantization. Asshownin
+Table 4, SIPIT reconstructsall inputswith perfectaccuracy whileexploring, onaverage, lessthan
+0.22% of the vocabulary, demonstrating that the gradient-based heuristic is both robust to quanti-
+zationnoiseandhighlyefficient. Fromacomplexityperspective,thenearlyconstantpercentageof
+tokensexploredacrossthetwovocabularyscalesempiricallyconfirmsthepredictedlinearscaling.
+Effectoflayerdepth. Finally,Figure6showsinversiontimesbylayerforlongerprompts(ranging
+from20to200tokens). Althoughdeeperlayersarecostlierinprinciple(sinceverifyingacandidate
+and computing gradients require traversing more blocks), the effect is minor: runtimes rise only
+slightlyfromfirsttolastlayer,andthescalingremainsgracefuloverall. Likely,earlierlayersneed
+moreiterationstoconverge,whiledeeplayersstorericherinformationthatreducesthesearcheffort.
+Asaresult,thenetcostremainsstable,confirmingSIPITisefficientacrossdepth.
+5 RELATED WORK
+Ourresultsconnecttotwoactivelinesofresearch:theoreticalanalysesofTransformerarchitectures,
+andinverseproblemsinlanguagemodeling. Webrieflyreviewbothtopositionourcontributions.
+Analytical properties of Transformers. Viewed as functions on R d, individual Transformer
+components are clearly non-injective: LayerNorm collapses along per-example statistics (Ba
+et al., 2016), residual connections can cancel, and in attention-only stacks, rank decays doubly-
+exponentiallywithdepth(Dongetal.,2021). Likewise,ontheoutputside,thesoftmaxbottleneck
+constrainsthedistributionsreachablebylanguagemodels(Yangetal.,2018). Fromthisalgebraic
+perspective,Transformersseeminherentlymany-to-one,anintuitionechoedbyclassicalcomplete-
+nessanduniversal-approximationtheoremsforTransformers,whichshowthathighlymany-to-one
+mapscanberepresentedinprinciple;webrieflyreviewtheseresultsinAppendixF.
+Ourfocusisdifferent: westudythediscrete-to-continuousmapfrompromptss ≤K tohidden
+states in R d. In this setting, analytic viewpoints on Transformer computation b ∈ ec V ome powerful:
+treating each layer as a real-analytic map yields almost-sure guarantees that hold at finite width,
+depth,andtraininghorizon(AppendixFsurveyswhichmodernLLMssatisfythisassumptionand
+provestheanalyticityforallactivationfunctionsencounteredinpractice). Recentworkhasadopted
+this angle for related properties: Jiang & Haghtalab (2025) show that building blocks of modern
+architectures are almost always surjective, while Sutter et al. (2025) prove that Transformers at
+randominitializationarealmostsurelyinjectivewithrespecttotheentirehidden-statematrix(and
+only at initialization). Differently, we prove injectivity with respect to the parameters and at the
+task-relevant last-token state; crucially, we show that injectivity is not an initialization artifact but
+persistsundertraining.
+9
+
+=== PAGE 10 ===
+PublishedasaconferencepaperatICLR2026
+Inverse problems in language modeling. Model inversion asks whether one can reconstruct a
+model’s input prompt from outputs or internal signals (Sun et al., 2021). In the context of lan-
+guage models, this question has motivated a growing body of work exploring practical inversion
+strategies. Output-to-prompt methods infer prompts from generated continuations but yield only
+approximatereconstructions(Zhangetal.,2024). Recentworkshowsthatevenblack-boxoutputs
+are information-rich: Morris et al. (2023b) train a separate inverter to map next-token probability
+vectorstotext,andNaziretal.(2025)extendthisbytakingsequencesoflogprobs,applyingalin-
+ear compression to embedding dimension, and training an encoder-decoder inverter; this achieves
+higherexact-matchratesbutstillwithoutguarantees. Complementarily,Morrisetal.(2023a)recon-
+structtextfromencoderlogitsviaatrainediterativeinverter. Thesecontributionshighlightprivacy
+risks whenprobabilities or embeddingsare exposed, butthey differ fromour setting: they rely on
+trainedinverters,remainapproximate,anddonotinverthiddenstatesofdecoder-onlyLMs.
+Arelatedlineofworkframesthetaskasautomatedpromptoptimization,castingpromptdesignas
+discretesequenceoptimizationalignedwithdownstreamperformance(Guoetal.,2025;Sunetal.,
+2022;Dengetal.,2022);methodssuchasAutoPrompt(Shinetal.,2020)andHardPromptsMade
+Easy(Wenetal.,2023)usegradientsignalstodiscovereffective,butapproximate,prompts. Most
+closely related to ours, Thomas et al. (2025) recover prompts from hidden states via a sequential
+algorithmthatusesanLLM-basedpolicytorankcandidates;lackinginjectivityguarantees,however,
+itmustscoreallvocabularytokensbeforecommitting,withnoformalexactnessguarantees.
+Unlikeallpriorwork,ourapproachistraining-free,efficient,andcomeswithprovablelinear-time
+guaranteesforexactrecoveryfrominternalstates.
+6 DISCUSSION AND CONCLUSIONS
+Thisworkestablishesthatdecoder-onlyTransformersarealmostsurelyinjective: distinctprompts
+producedistincthiddenstatesunderstandardinitializationandtraining. Buildingonthisstructural
+result,weintroducedSIPIT,thefirstalgorithmthatcanrecovertheexactinputsequencefromhidden
+activations, with provable linear-time guarantees. Together, these contributions move injectivity
+fromaninformalbelieftoarigorouslygroundedandoperationalpropertyoflanguagemodels.
+Thescientificimpactisclear.Ourfindingsreconciletwocompetingviewsinthecommunity:Trans-
+formersas“lossy”duetononlinearities,normalization,andmany-to-oneattention,versuslanguage
+modelsasinjectiveintheirhiddenrepresentations. Weadvocateviewinglanguagemodelsasmaps
+on the sequence space rather than the embedding space; under this perspective, we prove that all
+information about the input sequence is almost surely preserved end-to-end. The constructive in-
+version offered by SIPIT strengthens this point in practice, establishing a clean baseline for inter-
+pretability and auditing: if probes or inversion methods fail, it is not because the information is
+missing. For mechanistic interpretability in particular, injectivity guarantees that last-token states
+faithfullyencodethefullinput,givingasoundfoundationforcausalandprobinganalyses.
+Beyondtheory,thefindingscarrypracticalandlegalimplications.Hiddenstatesarenotabstractions
+but the prompt in disguise: any system that stores or transmits them is effectively handling user
+text itself, with direct consequences for privacy, deletion, and compliance (Miranda et al., 2025).
+The evolving regulatory landscape has not yet fully reckoned with this fact. The Hamburg Data
+ProtectionCommissioner,forinstance,arguedthatLLMparametersdonotconstitutepersonaldata
+becausetrainingdataistransformedintoabstractmathematicalrepresentationsduringlearning,and
+thatit“remainsdoubtfulwhetheranyextractabledatarecordsconstitutepersonaldata”(HmbBfDI,
+2024). Thatanalysis,however,concernstrainingdataencodedinmodelweights;itdoesnotaddress
+thehiddenrepresentationscomputedatinferencetime. Ourresultsrevealthattheserepresentations
+are lossless encodings of the user’s exact input, recoverable in full via SIPIT. Consequently, any
+systemthatstores,caches,ortransmitshiddenstatesiseffectivelyhandlingtheuser’sverbatimtext,
+andthecorrespondingpipelinesshouldbesubjecttothesamedata-protectionobligationsastheraw
+promptstheyencode.
+Finally,thisworkopensseveraldirections. Extendingtheanalysistomultimodalarchitecturessuch
+asmusicandvisionTransformersisanopenproblem. Studyingapproximateinversionundernoise
+or quantization will clarify how robust invertibility remains in practice. Bridging these technical
+insightswithevolvingregulatoryframeworkswillbecrucialforsafeandresponsibledeployment.
+10
+
+=== PAGE 11 ===
+PublishedasaconferencepaperatICLR2026
+REPRODUCIBILITY STATEMENT
+Theexperimentalsetup(hardware, softwareversions, anddatasetconstruction)isdescribedin§4;
+the100k-promptbenchmarkusesuniformsamplingfromfourpublicdatasetsdetailedin§4.1. On
+the theory side, every theorem stated in the main text is accompanied by a complete proof in the
+appendix: analyticpreliminariesinAppendixA,theformaldefinitionoftheTransformerlanguage
+modelandtheproofthatitisreal-analyticinAppendixB,almost-sureinjectivityanditspreservation
+under training in Appendix C, and SIPIT correctness and robustness in Appendix D. Appendix E
+providesImplementationDetailsandAdditionalExperiments,andAppendixFverifiesthatallacti-
+vationfunctionsusedinallmodernLLMssatisfytheanalyticityassumption.
+ACKNOWLEDGMENTS
+Figure 1 is adapted from Autoencoder Diagrams by Keenan Crane (2025), used under CC0 1.0
+Universal. WefurtheracknowledgeAdamBarlafortheinitialdiscussionsonLLMsinvertibility.
+ThisworkhasbeensupportedbyprojectMIS5154714oftheNationalRecoveryandResiliencePlan
+Greece 2.0 funded by the European Union under the NextGenerationEU Program, the MUR FIS2
+grant n. FIS-2023-00942 “NEXUS” (cup B53C25001030001), and partly by Sapienza University
+ofRomeviatheSeedofERCgrant“MINT.AI”(cupB83C25001040001).
+REFERENCES
+W.E.Aitken. Generaltopology.part4: Metricspaces,2020. URLhttps://public.csusm.
+edu/aitken_html/Essays/Topology/metric_spaces.pdf. 26
+Shane Arora, Hazel Browne, and Daniel Daners. An alternative approach to fre´chet derivatives.
+JournaloftheAustralianMathematicalSociety,111(2):202–220,2021. 25
+Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E. Hinton. Layer normalization. arXiv preprint
+arXiv:1607.06450,2016. URLhttps://arxiv.org/abs/1607.06450. 9
+Jose´EChaco´nandTarnDuong.Higherorderdifferentialanalysiswithvectorizedderivatives.arXiv
+preprintarXiv:2011.01833,2020. 20
+MingkaiDeng,JianyuWang,Cheng-PingHsieh,YihanWang,HanGuo,TianminShu,MengSong,
+Eric P. Xing, and Zhiting Hu. Rlprompt: Optimizing discrete text prompts with reinforcement
+learning,2022. URLhttps://arxiv.org/abs/2205.12548. 10
+Yihe Dong, Jean-Baptiste Cordonnier, and Andreas Loukas. Attention is not all you need: Pure
+attention loses rank doubly exponentially with depth. In Proceedings of the 38th International
+ConferenceonMachineLearning(ICML),volume139ofProceedingsofMachineLearningRe-
+search,2021. URLhttps://proceedings.mlr.press/v139/dong21a.html. 9
+Ronen Eldan and Yuanzhi Li. Tinystories: How small can language models be and still speak
+coherentenglish?,2023. URLhttps://arxiv.org/abs/2305.07759. 7
+GeraldBFolland. Realanalysis. PureandAppliedMathematics: AWileySeriesofTexts,Mono-
+graphsandTracts.JohnWiley&Sons,Nashville,TN,2edition,March1999. 26,41
+Leo Gao, Stella Biderman, Sid Black, Laurence Golding, Travis Hoppe, Charles Foster, Jason
+Phang, Horace He, Anish Thite, Noa Nabeshima, Shawn Presser, and Connor Leahy. The pile:
+An800gbdatasetofdiversetextforlanguagemodeling,2020. URLhttps://arxiv.org/
+abs/2101.00027. 7
+AaronGrattafiori,AbhimanyuDubey,AbhinavJauhri,AbhinavPandey,AbhishekKadian,Ahmad
+Al-Dahle,AieshaLetman,AkhilMathur,AlanSchelten,AlexVaughan,AmyYang,AngelaFan,
+Anirudh Goyal, Anthony Hartshorn, Aobo Yang, Archi Mitra, Archie Sravankumar, Artem Ko-
+renev, Arthur Hinsvark, Arun Rao, Aston Zhang, Aurelien Rodriguez, Austen Gregerson, Ava
+Spataru, Baptiste Roziere, Bethany Biron, Binh Tang, Bobbie Chern, Charlotte Caucheteux,
+Chaya Nayak, Chloe Bi, Chris Marra, Chris McConnell, Christian Keller, Christophe Touret,
+11
+
+=== PAGE 12 ===
+PublishedasaconferencepaperatICLR2026
+Chunyang Wu, Corinne Wong, Cristian Canton Ferrer, Cyrus Nikolaidis, Damien Allonsius,
+Daniel Song, Danielle Pintz, Danny Livshits, Danny Wyatt, David Esiobu, Dhruv Choudhary,
+Dhruv Mahajan, Diego Garcia-Olano, Diego Perino, Dieuwke Hupkes, Egor Lakomkin, Ehab
+AlBadawy, Elina Lobanova, Emily Dinan, Eric Michael Smith, Filip Radenovic, Francisco
+Guzma´n,FrankZhang,GabrielSynnaeve,GabrielleLee,GeorgiaLewisAnderson,GovindThat-
+tai,GraemeNail,GregoireMialon,GuanPang,GuillemCucurell,HaileyNguyen,HannahKore-
+vaar,HuXu,HugoTouvron,IliyanZarov,ImanolArrietaIbarra,IsabelKloumann,IshanMisra,
+IvanEvtimov,JackZhang,JadeCopet,JaewonLee,JanGeffert,JanaVranes,JasonPark,JayMa-
+hadeokar,JeetShah,JelmervanderLinde,JenniferBillock,JennyHong,JenyaLee,JeremyFu,
+JianfengChi, JianyuHuang, JiawenLiu, JieWang, JiecaoYu, JoannaBitton, JoeSpisak, Jong-
+soo Park, Joseph Rocca, Joshua Johnstun, Joshua Saxe, Junteng Jia, Kalyan Vasuden Alwala,
+KarthikPrasad,KartikeyaUpasani,KatePlawiak,KeLi,KennethHeafield,KevinStone,Khalid
+El-Arini, Krithika Iyer, Kshitiz Malik, Kuenley Chiu, Kunal Bhalla, Kushal Lakhotia, Lauren
+Rantala-Yeary,LaurensvanderMaaten,LawrenceChen,LiangTan,LizJenkins,LouisMartin,
+LovishMadaan,LuboMalo,LukasBlecher,LukasLandzaat,LukedeOliveira,MadelineMuzzi,
+MaheshPasupuleti,MannatSingh,ManoharPaluri,MarcinKardas,MariaTsimpoukelli,Mathew
+Oldham, Mathieu Rita, Maya Pavlova, Melanie Kambadur, Mike Lewis, Min Si, Mitesh Ku-
+mar Singh, Mona Hassan, Naman Goyal, Narjes Torabi, Nikolay Bashlykov, Nikolay Bogoy-
+chev,NiladriChatterji,NingZhang,OlivierDuchenne,OnurC¸elebi,PatrickAlrassy,Pengchuan
+Zhang,PengweiLi,PetarVasic,PeterWeng,PrajjwalBhargava,PratikDubal,PraveenKrishnan,
+PunitSinghKoura,PuxinXu,QingHe,QingxiaoDong,RagavanSrinivasan,RajGanapathy,Ra-
+monCalderer,RicardoSilveiraCabral,RobertStojnic,RobertaRaileanu,RohanMaheswari,Ro-
+hitGirdhar,RohitPatel,RomainSauvestre,RonniePolidoro,RoshanSumbaly,RossTaylor,Ruan
+Silva, Rui Hou, Rui Wang, Saghar Hosseini, Sahana Chennabasappa, Sanjay Singh, Sean Bell,
+Seohyun Sonia Kim, Sergey Edunov, Shaoliang Nie, Sharan Narang, Sharath Raparthy, Sheng
+Shen,ShengyeWan,ShrutiBhosale,ShunZhang,SimonVandenhende,SoumyaBatra,Spencer
+Whitman,StenSootla,StephaneCollot,SuchinGururangan,SydneyBorodinsky,TamarHerman,
+TaraFowler,TarekSheasha,ThomasGeorgiou,ThomasScialom,TobiasSpeckbacher,TodorMi-
+haylov,TongXiao,UjjwalKarn,VedanujGoswami,VibhorGupta,VigneshRamanathan,Viktor
+Kerkez, Vincent Gonguet, Virginie Do, Vish Vogeti, V´ıtor Albiero, Vladan Petrovic, Weiwei
+Chu, Wenhan Xiong, Wenyin Fu, Whitney Meers, Xavier Martinet, Xiaodong Wang, Xiaofang
+Wang, Xiaoqing Ellen Tan, Xide Xia, Xinfeng Xie, Xuchao Jia, Xuewei Wang, Yaelle Gold-
+schlag, Yashesh Gaur, Yasmine Babaei, Yi Wen, Yiwen Song, Yuchen Zhang, Yue Li, Yuning
+Mao,ZacharieDelpierreCoudert,ZhengYan,ZhengxingChen,ZoePapakipos,AadityaSingh,
+AayushiSrivastava,AbhaJain,AdamKelsey,AdamShajnfeld,AdithyaGangidi,AdolfoVictoria,
+AhuvaGoldstand,AjayMenon,AjaySharma,AlexBoesenberg,AlexeiBaevski,AllieFeinstein,
+Amanda Kallet, Amit Sangani, Amos Teo, Anam Yunus, Andrei Lupu, Andres Alvarado, An-
+drewCaples,AndrewGu,AndrewHo,AndrewPoulton,AndrewRyan,AnkitRamchandani,An-
+nieDong,AnnieFranco,AnujGoyal,AparajitaSaraf,ArkabandhuChowdhury,AshleyGabriel,
+AshwinBharambe,AssafEisenman,AzadehYazdan,BeauJames,BenMaurer,BenjaminLeon-
+hardi, Bernie Huang, Beth Loyd, Beto De Paola, Bhargavi Paranjape, Bing Liu, Bo Wu, Boyu
+Ni,BradenHancock,BramWasti,BrandonSpence,BraniStojkovic,BrianGamido,BrittMon-
+talvo,CarlParker,CarlyBurton,CatalinaMejia,CeLiu,ChanghanWang,ChangkyuKim,Chao
+Zhou,ChesterHu,Ching-HsiangChu,ChrisCai,ChrisTindal,ChristophFeichtenhofer,Cynthia
+Gao, Damon Civin, Dana Beaty, Daniel Kreymer, Daniel Li, David Adkins, David Xu, Davide
+Testuggine, DeliaDavid, DeviParikh, DianaLiskovich, DidemFoss, DingkangWang, DucLe,
+Dustin Holland, Edward Dowling, Eissa Jamil, Elaine Montgomery, Eleonora Presani, Emily
+Hahn,EmilyWood,Eric-TuanLe,ErikBrinkman,EstebanArcaute,EvanDunbar,EvanSmoth-
+ers, Fei Sun, Felix Kreuk, Feng Tian, Filippos Kokkinos, Firat Ozgenel, Francesco Caggioni,
+FrankKanayet,FrankSeide,GabrielaMedinaFlorez,GabriellaSchwarz,GadaBadeer,Georgia
+Swee, Gil Halpern, Grant Herman, Grigory Sizov, Guangyi, Zhang, Guna Lakshminarayanan,
+HakanInan,HamidShojanazeri,HanZou,HannahWang,HanwenZha,HarounHabeeb,Harri-
+sonRudolph, HelenSuk, HenryAspegren, HunterGoldman, HongyuanZhan, IbrahimDamlaj,
+IgorMolybog,IgorTufanov,IliasLeontiadis,Irina-ElenaVeliche,ItaiGat,JakeWeissman,James
+Geboski,JamesKohli,JaniceLam,JaphetAsher,Jean-BaptisteGaya,JeffMarcus,JeffTang,Jen-
+niferChan,JennyZhen,JeremyReizenstein,JeremyTeboul,JessicaZhong,JianJin,JingyiYang,
+JoeCummings,JonCarvill,JonShepard,JonathanMcPhie,JonathanTorres,JoshGinsburg,Jun-
+jie Wang, Kai Wu, Kam Hou U, Karan Saxena, Kartikay Khandelwal, Katayoun Zand, Kathy
+Matosich, Kaushik Veeraraghavan, Kelly Michelena, Keqian Li, Kiran Jagadeesh, Kun Huang,
+12
+
+=== PAGE 13 ===
+PublishedasaconferencepaperatICLR2026
+Kunal Chawla, Kyle Huang, Lailin Chen, Lakshya Garg, Lavender A, Leandro Silva, Lee Bell,
+Lei Zhang, Liangpeng Guo, Licheng Yu, Liron Moshkovich, Luca Wehrstedt, Madian Khabsa,
+Manav Avalani, Manish Bhatt, Martynas Mankus, Matan Hasson, Matthew Lennie, Matthias
+Reso, Maxim Groshev, Maxim Naumov, Maya Lathi, Meghan Keneally, Miao Liu, Michael L.
+Seltzer,MichalValko,MichelleRestrepo,MihirPatel,MikVyatskov,MikayelSamvelyan,Mike
+Clark, Mike Macey, Mike Wang, Miquel Jubert Hermoso, Mo Metanat, Mohammad Rastegari,
+Munish Bansal, Nandhini Santhanam, Natascha Parks, Natasha White, Navyata Bawa, Nayan
+Singhal, Nick Egebo, Nicolas Usunier, Nikhil Mehta, Nikolay Pavlovich Laptev, Ning Dong,
+Norman Cheng, Oleg Chernoguz, Olivia Hart, Omkar Salpekar, Ozlem Kalinli, Parkin Kent,
+ParthParekh,PaulSaab,PavanBalaji,PedroRittner,PhilipBontrager,PierreRoux,PiotrDollar,
+PolinaZvyagina,PrashantRatanchandani,PritishYuvraj,QianLiang,RachadAlao,RachelRo-
+driguez,RafiAyub,RaghothamMurthy,RaghuNayani,RahulMitra,RangaprabhuParthasarathy,
+Raymond Li, Rebekkah Hogan, Robin Battey, Rocky Wang, Russ Howes, Ruty Rinott, Sachin
+Mehta, SachinSiby, SaiJayeshBondu, SamyakDatta, SaraChugh, SaraHunt, SargunDhillon,
+Sasha Sidorov, Satadru Pan, Saurabh Mahajan, Saurabh Verma, Seiji Yamamoto, Sharadh Ra-
+maswamy, Shaun Lindsay, Shaun Lindsay, Sheng Feng, Shenghao Lin, Shengxin Cindy Zha,
+Shishir Patil, Shiva Shankar, Shuqiang Zhang, Shuqiang Zhang, Sinong Wang, Sneha Agarwal,
+Soji Sajuyigbe, Soumith Chintala, Stephanie Max, Stephen Chen, Steve Kehoe, Steve Satter-
+field,SudarshanGovindaprasad,SumitGupta,SummerDeng,SungminCho,SunnyVirk,Suraj
+Subramanian, Sy Choudhury, Sydney Goldman, Tal Remez, Tamar Glaser, Tamara Best, Thilo
+Koehler, Thomas Robinson, Tianhe Li, Tianjun Zhang, Tim Matthews, Timothy Chou, Tzook
+Shaked, Varun Vontimitta, Victoria Ajayi, Victoria Montanez, Vijai Mohan, Vinay Satish Ku-
+mar, Vishal Mangla, Vlad Ionescu, Vlad Poenaru, Vlad Tiberiu Mihailescu, Vladimir Ivanov,
+Wei Li, Wenchen Wang, Wenwen Jiang, Wes Bouaziz, Will Constable, Xiaocheng Tang, Xiao-
+jian Wu, Xiaolan Wang, Xilun Wu, Xinbo Gao, Yaniv Kleinman, Yanjun Chen, Ye Hu, Ye Jia,
+Ye Qi, Yenda Li, Yilin Zhang, Ying Zhang, Yossi Adi, Youngjin Nam, Yu, Wang, Yu Zhao,
+YuchenHao,YundiQian,YunluLi,YuziHe,ZachRait,ZacharyDeVito,ZefRosnbrick,Zhao-
+duoWen,ZhenyuYang,ZhiweiZhao,andZhiyuMa. Thellama3herdofmodels,2024. URL
+https://arxiv.org/abs/2407.21783. 7
+QingyanGuo,RuiWang,JunliangGuo,BeiLi,KaitaoSong,XuTan,GuoqingLiu,JiangBian,and
+YujiuYang. Evoprompt: Connectingllmswithevolutionaryalgorithmsyieldspowerfulprompt
+optimizers,2025. URLhttps://arxiv.org/abs/2309.08532. 10
+HaroldVHendersonandShayleRSearle. Thevec-permutationmatrix, thevecoperatorandkro-
+neckerproducts: Areview. Linearandmultilinearalgebra,9(4):271–288,1981. 20,38
+HmbBfDI. Discussion paper: Large language models and personal data, 2024. URL
+https://datenschutz-hamburg.de/fileadmin/user_upload/HmbBfDI/
+Datenschutz/Informationen/240715_Discussion_Paper_Hamburg_DPA_
+KI_Models.pdf. 10
+RogerA.HornandCharlesR.Johnson. MatrixAnalysis. CambridgeUniversityPress,Cambridge,
+2edition,2013. 37
+Albert Q. Jiang, Alexandre Sablayrolles, Arthur Mensch, Chris Bamford, Devendra Singh Chap-
+lot,DiegodelasCasas,FlorianBressand,GiannaLengyel,GuillaumeLample,LucileSaulnier,
+Le´lio Renard Lavaud, Marie-Anne Lachaux, Pierre Stock, Teven Le Scao, Thibaut Lavril,
+Thomas Wang, Timothe´e Lacroix, and William El Sayed. Mistral 7b, 2023. URL https:
+//arxiv.org/abs/2310.06825. 7
+HaozheJiangandNikaHaghtalab. Onsurjectivityofneuralnetworks: Canyouelicitanybehavior
+from your model? arXiv preprint arXiv:2508.19445, 2025. URL https://arxiv.org/
+abs/2508.19445. 9
+Tamara G. Kolda and Brett W. Bader. Tensor decompositions and applications. SIAM Review,
+51(3):455–500, 2009. doi: 10.1137/07070111X. URL https://doi.org/10.1137/
+07070111X. 18
+Steven G Krantz and Harold R Parks. A primer of real analytic functions. Springer Science &
+BusinessMedia,2002. 23
+13
+
+=== PAGE 14 ===
+PublishedasaconferencepaperatICLR2026
+AndrewD.Lewis. Chapter1: Holomorphicandrealanalyticcalculus. NotesonGlobalAnalysis,
+Vol.1,Queen’sUniversity,February2014. URLhttps://mast.queensu.ca/˜andrew/
+teaching/math942/pdf/1chapter1.pdf. Version: 2014-02-28. 19,40
+DavidG.Luenberger. Optimizationbyvectorspacemethods. Wiley-Interscience,1997. 25
+JanR.MagnusandHeinzNeudecker. Matrixdifferentialcalculuswithapplicationsinstatisticsand
+Econometrics. JohnWiley&Sons,Inc,2019. 25,36
+Microsoft, :, AbdelrahmanAbouelenin, AtabakAshfaq, AdamAtkinson, HanyAwadalla, Nguyen
+Bach,JianminBao,AlonBenhaim,MartinCai,VishravChaudhary,CongcongChen,DongChen,
+DongdongChen,JunkunChen,WeizhuChen,Yen-ChunChen,YilingChen,QiDai,XiyangDai,
+Ruchao Fan, Mei Gao, Min Gao, Amit Garg, Abhishek Goswami, Junheng Hao, Amr Hendy,
+Yuxuan Hu, Xin Jin, Mahmoud Khademi, Dongwoo Kim, Young Jin Kim, Gina Lee, Jinyu Li,
+YunshengLi,ChenLiang,XihuiLin,ZeqiLin,MengchenLiu,YangLiu,GilsiniaLopez,Chong
+Luo,PiyushMadan,VadimMazalov,ArindamMitra,AliMousavi,AnhNguyen,JingPan,Daniel
+Perez-Becker, Jacob Platin, Thomas Portet, Kai Qiu, Bo Ren, Liliang Ren, Sambuddha Roy,
+NingShang,YelongShen,SakshamSinghal,SubhojitSom,XiaSong,TetyanaSych,Praneetha
+Vaddamanu,ShuohangWang,YimingWang,ZhenghaoWang,HaibinWu,HaoranXu,Weijian
+Xu,YifanYang,ZiyiYang,DonghanYu,IshmamZabir,JianwenZhang,LiLynaZhang,Yunan
+Zhang,andXirenZhou.Phi-4-minitechnicalreport:Compactyetpowerfulmultimodallanguage
+modelsviamixture-of-loras,2025. URLhttps://arxiv.org/abs/2503.01743. 7
+Michele Miranda, Elena Sofia Ruzzetti, Andrea Santilli, Fabio Massimo Zanzotto, Se´bastien
+Bratie`res,andEmanueleRodola`. Preservingprivacyinlargelanguagemodels: Asurveyoncur-
+rentthreatsandsolutions. TransactionsonMachineLearningResearch,2025. ISSN2835-8856.
+URLhttps://openreview.net/forum?id=Ss9MTTN7OL. 10
+Boris Mityagin. The zero set of a real analytic function. arXiv preprint arXiv:1512.07276, 2015.
+19,20
+JohnX.Morris,VolodymyrKuleshov,VitalyShmatikov,andAlexanderM.Rush. Textembeddings
+reveal(almost)asmuchastext,2023a. URLhttps://arxiv.org/abs/2310.06816. 8,
+10
+JohnX.Morris,WentingZhao,JustinT.Chiu,VitalyShmatikov,andAlexanderM.Rush.Language
+modelinversion,2023b. URLhttps://arxiv.org/abs/2311.13647. 8,10
+JamesR.Munkres. Topology. PrenticeHall,UpperSaddleRiver,NJ,2edition,2000. 25,26
+Murtaza Nazir, Matthew Finlayson, John X. Morris, Xiang Ren, and Swabha Swayamdipta. Bet-
+ter language model inversion by compactly representing next-token distributions, 2025. URL
+https://arxiv.org/abs/2506.17090. 8,10
+Jorge Pe´rez, Javier Marinkovic´, and Pablo Barcelo´. On the turing completeness of modern neural
+network architectures. In International Conference on Learning Representations, 2019. URL
+https://openreview.net/forum?id=HyGBdo0qFm. 58
+Alec Radford, Jeff Wu, Rewon Child, David Luan, Dario Amodei, and Ilya Sutskever.
+Language models are unsupervised multitask learners. 2019. URL https://api.
+semanticscholar.org/CorpusID:160025533. 7,51
+ColinRaffel,NoamShazeer,AdamRoberts,KatherineLee,SharanNarang,MichaelMatena,Yanqi
+Zhou, Wei Li, and Peter J. Liu. Exploring the limits of transfer learning with a unified text-to-
+text transformer. Journal of Machine Learning Research, 21(140):1–67, 2020. URL http:
+//jmlr.org/papers/v21/20-074.html. 7
+AntonRazzhigaev,MatveyMikhalchuk,ElizavetaGoncharova,IvanOseledets,DenisDimitrov,and
+AndreyKuznetsov. Theshapeoflearning: Anisotropyandintrinsicdimensionsintransformer-
+basedmodels,2024. URLhttps://arxiv.org/abs/2311.05928. 54
+14
+
+=== PAGE 15 ===
+PublishedasaconferencepaperatICLR2026
+Anton Razzhigaev, Matvey Mikhalchuk, Temurbek Rahmatullaev, Elizaveta Goncharova, Polina
+Druzhinina, Ivan Oseledets, and Andrey Kuznetsov. Llm-microscope: Uncovering the hidden
+role of punctuation in context memory of transformers, 2025. URL https://arxiv.org/
+abs/2502.15007. 54
+WalterRudin. PrinciplesofMathematicalAnalysis. McGraw–Hill,NewYork,3edition,1976. 26,
+41,57
+TaylorShin,YasamanRazeghi,RobertL.LoganIV,EricWallace,andSameerSingh. Autoprompt:
+Eliciting knowledge from language models with automatically generated prompts, 2020. URL
+https://arxiv.org/abs/2010.15980. 10
+RavidShwartz-ZivandNaftaliTishby. Openingtheblackboxofdeepneuralnetworksviainforma-
+tion,2017. URLhttps://arxiv.org/abs/1703.00810. 55
+MichaelSpivak. Calculusonmanifolds. WestviewPress,Philadelphia,PA,January1971. 26
+TianxiangSun,YunfanShao,HongQian,XuanjingHuang,andXipengQiu. Black-boxtuningfor
+language-model-as-a-service,2022. URLhttps://arxiv.org/abs/2201.03514. 10
+Zhaodong Sun, Fabian Latorre, Thomas Sanchez, and Volkan Cevher. A plug-and-play deep im-
+age prior. In ICASSP 2021 - 2021 IEEE International Conference on Acoustics, Speech and
+SignalProcessing(ICASSP),pp.8103–8107.IEEE,June2021. doi: 10.1109/icassp39728.2021.
+9414879. URLhttp://dx.doi.org/10.1109/ICASSP39728.2021.9414879. 10
+Zhiqing Sun and Yiming Yang. An em approach to non-autoregressive conditional sequence gen-
+eration. In International Conference on Machine Learning, 2020. URL https://api.
+semanticscholar.org/CorpusID:220265867. 58
+DenisSutter,JulianMinder,ThomasHofmann,andTiagoPimentel. Thenon-linearrepresentation
+dilemma: Is causal abstraction enough for mechanistic interpretability?, 2025. URL https:
+//arxiv.org/abs/2507.08802. 9,35
+Gemma Team, Aishwarya Kamath, Johan Ferret, Shreya Pathak, Nino Vieillard, Ramona Merhej,
+SarahPerrin,TatianaMatejovicova,AlexandreRame´,MorganeRivie`re,LouisRouillard,Thomas
+Mesnard, Geoffrey Cideron, Jean bastien Grill, Sabela Ramos, Edouard Yvinec, Michelle Cas-
+bon, Etienne Pot, Ivo Penchev, Gae¨l Liu, Francesco Visin, Kathleen Kenealy, Lucas Beyer, Xi-
+aohaiZhai,AntonTsitsulin,RobertBusa-Fekete,AlexFeng,NoveenSachdeva,BenjaminCole-
+man,YiGao,BasilMustafa,IainBarr,EmilioParisotto,DavidTian,MatanEyal,ColinCherry,
+Jan-ThorstenPeter,DanilaSinopalnikov,SuryaBhupatiraju,RishabhAgarwal,MehranKazemi,
+Dan Malkin, Ravin Kumar, David Vilar, Idan Brusilovsky, Jiaming Luo, Andreas Steiner, Abe
+Friesen,AbhanshuSharma,AbheeshtSharma,AdiMayravGilady,AdrianGoedeckemeyer,Alaa
+Saade,AlexFeng,AlexanderKolesnikov,AlexeiBendebury,AlvinAbdagic,AmitVadi,Andra´s
+Gyo¨rgy, Andre´ Susano Pinto, Anil Das, Ankur Bapna, Antoine Miech, Antoine Yang, Antonia
+Paterson, AshishShenoy, AyanChakrabarti, BilalPiot, BoWu, BobakShahriari, BrycePetrini,
+CharlieChen,CharlineLeLan,ChristopherA.Choquette-Choo,CJCarey,CormacBrick,Daniel
+Deutsch, Danielle Eisenbud, Dee Cattle, Derek Cheng, Dimitris Paparas, Divyashree Shivaku-
+mar Sreepathihalli, Doug Reid, Dustin Tran, Dustin Zelle, Eric Noland, Erwin Huizenga, Eu-
+gene Kharitonov, Frederick Liu, Gagik Amirkhanyan, Glenn Cameron, Hadi Hashemi, Hanna
+Klimczak-Plucin´ska,HarmanSingh,HarshMehta,HarshalTusharLehri,HusseinHazimeh,Ian
+Ballantyne,IdanSzpektor,IvanNardini,JeanPouget-Abadie,JethaChan,JoeStanton,JohnWi-
+eting, JonathanLai, JordiOrbay, JosephFernandez, JoshNewlan, JuyeongJi, JyotinderSingh,
+KatBlack,KathyYu,KevinHui,KiranVodrahalli,KlausGreff,LinhaiQiu,MarcellaValentine,
+Marina Coelho, Marvin Ritter, Matt Hoffman, Matthew Watson, Mayank Chaturvedi, Michael
+Moynihan,MinMa,NabilaBabar,NatashaNoy,NathanByrd,NickRoy,NikolaMomchev,Ni-
+layChauhan,NoveenSachdeva,OskarBunyan,PankilBotarda,PaulCaron,PaulKishanRuben-
+stein, Phil Culliton, Philipp Schmid, Pier Giuseppe Sessa, Pingmei Xu, Piotr Stanczyk, Pouya
+Tafti, Rakesh Shivanna, Renjie Wu, Renke Pan, Reza Rokni, Rob Willoughby, Rohith Vallu,
+Ryan Mullins, Sammy Jerome, Sara Smoot, Sertan Girgin, Shariq Iqbal, Shashir Reddy, Shruti
+Sheth,SiimPo˜der,SijalBhatnagar,SindhuRaghuramPanyam,SivanEiger,SusanZhang,Tianqi
+Liu,TrevorYacovone,TylerLiechty,UdayKalra,UtkuEvci,VedantMisra,VincentRoseberry,
+VladFeinberg,VladKolesnikov,WoohyunHan,WoosukKwon,XiChen,YinlamChow,Yuvein
+15
+
+=== PAGE 16 ===
+PublishedasaconferencepaperatICLR2026
+Zhu, Zichuan Wei, Zoltan Egyed, Victor Cotruta, Minh Giang, Phoebe Kirk, Anand Rao, Kat
+Black,NabilaBabar,JessicaLo,EricaMoreira,LuizGustavoMartins,OmarSanseviero,Lucas
+Gonzalez, ZachGleicher, TrisWarkentin, VahabMirrokni, EvanSenter, EliCollins, JoelleBar-
+ral,ZoubinGhahramani,RaiaHadsell,YossiMatias,D.Sculley,SlavPetrov,NoahFiedel,Noam
+Shazeer,OriolVinyals,JeffDean,DemisHassabis,KorayKavukcuoglu,ClementFarabet,Elena
+Buchatskaya,Jean-BaptisteAlayrac,RohanAnil,Dmitry,Lepikhin,SebastianBorgeaud,Olivier
+Bachem,ArmandJoulin,AlekAndreev,CassidyHardin,RobertDadashi,andLe´onardHussenot.
+Gemma3technicalreport,2025. URLhttps://arxiv.org/abs/2503.19786. 7
+RahulThomas, LouaiZahran, EricaChoi, AkileshPotti, MicahGoldblum, andArkaPal. Hidden
+nomore:Attackinganddefendingprivatethird-partyLLMinference. InProceedingsofthe42nd
+InternationalConferenceonMachineLearning(ICML),2025. URLhttps://arxiv.org/
+abs/2505.18332. 10
+Yuxin Wen, Neel Jain, John Kirchenbauer, Micah Goldblum, Jonas Geiping, and Tom Goldstein.
+Hardpromptsmadeeasy: Gradient-baseddiscreteoptimizationforprompttuninganddiscovery,
+2023. URLhttps://arxiv.org/abs/2302.03668. 8,10,49
+Zhilin Yang, Zihang Dai, Ruslan Salakhutdinov, and William W. Cohen. Breaking the softmax
+bottleneck:Ahigh-rankrnnlanguagemodel. InInternationalConferenceonLearningRepresen-
+tations(ICLR),2018. URLhttps://arxiv.org/abs/1711.03953. 9
+Chulhee Yun, Srinadh Bhojanapalli, Ankit Singh Rawat, Sashank Reddi, and Sanjiv Kumar. Are
+transformersuniversalapproximatorsofsequence-to-sequencefunctions? InInternationalCon-
+ference on Learning Representations, 2020. URL https://openreview.net/forum?
+id=ByxRM0Ntvr. 58
+CollinZhang,JohnX.Morris,andVitalyShmatikov. Extractingpromptsbyinvertingllmoutputs,
+2024. URLhttps://arxiv.org/abs/2405.15012. 10
+16
+
+=== PAGE 17 ===
+PublishedasaconferencepaperatICLR2026
+APPENDIX OVERVIEW
+A Preliminaries 17
+A.1 Notation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+A.2 Real-Analyticity. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+A.3 Differential,Measure-Theoretic,andTopologicalTools . . . . . . . . . . . . . . . 25
+B TransformerLanguageModel 27
+C AlmostSureInjectivity 32
+C.1 Absolutecontinuityensuresalmostsureinjectivity . . . . . . . . . . . . . . . . . 33
+C.2 AbsolutecontinuityoftheparameterdistributionispreservedunderGD . . . . . . 35
+D Left-InvertibilityViaSipIt 43
+D.1 One-StepLast-TokenMaps . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+D.2 TheCoreRoutines: LocalVerifiers,AcceptanceRegions,andPolicies . . . . . . . 44
+D.3 GlobalInversionviaSIPIT . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 46
+E ImplementationDetailsandAdditionalExperiments 48
+E.1 ImplementationDetails . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 48
+E.2 AdditionalAblations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 50
+E.3 IdenticalNext-Token . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 51
+E.4 PromptswithSimilarRepresentations . . . . . . . . . . . . . . . . . . . . . . . . 52
+E.5 RelationwithAnisotropyandIntrinsicDimension . . . . . . . . . . . . . . . . . . 54
+F Real-AnalyticActivationFunctionsinModernLLMs 56
+A PRELIMINARIES
+Thissectionfixesthenotationusedthroughoutthemainpaperandtheappendix(subsectionA.1),
+and it introduces real-analyticity as the organizing theme (subsection A.2). We first review the
+vector-space notion and its basic closure/composition properties (subsubsection A.2.1), together
+with a zero-set principle used in measure-zero arguments. We then extend these ideas to maps
+betweenmatrixspaces(subsubsectionA.2.2)viavectorization/matricizationandnotethatanalytic-
+ityispreservedundermatrixcompositions. Tostreamlinelaterproofs,wesummarizereal-analytic
+buildingblockscommonlyusedintransformerlayers–polynomials,exponential/logarithm,softmax,
+rownormalization,matrixproducts,Hadamardscaling,andstacking(subsubsectionA.2.3).Finally,
+insubsectionA.3,wecollectdifferentialandtopologicaltools–Fre´chetderivativesandtheHessian,
+standard facts on R p, the inverse function theorem, and pushforwards/absolute continuity–which
+weuseforlocalinvertibilityandabsolute-continuityarguments. Readersalreadycomfortablewith
+thesetopicscanskimnowandreturntospecificsubsectionsasneeded.
+A.1 NOTATION
+For arbitrary T N, we write [T] = 1,2,...,T to denote the set of positive integers up to T.
+Additionally,we ∈ denotethestrictlypos { itiverealnum } bersasR + =(0, )andthenon-negativereal
+numbersasR +
+0
+=[0,
+∞
+). Similarly,weletN0 =N
+∪{
+0
+}
+. ∞
+17
+
+=== PAGE 18 ===
+PublishedasaconferencepaperatICLR2026
+Discretesetsaredenotedbyuppercasecalligraphicletters ,andasequenceoflengthK isdenoted
+by lowercase letters: s = s ,...,s K. We wri V te s = K to denote the length of the
+1 K
+sequence. The set of non-em ⟨ pty sequen ⟩ ce ∈ s o V f length at mos | t | K is denoted as ≤K = (cid:83)K k.
+V k=1V
+Non-discretesetsaredenotedbyuppercasecalligraphicbold-facelettersB.
+Remark1. Wewilloftenrefertoadiscreteset asthevocabularyandtoanelements ≤K as
+V ∈V
+aninput,context,orprompt.
+Matrices(vectors)aredenotedbyuppercase(lowercase)bold-faceletters: X R d1×d2 (x R d).
+∈ ∈
+For vectors and matrices, we frequently use standard norms and common matrix operations. The
+HadamardandKroneckerproductsaredefinedfollowingKolda&Bader(2009):
+• p-norm: Foravectorx R d,theℓ p normisdefinedas
+∈
+1
+(cid:32) d (cid:33) p
+(cid:88)
+x = x p .
+p i
+∥ ∥ | |
+i=1
+• Frobeniusnorm: ForamatrixX R d1×d2,theFrobeniusnormisdefinedas
+∈
+(cid:118)
+(cid:113) (cid:117) (cid:117)(cid:88) d1 (cid:88) d2
+∥
+X
+∥ F
+= tr(XX⊤)=(cid:116) X2
+ij
+.
+i=1j=1
+• Hadamardproduct: TheHadamard(element-wise)productisdefinedforvectorsandmatrices
+ofthesameshape:
+(x y) =x y , foralli [d],
+i i i
+⊙ ∈
+(X Y) =X Y , foralli [d ], j [d ],
+ij ij ij 1 2
+⊙ ∈ ∈
+wherex,y R dandX,Y R d1×d2.
+∈ ∈
+• Kroneckerproduct: TheKroneckerproductofX R d1×d2 andZ R d3×d4 isdenotedX Z
+∈ ∈ ⊗
+anddefinedblockwiseas
+ 
+X Z X Z
+11
+···
+1d2
+X Z=   . . . ... . . .   R (d1d3)×(d2d4).
+⊗  ∈
+X Z X Z
+d11
+···
+d1d2
+Wedenotetheall-zerosmatrixofsizem nas0 ,andtheall-zerosvectoroflengthmas0 .
+m×n m
+×
+Similarly,wewrite1 fortheall-onesvectoroflengthm,andI (orI whendimensionsmust
+m m m×m
+beexplicit)forthem midentitymatrix.
+×
+Letf : ≤K R p R d beafunctionoverafinitevocabulary andK N. Werefertof asthe
+V × → V ∈
+model,toitsfirstargumentastheinputsequence,andtoitssecondargumentastheparameters.
+Remark 2. Throughout our analysis, we assume a finite set of possible input sequences, reflect-
+ingthepracticallimitationsanddesignchoicesofmodernLLMs, specificallytheboundedcontext
+length.
+Remark 3. We take the codomain of the model to be R d, corresponding to the space of token
+embeddings. Thisallowsustostudyhowthefinalembedding(typicallyusedtocomputenext-token
+probabilities)dependsonboththeinputsequenceandthemodelparameters.
+A.2 REAL-ANALYTICITY
+We now introduce the central notion for our analysis: real-analyticity. In its standard form, real-
+analyticity is defined for functions f : U R n, where U R m is an open set. Since the
+→ ⊆
+transformerarchitectureisnaturallyexpressedintermsofmatrices,itwillbeconvenienttoextend
+thisnotiontomapsoftheformf :R m×n R a×b.
+→
+Multi-indexnotation. Weusemulti-indexnotationforbothvectorsandmatrices.
+18
+
+=== PAGE 19 ===
+PublishedasaconferencepaperatICLR2026
+Vectorcase. Letα=(α 1 ,...,α m )⊤ ∈ N m 0 andx,y ∈ R m. Define:
+m m m
+(cid:88) (cid:89) (cid:89)
+α = α , α!= α !, (x y)α = (x y )αj.
+j j j j
+| | − −
+j=1 j=1 j=1
+Matrixcase. LetA=(α uv ) ∈ N m 0 ×nandX,Y ∈ R m×n. Define:
+m n m n m n
+(cid:88)(cid:88) (cid:89) (cid:89) (cid:89) (cid:89)
+A = α , A!= α !, (X Y)A = (X Y )αuv.
+uv uv uv uv
+| | − −
+u=1v=1 u=1v=1 u=1v=1
+GivenanopensetU R mandamapf :U R,wewrite
+⊆ →
+∂|α|f
+dαf(x) := (x)
+∂xα
+1
+1
+···
+∂xα mm
+forthemixedpartialderivative(whenitexists).Unlessstatedotherwise,weassumef C∞(U),so
+d d α αf ac e t x s is c t o s m an p d on is en c t o w n i t s i e n . u W ou e s a fo ls r o a u ll s α eth ∈ e N co m 0 n ; v f e o n r ti v o e n ct d o 0 r- f va = lue f d . mapsf =(f 1 ,...,f n ∈ )theoperator
+A.2.1 REAL-ANALYTICFUNCTIONSWITHVECTORINPUTS
+Webeginwiththestandardvector-spacedefinitionanditsbasicalgebraicproperties. Thesearethe
+buildingblocksfromwhichalllateranalyticityargumentsareassembled.
+Definition A.1 (Real-analytic functions, Lewis 2014, Definition 1.1.3). Let U R m be open. A
+⊆
+functionf :U Risreal-analyticonUif,foreveryy U,thereexistcoefficients c α R α∈Nm
+→ ∈ { ∈ } 0
+andr >0suchthat
+(cid:88)
+f(x)= c (x y)α
+α
+−
+α∈Nm
+0
+forallx U with x y <r. Thesetofreal-analyticfunctionsonU isdenotedbyCω(U).
+2
+∈ ∥ − ∥
+A map f : U R n is real-analytic on U if each of its components f 1 ,...,f n : U R is
+real-analytic. Th → esetofsuchmapsisdenotedCω(U; R n). →
+Remark4. Toestablishreal-analyticityofavector-valuedmapping(e.g.,anMLP,attentionmech-
+anism,orLayerNorm),itsufficestoprovereal-analyticityofeachscalarcomponent.
+PropositionA.1(Closureproperties,Lewis2014,Proposition1.2.1). Letf,g : R m Rbereal-
+→
+analyticmaps. Then,thefollowinghold:
+1. Addition: f +g Cω(R m).
+∈
+2. Product: fg Cω(R m).
+∈
+3. Quotient: Ifg(x)=0forallx R m,thenf/g Cω(R m).
+̸ ∈ ∈
+PropositionA.2(Composition,Lewis2014,Proposition1.2.2). Letf : R m R n andg : R n
+R k bereal-analyticmaps. Then,thecompositiong f :R m R k isreal-ana → lytic. →
+◦ →
+Remark5. Forsimplicity,wedonotstatetheclosurepropertiesintheirmostgeneralform,where
+f andg maybedefinedondifferentopensubsetsofR m. Thisavoidsadditionalnotationinvolving
+intersectionsofdomains.Sinceeveryfunctionofinterestinourlateranalysisisdefinedonthewhole
+spaceR m,thisrestrictionentailsnolossofgenerality.
+TheoremA.1(Zerosetsofnontrivialreal-analyticmapsMityagin2015). LetU R mbeconnected
+andopen,andletf Cω(U; R n). Iff 0 n ,thenitszeroset ⊆
+∈ ̸≡
+Z(f) := f−1( 0 ) = x U :f(x)=0
+n n
+{ } { ∈ }
+hasLebesguemeasurezeroinR m (i.e. Leb
+m
+(cid:0) Z(f) (cid:1) =0). Equivalently,ifthereexistsx U with
+f(x)=0 ,thenLeb (cid:0) f−1( 0 ) (cid:1) =0. ∈
+n m n
+̸ { }
+19
+
+=== PAGE 20 ===
+PublishedasaconferencepaperatICLR2026
+Remark 6. The result in Mityagin (2015) is stated for scalar-valued maps f : U R. The
+extensiontovector-valuedmapsf = (f 1 ,...,f n ) : U R n isimmediate: thezerose → toff isthe
+→
+intersectionofthezerosetsofitsscalarcomponents,
+n
+(cid:92)
+Z(f)= Z(f ),
+i
+i=1
+andiff 0 ,thenatleastonecomponentf 0,soZ(f) Z(f ),whichhasmeasurezeroby
+n j j
+̸≡ ̸≡ ⊆
+thescalarcase.
+A.2.2 REAL-ANALYTICFUNCTIONSWITHMATRIXINPUTS
+Sincetransformerlayersoperateonmatrices(e.g.,X R T×d),weneedtoextendreal-analyticity
+∈
+fromvectorspacestomatrixspaces. Thekeytoolisthevectorizationoperator,whichletsusreduce
+matrix-analyticquestionstothevectorcasetreatedabove.
+DefinitionA.2(Real-analyticityonmatrixspaces). LetU R m×nbeopen.Afunctionf :U R
+⊆ →
+isreal-analyticonU if,foreveryY
+∈
+U,thereexistcoefficients
+{
+c A
+∈
+R }A∈Nm
+0
+×n andr >0such
+that
+(cid:88)
+f(X)= c (X Y)A
+A
+−
+A∈Nm×n
+0
+forallX U with X Y <r.
+F
+∈ ∥ − ∥
+Amapf :U R a×b isreal-analyticonU ifeachofitscomponentsf ij :U Risreal-analytic.
+→ →
+ThesetofsuchmapsisdenotedCω(U;
+R
+a×b).
+Remark 7. In the special case where n = b = 1, the domain and codomain reduce to R m and
+R a, respectively. Then Definition A.2 recovers Definition A.1. Thus, Definition A.2 generalizes
+real-analyticitytofunctionsbetweenmatrixspaces.
+DefinitionA.3(VectorizationandmatricizationOperators). Letvec m,n :R m×n R mndenotethe
+→
+standardvectorizationoperator, whichstacksthecolumnsofamatrixintoasinglecolumnvector
+(Henderson&Searle,1981).
+We also define the corresponding matricization operator mat m,n : R mn R m×n. As shown in
+→
+Chaco´n&Duong2020,thevectorizationandmatricizationoperatorsaremutualinverses:
+mat m,n (cid:0) vec m,n (X) (cid:1) =X X R m×n (7)
+∀ ∈
+vec m,n (cid:0) mat m,n (x) (cid:1) =x x R mn (8)
+∀ ∈
+Furthermore, if x R mn and X R m×n are related by vectorization and matricization, i.e.,
+∈ ∈
+x=vec (X)andX=mat (x),thentheirnormscoincide:
+m,n m,n
+x = X .
+2 F
+∥ ∥ ∥ ∥
+Definition A.4 (Vectorized Form of Function). Let U R m×n be open and U˜ = vec m,n (U)
+⊆
+(also open since vec is a linear homeomorphism). We denote the vectorized form of a function
+f :U R a×bas
+→ f˜:=vec a,b f mat m,n :U˜ R ab.
+◦ ◦ →
+Equivalently,forallX U:
+∈
+(cid:18) (cid:19)
+f(X)=mat
+f˜(cid:0)
+vec (X)
+(cid:1)
+(9)
+a,b m,n
+Lemma A.1 (Equivalence real-analyticity). Let U R m×n be open, U˜ = vec m,n (U), and let
+⊆
+f :U R a×bwithitsvectorizedformf˜:U˜ R ab.
+→ →
+FixY U andsety=vec (Y) U˜. Thenthefollowingareequivalent:
+m,n
+∈ ∈
+1. f isreal-analyticatY(inthesenseofDefinitionA.2).
+2. f˜isreal-analyticaty(inthesenseofDefinitionA.1).
+20
+
+=== PAGE 21 ===
+PublishedasaconferencepaperatICLR2026
+Proof. WebeginbyestablishingthecorrespondencebetweenmatrixandvectorindicesinR k×ℓand
+R kℓ. Fors [kℓ],define:
+∈
+u(s):=1+(s 1)modk (rowindex)
+−
+(cid:22) (cid:23)
+s 1
+v(s):=1+ − (columnindex)
+k
+Then (u(s),v(s)) [k] [ℓ] gives the matrix coordinates corresponding to the sth entry of the
+∈ ×
+vectorization. Conversely,for(u,v) [k] [ℓ],define:
+∈ ×
+s(u,v):=u+(v 1)k [kℓ]
+− ∈
+torecoverthelinearindex.
+Whenclearfromcontext,weomitargumentsandsimplywriteu,v,orsforreadability.
+LetX,Y R m×n,withvectorizationsx = vec m,n (X)andy = vec m,n (Y). Foravectormulti-
+indexα ∈ ∈ N m 0 n,definethecorrespondingmatrixmulti-indexA α :=mat m,n (α),sothat:
+mn m n
+(cid:89) (cid:89) (cid:89)
+(x y)α = (x y )αs = (X Y )(Aα)uv =(X Y)Aα. (10)
+s s uv uv
+− − − −
+s=1 u=1v=1
+Similarly,foramatrixmulti-indexA ∈ N m 0 ×n,definethecorrespondingvectormulti-indexα A :=
+vec (A),giving:
+m,n
+m n mn
+(cid:89) (cid:89) (cid:89)
+(X Y)A = (X
+uv
+Y
+uv
+)Auv = (x
+s
+y
+s
+)(αA)s =(x y)αA. (11)
+− − − −
+u=1v=1 s=1
+NowletM U,andletm=vec (M) U˜. Bydefinitionofthevectorization,
+m,n
+∈ ∈
+f (M)=f˜(m), wheres=s(u,v).
+uv s
+Thiscoordinate-wisecorrespondenceunderliestheequivalencestatedinthelemma.
+( )Assumef isreal-analyticatY. ThenbyDefinitionA.2,thereexistsr >0and,foreach(u,v),
+⇒
+coefficients c (uv) suchthat:
+{ A }A∈Nm 0 ×n
+f (X)= (cid:88) c (uv) (X Y)A, X U : X Y <r. (12)
+uv A − ∀ ∈ ∥ − ∥ F
+A∈Nm×n
+0
+UsingEquation11,eachcomponentf˜ off˜canbeexpressedas:
+s
+f˜(x)= (cid:88) c˜(s)(x y)α, wherec˜(s) :=c (u(s),v(s)) .
+s α − αA A
+α∈Nmn
+0
+Thisseriesconvergesforallx U˜ with x y = X Y <r.Hence,eachscalarcomponent
+2 F
+∈ ∥ − ∥ ∥ − ∥
+off˜hasaconvergentpowerseriesaty,provingthatf˜isreal-analyticthere.
+( ) The reverse direction follows by symmetry: assume f˜is real-analytic at y, write the expan-
+⇐
+sion at y using definition Definition A.1, and repeat the argument using Equation 10 to construct
+component-wiseexpansionsforf atY.
+uv
+Remark 8. Consider the function f = vec m,n : R m×n R mn×1, which vectorizes an m n
+→ ×
+matrixbystackingitscolumns. Itscorrespondingvectorizedformis
+f˜(x)=(vec vec mat )(x)=vec (x)=x,
+mn,1 m,n m,n mn,1
+◦ ◦
+since x R mn is already a column vector . This composition yields the identity map on R mn,
+∈
+whichisclearlyrealanalytic. Therefore,byLemmaA.1,bothvec isrealanalytic,andsimilarly,
+m,n
+soismat . Itisnowevidentthatthecompositionoftwomatrix-valuedreal-analyticfunctionis
+m,n
+real-analytic,andwewillproveit.
+21
+
+=== PAGE 22 ===
+PublishedasaconferencepaperatICLR2026
+PropositionA.3(Compositiononmatrixspacesisreal-analytic). Supposef :R m×n R a×b and
+g :R a×b R p×q arereal-analytic(inthesenseofDefinitionA.2). Theng f :R m×n→ R p×q is
+→ ◦ →
+real-analytic.
+Proof. Considerthevectorizedforms
+f˜:=vec a,b f mat m,n :R mn R ab, g˜:=vec p,q g mat a,b :R ab R pq.
+◦ ◦ → ◦ ◦ →
+By Lemma A.1, f is real-analytic iff f˜is, and g is real-analytic iff g˜is. Hence f˜and g˜are real-
+analyticmapsbetweenEuclideanspaces.
+Thevectorizedformofthecompositionis
+g(cid:93)f =vec (g f) mat = (cid:0) vec g mat (cid:1) (cid:0) vec f mat (cid:1) =g˜ f˜,
+p,q m,n p,q a,b a,b m,n
+◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦
+(cid:124) (cid:123)(cid:122) (cid:125) (cid:124) (cid:123)(cid:122) (cid:125)
+g˜ f˜
+whereweinsertedtheidentity(mat vec )(X)=X.Bythevector-spacecompositionproperty
+a,b a,b
+◦
+(PropositionA.2),g˜ f˜isreal-analyticonR mn. ApplyingLemmaA.1oncemore,wegetthatg f
+◦ ◦
+isreal-analytic.
+A.2.3 REALANALYTICITYOFCOMMONCOMPONENTS
+We now catalogue the specific functions that appear inside transformer layers, proving each one
+is real-analytic. These building blocks—polynomials, exponentials, softmax, row normalization,
+matrixproducts,Hadamardscaling,andstacking—willbecomposedinAppendixBtoestablishthe
+real-analyticity of the full model. Throughout, all maps are defined on R m×n (or an open subset
+thereof),soDefinitionA.2applies.
+Proposition A.4 (Polynomials are real-analytic). Let p : R m R be a polynomial in the coor-
+dinates of x ∈ R m, i.e., p(x) = (cid:80) |α|≤d a α xα for some d ∈ → N0 and coefficients a α ∈ R. Then
+p Cω(R m).
+∈
+Proof. PolynomialsareC∞,anddαp 0whenever α > d. HencetheTaylorexpansionofpat
+anyy R mtruncates: ≡ | |
+∈ (cid:88) dαp(y)
+p(x) = (x y)α,
+α! −
+|α|≤d
+whichholdsforallx R m(radiusr =+ ). Thereforepisreal-analytic.
+∈ ∞
+PropositionA.5(Theexponentialisreal-analytic). Themapexp:R (0, )isreal-analyticon
+→ ∞
+R.
+Proof. DefineE(x) := (cid:80)∞ xk . Bytheratiotestthispowerserieshasinfiniteradiusofconver-
+k=0 k!
+gence, hence converges absolutely for all x R. Standard results on power series imply that E
+is C∞ on R and can be differentiated termwi ∈ se within its radius of convergence; in particular, for
+everyj N0 ,
+∈
+(cid:88) ∞ k(k 1) (k j+1) (cid:88) ∞ xr
+E(j)(x)= − ··· − xk−j = =E(x).
+k! r!
+k=j r=0
+Fixy R. Taylor’stheoremforpowerseriesthenyields
+∈
+(cid:88) ∞ E(j)(y) (cid:88) ∞ (x y)j
+E(x)= (x y)j =E(y) − ,
+j! − j!
+j=0 j=0
+whichisaconvergentpowerseriesinx y withinfiniteradiusofconvergence. HenceE isreal-
+−
+analyticateveryy R. AsE istheusualexponentialfunctiondefinedbyitspowerseries,expis
+∈
+real-analyticonR.
+Proposition A.6 (The logarithm is real-analytic). The map log : (0, ) R is real-analytic on
+∞ →
+(0, ).
+∞
+22
+
+=== PAGE 23 ===
+PublishedasaconferencepaperatICLR2026
+Proof. Forbrevity,wepresentonlyaproofsketch;
+The exponential map exp : R (0, ) is real-analytic with exp′(y) = 0 for all y. By the real-
+→ ∞ ̸
+analytic inverse function theorem (see Krantz & Parks 2002, Thm. 2.3.1), its local inverse log is
+real-analyticon(0, ).
+∞
+Thenextthreeresultshandletheattention-specificoperations: softmax,rownormalization(usedin
+thecausalprojectionform),andentrywisematrixpolynomials.
+PropositionA.7(Softmaxisreal-analytic). Themapsoftmax:R m R mwithcomponents
+→
+exi
+softmax i (x) = (cid:80)m exj , i=1,...,m,
+j=1
+isreal-analyticonR m.
+Proof. Fix i. The numerator x exi is the composition of the coordinate projection π
+i
+(x) =
+(cid:55)→
+x (a linear, hence real-analytic, map) with exp; by Proposition A.5 and the composition rule in
+i
+PropositionA.1,itisreal-analytic. Thedenominator
+m
+(cid:88)
+H(x)= exj
+j=1
+isafinitesumofreal-analyticfunctions,hencereal-analytic. Moreover,H(x) > 0forallx R m
+becauseexj >0. Therefore,bythequotientruleinPropositionA.1,themap ∈
+exi
+x
+(cid:55)→ H(x)
+isreal-analyticonR m. Sincethisholdsforeachi = 1,...,m, thevector-valuedmapsoftmaxis
+real-analytic.
+PropositionA.8(Rownormalizationisreal-analyticonpositiverow-sumdomain). Let
+D T := (cid:8) Y R T×T :Y1 T (0, )T(cid:9) .
+∈ ∈ ∞
+DefineRN(Y) = diag(Y1 T )−1YonD T . ThenRN : D T R T×T isreal-analytic(inthesense
+→
+ofDefinitionA.2).
+Proof. The map Y s := Y1 is linear, hence real-analytic. On (0, )T, the entrywise re-
+T
+(cid:55)→ ∞
+ciprocal s s⊙(−1) is real-analytic (componentwise t 1/t). The map s diag(s) is linear.
+(cid:55)→ (cid:55)→ (cid:55)→
+Matrix multiplication (A,Y) AY is real-analytic (Proposition A.10). Composing these gives
+RN(Y)=diag(Y1 )−1Yrea (cid:55)→ l-analyticontheopensetD .
+T T
+PropositionA.9(Entrywisematrixpolynomialsarereal-analytic). Fixm,n N. Forcoefficients
+{
+c A
+∈
+R }A∈Nm
+0
+×n andsomed
+∈
+N0 ,definethefunctionp:R m×n
+→
+Rby: ∈
+(cid:88)
+p(X)= c XA, (13)
+A
+|A|≤d
+where XA = (cid:81)m (cid:81)n XAuv as defined in the multi-index notation above. Then p is real-
+u=1 v=1 uv
+analyticonR m×n(inthesenseofDefinitionA.2).
+Moreover, if f : R m×n R a×b has component functions f ij of the form Equation 13, then f is
+→
+real-analytic.
+Proof. Considerthevectorizedformp˜:= p mat m,n : R mn R. Usingthecoordinateidentifi-
+◦ →
+cationfromequation11-equation10,eachmonomialsatisfies
+(cid:0) mat
+m,n
+(x) (cid:1)A =xαA,
+23
+
+=== PAGE 24 ===
+PublishedasaconferencepaperatICLR2026
+whereα =vec (A). Hence:
+A m,n
+(cid:88)
+p˜(x)= c
+A
+xαA,
+|A|≤d
+which is a standard multivariate polynomial in x R mn. By Proposition A.4, such functions are
+real-analytic on all of R mn, so p˜ Cω(R mn). B ∈ y Lemma A.1, this implies p is real-analytic on
+R
+m×n. ∈
+Forthesecondclaim,observethatifeachf isascalarpolynomialoftheformEquation13,then
+ij
+eachf isreal-analyticbytheargumentabove. Hence,byDefinitionA.2,f isrealanalytic.
+ij
+Finally, we record the algebraic operations—matrix multiplication, Hadamard scaling, concatena-
+tion,andnoncommutativematrixpolynomials—thatallowustocomposetheaboveprimitivesinto
+fulltransformerlayers.
+Proposition A.10 (Matrix product of real-analytic factors). Let the functions f : R m×n R p×r
+andg :R m×n R r×q bereal-analytic. Then,h:R m×n R p×q definedash(X)=f(X → )g(X),
+isreal-analytic → onR m×n. →
+Proof. Foreach(i,j) [p] [q],itholdsthath (X)=
+(cid:80)r
+f (X)g (X).
+∈ × ij k=1 ik kj
+Each factor f and g is a real-analytic scalar map by assumption; their product is real-analytic
+ik kj
+by Proposition A.1, and a finite sum of real-analytic functions is real-analytic. Thus every h is
+ij
+real-analytic,hencehisreal-analytic.
+PropositionA.11(Hadamard(element-wise)scaling). LetA R m×nbeafixedmatrix. Then,the
+mapf :R m×n R m×ndefinedasf(X)=A Xisreal-an ∈ alyticonR m×n.
+→ ⊙
+Proof. Componentwise,(A X) =A X isaproductofaconstantandacoordinatefunction,
+ij ij ij
+⊙
+henceapolynomial(degree 1)andthusreal-analytic.
+≤
+Proposition A.12 (Concatenation/stacking of real-analytic blocks). Let f ℓ : R m×n R p×qℓ be
+→
+real-analytic for ℓ [L]. The horizontal concatenation operation g : R m×n R p×(q1+···+qL),
+∈ →
+definedas:
+(cid:2) (cid:3)
+g(X)= f (X) f (X) f (X)
+1 2 L
+···
+is real-analytic. Likewise, if f ℓ : R m×n R pℓ×q are real-analytic, then the vertical stacking
+operationh:R m×n R (p1+···+pL)×q,defi → nedas:
+→
+h(X)= (cid:2) f (X)⊤ f (X)⊤ f (X)⊤(cid:3)⊤
+1 2 L
+···
+isreal-analytic.
+Proof. Each scalar component of g (respectively h) is exactly one scalar component of some f ,
+ℓ
+hencereal-analytic. Thereforegandharereal-analyticbydefinitionDefinitionA.2.
+Proposition A.13 (Noncommutative matrix polynomials are real-analytic). Let n,p,q N, let
+X R n×n,andfixcoefficientmatricesA k R p×nandB k R n×q fork =0,...,d. De ∈ fine
+∈ ∈ ∈
+d
+(cid:88)
+f(X) := A k XkB k R p×q, X0 :=I n , Xk+1 :=XkX.
+∈
+k=0
+Thenf isrealanalyticinthesenseofDefinitionA.2.
+Proof. The identity map X X is linear, hence a degree-1 entrywise polynomial; by Proposi-
+tionA.9itisreal-analytic. A (cid:55)→ ssumeX Xk isreal-analytic. Withf(X) = Xk andg(X) = X,
+Proposition A.10 yields Xk+1 = f(X) (cid:55)→ g(X) real-analytic; by induction, all powers X Xk are
+(cid:55)→
+real-analytic.
+Foreachk,left/rightmultiplicationbyfixedmatricespreservesreal-analyticityviaPropositionA.10:
+sincetheconstantmapsX A andX B arereal-analytic(componentsareconstantpolyno-
+k k
+mials),thecompositionX (cid:55)→ A XkB (cid:55)→ isreal-analytic. Finally,f isafinitesumofreal-analytic
+k k
+(cid:55)→
+maps,hencereal-analyticbyclosureunderaddition(applyPropositionA.1componentwise).
+24
+
+=== PAGE 25 ===
+PublishedasaconferencepaperatICLR2026
+Remark 9. We highlight several standard constructions that yield real-analytic maps, omitting
+proofsforbrevity:
+• Affineandbilinearmaps. FunctionsoftheformX AXB+Carereal-analytic,astheyare
+(cid:55)→
+obtainedviamatrixmultiplicationandadditionofconstantmatrices(PropositionA.10,Proposi-
+tionA.1).
+• AlgebraicexpressionsinX.AnyexpressionconstructedfromXusingfinitelymanyadditionsand
+matrixmultiplicationswithfixedcoefficientmatrices,e.g. A +A XB +A XB XC -defines
+0 1 1 2 2 2
+areal-analyticmap.ThisfollowsfromrepeatedapplicationofPropositionA.10andclosureunder
+addition.
+• Scalarpolynomialinvariants. CoordinatefunctionsX ,thetracetr(X),allprincipalandnon-
+ij
+principal minors, and the determinant det(X) are scalar polynomials in the entries of X, and
+hencereal-analyticbyPropositionA.9.
+A.3 DIFFERENTIAL,MEASURE-THEORETIC,ANDTOPOLOGICALTOOLS
+Thissubsectioncollectstheminimalcalculus,measure,andtopologywewilluselater. Infinitedi-
+mensions,Fre´chetderivativesletusspeakuniformlyaboutJacobiansandHessians;basicEuclidean
+topology lets us control neighborhoods and compactness; the inverse function theorem gives lo-
+calinvertibility;andpushforwards/absolutecontinuityformalizehowdistributionstransformunder
+measurablemaps.
+DefinitionA.5(Fre´chetderivative(Luenberger,1997,§7.2-§7.3)). LetU R mopen,andconsider
+afunctionf : U R n. Wesaythatf isFre´chetdifferentiableatx U ⊆ ifthereexistsabounded
+linearmapA:R →m R nsuchthat ∈
+→
+f(x+h) f(x) Ah
+2
+lim ∥ − − ∥ =0.
+∥h∥2→0
+∥
+h
+∥
+2
+TheuniqueoperatorAisdenotedbyDf(x)andcalledthe(Fre´chet)derivativeoff atx.
+Definition A.6 (Second Fre´chet derivative (Magnus & Neudecker, 2019, Ch. 18)). Let U R m
+open,andconsiderafunctionf : U R n. Supposef isFre´chetdifferentiableatx. Thes ⊆ econd
+Fre´chetderivativeoff atxistheboun → dedbilinearmapD2f(x):R m R m R ndefinedas:
+× →
+Df(x+th)[k] Df(x)[k]
+D2f(x)[h,k]:= lim − .
+t→0 t
+Proposition A.14 (Connection to the Hessian). If f : U R is C2, then D2f(x) is symmetric
+(Aroraetal.,2021,Thm.5.1)andcanrepresentedbytheH → essianmatrix 2f(x):
+∇
+D2f(x)[h,k] = h⊤(cid:0) 2f(x) (cid:1) k,
+∇
+asnotedinMagnus&Neudecker2019,Ch.18.
+Euclideantopology. ThefollowingstandarddefinitionsandfactsaboutR p areusedinthelocal-
+to-globalmeasureargumentinAppendixC.
+DefinitionA.7(ClosureofasetinR p). LetU R p. TheclosureofU,denotedU,isthesmallest
+closedsubsetofR pcontainingU. ⊆
+Definition A.8 (Euclidean balls in R p). Fix p N and equip R p with the Euclidean norm 2 .
+Forx R pandr >0wedefine: ∈ ∥·∥
+∈
+B(x,r):= y R p : y x 2 <r
+{ ∈ ∥ − ∥ }
+B(x,r):= y R p : y x 2 r
+{ ∈ ∥ − ∥ ≤ }
+In R p with the Euclidean topology one has B(x,r) = B(x,r), i.e. the closed ball equals the
+topologicalclosureoftheopenball.
+DefinitionA.9(Second-countablesubspaceofR p(Munkres,2000,§30)). LetX R pbeequipped
+withthesubspacetopologyτ
+X
+:= U X :U openinR p . WesayX issecond- ⊆ countableifthere
+{ ∩ }
+existsacountablefamily τ suchthateveryO τ isaunionofmembersof .Equivalently,
+X X
+F ⊆ ∈ F
+thecountablefamily
+Q := (cid:8) B(x,r) X :x Q p,r Q>0 (cid:9) ,
+F ∩ ∈ ∈
+isabasisforτ .
+X
+25
+
+=== PAGE 26 ===
+PublishedasaconferencepaperatICLR2026
+PropositionA.15(StandardfactsforR p). Fixp N. Thefollowinghold:
+∈
+1. Hausdorff(Aitken,2020,Prop.18): R pwithitsEuclideanmetricisHausdorff.
+2. Heine-Borel (Munkres, 2000, Thm. 27.3): A subset of R p is compact iff it is closed and
+bounded;inparticular,eachclosedEuclideanballB(x,r)iscompact.
+3. Second countability (Munkres, 2000, §13 and Thm. 30.2) : R has a countable base (in-
+tervals with rational endpoints); hence R p, being a finite product of second-countable
+spaces,issecond-countable. Moreover,subspacesofsecond-countablespacesaresecond-
+countable.
+4. Lindelo¨f consequence(Munkres, 2000, Thm. 30.3(a)): Every second-countable space is
+Lindelo¨f; consequently, every open cover of any subspace of R p admits a countable sub-
+cover.
+5. Local compactness of R p(Munkres, 2000, Thm. 29.2): For any x R p and open neigh-
+∈
+borhoodW x,thereexistsε>0withB(x,ε) W,andB(x,ε)iscompactbyHeine-
+Borel;hence ∋ R pislocallycompact.Furthermore, ⊆ inaHausdorffspace,localcompactness
+isequivalenttoshrinkingneighborhoodswithcompactclosures: foreveryneighborhood
+W xthereexistsanopenV withx V V W andV compact.
+∋ ∈ ⊆ ⊆
+Invertibility and measure transport. The inverse function theorem and the pushforward for-
+malism are the two tools that connect local diffeomorphism charts to global measure-preservation
+statements.
+Definition A.10 (Ck diffeomorphism Spivak 1971, Ch. 5). Let U,V R p be open sets and let
+k N . Amapf :U V isaCk diffeomorphismif: ⊆
+∈ ∪{∞} →
+1. f isbijective;
+2. f isCk (allpartialderivativesuptoorderkexistandarecontinuous);
+3. theinversemapf−1 :V U isCk.
+→
+Whenk = 1wesimplysaydiffeomorphism. Equivalently, aCk diffeomorphismisabijectiveCk
+mapwhoseinverseisalsoCk.
+Theorem A.2 (Inverse Function Theorem Rudin 1976, Thm. 9.24). Let U R p be open and
+f : U R p beC1. Supposea U satisfiesdetDf(a) = 0. Thenthereexist ⊂ opensetsU 0 U
+witha → U 0 andV 0 R pwithf ∈ (a) V 0 suchthat ̸ ⊂
+∈ ⊂ ∈
+(cid:12)
+f(cid:12)
+U0
+:U
+0 →
+V
+0
+isaC1-diffeomorphism. Moreover,theinversef−1 :V U isC1and
+0 0
+→
+D
+(cid:0) f−1(cid:1)
+(f(x)) =
+(cid:0)
+Df(x)
+(cid:1)−1
+x U .
+0
+∀ ∈
+Remark 10. In Theorem A.2 we assume f : U R p R p, so the Jacobian Df(a) is a p p
+⊆ → ×
+(square)matrix. Inthissetting,
+detDf(a)=0 Df(a)isinvertible,
+̸ ⇐⇒
+andthisisexactlythehypothesisthatyieldsalocalC1inverse.
+Definition A.11 (Pushforward and absolute continuity (Folland, 1999, §3.2)). Consider a Borel-
+measurablemapT :R p R pandletµbeaBorelmeasureonR p. ThepushforwardmeasureT # µ
+istheBorelmeasureonR
+→pdefinedby
+T
+#
+µ(U) := µ (cid:0) T−1(U) (cid:1) , U (R p).
+∈B
+If ν is another Borel measure on R p, we say T # µ is absolutely continuous with respect to ν, and
+writeT
+#
+µ ν,ifforeveryBorelsetU (R p):
+≪ ∈B
+ν(U)=0= T µ(U)=0.
+#
+⇒
+Inparticular,forLebesguemeasureLeb ,toproveT µ Leb foreveryµ Leb ,itsufficesto
+p # p p
+≪ ≪
+verifythat
+Leb p (U)=0 = Leb p (cid:0) T−1(U) (cid:1) =0 forallBorelU R p.
+⇒ ⊆
+26
+
+=== PAGE 27 ===
+PublishedasaconferencepaperatICLR2026
+B TRANSFORMER LANGUAGE MODEL
+Thisappendixsectiongivesaconcise,shape-accuratespecificationofthedecoder-onlyTransformer
+weanalyze. Weincludeitbothtokeepthepaperself-containedandbecausethemeasure-zeroargu-
+mentslaterhingeonarchitecture-dependentwitnessesandexactdimensionbookkeeping. Webegin
+withtokenandpositionalembeddings(DefinitionB.3),defineself-attentionanditscausalvariants
+(DefinitionB.5,DefinitionB.6,DefinitionB.7),assemblemulti-headattention,layernormalization,
+and an MLP into a pre-LN residual block (Definition B.8, Definition B.9, Definition B.4, Defini-
+tionB.11),stackLsuchblockstoobtainthemodel(DefinitionB.12),andconcludewiththeunem-
+bedding+softmaxhead(DefinitionB.10),isolatingthelast-tokenrepresentationusedindownstream
+proofs(Equation29).
+Inputprocessing. Thefirststageofthemodelmapsadiscretetokensequenceintoacontinuous
+matrixrepresentationvialearnedembeddings.
+DefinitionB.1(TokenEmbeddingLayer). Let beavocabulary,andletd Nbetheembedding
+dimension. For any input sequence s = s ,.. V .,s ≤K, the Token Em ∈ bedding Layer is the
+1 T
+⟨ ⟩ ∈ V
+functiondefinedas:
+E(s)=(E s1 ,...,E sT ) ⊤
+∈
+R T×d, (14)
+whereE
+∈
+R |V|×disatrainableembeddingmatrixindexedbyelementsof
+V
+,andE si
+∈
+R ddenotes
+theembeddingvectorfortokens .
+i
+Thismappingisappliedelement-wiseandisindependentofthesequencelengthT.
+Definition B.2 (Positional Embedding Layer). Let be a vocabulary, and let d N be the em-
+bedding dimension. For any input sequence s = s V ,...,s ≤K with T = ∈ s, the (learned
+1 T
+⟨ ⟩ ∈ V | |
+absolute)PositionalEmbeddingLayeristhefunctiondefinedas:
+PE(s) = (P 1 ,...,P T ) ⊤ R T×d, (15)
+∈
+where P R K×d is a trainable matrix indexed by positions i [K], and P i R d denotes the
+∈ ∈ ∈
+embeddingvectorforpositioni. Thismappingdependsonlyonpositions(notontokenidentities)
+andreturnsthefirstT rowsofP.
+Definition B.3 (Embedding Layer). Let be a vocabulary, K N a context bound, and d N
+the embedding width. For any input sequ V ence s = s ,...,s ∈ ≤K with T = s, define ∈ the
+1 T
+⟨ ⟩ ∈ V | |
+embeddinglayerasthesumofthetokenandpositionalembeddings:
+Emb(s):=E(s)+PE(s)= (cid:0) E s1 +P 1 , ..., E sT +P T (cid:1)⊤
+∈
+R T×d, (16)
+where E R |V|×d is the trainable token-embedding matrix and P R K×d is the trainable
+∈ ∈
+positional-embeddingmatrix.
+Sub-layer modules. The Transformer block is built from four reusable sub-layers—an MLP,
+(causal)self-attention,multi-headattention,andlayernormalization—eachdefinednext.
+DefinitionB.4(Multi-LayerPerceptron). AMulti-LayerPerceptron(MLP)withM layersisafunc-
+tionmlp M :R d0 → R dM,definedrecursivelyas:
+h(1) =W(1)x+b(1) (17)
+h(m) =W(m)σ (cid:0) h(m−1)(cid:1) +b(m), m 2 (18)
+≥
+mlp (x)=h(M) (19)
+M
+where x ∈ R d0 is the input, { W(m) ∈ R dm×dm−1 } M m=1 and { b(m) ∈ R dm } M m=1 are trainable
+parametersandσisanactivationfunction.
+Definition B.5 (Self-Attention). A Self-Attention module is a function η : R T×din R T×dη,
+→
+definedas:
+(cid:32) (cid:33)
+⊤
+(XQ)(XK)
+η(X;Q,K,V)=softmax XV, (20)
+(cid:112)
+d
+η
+whereX R T×din istheinput,Q,K,V R din×dη aretrainableparameters(query,key,andvalue
+∈ ∈
+matrices),softmaxisappliedrow-wise,d istheattentiondimension(typicallyd <d ),andT is
+η η in
+thesequencelength.
+27
+
+=== PAGE 28 ===
+PublishedasaconferencepaperatICLR2026
+T×T
+DefinitionB.6(CausalSelf-Attention,maskedform). Definethe“causalmask”M R as:
+∈
+(cid:26)
+0, j i,
+M ij = ≤
+, j >i
+−∞
+Then,aCausalSelf-Attentionmoduleisafunctionη˜:R T×din R T×dη,definedas:
+→
+(cid:32) (cid:33)
+⊤
+(XQ)(XK)
+η˜(X;Q,K,V)=softmax +M XV, (21)
+(cid:112)
+d
+η
+whereX R T×din istheinput,Q,K,V R din×dη aretrainableparameters(query,key,andvalue
+∈ ∈
+matrices),softmaxisappliedrow-wise,d istheattentiondimension(typicallyd <d ),andT is
+η η in
+thesequencelength.
+Definition B.7 (Causal Self-Attention, projection form). Define the unit lower-triangular matrix
+L R T×T asL ij = I{j≤i} andconsidertherownormalizationoperationRN : D T R T×T of
+∈ →
+PropositionA.8. Then,aCausalSelf-Attentionmoduleisafunctionη˜:R T×din R T×dη,defined
+→
+as:
+(cid:32) (cid:32) (cid:33)(cid:33)
+⊤
+(XQ)(XK)
+η˜(X;Q,K,V)=RN L exp XV, (22)
+(cid:112)
+⊙ d
+η
+whereX R T×din istheinput,Q,K,V R din×dη aretrainableparameters(query,key,andvalue
+∈ ∈
+matrices),RNisappliedrow-wise,d istheattentiondimension(typicallyd < d ),andT isthe
+η η in
+sequencelength.
+Remark 11. Consider Z = 1 (XQ)(XK) ⊤. Since L = 1 for all i [T], we have that
+√dη ii ∈
+(cid:2) L expZ (cid:3) =eZii >0,hencetherowsum (cid:80) eZij eZii >0andRNiswell-defined.
+⊙ ii j≤i ≥
+DefinitionB.8(Multi-HeadSelf-Attention). AMulti-HeadSelf-AttentionmodulewithH headsis
+afunctionattn H :R T×din R T×dout,definedusingtheSelf-AttentionmapfromDefinitionB.5or
+→
+DefinitionB.7withdifferentparametersetsperhead:
+η (X)=η(X;Q(h),K(h),V(h)), h [H], (23)
+h
+∈
+attn (X)= (cid:2) η (X),...,η (X) (cid:3) WO, (24)
+H 1 H
+where { Q(h),K(h),V(h) ∈ R din×dη } H h=1 arethehead-specificparametersandWO ∈ R Hdη×dout
+istheoutputprojectionmatrix.
+DefinitionB.9(LayerNormalization). LayerNormalizationisafunctionLN : R d R d,defined
+→
+as:
+x µ 1
+LN(x)=γ (cid:112)− x d +β, (25)
+⊙ σ2 +ε
+x
+where x ∈ R d is the input, µ x = d 1(cid:80)d i=1 x i and σ x 2 = d 1(cid:80)d i=1 (x i − µ x )2 are the mean and
+variance of x, vectors β,γ R d are learnable parameters, and ε R + is a small constant that
+∈ ∈
+ensureswedon’tdividebyzero.
+Definition B.10 (Unembedding Layer). Let be a vocabulary and d N and U R |V|×d be a
+V ∈ ∈
+trainableprojectionmatrix. DefinetheunembeddingmapUnEmb:R d R |V|by
+→
+UnEmb(h) := softmax (cid:0) ULN(h) (cid:1) , h R d.
+∈
+Fullarchitectureassembly. Withallsub-layersinplace,weassemblethemintoasinglepre-LN
+residual block, stack L such blocks into the Transformer backbone, and append the unembedding
+headtoformthecompletelanguagemodel.
+Definition B.11 (Transformer Block). A Transformer Block consists of a composition of a Multi-
+HeadSelf-AttentionlayerwithHheads(DefinitionB.8)andanMLPwithM layers(DefinitionB.4),
+each preceded by layer normalization (Definition B.9) and wrapped with residual connections.
+GivenaninputX R T×d,theoutputTB(X) R T×discomputedas:
+∈ ∈
+H=X+attn (X) (26)
+H
+TB(X)=H+mlp (H), (27)
+M
+28
+
+=== PAGE 29 ===
+PublishedasaconferencepaperatICLR2026
+whereX,H R T×d aretheresultsofapplyinglayernormalizationrow-wisetoXandH,respec-
+∈
+tively,eachwithitsownsetoflearnableparametersandmlp isappliedrow-wise. Allsub-layer
+M
+parametersaredimensionedappropriately.
+DefinitionB.12(Transformer). FixL N. Foreachℓ [L],letTB(ℓ) :R T×d R T×d denotea
+∈ ∈ →
+TransformerBlock(DefinitionB.11)withitsownparameters. Definethemodule
+Tr := TB(L) TB(1).
+T
+◦···◦
+Each TB(ℓ) maps R T×d R T×d, so the residual additions in Definition B.11 are dimensionally
+→
+validateverydepth.
+Definition B.13 (Transformer Language Model). Let denote a finite vocabulary and K N a
+V ∈
+fixedcontextlength. ATransformerLanguageModelwithLlayersisthecompositionofanembed-
+ding layer (Definition B.3), a Transformer with L blocks (Definition B.12), and an Unembedding
+Layer(DefinitionB.10).
+Formally,itisaparameterizedfunction
+f : ≤K R p ∆|V|−1
+V × →
+definedasfollows. Withoutlossofgenerality,considerθ =(θ 1 R p1,θ 2 R p2,θ 3 R p3) R p,
+∈ ∈ ∈ ∈
+whichcollectsallthemodelparameters.
+Foraninputsequences= s ,...,s withT K:
+1 T
+⟨ ⟩ ≤
+H(s; θ)=Emb(s; θ ) (embedding) (28)
+1
+(cid:18) (cid:16) (cid:17)(cid:19)
+r(s; θ)= Tr H(s; θ); θ (last-tokenrepresentation) (29)
+|s| 2
+|s|
+(cid:16) (cid:17)
+f(s; θ)=UnEmb r(s; θ); θ (next-tokenprediction) (30)
+3
+Then,theprobabilityofthenext-tokenbeing isgivenby:
+i
+V
+(cid:0) (cid:1)
+Pr[s = s] = f(s; θ) , i [ ]. (31)
+T+1 V i | i ∀ ∈ |V|
+Verification of real-analyticity. We close this section by showing that every module defined
+above is jointly real-analytic in its inputs and parameters. This is the technical property that lets
+the measure-zero arguments in Appendix C go through. We first record the equivalence between
+the two causal-softmax formulations, then verify analyticity of the embedding layer and of each
+sub-layerandtheircompositions.
+PropositionB.1(Equivalenceofmaskedandprojectioncausalsoftmax). ForanylogitsZ R T×T,
+∈
+letMandLbeasinDefinitionsB.6–B.7. Then,row-wise,
+(cid:0) (cid:1)
+softmax(Z+M) = RN L expZ .
+⊙
+Consequently,thetwodefinitionsoftheCausalSelf-Attentionareidentical.
+Proof. Fixarowi. Bythemask:
+
+(cid:2) softmax(Z+M) (cid:3) =
+
+(cid:80)
+eZi
+e
+j
+Zik , j ≤ i,
+ij k≤i
+0,
+j >i,
+interpreting viaalimit. Ontheotherhand,itholdsthat:
+−∞
+[L expZ]
+ij
+=Ij≤i eZij.
+⊙
+Therefore,L expZkeepsexactlytheentrieswithj i. Then,foreachrow,rownormalization
+dividestheke ⊙ ptentriesbythesamepositivesum (cid:80) ≤ eZik andleavestheothersat0,yieldingthe
+k≤i
+samerowasabove. Thisholdsforeveryrowi,provingtheidentity.
+29
+
+=== PAGE 30 ===
+PublishedasaconferencepaperatICLR2026
+Proposition B.2 (Embedding layer is real-analytic in the parameters). Fix a sequence s =
+s ,...,s ≤K withT = s. Considerthemap
+1 T
+⟨ ⟩∈V | |
+(E,P) Emb(s) = E(s)+PE(s) R T×d, E R |V|×d, P R K×d.
+(cid:55)−→ ∈ ∈ ∈
+Thenthismapisreal-analyticonR |V|×d R K×d(inthesenseofDefinitionA.2).
+×
+Proof. Let S 0,1 T×|V| select rows s T , and R 0,1 T×K select the first T rows.
+s ∈ { } { i }i=1 T ∈ { }
+Then
+E(s)=S E, PE(s)=R P, Emb(s)=S E+R P.
+s T s T
+Each map (E,P) S E and (E,P) R P is a matrix product of a constant matrix with the
+s T
+(cid:55)→ (cid:55)→
+variable(constantmapsarereal-analyticasdegree-0polynomialsbyPropositionA.9;theproduct
+isreal-analyticbyPropositionA.10). Theirsumisreal-analyticbyclosureunderaddition(Proposi-
+tionA.1). Hence(E,P) Emb(s)isreal-analytic.
+(cid:55)→
+PropositionB.3(Jointreal-analyticityofcoremodulesandstacks). Assumethepointwiseactivation
+σ : R R used in the MLP is real-analytic (e.g., tanh, GELU). Fix T [K]. For notational
+→ ∈
+conveniencedefinetheparametertuples
+(cid:16) (cid:17)
+Θ := Q(h),K(h),V(h) H , WO , Θ (1) :=(γ(1),β(1)), Θ (2) :=(γ(2),β(2)),
+attn { }h=1 LN LN
+Θ := (cid:0) W(m),b(m) M (cid:1) , Θ := (cid:0) Θ ,Θ (1) ,Θ (2) ,Θ (cid:1) , Θ := (cid:0) Θ (1) ,...,Θ (L)(cid:1) .
+mlp { }m=1 TB attn LN LN mlp Tr,T TB TB
+Thenthefollowingmapsarejointlyreal-analyticintheirinputsandparameters:
+1. MLP. (x,Θ ) mlp (x) is real-analytic: each affine layer (W,b,x) Wx+b is a
+mlp (cid:55)→ M (cid:55)→
+matrix product plus addition (Proposition A.10 and Proposition A.1); the activation σ is real-
+analyticbyassumption, andcompositionpreservesreal-analyticity(PropositionA.2). Iteration
+overM layersisrepeatedcomposition(PropositionA.2).
+2. LayerNormalization. (x,γ,β) LN(x) = γ x−µx +β isreal-analytic: µ andσ2 are
+(cid:55)→ ⊙ √σ2+ε x x
+x
+(entrywise)polynomialsinx(PropositionA.9);g(x) = σ2 +εsatisfiesg(x) > 0(definitionof
+x
+ε > 0),andthescalarmaph(t) = t−1/2 isreal-analyticon(0, )(classicalbinomialseries).
+∞
+Thus h g is real-analytic (Proposition A.2); division by g1/2 is a quotient by a nonvanishing
+◦
+real-analyticfunction(PropositionA.1);Hadamardscalingbyγandadditionofβpreservereal-
+analyticity(PropositionA.11andPropositionA.1). Row-wiseapplicationishandledbystacking
+(PropositionA.12)andthevectorizationequivalence(LemmaA.1).
+(cid:0) (cid:1)
+3. Unembedding. (h,U,γ,β) softmax ULN(h) is real-analytic: LN is real-analytic by
+(cid:55)→
+(2); multiplicationbyUisreal-analytic(PropositionA.10); softmaxisreal-analytic(Proposi-
+tion A.7); the overall map is a composition (Proposition A.2) and stacking across coordinates
+(PropositionA.12).
+4. Self-Attention(vanillaorcausal)andMulti-Head. LetZ= 1 (XQ)(XK) ⊤.
+√dη
+(a)VanillaSA:(X,Q,K,V) softmax(Z)XV isreal-analyticby: matrixproducts(Propo-
+(cid:55)→
+sition A.10), scaling, row-wise softmax (Proposition A.7 with stacking, Proposition A.12, and
+LemmaA.1),andafinalmatrixproduct.
+(b)CausalSA(projectionform): WithLunitlower-triangularandusingDefinitionB.7,
+(cid:0) (cid:1)
+(X,Q,K,V) RN L expZ XV
+(cid:55)−→ ⊙
+is real-analytic: exp is real-analytic (Proposition A.5); Hadamard scaling by fixed L is real-
+analytic(PropositionA.11);byRemark11,everyrowofL exp(Z)sumstoastrictlypositive
+⊙
+value(thediagonalterm),sotheargumentliesinthedomainD ofPropositionA.8;henceRN
+T
+isreal-analyticthere;thefinalmultiplicationbyXVisreal-analytic(PropositionA.10).
+Therefore, each single attention head is real-analytic whether it is vanilla or causal (projec-
+tion). ForMulti-HeadSelf-Attention(DefinitionB.8), horizontalconcatenationacrossheadsis
+real-analytic(PropositionA.12),andtheoutputprojectionbyWO isamatrixproduct(Proposi-
+tionA.10).Hence(X,Θ ) attn (X)isreal-analyticregardlessofwhichattentionvariant
+attn H
+(cid:55)→
+eachheaduses.
+30
+
+=== PAGE 31 ===
+PublishedasaconferencepaperatICLR2026
+5. Transformer Block (fixed T). (X,Θ TB ) TB(X) R T×d is real-analytic: apply LN row-
+(cid:55)→ ∈
+wisetogetX(item2withstacking,PropositionA.12,andLemmaA.1);applyattention(item4)
+to X; add the residual (closure under addition, Proposition A.1); apply LN row-wise to get H
+(item2withstackingandLemmaA.1);applytherow-wiseMLP(item1withstacking,Proposi-
+tionA.12);addtheresidualagain(PropositionA.1). Allintermediatematrixmultiplicationsuse
+PropositionA.10,andtheoverallstructureisacomposition(PropositionA.3viaLemmaA.1).
+6. Transformer(fixedT). (X,Θ ) Tr (X) = TB(L) TB(1)(X)isacompositionof
+Tr,T T
+(cid:55)→ ◦···◦
+real-analyticmapsfrom(5),hencereal-analyticbyPropositionA.3.
+All statements extend from vector-valued to matrix-valued, row-wise applications via Proposi-
+tionA.12andLemmaA.1, andeverysum/product/quotient/compositionstepaboveinvokesPropo-
+sitionA.1,PropositionA.10,andPropositionA.3asindicated.
+31
+
+=== PAGE 32 ===
+PublishedasaconferencepaperatICLR2026
+C ALMOST SURE INJECTIVITY
+This section establishes a foundational structural result: for causal Transformer Language Models
+with standard architectural widths and at least one attention head per block, the final hidden state
+at the last token is almost surely injective with respect to the input sequence, assuming the model
+parameters are drawn from any absolutely continuous distribution at initialization. Crucially, we
+showthisinjectivityispreservedafteranyfinitenumberofgradientdescent(GD)updates.
+Weorganizethesectionintwoparts; (i)Measure-zerocollisionsviareal-analyticityandawitness
+constructionand(ii)Preservationofabsolutecontinuityundergradientdescent. Eachpiecebuilds
+toward the main theorem, which asserts that under mild width and head assumptions, the Trans-
+formermapfrominputsequencestolast-tokenrepresentationsisinjectivealmostsurely,evenafter
+multipleroundsoftraining. Themaintheoremfollows.
+AssumptionC.1(MinimumEmbeddingDimension). Weassumetheembeddingdimensionsatisfies
+d 4andd 1. Furthermore,weassumethateachtransformerblockhasatleastoneattention
+η
+≥ ≥
+head.Theseconditionsaretriviallysatisfiedinpractice:formodernlargelanguagemodels,embed-
+dingdimensionsaretypicallyinthehundredsorthousands, andeachlayerhasmultipleattention
+heads,sotheassumptionsimposenopracticalrestrictionsonthemodelsunderconsideration.
+TheoremC.1(Finite-horizona.s.injectivityunderGD). Fixafinitevocabulary ,acontextbound
+V
+K N, a time horizon T N, and consider the causal Transformer Language Model (TLM)
+of D ∈ efinition B.13 under Ass ∈ umption C.1. Let (cid:8)(cid:0) s ≤K,p ∆|V|−1(cid:1)(cid:9)T be any sequence
+t ∈V t ∈ t=1
+of samples and let η (0,1) T be any sequence of step-sizes. Assume the parameters are
+{ t ∈ }t=1
+randomlyinitializedandupdatedbygradientdescent:
+θ µ, µ Leb ,
+0 p
+∼ ≪
+θ =θ η (θ ),
+t+1 t
+−
+t
+∇L
+st,pt t
+whereLeb
+p
+denotesLebesguemeasureonR pand
+s,p
+:R p Risthestandardcross-entropyloss
+L →
+(cid:0) (cid:1)
+(θ)=CrossEntropy f(s; θ), p .
+s,p
+L
+Then,withprobabilityoneoverthedrawofθ ,thelast-token,last-layerrepresentationmap
+0
+≤K s r(s; θ T ) R d
+V ∋ (cid:55)−→ ∈
+isinjective. Equivalently,
+Pr (cid:2) s=t ≤K :r(s; θ )=r(t; θ ) (cid:3) =0,
+T T
+∃ ̸ ∈V
+wherer( ; θ )denotesthelast-tokenrepresentationdefinedinEquation(29).
+T
+·
+Proof.
+Letθ µwithµ Leb . ForafixedtraininghorizonT,definetheGDupdatemap
+0 p
+∼ ≪
+Φ:R p R p, Φ(θ 0 ) = θ T ,
+→
+i.e.ΦisthecompositionofT gradient-descentstepswithstepsizes η T (0,1)ontheloss .
+{ t }t=1 ⊂ L
+1)AbsolutecontinuityafterT steps. ByCorollaryC.5.1,sinceµ Leb ,thepushforwardlaw
+p
+≪
+Φ µofθ remainsabsolutelycontinuous:
+# T
+θ Φ µ Leb .
+T # p
+∼ ≪
+2)Globalalmost-suredistinctness. Let := ≤K,whichisfinite. ByCorollaryC.2.1,underany
+S V
+absolutelycontinuousparameterlaw,
+(cid:104) (cid:105)
+Pr r(s; θ )=r(t; θ ) s=t ≤K = 1.
+T T
+̸ ∀ ̸ ∈V
+Thusthemaps r(s; θ )isinjectivealmostsurely,asclaimed.
+T
+(cid:55)→
+32
+
+=== PAGE 33 ===
+PublishedasaconferencepaperatICLR2026
+C.1 ABSOLUTECONTINUITYENSURESALMOSTSUREINJECTIVITY
+We begin by fixing two distinct sequences and asking when their last-token representations can
+coincide. As before, in this subsection we will consider a finite vocabulary and a finite context
+windowK N. Additionally,recallthatforθ =(θ 1 ,θ 2 ,θ 3 ) R p: V
+∈ ∈
+r(u; θ):= (cid:16) Tr |u| (cid:0) Emb(u; θ 1 ); θ 2 (cid:1)(cid:17) R d,
+|u| ∈
+andfors=t,wedefinethediscrepancy:
+̸
+(cid:13) (cid:13)2
+h(θ):=(cid:13)r(s; θ) r(t; θ)(cid:13) .
+− 2
+By Proposition B.3, this map is real-analytic. To invoke the zero-set theorem, it suffices to show
+thath 0. Weconstructaparameterconfigurationθ suchthatr(s; θ ) = r(t; θ ),treatingtwo
+⋆ ⋆ ⋆
+̸≡ ̸
+exhaustivecases:
+• Case A: If the sequences differ at their final token or in length, we isolate this distinction via
+selectiveinitializationofembeddingsandpositionalencodings.
+• CaseB:Iftheydifferearlier,weconstructorthogonalembeddingsandexploitattentionheadsto
+differentiatethecontributionstothefinalrepresentation.
+Inbothcases, wedemonstrateexplicitparametersettingsunderwhichthediscrepancyisnonzero.
+(cid:8) (cid:9)
+Thisconfirmsh 0,andthezeroset θ : r(s; θ) = r(t; θ) hasmeasurezerobyTheoremA.1.
+̸≡
+Hence, iftheparameterdistributionisabsolutelycontinuous, theprobabilityofacollisioniszero.
+Aunionboundextendsthistoanyfinitesetofinputs.
+TheoremC.2(Almost-surepairwisedistinctnessoflast-tokenrepresentations). Lettheparameter
+vector θ R p be drawn from any distribution absolutely continuous with respect to Lebesgue
+∈
+measure. Then,foranyfixeds=t,
+̸
+Pr[r(s; θ)=r(t; θ)]=0.
+(cid:13) (cid:13)2
+Proof. Let T
+s
+=
+|
+s
+|
+and T
+t
+=
+|
+t
+|
+, and h(θ) := (cid:13)r(s; θ)
+−
+r(t; θ)(cid:13)
+2
+. Since h is real-analytic
+(Proposition B.3), it suffices to show that it is not the zero function on R p; then h−1( 0 ) has
+{ }
+LebesguemeasurezerobyTheoremA.1,andabsolutecontinuitytransfersthistoprobabilityzero.
+Weconstructaparametersettingθ forwhichh(θ )>0,treatingtwoexhaustivecases:
+⋆ ⋆
+CaseA:T = T ors = t . SetallTransformerparameterstozerosothatthenetworkactsas
+s
+̸
+t Ts
+̸
+Tt
+theidentity: Tr (X)=X.
+T
+• Ifs = t ,setE = e ,E = e = e ,andallotherrowsofEtozero. SetP = 0 .
+Ts
+̸
+Tt sTs 1 tTt 2
+̸
+1 K×d
+Thenr(s; θ )=e ,r(t; θ )=e ,soh(θ )= e e 2 >0.
+⋆ 1 ⋆ 2 ⋆ ∥ 1 − 2 ∥2
+• If T = T , set E = 0 and P = e , P = e = e (all others zero). Then, again,
+s
+̸
+t |V|×d Ts 1 Tt 2
+̸
+1
+r(s; θ )=e ,r(t; θ )=e ,soh(θ )>0.
+⋆ 1 ⋆ 2 ⋆
+CaseB:T :=T =T ands =t ,buts =t forsomei [T 1]. Leti⋆ bethesmallestsuch
+s t T T i i
+̸ ∈ −
+index. NoteT 2.
+≥
+We construct a model with (i) all blocks after the first set to identity (zero parameters), (ii) in the
+firstblock,allheadssettozeroexcepthead1andtheMLPiszero.
+Weexplicitlyconstructembeddingsandhead-1parameters(Q,K,V),aswellastheoutputprojec-
+tionWO,sothatr(s; θ )=r(t; θ ).
+⋆ ⋆
+̸
+1)EmbeddingConstruction. Chooseorthogonalvectorse,p,q R dsatisfying:
+∈
+e,p = e,q = p,q =0, 1 ,e = 1 ,p = 1 ,q =0, e = p = q =1.
+d d d 2 2 2
+⟨ ⟩ ⟨ ⟩ ⟨ ⟩ ⟨ ⟩ ⟨ ⟩ ⟨ ⟩ ∥ ∥ ∥ ∥ ∥ ∥
+SuchvectorsexistduetoAssumptionC.1(requiresd 4). Setembeddings:
+≥
+(cid:26) e, v s i⋆,s
+T
+  p, j =i⋆
+E v = ∈{ }, P j = q, j =T .
+0 , otherwise
+d  0 , otherwise
+d
+33
+
+=== PAGE 34 ===
+PublishedasaconferencepaperatICLR2026
+Thus,theinputrowsbeforeLayerNormare:
+ e+p, j =i⋆  p, j =i⋆
+(cid:104) (cid:105)  (cid:104) (cid:105) 
+H(s; θ ) = e+q, j =T , H(t; θ ) = e+q, j =T .
+⋆ ⋆
+j  e,0 , otherwise j  e,0 , otherwise
+d d
+∈{ } ∈{ }
+2) LayerNorm Output. Use LayerNorm with (γ,β) = (1,0). Since all components have zero
+mean,thenormalizationis:
+x
+LN(x)= =:c(x)x.
+(cid:113)
+1 x 2+ε
+d∥ ∥
+Define:
+c :=
+(cid:0)2
++ε
+(cid:1)−1/2
+, c :=
+(cid:0)1
++ε
+(cid:1)−1/2
+.
+ep d e d
+Then:
+ c (e+p), j =i⋆  c p, j =i⋆
+(cid:104) (cid:105)  ep (cid:104) (cid:105)  e
+H(s; θ ) = c (e+q), j =T , H(t; θ ) = c (e+q), j =T .
+⋆ ep ⋆ ep
+j  0 ,c e , otherwise j  0 ,c e , otherwise
+d e d e
+∈{ } ∈{ }
+3)HeadParameters. Lete 1 R dη bethefirststandardbasisvector. Set:
+∈
+Q=αee⊤, K=βpe⊤, V=ee⊤,
+1 1 1
+whereα,β >0arescalarstobechosen.
+Thenforanyj,attentionvectorsare:
+(cid:28)(cid:104) (cid:105) (cid:29) (cid:28)(cid:104) (cid:105) (cid:29) (cid:28)(cid:104) (cid:105) (cid:29)
+q =α H( ; θ ) , e e , k =β H( ; θ ) , p e , v = H( ; θ ) , e e .
+j ⋆ 1 j ⋆ 1 j ⋆ 1
+· j · j · j
+AtrowT,q (s) =q (t) =αc e . Onlythekeyati⋆isnonzero:
+T T ep 1
+(s) (t)
+k =βc e , k =βc e .
+i⋆ ep 1 i⋆ e 1
+Valuevectorsati⋆differ:
+(s) (t)
+v =c e , v =0 .
+i⋆ ep 1 i⋆ d
+Andv (s) =v (t) =c e .
+T T ep 1
+4)AttentionWeights. Theonlynonzeroscoreisati⋆:
+αβ αβ
+S (s) = c2 , S (t) = c c , S (·) =0forj =i⋆.
+T,i⋆ (cid:112) d ep T,i⋆ (cid:112) d ep e T,j ̸
+η η
+Fix δ (0,1) and define L := log (cid:0)1−δ(T 1) (cid:1) . Set αβ = (cid:112) d L/c2 , so S (s) = L and
+∈ 2 δ − η ep T,i⋆
+S (t) >L. Then:
+T,i⋆
+δ
+A (s) 1 δ, A (t) >1 δ, A (·) forj =i⋆.
+T,i⋆ ≥ − T,i⋆ − T,j ≤ T 1 ̸
+−
+5)Self-AttentionOutput.
+(s) (cid:88) (s) (s) (t) (cid:88) (t) (t)
+y =(1 δ)c e + A v , y = A v .
+T − ep 1 T,j j T T,j j
+j̸=i⋆ j̸=i⋆
+Tailsareboundedby:
+(cid:13) (cid:13)
+(cid:13) (cid:13)
+(cid:13)(cid:88) (·) (·)(cid:13)
+(cid:13) (cid:13) A T,j v j (cid:13) (cid:13) ≤ δc e .
+(cid:13)j̸=i⋆ (cid:13)
+2
+34
+
+=== PAGE 35 ===
+PublishedasaconferencepaperatICLR2026
+Sincebothoutputslieinspan e ,wecompare:
+1
+{ }
+(s) (t)
+y y ,e (1 δ)c 2δc .
+⟨ T − T 1 ⟩≥ − ep − e
+Choosingδ < cep makesthisstrictlypositive.
+cep+2ce
+6)OutputProjectionandPropagation. LetWO bethematrixwith(WO) = 1andallother
+1,1
+entries zero. Then the head output is projected into coordinate 1, making the last row of the first
+transformerblockdifferbetweensandtinthefirstcoordinate. SincetheoriginalrowsatT were
+identicalandtherestofthenetworkisidentity,thisdifferencepropagatestothefinaloutput,andwe
+getr(s; θ )=r(t; θ ).
+⋆ ⋆
+̸
+Remark12(CausalSelf-Attention). Thesameconstructionworksforcausalself-attention. Inour
+setup,attentionatpositionT onlyneedstoconsidertokensatpositionsj T,andweonlyrelyon
+attentionfromT toi⋆ <T. Allnonzeroscoresoccurattheseallowablein ≤ dices,socausalmasking
+doesnotaffectthecomputationortheargument.
+CorollaryC.2.1(Almost-sureglobaldistinctnessoverafiniteinputfamily). Let ≤K beany
+S ⊆V
+finitecollectionofinputs. Ifθisdrawnfromalawabsolutelycontinuousw.r.t. Leb ,then
+p
+(cid:2) (cid:3)
+Pr r(s; θ)=r(t; θ) foralldistincts,t = 1.
+̸ ∈S
+Inparticular,thelast-tokenrepresentationsarepairwisedistinctalmostsurelyacrossallinputs.
+Proof. Foreachunorderedpair s,t withs=t,TheoremC.2givesPr[r(s; θ)=r(t; θ)]=
+0. Bytheunionboundoverthe
+{
+finite
+}
+ly
+⊂
+m
+S
+anypair
+̸
+s(
+(cid:0)|S|(cid:1)
+intotal),
+2
+(cid:104) (cid:105) (cid:88) (cid:2) (cid:3)
+Pr s=t :r(s; θ)=r(t; θ) Pr r(s; θ)=r(t; θ) =0.
+∃ ̸ ∈S ≤
+s,t
+Hencethecomplementeventhasprobability1.
+Remark13(Pointwisevs.last-tokeninjectivity). Sutteretal.(2025)establisharelatedbutdistinct
+guarantee.Theyanalyzethemappingfromaprompttotheentiresequence(matrix)ofhiddenstates,
+whichalreadyrulesoutcollisionsforinputsofdifferentlengths.Theirresultispointwiseinjectivity:
+iftwopromptsdifferatpositiont, thenthet-thhiddenstate(row)differs. Thisdoesnot, byitself,
+imply injectivity of the map to the final hidden state / last-token embedding that we study, so two
+differentpromptscouldstillcoincideatthelasttoken–ourquantityofoperationalinterest.
+C.2 ABSOLUTECONTINUITYOFTHEPARAMETERDISTRIBUTIONISPRESERVEDUNDERGD
+Ourgoalinthissubsectionistoexplainwhyabsolutecontinuityoftheparameterlawatinitialization
+survivesanyfinitenumberofgradient–descent(GD)steps,therebyallowingthealmost-sureinjec-
+tivityargumentfromtheprevioussubsectiontopersistthroughouttraining. Theargumentproceeds
+infoursteps.
+Step1: RegularityoftheGDmap. ByPropositionsA.6andB.3,theloss isreal-analytic,
+s,p
+L
+and real-analyticity is closed under differentiation and composition. Consequently the GD map
+ϕ(θ) = θ η (θ)isreal-analytic, itsJacobianDϕ(θ) = I η 2 (θ)isreal-analytic,
+s,p p s,p
+− ∇L − ∇ L
+andsoisθ detDϕ(θ)(thedeterminantisapolynomialinthematrixentries).
+(cid:55)→
+Step 2: Witness and measure-zero critical set. We rule out the degenerate case by a witness:
+at θ = 0 , our Hessian calculation (Lemma C.4) shows detDϕ(θ ) > 0, hence detDϕ is not
+⋆ p ⋆
+identicallyzeroanditszeroset := detDϕ=0 hasLebesguemeasurezerobythereal-analytic
+C { }
+zero–settheorem(TheoremA.1;summarizedinTheoremC.3).
+35
+
+=== PAGE 36 ===
+PublishedasaconferencepaperatICLR2026
+Step 3: Local-to-global via countable chart covers. On the complement R p , the Inverse
+Function Theorem (Theorem A.2) provides, for every θ, a neighborhood on whic \ h C ϕ is a C1 dif-
+feomorphism. Althoughtheseneighborhoodsformanaprioriuncountablecover,thesecondcount-
+abilityofR p (andofitssubspaces)ensuresacountablesubcoverofsuchcharts(PropositionA.15,
+Lemma C.5). This countability is crucial because it lets us pass from local statements to a global
+measurestatementviacountableunions. Withthiscoverinhand, thechange-of-variablesformula
+oneachchart(TheoremC.4)impliesthattheimageunderthelocalinverseofanynullsetremains
+null; piecing the charts together and adding the null set shows that preimages of Lebesgue-null
+C
+setsunderϕarenull(LemmaC.6).
+Step4: Preservationofabsolutecontinuityandconclusion. Equivalently,ϕpushesabsolutely
+continuous laws to absolutely continuous laws (Theorem C.5); iterating across finitely many GD
+stepspreservesabsolutecontinuity(CorollaryC.5.1). Finally,combiningthispreservationwiththe
+almost-sure pairwise distinctness of last-token representations over any finite input family (Corol-
+lary C.2.1) yields the main consequence we need for training: the last-token representation map
+remainsinjectivealmostsurelyafteranyfiniteGDhorizon.
+C.2.1 WITNESSCONSTRUCTION
+ThegoalofthissubsubsectionistoshowthattheGDJacobiandeterminantisnotidenticallyzero
+by evaluating it at the all-zeros witness θ = 0 . The argument proceeds bottom-up: we first
+⋆ p
+establish a “zero-gate” lemma that zeroes out most Hessian blocks when the gate matrix vanishes
+(Lemma C.1), derive the resulting spectrum (Lemma C.2, Lemma C.3), and then assemble these
+intothefullHessianatthewitness(LemmaC.4).
+LemmaC.1(Zero-gatethroughscalarloss). LetU R m+qbeopenandwritepointsasv=(ξ,ψ)
+withξ R mandψ R q. Letπ :R m+q R mbe ⊆ theprojectionπ(ξ,ψ)=ξ. Consider
+∈ ∈ →
+g C2(R m; R n×r), h C2(U; R r),
+∈ ∈
+anddefinef :U R nby
+→
+(cid:0) (cid:1)
+f(ξ,ψ):=g(ξ)h(ξ,ψ)=g π(ξ,ψ) h(ξ,ψ).
+Let C2(R n;R)andset
+L∈
+(cid:0) (cid:1)
+R:= f :U R, R(ξ,ψ)= g(ξ)h(ξ,ψ) .
+L◦ → L
+Fixv =(ξ ,ψ ) U andassumeg(ξ )=0 . ThentheHessianofRatv hasblockform
+0 0 0 0 n×r 0
+∈
+(cid:32) (cid:33) (cid:32) (cid:33)
+2 R(v ) 2 R(v ) 2 R(v ) 0
+2R(v )= ∇ξξ 0 ∇ξψ 0 = ∇ξξ 0 m×q .
+0
+∇ 2 R(v ) 2 R(v ) 0 0
+∇ψξ 0 ∇ψψ 0 q×m q×q
+i.e.allmixedandψ–onlysecondpartialsvanish.
+Proof.
+1)Introducethebilinearmultiplicationmapµ : R n×r R r R n, µ(M,y) = My, andtheC2
+mapH :U R n×r R r,H(ξ,ψ)=(g(ξ),h(ξ,ψ)) × . Then → f =µ H andwewrite:
+→ × ◦
+g :=g(ξ )=0 h :=h(ξ ,ψ ) H(v )=(g ,h ).
+0 0 n×r 0 0 0 0 0 0
+Becauseµisbilinear,Dµ(M,y)[(∆M,∆y)]=∆My+M∆y. Bythechainrule:
+(cid:2) (cid:3) (cid:104) (cid:105)
+Df(v ) (h ,h ) =Dµ(g ,h ) Dg(ξ )[h ], Dh(v )[(h ,h )]
+0 ξ ψ 0 0 0 ξ 0 ξ ψ
+=Dg(ξ )[h ]h + g Dh(v )[(h ,h )]
+0 ξ 0 0 0 ξ ψ
+(cid:124)(cid:123)(cid:122)(cid:125)
+0n×r
+=Dg(ξ )[h ]h .
+0 ξ 0
+(cid:2) (cid:3)
+In particular, Df(v ) (0 , ) = 0 . The second-order chain rule for Fre´chet derivatives (e.g.
+0 m n
+·
+Magnus&Neudecker2019,Thm.18.4)yields:
+D2f(v )[h,k]=D2µ (cid:0) H(v ) (cid:1)(cid:2) DH(v )[h], DH(v )[k] (cid:3) +Dµ (cid:0) H(v ) (cid:1)(cid:2) D2H(v )[h,k] (cid:3) .
+0 0 0 0 0 0
+36
+
+=== PAGE 37 ===
+PublishedasaconferencepaperatICLR2026
+Becauseµisbilinear,D2µ 0andthefirsttermis0. Furthermore,
+≡
+D2H(v )[h,k]= (cid:16) D2g(ξ )[h ,k ], D2h(v ) (cid:2) (h ,h ),(k ,k ) (cid:3)(cid:17) ,
+0 0 ξ ξ 0 ξ ψ ξ ψ
+anditholdsthat:
+D2f(v )[h,k]=Dµ(g ,h ) (cid:104) D2g(ξ )[h ,k ], D2h(v ) (cid:2) (h ,h ),(k ,k ) (cid:3)(cid:105)
+0 0 0 0 ξ ξ 0 ξ ψ ξ ψ
+= (cid:16) D2g(ξ )[h ,k ] (cid:17) h + g (cid:16) D2h(v ) (cid:2) (h ,h ),(k ,k ) (cid:3)(cid:17)
+0 ξ ξ 0 0 0 ξ ψ ξ ψ
+(cid:124)(cid:123)(cid:122)(cid:125)
+0n×r
+(cid:16) (cid:17)
+= D2g(ξ )[h ,k ] h .
+0 ξ ξ 0
+Ifatleastoneofthetwodirectionshasξ–componentzero,thenD2g(ξ )[h ,k ]=0,sothebilinear
+0 ξ ξ
+formvanishes.
+2)Applythesecond-orderchainruletoR= f atv :
+0
+L◦
+D2R(v )[h,k]=D2 (cid:0) f(v ) (cid:1)(cid:2) Df(v )[h], Df(v )[k] (cid:3) +D (cid:0) f(v ) (cid:1)(cid:2) D2f(v )[h,k] (cid:3) . (⋆)
+0 0 0 0 0 0
+L L
+By(1), ifatleastoneofthetwodirectionsispureψ, bothtermsontheright-handsideofvanish.
+Therefore
+D2R(v )[h,k]=0 wheneveratleastoneofh,kisoftheform(0 , ).
+0 m
+·
+InvokingPropositionA.14,thisisexactlythestatementthattheξψ,ψξandψψHessianblocksare
+0. Theremainingblock 2 R(v )iswhateverisinducedby(⋆)forpairs
+∇ξξ 0
+(cid:0) (cid:1)
+(h,k)= (h ,0 ),(k ,0 ) .
+ξ q ξ q
+Lemma C.2 (Spectrum under block-diagonal extension). Let f C2(R m+q; R), and fix v =
+(ξ 0 ,ψ 0 ) R m+q. AssumetheHessianoff atvhastheblockform ∈
+∈
+(cid:32) (cid:33)
+B 0
+H:= 2f(v) = m×q , B R m×m.
+∇ 0 0 ∈
+q×m q×q
+Thenthecharacteristicpolynomialfactorizesas
+χ (λ):=det (cid:0) λI H (cid:1) =det (cid:0) λI B (cid:1) λq.
+H m+q m
+− −
+Consequently,
+σ(H)=σ(B) 0 , and mult (0) = mult (0) + q,
+H B
+∪{ }
+i.e., the spectrum of H consists of the eigenvalues of B together with q additional zeros, and the
+algebraicmultiplicityoftheeigenvalue0forH equalsthatforBplusq.
+Proof. SinceHisblockdiagonal,
+(cid:32) (cid:33)
+λI B 0
+m m×q
+λI H= − .
+m+q
+− 0 λI
+q×m q
+Thedeterminantofablocktriangular(inparticularblockdiagonal)matrixequalstheproductofthe
+determinantsofitsdiagonalblocks(e.g. Horn&Johnson2013,Cor.0.8.5). Hence
+χ (λ)=det(λI B) det(λI )=det(λI B) λq.
+H m q m
+− · − ·
+Thezerosofχ aretheeigenvaluesofHcountedwithalgebraicmultiplicity,whichyieldsσ(H)=
+H
+σ(B) 0 andmult (0)=mult (0)+q.
+H B
+∪{ }
+Remark 14. If 0 σ(B), then 0 appears in σ(H) with multiplicity strictly larger than q; the
+∈
+statementaboveaccountsforthisbyaddingqtothealgebraicmultiplicityof0carriedoverfromB.
+37
+
+=== PAGE 38 ===
+PublishedasaconferencepaperatICLR2026
+Lemma C.3 (Hessian of w.r.t. U,β at θ = 0 and its spectrum). Let n := and d be the
+⋆
+embedding width. Fix (s, L p) ≤K ∆n−1, and consider the Transformer Lan |V gu | age Model of
+∈ V ×
+Definition B.13. In the unembedding layer, set the LayerNorm scale to zero, γ = 0 . Let the
+d
+parameterbeorderedas
+θ = (cid:0) u,β,γ,θ′(cid:1) , u:=vec n,d (U) R nd, β R d.
+∈ ∈
+Restrictattentiontothe(u,β)-coordinatesandthebasepoint
+θ =0 i.e. U=0 , β =0 , γ =0 , θ′ =0.
+⋆ p n×d d d
+Writeb:= n 11 n andw:=b − p ∈ R n.
+ThentheHessianofthecross-entropyloss
+(cid:0) (cid:1)
+(θ)=CrossEntropy f(s; θ),p
+L
+withrespectto(u,β)atθ isthesymmetricblockmatrix
+⋆
+(cid:32) (cid:33)
+0 I w
+nd×nd d
+2 (θ )= ⊗ .
+∇(u,β)L ⋆
+I w⊤ 0
+d d×d
+⊗
+ThespectrumofthisHessianis
+spec (cid:0) 2 (θ ) (cid:1) = + w ,...,+ w , w ,..., w , 0,...,0 .
+∇(u,β)L ⋆ { (cid:124) ∥ ∥ 2 (cid:123)(cid:122) ∥ ∥ (cid:125) 2 − (cid:124) ∥ ∥ 2 (cid:123)(cid:122) −∥ ∥ (cid:125) 2 (cid:124) (cid:123)(cid:122) (cid:125)}
+d d d(n−1)
+Proof.
+1)Logitsinvectorizedform. Withγ =0 ,theLayerNormoutputattheunembeddingisconstant:
+d
+LN(h) β(DefinitionB.9). Thusthelogitsbeforethefinalsoftmaxare
+≡
+Z=Uβ R n.
+∈
+Usingvec(AXb)=(b⊤ A)vec(X)(standardidentityforvectorization,cf.Henderson&Searle
+⊗
+(1981)),withA=I andb=β,
+n
+z=vec(Z)=vec(Uβ)=(β⊤ I )u.
+n
+⊗
+Therefore,near(u,β)=(0 ,0 ),thelogitsmapisthebilinearfunction
+nd d
+z(u,β):=(β⊤ I n )u R n.
+⊗ ∈
+2)Firstandseconddifferentials. Let(h,η)and(k,ξ)bedirectionsinR nd R d. Differentiating
+z(u,β)=(β⊤ I )ugives ×
+n
+⊗
+Dz(u,β)[h,η]=(β⊤ I )h+(η⊤ I )u.
+n n
+⊗ ⊗
+At(u,β)=(0 ,0 ),
+nd d
+Dz(0 ,0 )[h,η]=0
+nd d n×(nd+d)
+(since both terms are multiplied by u or β). Differentiating once more (or, equivalently, using
+bilinearityofz)yieldstheconstantsymmetricbilinearform
+D2z(0 ,0 ) (cid:2) (h,η),(k,ξ) (cid:3) =(ξ⊤ I )h+(η⊤ I )k.
+nd n n n
+⊗ ⊗
+3)GradientoftheCE-in-softmaxattheorigin. LetF(z) := CrossEntropy(softmax(z),p). A
+standardcomputation(softmaxJacobian)gives
+F(z)=softmax(z) p.
+z
+∇ −
+Atz=0 ,softmax(0 )= 11 =:b,hence
+n n n n
+F(0 )=b p=:w.
+z n
+∇ −
+38
+
+=== PAGE 39 ===
+PublishedasaconferencepaperatICLR2026
+4)Second-orderchainruleforF Z at(0,0). SimilarlytotheproofofLemmaC.1,thesecond
+◦
+differentialofacompositionis
+D2(F z)(v)[h,k]=D2F(z(v)) (cid:2) Dz(v)h, Dz(v)k (cid:3) +DF(z(v)) (cid:2) D2z(v)[h,k] (cid:3) .
+◦
+Atv=(0 ,0 ),Dz(v)=0 andDF(z(v))= F(0 )⊤ =w⊤,so
+nd d n×(nd+d) z n
+∇
+D2 (v) (cid:2) (h,η),(k,ξ) (cid:3) =w⊤D2z(v) (cid:2) (h,η),(k,ξ) (cid:3)
+L
+=w⊤(cid:0) (ξ⊤ I )h+(η⊤ I )k (cid:1)
+n n
+⊗ ⊗
+=h⊤(I w)ξ + k⊤(I w)η,
+d d
+⊗ ⊗
+whereweusedthemixed-productruleforKroneckerproductsandtheidentity
+w⊤(ξ⊤ I )=ξ⊤ w⊤.
+n
+⊗ ⊗
+5)IdentificationoftheHessianblocks. BydefinitionoftheHessianasabilinearform,
+D2 (v) (cid:2) (h,η),(k,ξ) (cid:3) = (cid:16) h⊤ η⊤ (cid:17) (cid:32) 0 nd×nd ∂ ∂ u 2 ∂ L β (cid:33)(cid:32) k (cid:33) .
+L ∂2L 0 ξ
+∂β∂u d×d
+ComparingwiththeexpressionobtainedinStep4forarbitrary(h,η)and(k,ξ)forces
+∂2
+L (θ )=I w,
+∂2
+L (θ )= (cid:0) I w (cid:1)⊤ =I w⊤,
+∂u∂β ⋆ d ⊗ ∂β∂u ⋆ d ⊗ d ⊗
+and,becauseDz(v)=0 (sonoquadratictermsurvivesineitheruorβalone),
+n×(nd+d)
+∂2 ∂2
+L (θ )=0 , L (θ )=0 .
+∂u∂u ⋆ nd×nd ∂β∂β ⋆ d×d
+Thisgivesexactlytheclaimedblockmatrix.
+6)Spectrum. Let
+(cid:32) (cid:33)
+0 I w
+nd×nd d
+H:= 2 (θ )= ⊗ .
+∇(u,β)L ⋆
+I w⊤ 0
+d d×d
+⊗
+Then
+(cid:32) (cid:33) (cid:32) (cid:33)
+(I w)(I w⊤) 0 I (ww⊤) 0
+H2 = d ⊗ d ⊗ nd×d = d ⊗ nd×d .
+0 (I w⊤)(I w) 0 I (w⊤w)
+d×nd d d d×nd d
+⊗ ⊗ ⊗
+The eigenvalues of ww⊤ are w 2 (multiplicity 1) and 0 (multiplicity n 1); the eigenvalues of
+w⊤wequal w 2(scalar). Th ∥ eref ∥ o 2 retheeigenvaluesofH2are −
+∥ ∥2
+w 2,..., w 2, 0,...,0 .
+(cid:124) ∥ ∥2 (cid:123)(cid:122) ∥ ∥ (cid:125) 2 (cid:124) (cid:123)(cid:122) (cid:125)
+2dtimes d(n−1)times
+BecauseHissymmetric, itseigenvaluesaretherealsquare-rootsofthoseofH2, namely w
+2
+±∥ ∥
+(each with multiplicity d) and 0 (with multiplicity d(n 1)). This is exactly the set stated in the
+−
+lemma.
+Lemma C.4 (Full Hessian at the witness: block form and spectrum). Let n := and d be the
+|V|
+embeddingwidth. Writetheparameteras
+θ = (cid:0) (u,β), (γ,θ′) (cid:1) , u=vec n,d (U) R nd, β,γ R d, θ′ R p′ ,
+∈ ∈ ∈
+sop=nd+2d+p′. Considerthewitnesspoint
+θ =0 (U=0 , β =0 , γ =0 , θ′ =0 ).
+⋆ p n×d d d d
+Letb:= n 11 n andw:=b − p ∈ R n. ThentheHessianofthecross-entropyloss L (θ)atθ ⋆ admits
+theblock-diagonaldecomposition
+(cid:32) (cid:33) (cid:32) (cid:33)
+B 0 0 I w
+2 (θ ) = , B = nd×nd d ⊗ .
+⋆
+∇ L 0 0 I w⊤ 0
+d d×d
+⊗
+Consequently,
+spec (cid:0) 2 (θ ) (cid:1) = (cid:110) + w ,...,+ w , w ,..., w , 0,...,0 (cid:111) .
+⋆ 2 2 2 2
+∇ L (cid:124) ∥ ∥ (cid:123)(cid:122) ∥ ∥ (cid:125) (cid:124) −∥ ∥ (cid:123)(cid:122) −∥ ∥ (cid:125) (cid:124) (cid:123)(cid:122) (cid:125)
+d d p−2d
+39
+
+=== PAGE 40 ===
+PublishedasaconferencepaperatICLR2026
+Proof. Setγ =0 .ThentheunembeddingLayerNormoutputisconstant,LN(h) β,sothelogits
+d
+≡
+equalz=Uβ.Hence,inaneighborhoodofθ ,thelossdependsonlyon(u,β)andisindependent
+⋆
+of(γ,θ′).
+We will apply Lemma C.1 with the open set U = R nd+2d+p′, coordinates ξ = (u,β) and ψ =
+(γ,θ′)andwithn= ,r =d. Define
+|V|
+g(ξ):=mat n,d (u) R n×d, h(ξ,ψ):=β R d,
+∈ ∈
+sothat
+f(ξ,ψ):=g(ξ)h(ξ,ψ) = Uβ R n,
+(cid:0) (cid:1) ∈
+and,with (z):=CrossEntropy softmax(z),p ,
+L
+(cid:0) (cid:1) (cid:0) (cid:1)
+R(ξ,ψ):= f(ξ,ψ) =CrossEntropy softmax(Uβ),p .
+L
+At the witness v = (ξ ,ψ ) we have g(ξ ) = 0 , so by Lemma C.1 all mixed and ψ–only
+0 0 0 0 n×d
+secondpartialsofRvanishatv ,i.e.
+0
+(cid:32) (cid:33)
+2 R(v ) 0
+2R(v )= ∇(u,β) 0 .
+0
+∇ 0 0
+IdentifyingR(ξ,ψ) (θ)underthecorrespondenceaboveyields
+≡L
+(cid:32) (cid:33)
+2 (θ ) 0
+2 (θ )= ∇(u,β)L ⋆ .
+⋆
+∇ L 0 0
+Combining,LemmasC.2andC.3,wegetthat
+spec (cid:0) 2 (θ ) (cid:1) =spec (cid:0) 2 (θ ) (cid:1) 0 d+p′
+∇ L ⋆ ∇(u,β)L ⋆ ∪ { }
+(cid:110) (cid:111)
+= w (eachmult.d), 0(mult.d(n 1)+d+p′) .
+2
+±∥ ∥ −
+Sincep=nd+2d+p′,themultiplicityof0equalsp 2d,whichyieldstheclaimedspectrum.
+−
+Theorem C.3 (GD Jacobian is nondegenerate a.e.). Fix a finite vocabulary , a context bound
+V
+K N, and the Transformer language model f of Definition B.13. For any sample (s,p)
+∈ ∈
+≤K ∆|V|−1 andanylearningrateη (0,1),letϕ : R p R p bethegradient-descentupdate,
+V × ∈ →
+definedas:
+ϕ(θ) = θ η (θ),
+θ s,p
+− ∇ L
+where
+s,p
+:R p RisthestandardCrossEntropyloss:
+L →
+(cid:0) (cid:1)
+(θ)=CrossEntropy f(s; θ),p .
+s,p
+L
+Thenthecriticalset
+:= θ R p :detDϕ(θ)=0
+C { ∈ }
+hasLebesguemeasurezeroinR p.
+Proof. By Propositions A.6 and B.3 and the closure properties of real analyticity, is real-
+s,p
+L
+analytic; hence so are its gradient and Hessian. Therefore ϕ is real-analytic (Lewis, 2014,
+Thm.1.1.15)and
+Dϕ(θ)=I η 2 (θ).
+p − ∇θL s,p
+Sincethedeterminantisapolynomialintheentries,θ detDϕ(θ)isreal-analytic.
+(cid:55)→
+Itisnotidenticallyzero: atthewitnessθ =0 ,LemmaC.4gives
+⋆ p
+spec (cid:0) 2 (θ ) (cid:1) = + w ,...,+ w , w ,..., w ,0,...,0 , w:= 11 p.
+∇ L ⋆ { (cid:124) ∥ ∥ 2 (cid:123)(cid:122) ∥ ∥ (cid:125) 2 (cid:124) −∥ ∥ 2 (cid:123)(cid:122) −∥ ∥ (cid:125) 2 (cid:124) (cid:123)(cid:122) (cid:125)} n −
+d d p−2d
+HencetheeigenvaluesofDϕ(θ )=I η 2 (θ )are
+⋆ p ⋆
+− ∇ L
+1 η w , 1+η w , 1 ,
+2 2
+(cid:124) − (cid:123) ∥ (cid:122) ∥ (cid:125) (cid:124) (cid:123) ∥ (cid:122) ∥ (cid:125) (cid:124)(cid:123)(cid:122)(cid:125)
+dtimes dtimes p−2dtimes
+so
+detDϕ(θ )= (cid:0) 1 η2 w 2(cid:1)d >0.
+⋆ − ∥ ∥2
+Thus detDϕ is a nontrivial real-analytic function. By Theorem A.1, its zero set has Lebesgue
+measure0.
+40
+
+=== PAGE 41 ===
+PublishedasaconferencepaperatICLR2026
+C.2.2 GRADIENTDESCENTPRESERVESABSOLUTECONTINUITY
+With the witness in hand and the critical set shown to be measure-zero (Theorem C.3), we now
+carryoutSteps3–4oftheroadmap: coverthenon-criticalregionbycountablymanydiffeomorphic
+charts(LemmaC.5),usethechange-of-variablesformulatoshowpreimagesofnullsetsremainnull
+(LemmaC.6),andconcludethatoneGDsteppreservesabsolutecontinuity(TheoremC.5).Iterating
+yieldsthefinite-horizoncorollary(CorollaryC.5.1).
+LemmaC.5(CountablechartcoverofR p ). ConsiderthesetupofTheoremC.5. Inparticular,
+letϕ:R p R pbetheone-stepGDmapfr \ om C thattheorem:
+→
+ϕ(θ)=θ η (θ), (32)
+θ s,p
+− ∇ L
+withstepsizeη (0,1),andthemeasure-zerocritical-set(TheoremC.3):
+∈
+:= θ R p :detDϕ(θ)=0 .
+C { ∈ }
+Then there exist open sets (U k ) k≥1 covering X := R p such that, for each k, the restriction
+\C
+ϕ :=ϕ :U V :=ϕ(U )isaC1diffeomorphismwithC1inverseψ :=ϕ−1.
+k | Uk k → k k k k
+Proof.
+1) X is open: By Propositions A.6 and B.3 and the closure rules of real-analyticity, is C2,
+s,p
+L
+henceϕisC1. Themapθ Dϕ(θ)iscontinuous,andthedeterminantisacontinuouspolynomial
+in the entries, so g(θ) := (cid:55)→ detDϕ(θ) is continuous. Therefore = g−1( 0 ) is closed (Rudin,
+1976,Thm.4.8)andX =R p isopen. C { }
+\C
+2) Local diffeomorphisms by the Inverse Function Theorem: Fix θ X. Then g(θ) = 0,
+∈ ̸
+so by the Inverse Function Theorem (Theorem A.2) there exist open neighborhoods U θ and
+θ
+∋
+V ϕ(θ)suchthat
+θ
+∋
+ϕ :=ϕ :U V
+θ
+|
+Uθ θ
+→
+θ
+isaC1diffeomorphismwithC1inverseψ :=ϕ−1. Moreover,
+θ θ
+(cid:0) (cid:1)−1
+Dψ (ϕ(x))= Dϕ(x) x U .
+θ θ
+∀ ∈
+InparticularDϕ(x)isinvertibleforallx U ,whenceU X.Thus U isanopencover
+θ θ θ θ∈X
+∈ ⊂ { }
+ofX byIFTcharts.
+3) Select a countable subcover: By Proposition A.15(3), R p is second-countable; subspaces
+of second-countable spaces are second-countable, hence X is second-countable. By Proposi-
+tionA.15(4),everyopencoverofasecond-countablespaceadmitsacountablesubcover. Therefore
+thereexistpointsθ ,θ ,... X suchthatX =
+(cid:83)∞
+U .
+1 2 ∈ k=1 θk
+SetU :=U ,V :=V ,andϕ :=ϕ =ϕ ,ψ :=ψ . Eachϕ isaC1 diffeomorphism
+withC k 1inver θ s k eψ k bySte θ p k 2. This k yields | t U he k desir θ e k dco k untable θk chartcove k rofX.
+k
+Theorem C.4 (Change of Variables Folland 1999, Thm. 2.47(b)). Let U,V R p be open and
+ψ :V U aC1diffeomorphism. IfE V isLebesguemeasurable,then ⊆
+→ ⊆
+(cid:90)
+(cid:0) (cid:1) (cid:12) (cid:12)
+Leb
+p
+ψ(E) = (cid:12)detDψ(y)(cid:12)dy.
+E
+LemmaC.6(Pre-imagesofnullsetsarenull). ConsiderthesetupofTheoremC.5,inparticularthe
+C1gradientdescentmap:
+ϕ(θ)=θ η (θ), η (0,1),
+θ s,p
+− ∇ L ∈
+anditscriticalset := θ R p :detDϕ(θ)=0 . Then,foreverymeasurableA R p,
+C { ∈ } ⊆
+Leb (A)=0 = Leb (cid:0) ϕ−1(A) (cid:1) =0.
+p p
+⇒
+Proof. LetX =R p anddecomposethepre-image:
+\C
+ϕ−1(A)= (cid:0) ϕ−1(A) (cid:1) (cid:0) ϕ−1(A) X (cid:1) .
+∩C ∪ ∩
+41
+
+=== PAGE 42 ===
+PublishedasaconferencepaperatICLR2026
+Thefirstsetiscontainedin , ameasurezeroset(TheoremC.3), hencehasLeb –measure0. By
+p
+C
+LemmaC.5,coverX bycountablymanycharts U onwhichϕ :=ϕ isaC1diffeomorphism
+ontoV :=ϕ(U )withinverseψ C1(V ; U { )
+k
+. } Then,ithold
+k
+sthat: |
+Uk
+k k k k k
+∈
+ϕ−1(A) U =ψ (cid:0) A V (cid:1) .
+k k k
+∩ ∩
+SinceLeb (A)=0andbothAandV aremeasurable,A V ismeasurableandhasmeasure0.
+p k k
+∩
+ByTheoremC.4appliedtoψ withE =A V ,
+k k
+∩
+(cid:90)
+(cid:0) (cid:1) (cid:12) (cid:12)
+Leb
+p
+ψ
+k
+(A V
+k
+) = (cid:12)detDψ
+k
+(y)(cid:12)dy=0.
+∩
+A∩Vk
+Therefore,eachϕ−1(A) U isnullandbecauseacountableunionofnullsetsisnull,itholdsthat:
+k
+∩
+Leb (cid:0) ϕ−1(A) (cid:1) =0.
+p
+TheoremC.5(PreservationofabsolutecontinuityunderoneGDstep). ConsiderthesetupofThe-
+oremC.3. Inparticular,letϕ:R p R pbetheone-stepGDmapfromthattheorem:
+→
+ϕ(θ)=θ η (θ), (33)
+θ s,p
+− ∇ L
+withstepsizeη (0,1). Then,gradient-descentpreservesabsolutecontinuity: foreveryabsolutely
+continuousprob ∈ abilitylawµonR p,itsimageunderϕremainsabsolutelycontinuous:
+ϕ µ Leb .
+# p
+≪
+Therefore,theupdatedparametersθ′ :=ϕ(θ)areabsolutelycontinuous.
+Proof. By Proposition B.3 and closure properties, is C2, hence ϕ C1 and is Borel-
+s,p
+L ∈
+measurable. FromTheoremC.3thecriticalset
+:= θ R p :detDϕ(θ)=0
+C { ∈ }
+hasLeb -measure0. Therefore,thehypothesisofLemmaC.6holds,andwehavetheproperty:
+p
+Leb p (A)=0 = Leb p (cid:0) ϕ−1(A) (cid:1) =0 foreverymeasurableA R p. ( )
+⇒ ⊆ †
+LetAbeanyBorelsetwithLeb (A)=0. Then
+p
+ϕ µ(A) = µ (cid:0) ϕ−1(A) (cid:1) = 0,
+#
+becauseµ Leb andLeb (cid:0) ϕ−1(A) (cid:1) =0by( ). SincethisholdsforeveryLeb -nullsetA,we
+p p p
+≪ †
+concludeϕ µ Leb .
+# p
+≪
+Corollary C.5.1 (Preservation of absolute continuity under finitely many GD steps). Fix a finite
+vocabulary ,acontextboundK N,andtheTransformerlanguagemodelf ofDefinitionB.13.
+Fort=1,.. V .,T,let(s ,p ) ≤∈K ∆|V|−1andη (0,1),anddefinethet-thGDupdate
+t t t
+∈V × ∈
+(cid:0) (cid:1)
+ϕ (θ) = θ η (θ), (θ)=CrossEntropy f(s ; θ),p .
+t
+−
+t
+∇
+θ
+L
+st,pt
+L
+st,pt t t
+LettheT-stepupdatemapbethecomposition
+Φ := ϕ T ϕ 1 : R p R p.
+◦···◦ →
+Then,foreveryabsolutelycontinuousprobabilitylawµonR p,itsimageunderΦremainsabsolutely
+continuous:
+Φ µ Leb .
+# p
+≪
+Equivalently,ifθ(0) µwithµ Leb and
+p
+∼ ≪
+θ(t+1) = ϕ (cid:0) θ(t)(cid:1) , t=0,...,T 1,
+t
+−
+thentheT-stepparametersθ(T) =Φ (cid:0) θ(0)(cid:1) areabsolutelycontinuous.
+Proof. Since the result of Lemma C.6 holds for each ϕ , for any null set A, repeated preimages
+t
+remainnull:
+Leb (cid:0) (ϕ ϕ )−1(A) (cid:1) =0.
+p T 1
+◦···◦
+ThesameargumentasintheproofofTheoremC.5thenyieldstheclaim.
+42
+
+=== PAGE 43 ===
+PublishedasaconferencepaperatICLR2026
+D LEFT-INVERTIBILITY VIA SIPIT
+Goal. Westudywhenandhowthehiddenstatesofacausaldecoder-onlyTransformeradmitaleft
+inverse: giventhelayer-ℓrepresentationatpositiontandthetrueprefixπ =s ,canwerecover
+1:t−1
+thenexttokens ?
+t
+Mainidea. Undermildrandomnessintheparametersandcausalmasking,theone-steplast-token
+mapthatsendsacandidatetokenv tothelayer-ℓrepresentationatpositiont(conditioningonπ)is
+almost-surely injective, and in fact has a positive separation margin. This yields a simple verifier:
+declarevcorrectifftheobservedhiddenstateliesinasmallballaroundF(v;π,t).
+Algorithmic consequence. Because causality localizes the dependence to (π,s ), we can invert
+t
+an entire sequence sequentially with a single pass over the vocabulary per position. We call this
+procedureSIPIT(SequentialInversePromptviaITerativeupdates),andweshowexact(androbust)
+recoveryholdsalmostsurely,withworst-casetimeΘ(T ).
+|V|
+Standing conventions for this section. Fix a layer index ℓ [L]. For any input sequence s =
+∈
+s ,...,s ,definethelayeroutputsrow-wiseby
+1 T
+⟨ ⟩
+H(0)(s):=Emb(s), H(ℓ)(s):=TB(ℓ)(cid:0) H(ℓ−1)(s) (cid:1)
+R
+T×d,
+∈
+and write h (s) to denote the row of H(ℓ)(s) at position t. Furthermore, we use for sequence
+t
+⊕
+concatenation: ifs= s ,...,s andv ,thens v = s ,...,s ,v .
+1 t−1 1 t−1
+⟨ ⟩ ∈V ⊕ ⟨ ⟩
+Theparametersθandtargetlayerℓareconsideredfixedandomittedforsimplicity.
+AssumptionD.1(Causalself-attentionthroughout). Everyattentionlayerineveryblockiscausal
+inthesenseofDefinitionsB.6andB.7. Consequently,foranysandanyt [T],
+∈
+h (s)dependsonlyontheprefix s ,...,s . (34)
+t 1 t
+⟨ ⟩
+AssumptionD.2(InjectivityAssumption). SIPIT isappliedtomodelsinitializedwithparameters
+drawnfromanabsolutelycontinuousdistributionandtrainedvia(mini-batch)gradientdescentwith
+stepsizesin(0,1),asdescribedinAppendixC.Undertheseconditions,anynetworkconsideredin
+thesequelisalmost-surelyinjective(TheoremC.1).
+D.1 ONE-STEPLAST-TOKENMAPS
+Wefirstisolatethepositionwisemapthatdrivesinversion.Fixapositiontandprefixπ t−1.The
+∈V
+one-stepmapF(;π,t)sendsacandidatetokenv tothelayer-ℓhiddenstateatpositiontobtained
+·
+whentheprefixisπandthetokenattisv. Causalityimpliesthath dependsonlyon(π,v)(noton
+t
+anyfuturetokens),andweshowthat,foralmostallparametersettings,F isinjectivewithastrictly
+positivepairwisemarginover .
+V
+Definition D.1 (One-step map at time t under prefix π). Let π t−1 be a fixed prefix (possibly
+∈ V
+t=1,whenπisempty). Define
+F : R d, F(v; π,t) := h t (π v).
+V −→ ⊕
+Remark15. F issimplyafunctionthatreturnsthehiddenoutputoftokenv attheℓtransformer
+block given that π is used a fixed prefix. This map allows us to have a convenient notation for
+introducingresultsaboutinversion. Furthermore, sinceF isbuiltusingℓtransformerblocks, itis
+parameterizedbyθ. Nevertheless,forthesakeofsimplicity,wewillrefertoF simplyasF.
+ℓ,θ
+Once the One-step map (Definition D.1) is introduced, one can present its a.s. injectivity through
+an application of the previously obtained result (Theorem C.1). Furthermore, one can deploy the
+commonprefixtointroduceastrongernotionofinjectivity: marginseparation(LemmaD.1).
+Theorem D.1 (A.s. one-step injectivity). Fix t and the prefix π t−1. Under Assumptions D.1
+∈ V
+andD.2,itholdsthat:
+Pr (cid:2) v =v′ :F(v; π,t)=F(v′; π,t) (cid:3) = 0.
+∃ ̸ ∈V
+Equivalently,F isinjectivealmost-surely.
+43
+
+=== PAGE 44 ===
+PublishedasaconferencepaperatICLR2026
+Proof. Set the finite family := π v : v t and view h (s) as the last-token
+t,π t
+S { ⊕ ∈ V} ⊆ V
+representationofthetruncatedTransformerconsistingofthefirstℓblocks. Allassumptionsusedin
+CorollaryC.2.1remainvalidforthistruncatedmodel. Applyingthecorollarywith = yields,
+t,π
+almost-surely,h (π v)=h (π v′)wheneverv =v′. Thisisexactlytheinjecti S vityo S fF.
+t t
+⊕ ̸ ⊕ ̸
+LemmaD.1(Strictseparationmargina.s.). UndertheconditionsofTheoremD.1,definethe(data-
+dependent)margin
+∆ π,t := v̸= m v i ′ n ∈V (cid:13) (cid:13)F(v; π,t) − F(v′; π,t) (cid:13) (cid:13) 2
+Then,
+Pr[∆ >0]=1.
+π,t
+Proof. ByTheoremD.1,withprobability1theset
+F(v; π,t):v
+{ ∈V}
+consistsof distinctpointsinR d. Onthiseventoffullprobability,everypairwisedistanceamong
+|V|
+thesefinitelymanypointsisstrictlypositive,sotheirminimumisstrictlypositiveaswell.
+Thus,theevent ∆ >0 coincideswiththeeventthatF isinjectiveon . Sinceinjectivityholds
+π,t
+{ } V
+almost-surelybyassumption,weconcludethatPr[∆ >0]=1.
+π,t
+D.2 THECOREROUTINES: LOCALVERIFIERS,ACCEPTANCEREGIONS,ANDPOLICIES
+Given F( ; π,t), inversion reduces to a local hypothesis test: for an observed h(cid:98)t , which token’s
+·
+predictedrepresentationisclosest? Weformalizethiswithacceptanceregions–closedballsaround
+F(v; π,t)–andaverifierthatacceptsviffh(cid:98)t liesinitsball. Almost-sureinjectivityyieldsunique-
+nessatradius0,andapositivemarginyieldsuniquenessforanyε<∆ /2. Toexplorecandidates
+π,t
+efficiently,wecoupletheverifierwithanypolicythatenumeratesuntriedtokens(e.g.,uniformwith-
+outreplacementoragradient-guidedranking).
+Definition D.2 (Local verifier and acceptance tolerance). Given a tolerance ε 0, define the ac-
+≥
+ceptanceregionforsymbolvastheclosedball(DefinitionA.8):
+(cid:0) (cid:1)
+(v; ε) := B F(v; π,t),ε .
+π,t
+A
+Acandidatetokenv isverifiedforobservationh(cid:98)t ifandonlyif h(cid:98)t
+π,t
+(v; ε).
+∈V ∈A
+Remark 16 (Decoding via acceptance regions). Given a prefix π t−1 and the observation h(cid:98)t
+∈ V
+atpositiont, weidentifythenexttokenbycheckinginwhichacceptanceregionh(cid:98)t lies: declarev
+verified iff h(cid:98)t
+π,t
+(v;ε). By Lemma D.1, for any ε < ∆π,t/2 the regions
+π,t
+(v;ε)
+v∈V
+are
+∈ A {A }
+pairwisedisjoint;hencethereisatmostoneverifiedtoken(andinthenoiselesscaseε=0,exactly
+one).
+Building on the intuition in Remark 16, we introduce two radii to define acceptance regions that
+avoidcollisions:
+Proposition D.1(Probabilistic soundness anduniqueness of thelocal verifier). Fix position t and
+prefixπ t−1. UnderAssumptionsD.1andD.2,forallv⋆ ,thefollowingholdwithprobabil-
+∈V ∈V
+ityone:
+1. Noiselesssoundness. Ifε=0andh(cid:98)t =F(v⋆; π,t),thenv⋆istheuniqueverifiedsymbol.
+2. Robustuniqueness. Ifε<∆π,t/2andh(cid:98)t
+π,t
+(v∗; ε),thenv⋆istheuniqueverifiedsymbol.
+∈A
+Proof. RecallthatunderAssumptionsD.1andD.2,F isinjectiveand∆ >0almost-surely.
+π,t
+(1)Noiselesssoundness.Foranyv ,
+π,t
+(v; 0)= F(v; π,t) .Ifh(cid:98)t =F(v⋆; π,t)andsome
+v =v⋆werealsoverifiedatε=0, ∈ we V wo A uldhaveF(v { ; π,t)=F( } v⋆; π,t),whichisaprobability
+ze ̸ roeventundertheassumptionsmade. Hencev⋆isuniquelyverifiedalmost-surely.
+44
+
+=== PAGE 45 ===
+PublishedasaconferencepaperatICLR2026
+(2)Robustuniqueness. Assumeε<∆π,t/2and h(cid:98)t F(v⋆; π,t)
+2
+<ε. Ifsomev =v⋆werealso
+∥ − ∥ ̸
+verified,then h(cid:98)t F(v; π,t)
+2
+ε. Bythetriangleinequality,
+∥ − ∥ ≤
+(cid:13) (cid:13)F(v; π,t) − F(v⋆; π,t) (cid:13) (cid:13) 2 ≤ (cid:13) (cid:13)h(cid:98)t − F(v; π,t) (cid:13) (cid:13) 2 + (cid:13) (cid:13)h(cid:98)t − F(v⋆; π,t) (cid:13) (cid:13) 2 < 2ε < ∆ π,t ,
+contradictingthedefinitionof∆ (again,validundertheassumptionsmade). Thusv⋆ isuniquely
+π,t
+verifiedalmost-surely.
+Candidate enumeration. Finally, we introduce the last conceptual block required to build the
+inversionalgorithm: apolicyalgorithmthatsystematicallyenumeratescandidatetokenssothatthe
+verifierisguaranteedtoencounterthetrueone.
+DefinitionD.3(Policyalgorithm). Let beafinitevocabulary. Apolicyalgorithmisa(possibly
+V
+randomized)map
+Π: ⊊ suchthat Π( ) forall ⊊ .
+{C V} −→ V C ∈V \C C V
+(When = themapisundefined.)
+C V
+Remark17(Enumerationproperty). Intuitively,apolicychoosesanytokennottriedyet. Starting
+from
+0
+=∅anditerating
+C
+v :=Π( ), := v (i=1,..., ),
+i i−1 i i−1 i
+C C C ∪{ } |V|
+producesasequence(v ,...,v )thatisa(possiblyrandom)permutationof . Thus, inexactly
+1 |V|
+V
+steps,everytokenisoutputoncewithnorepetitions.
+|V|
+Two examples of policy algorithms. We give (i) a uniform-random without replacement policy
+and(ii)agradient-guidedpolicy.
+Algorithm2Policy(Random)
+Require: Vocabulary ; visitedset ; embeddingmatrixE R |V|×d
+V C ∈
+Ensure: NexttokenIDandembedding
+1: SampleapermutationL=(v 1 ,...,v |V| )uniformlyfrom
+V
+2: Defineρ(v; π)astherankofvinL
+3: v⋆ =argmin ρ(v; π)
+v∈V\C
+4: returnv⋆,E v⋆
+Algorithm3Policy(Gradient-based)
+Require: Vocabulary ;visitedset ;embeddingmatrixE R |V|×d; prefixπ t−1; layerℓ;
+V C ∈ ∈V
+previouscontinuousembeddinge(j−1); stepsizeγ >0; gradient-basedupdaterule
+G
+Ensure: NexttokenIDandembedding
+1: g
+←∇e(j−1)
+1
+2
+(cid:13) (cid:13)
+(cid:13)
+F (cid:0) e(j−1); π,t (cid:1)
+−
+h(cid:98)t (cid:13) (cid:13)
+(cid:13)
+2
+2
+2: e(j) (e(j−1),g,γ)
+←G
+3: GetL=(v 1 ,...,v |V| )byorderingv i basedonℓ 2 (E vi ,e(j))
+4: Defineρ(v; π)astherankofvinL
+5: v⋆ =argmin ρ(v; π)
+v∈V\C
+6: returnv⋆,e(j)
+Remark18(Bypassingtheembeddinglayer). WeslightlyoverloadnotationandwriteF(e;π,t).
+Herewebypassthetokenembeddinglookupandinjectacontinuousvectoratthecurrentposition:
+thefirstt 1rowsofH(0)aresettoEmb(π)andthet-throwissettoe.Thisextensionisusedonlyto
+−
+guidethesearch(e.g.,inPolicy-Gradient). AlltheoreticalguaranteesarestatedforF(v;π,t)with
+v and are unaffected by allowing F to accept a continuous proxy during candidate scoring.
+∈ V
+Any extra inputs/side outputs used by a policy (such as the updated proxy) are orthogonal to the
+correctnessstatements.
+45
+
+=== PAGE 46 ===
+PublishedasaconferencepaperatICLR2026
+Remark19(Practicalchoiceofpolicy). BothAlgorithms2and3satisfyDefinitionD.3. Inpractice
+we use the gradient-guided policy with standard gradient descent updates, as it tends to find the
+verified token with far fewer proposals: the next token is chosen by ranking by the distance
+E e(j) totheupdatedproxye(j). Thispreservesthesameworst-caseguara V ntees(singlepass
+v 2
+∥ − ∥
+over )whileimprovingempiricalefficiency.
+V
+D.3 GLOBALINVERSIONVIASIPIT
+Wenowcomposethelocalverifierintoasequentialdecoder. Atstept, causalityensuresh (s) =
+t
+F(s ;π,t) for the true prefix π = s . Since the verifier uniquely accepts s (noiselessly, and
+t 1:t−1 t
+robustlyunderperturbationsbelowhalfthemargin),anycoveringpolicymustencounterandaccept
+thetruetokenwithinasinglepassover . Iteratingfromt = 1toT yieldsexactrecoveryalmost
+V
+surely;wealsoquantifyrobustnessandtheworst-caseruntime.
+Wearenowreadytointroduceourinversionalgorithm: SIPIT(Algorithm1).Thealgorithmsapplies
+todecoder-onlytransformerswithcausalself-attention(AssumptionD.1),andassumesinjectivity,
+whichoccurswithalmost-surely(AssumptionD.2). Weassumeaccesstothelayer-ℓhiddenstates
+(cid:110) (cid:111)T
+perposition h(cid:98)t andtotheparametersneededtoevaluatethelocalverifierfromDefinitionD.2
+t=1
+forarbitrary(t,π,j),aswellasthegradient(whenneeded),namelytothemodeluptolayerℓ. A
+policyalgorithmisfixed(e.g.,Algorithm3).
+Webeginbyrecordingthefollowingstandardlemmaandomittingtheproof,asitisimmediatefrom
+causalmasking: undercausalself-attention,therepresentationatpositiontisindependentoffuture
+tokens.
+LemmaD.2(Causalfactorizationandprefixwiseidentifiability). UnderAssumptionsD.1andD.2,
+fixpositiont [T]. Foranys= s ,...,s withπ = s ,...,s ,
+1 T 1 t−1
+∈ ⟨ ⟩ ⟨ ⟩
+h (s) = F(s ; π,t),
+t t
+whereF istheone-stepmapfromDefinitionD.1.
+Proof. Withcausalmasking,positiontattendsonlytopositions t. Evaluatingthenetworkupto
+≤
+layerℓthereforeyieldsarepresentationattthatisafunctionoftheprefixπandthecurrenttokens
+t
+only,i.e. F(s ; π,t),asclaimed.
+t
+PropositionD.2(Theverifieristherightprimitive). Fixtandatrueprefixπ = s ,...,s . Un-
+1 t−1
+⟨ ⟩
+derAssumptionD.1,theobservedhiddenstateatsteptsatisfiesh (s)=F(s ; π,t)(LemmaD.2).
+t t
+Inaddition,underAssumptionD.2,F isinjectiveandhaspositivemargin∆ > 0almost-surely
+π,t
+(TheoremD.1andlemmaD.1). Consequently,forthelocalverifierofDefinitionD.2,thefollowing
+holdwithprobabilityone:
+1. (Noiseless)Withε=0andobservationh(cid:98)t =h
+t
+(s),theuniqueverifiedtokeniss
+t
+.
+2. (Robust)Ifh(cid:98)t =h
+t
+(s)+e
+t
+with e
+t 2
+<ε<∆π,t/2,thens
+t
+istheuniqueverifiedtoken.
+∥ ∥
+Proof. ImmediatefromLemmaD.2andPropositionD.1appliedwithv⋆ =s ,whichholdsalmost-
+t
+surelybyTheoremD.1andLemmaD.1.
+PropositionD.3(Eventualacceptanceunderincreasingenumeration). Fixapositiontandthetrue
+prefix π = s ,...,s . Under Assumption D.1 and Assumption D.2, let ε 0 and work on
+1 t−1
+⟨ ⟩ ≥
+theprobability-oneeventwherethelocalverifieruniquelyacceptsthetruetokens (e.g.,ε = 0or
+t
+ε<∆ /2;seePropositionD.2).
+π,t
+Let Π be any policy algorithm (Definition D.3). Define the increasing visited sets by
+0
+= ∅,
+C
+v :=Π( ),and := v fori 1,andstopatthefirstindex
+i i−1 i i−1 i
+C C C ∪{ } ≥
+(cid:8) (cid:9)
+τ :=min i 1: h(cid:98)t
+π,t
+(v
+i
+; ε) .
+≥ ∈A
+Then(v ) enumerates withoutreplacementandτ almost surely. Inparticular, forthe
+i i≥1
+V ≤ |V|
+fixed prefix π, the policy’s increasingly expanding search over eventually proposes the unique
+V
+verifiedtokens andacceptsitwithprobability1.
+t
+46
+
+=== PAGE 47 ===
+PublishedasaconferencepaperatICLR2026
+Proof. Workontheprobability-oneeventofPropositionD.2(underAssumptionsD.1andD.2with
+thestatedε),onwhichthelocalverifieratsteptuniquelyacceptsthetruetokens . Equivalently,
+t
+h(cid:98)t
+π,t
+(v; ε) v =s
+t
+. (35)
+∈A ⇐⇒
+Enumeration without replacement. By the definition of a policy algorithm (Definition D.3),
+v =Π( ) and = v . Hencev / and = +1. Inducting
+i i−1 i−1 i i−1 i i i−1 i i−1
+C ∈V\C C C ∪{ } ∈C |C | |C |
+oniyieldsthat(v ) hasnorepetitionsand containsexactlyidistincttokens. Since isfinite,
+i i≥1 i
+C V
+after steps we have = , i.e., (v ) |V| is a permutation of (this holds pathwise, for any
+|V| C |V| V i i=1 V
+realizationofthepolicy’sinternalrandomness).
+Eventual acceptance. Because (v ) is a permutation of , there exists a unique index j
+i
+V ∈
+1,..., withv =s . Byequation35,
+j t
+{ |V|}
+τ =min i 1: h(cid:98)t
+π,t
+(v
+i
+; ε) =min i 1: v
+i
+=s
+t
+=j,
+{ ≥ ∈A } { ≥ }
+soτ andtheprocessacceptss .
+t
+≤|V|
+Sincetheeventonwhichequation35holdshasprobability1,theconclusion(eventualacceptance
+atfiniteτ)holdsalmostsurely.
+Theorem D.2 (Correctness of SIPIT (noiseless & robust)). For each t 1,...,T let π
+t
+=
+∈ { }
+s ,...,s and let ∆ > 0 be the margin of the one-step map F(;π ,t) from Lemma D.1.
+⟨
+1 t−1
+⟩
+πt,t
+·
+t
+UnderAssumptionsD.1andD.2,runSIPIT(Algorithm1)withatoleranceε 0andobservations
+≥
+h(cid:98)t =h
+t
+(s)+e
+t
+(t=1,...,T),
+wheretheperturbationssatisfy e εforalltand
+t 2
+∥ ∥ ≤
+ε < 1∆ forallt.
+2 πt,t
+Then, with probability 1 over the model parameters: (i) for every t, the inner for-loop over j (the
+loop over vocabulary candidates) terminates within iterations by accepting the true token s ;
+t
+|V|
+and (ii) after the outer for-loop over t (the loop over positions) finishes, the algorithm outputs the
+exactsequences=s.
+(cid:98)
+In particular, this covers the noiseless case by taking ε = 0 and h(cid:98)t = h
+t
+(s), and the robust case
+withanyuniformεsuchthatmax e ε< 1min ∆ .
+t ∥ t ∥ 2 ≤ 2 t πt,t
+Proof. ByAssumptionD.2andtheoremD.1, andLemmaD.1, thereisaprobability-oneeventon
+which,forallt,F(;π ,t)isinjectivewithstrictlypositivemargin∆ .Intersectingacrossfinitely
+·
+t πt,t
+manytpreservesprobability1. Workonthisevent.
+ByAssumptionD.1andlemmaD.2,h (s)=F(s ;π ,t). Since e ε,
+t t t t 2
+∥ ∥ ≤
+(cid:0) (cid:1)
+h(cid:98)t =F(s
+t
+;π
+t
+,t)+e
+t
+∈
+B F(s
+t
+;π
+t
+,t),ε =
+A
+πt,t
+(s
+t
+;ε),
+sothelocalverifieracceptss . Moreover, becauseε < 1∆ , PropositionD.1(2)impliesrobust
+t 2 πt,t
+uniqueness:
+h(cid:98)t
+∈A
+πt,t
+(v;ε)
+⇐⇒
+v =s
+t
+. (36)
+Whenε = 0,equation36alsoholdsbyPropositionD.1(1). WenowanalyzeSIPITandproceedby
+inductionont.
+Base case (t = 1). The outer for-loop over t begins with s = = π . Inside the inner for-
+(cid:98) 1
+⟨⟩
+loopoverj(theloopovervocabularycandidates),thepolicy(DefinitionD.3)enumerates without
+replacement. ByPropositionD.3,thereexistsj⋆ suchthatv j⋆ = s 1 ,whichisacc V eptedand
+≤ |V|
+triggersthebreak;thealgorithmappendss .
+1
+Inductive step. Suppose after completing the inner loop at step t 1 the algorithm has appended
+−
+s ,sotheprefixenteringsteptiss=π .Byequation36,withintheinnerlooptheverifieraccepts
+t−1 (cid:98) t
+exactlywhenv =s .Becausethepolicyenumerates withoutreplacement,somej satisfies
+j t
+V ≤|V|
+v =s ,whichisaccepted,appended,andtheinnerloopbreaks.
+j t
+Thusforeveryt,theinnerloopterminatesbyacceptings within iterations,andaftertheouter
+t
+|V|
+loopfinisheswehaveappended(s ,...,s ),i.e.,s=s. Sincethereasoningholdsonaprobability-
+1 T (cid:98)
+oneevent(independentofthepolicy’sinternalrandomness),theconclusionisalmostsure.
+47
+
+=== PAGE 48 ===
+PublishedasaconferencepaperatICLR2026
+Terminationandcomplexity. Havingestablishedcorrectness,werecordtheworst-caseiteration
+countanddiscussitsrelationtowall-clocktime.
+PropositionD.4(Terminationandlinearstepbound). Run SIPIT (Algorithm1)onalength-T se-
+quence with any policy that enumerates without replacement. Then the algorithm halts after a
+V
+finite number of iterations. Moreover, in the worst case the inner for-loop over j executes at most
+iterationsateachpositiont,sothetotalnumberofverifiertestsacrosstheentirerunisatmost
+|V|
+T . Inparticular,thenumberofloopiterationsgrowslinearlywithT .
+|V| ·|V|
+Proof. Fix a position t. The inner for-loop over j proposes unvisited tokens and stops when a
+candidateverifies, orafterexhausting . Becausethe policyenumerateswithoutreplacement, the
+V
+loop can execute at most iterations at step t. The outer for-loop over t runs for exactly T
+positions,hencethetotalnu
+|V
+m
+|
+berofinner-loopiterations(i.e.,verifiertests)isatmost
+(cid:80)T
+=
+t=1|V|
+T < . ThereforethealgorithmhaltsandthetotalnumberoftestsislinearinT .
+|V| ∞ ·|V|
+Remark20(Iterationsvs.wall–clocktime). PropositionD.4boundsthenumberofiterations/tests:
+the inner loop performs at most verifier tests per position, so the total is Θ(T ). This is an
+|V| |V|
+iterationcomplexitystatementthatholdsforanypolicysatisfyingthe“enumerate withoutreplace-
+V
+ment”property.Actualwall–clocktimealsodependsontheper–testcost(onecalltoF(v;π,t)plus
+adistance)andonanypolicyoverhead(e.g.,forward/backwardproxyupdates,scoring,sorting). A
+genericdecompositionis
+T
+(cid:0) (cid:1) (cid:88)
+time = ΘT C + C (t),
+test policy
+|V|·
+t=1
+where C is the cost of one membership test and C (t) captures policy-specific work at step
+test policy
+t. Thus,if istreatedasfixedandC , C (t)arebounded(e.g.,aconstantnumberofproxy
+test policy
+|V|
+updatesandatmostonerankingperupdate), wall–clocktimeisO(T). If growsorthepolicy
+|V|
+sortsperupdate, additionalfactorslike orlog mayappearinthetime, butthetermination
+|V| |V|
+andtheΘ(T )iterationboundremainunchanged.
+|V|
+Remark 21 (Choosing the tolerance ε). Theory guarantees uniqueness whenever ε < 1∆
+2 π,t
+(PropositionD.1). Since∆ isunknown,twopracticalchoicesworkwell: (i)backoff: startwith
+π,t
+asmallεandincreaseonlyifnotokenverifies;(ii)calibration: setεfromheld-outhiddenstatesat
+layerℓ. Inallcasesthedecisionruleremainsasimpleyes/nomembershiptest.
+Remark22(WhySIPITissequential). Thealgorithmneversolvesaglobalassignment.Atposition
+t it conditions on the current prefix π and queries the local verifier for a single token. Causality
+(AssumptionD.1)ensuresh dependsonlyon(π,s ),sotheselocal,prefixwisedecisionscompose
+t t
+torecoverthefullsequence.
+E IMPLEMENTATION DETAILS AND ADDITIONAL EXPERIMENTS
+This section collects implementation details (§E.1), additional ablations on collision experiments
+and SIPIT (§E.2), controlled experiments with identical next-token predictions (§E.3), qualitative
+inspection of the closest hidden-state pairs (§E.4), and connections to anisotropy and intrinsic di-
+mension(§E.5).
+E.1 IMPLEMENTATIONDETAILS
+Whatisacollisioninpractice. Inthetheoreticalpartsofthepaperweuse“collision”intheusual
+functional sense: two distinct prompts s = s′ such that their last-token representations coincide
+̸
+exactly,
+r(s; θ )=r(s′; θ ).
+T T
+Thisistheeventwhoseprobabilityiscontrolledintheorems2.2and2.3andinSectionC,andall
+proofsarecarriedoutatthelevelofexactequality(nonumericalthresholdisrequired).
+Intheexperiments,however,representationsarestoredinfloating-pointformat,soexactequalityof
+r(s; θ )andr(s′; θ )maynotbeameaningfulorrobustcriterion. Wethereforeadoptanumer-
+T T
+ical proxy: given two prompts s,s′ and their embeddings r(s; θ T ),r(s′; θ T ) R d, we declare a
+∈
+48
+
+=== PAGE 49 ===
+PublishedasaconferencepaperatICLR2026
+practicalcollisiononlyif
+torch.allclose (cid:0) r(s; θ ),r(s′; θ ) (cid:1) =True,
+T T
+i.e.,everycoordinatefallswithinPyTorch’sprescribedtolerances,namely10−5 and10−8 forrele-
+vantandabsolutetolerancerespectively. Acrossallofthebillionstotrillionsofempiricalchecks,
+every pair of distinct prompts s = s′ failed this criterion: torch.allclose always returned
+False, and the observed ℓ dist ̸ ances were consistently bounded away from zero. Thus, at the
+2
+resolutionofournumericalprecision,wedidnotobserveanycollisionsinpractice.
+SIPITimplementation. WeimplementSIPITexactlyasinAlg.1withthegradient-guidedpolicy.
+Tostabilizethecontinuousproxyusedforranking,weapplygradientclipping(cappingthegradient
+normat1)andweperiodicallyprojectitbacktothenearesttokenembeddingeveryK=50candidate
+proposals:
+e(j) ← E v† , v† = arg v m ∈V in \C (cid:13) (cid:13)E v − e(j)(cid:13) (cid:13) 2 ,
+withouttakinggradientsthroughthisprojection. Theseheuristicsaffectefficiencyonly;theverifier
+andallcorrectnessguaranteesremainunchanged.
+HARDPROMPTS implementation. The original HARDPROMPTS method Wen et al. (2023) tar-
+getsmultimodalvision-languagemodelsandoptimizespromptsviaaCLIP-basedsimilarityobjec-
+tive. In our text-only setting we lack the vision branch and CLIP loss, so we adapt Algorithm 1
+of Wen et al. (2023) to language models by replacing the objective with the same ℓ loss used in
+2
+SIPIT’sgradientcalculation,andsettingtheoptimizationstepsT = 1#tokens .Allotherdetails
+4 ·|V|
+(stepsizes,stoppingrules)mirrorourSIPITsetuptoensureafaircomparison.
+102
+10−1
+10−4
+ecnatsiD2L
+gpt2
+Collisionthreshold
+102
+10−1
+10−4
+ecnatsiD2L
+gpt2-medium
+Collisionthreshold
+102
+10−1
+10−4
+111 222 333 444 555 666 777 888 999 111000 111111 111222 1133 1144 1155 1166 1177 1188 1199 2200 2211 2222 2233 2244 25 26 27 28 29 30 31 32 33 34 35 36
+Layer
+ecnatsiD2L
+gpt2-large
+Collisionthreshold
+Figure 7: Seeking collisions in a large-scale prompt set (§4.1). For each layer, boxplots show
+the distribution (log scale) of the minimum pairwise ℓ distances between last-token states across
+2
+promptsfortheGPT-2modelfamily(Small,Medium,andLarge);redbarsmarkmediansand
+thedashedlineindicatesthecollisionthreshold10−6.
+49
+
+=== PAGE 50 ===
+PublishedasaconferencepaperatICLR2026
+E.2 ADDITIONALABLATIONS
+E.2.1 COLLISIONEXPERIMENTS
+We report three complementary ablations that probe how separation behaves across depth, length,
+andmodelfamily.
+GPT-2 family across depth. For GPT-2 Small, GPT-2 Medium, and GPT-2 Large, the
+per-layer boxplots (log scale) of the minimum pairwise ℓ distances between last-token states in
+2
+Figure7showthatallminimasitordersofmagnitudeabovethecollisionthreshold10−6 atevery
+depth,andthetypicalseparationincreaseswithdepth(medianredbarsdriftupward). Thisrulesout
+collisionsinpracticeandindicatesthatdeeperblocksmonotonicallysharpenlast-tokendistinctions
+inthesemodels.
+104
+103
+0 100 200 300 400 500
+Sequencelength
+ecnatsiD2L
+Gemma-3 family across depth and scale.
+Across Gemma3-1B, Gemma3-4B, and
+Gemma3-12B, the layerwise boxplots (log
+scale)inFigure8againshowminimafarabove
+10−6 atalldepths. Bothdepthand modelsize
+trend positively with separation: medians and
+lower whiskers move upward in deeper layers
+mean
+and larger models, indicating progressively
+min
+strongermarginsandnoobservedcollisions.
+max
+Effect of sequence length (Gemma-1B).
+Varying the prompt length reveals that
+min/mean/max pairwise distances rise quickly
+Figure9:Sequencelengthversusdistanceoverall for short sequences and then plateau, with the
+pairsofdistinctpromptsforGemma-1B.
+minimum never approaching zero (see Fig-
+ure9). Thissuggeststhatbeyondamodestcontextsize,additionaltokensdonoterodeseparability;
+marginsstabilizeratherthancollapse,makingcollisionsunlikelyforanypromptlengthexplored.
+105
+101
+10−3
+ecnatsiD2L
+gemma-3-1b-pt
+Collisionthreshold
+105
+101
+10−3
+ecnatsiD2L
+gemma-3-4b-pt
+Collisionthreshold
+105
+101
+10−3
+111 222 333 444 555 666 777 888 999 111000111111111222111333111444111555111666111777111888111999222000222111222222222333222444222555222666227722882299330033113322333333443536373839404142434445464748
+Layer
+ecnatsiD2L
+gemma-3-12b-pt
+Collisionthreshold
+Figure8: Seekingcollisionsinalarge-scalepromptset(§4.1). Foreachlayer,boxplots(logscale)
+showthedistributionofminimumpairwiseℓ distancesbetweenlast-tokenstatesacrosspromptsfor
+2
+theGemma-3modelfamily(1B,4B,12B);redbarsdenotemediansandthedashedlinemarksthe
+collisionthreshold10−6.
+50
+
+=== PAGE 51 ===
+PublishedasaconferencepaperatICLR2026
+Overall, these ablations corroborate the main text: last-token states remain well-separated across
+architecturesanddepths,separationtypicallygrowswithdepth(andscaleforGemma),andmargins
+stabilizewithsequencelength,aligningwithouralmost-sureinjectivityguaranteesandwithSIPIT’s
+exactrecoverybehavior.
+E.2.2 SIPIT
+Inversionperformance
+Model Vocabsize
+Accuracy Time(s) Vocabexplored(%)
+Mistral-7B-v0.1 32000 100% 72.99 37.57 0.21 0.11%
+± ±
+Llama-3.1-8B 128255 100% 345.35 181.30 0.22 0.12%
+± ±
+Table6: PerformanceofSIPITondifferentvocabularysizes
+VocabularySize. Tofurthervalidateourfindings(aspresentedinSection4)regardingthescaling
+ofSIPITwithvocabularysize,weconductedadditionalexperimentsonthetwomodelswithsubstan-
+tiallydifferentvocabularysizes,Mistral-7B-v0.1( 32K vocabulary)andLlama-3.1-8B
+≈
+( 128K). For a fair comparison, we construct sentences that tokenize to exactly the same se-
+≈
+quence of tokensacross both models. The resultsare reported in theTable 6. We observe that, in
+practice,theinversiontimegrowslinearlywithvocabularysize,asexpected,reflectedbythenearly
+constant percentage of tokens explored between the small-vocabulary model (Mistral) and the
+larger-vocabularymodel(Llama). Importantly,forbothmodels,thefractionoftokensexploredre-
+mainsbelow0.25%,indicatingthatthegradient-basedheuristicisbothrobustandhighlyefficient.
+Dataset InversionTime(s) Accuracy
+TrainData 146.48 91.52 100%
+±
+TestData 128.62 83.40 100%
+±
+OOD 106.87 39.10 100%
+±
+Table7: PerformanceofSIPITonin-distributionvs. out-of-distributiondata
+RobustnessofSIPITonunseenandrandomsequences. BasedonGPT-2,weconstructedthree
+datasets,whichwerefertoasTrain,Test,andOOD(Out-of-Distribution). TheTrainsetisformed
+bysamplingsentencesfromWebText(thedatasetusedtotrainGPT-2Radfordetal.(2019)); the
+TestsetcontainssentencessampledfromWikipedia(notinthetrainingset);andtheOODsetcon-
+sistsofrandomtokensequences. Eachdatasetcontains50promptsoflength100tokens. Wereport
+the findings in Table 7. Interestingly, the OOD samples are significantly faster to invert than the
+TrainandTestsamples. Wehypothesizethatthisdifferencestemsfromthegeometryofthehidden
+representations: natural language sentences (Train and Test) tend to lie on a structured, clustered
+manifold,whichcanmaketheinversionlandscapelocallyflatterandlesswell-conditioned. Incon-
+trast, random token sequences produce more dispersed and isolated hidden states, yielding clearer
+descentdirectionsandeffectivelystrongergradientsignals,whichacceleratesconvergence. Across
+all three datasets, we obtain exact recovery for every sequence, further supporting the theoretical
+guaranteesofSIPIT.
+E.3 IDENTICALNEXT-TOKEN
+The collision and ablation experiments above use generic prompt sets. A natural stress test is to
+ask: what happens when we deliberately construct prompt pairs that produce the same next-token
+prediction? To answer this question we designed a set of new experiments where two different
+promptarespecificallyconstructedtoyieldtheexactsametargetanswer.First,wefocusedonword-
+to-wordmachinetranslation(google/smol)andmathtasks(ProCreations/SimpleMath)
+51
+
+=== PAGE 52 ===
+PublishedasaconferencepaperatICLR2026
+Model
+ℓ2Distance(min)
+Model
+ℓ2Distance(min)
+layer1 layerL/2 layerL layer1 layerL/2 layerL
+Llama-3.1-8B 0.694 1.632 4.202 Llama-3.1-8B 0.789 2.126 8.245
+Mistral-7B-v0.1 0.207 1.056 2.348 Mistral-7B-v0.1 0.222 1.664 4.362
+Phi-4-mini-instruct 4.375 6.974 17.328 Phi-4-mini-instruct 4.447 8.497 37.262
+Table 8: Distances for Translation (En–Fr) Table 9: Distances for Math separator-token
+separator-tokenembeddingsacrosslayers. embeddingsacrosslayers.
+on Llama-3.1-8B, Mistral-7B, and Phi-4-mini-instruct. From these datasets, we
+builtfewshotpromptsthatdifferedonlyintheirdelimiters(e.g. ->vs:)whilepreservingidentical
+translationsorarithmeticsolutions. Somequalitativeexamplesareshownbelow:
+Delimiter: -> Delimiter: :
+Translate into French. Translate into French.
+Hello -> Bonjour Hello : Bonjour
+Goodbye -> Au revoir Goodbye : Au revoir
+House -> House :
+Delimiter: -> Delimiter: =
+Do the additions. Do the additions.
+2790 + 6698 -> 9488 2790 + 6698 = 9488
+8262 + 3848 -> 12110 8262 + 3848 = 12110
+1628 + 132 -> 1628 + 132 =
+We then assessed collisions involving four different separator token embeddings across all dataset
+pairs, specifically ->, :, =, and -. Despite producing the exact same answer the corresponding
+embeddingsremainclearlydistinct(no“collision”)sincetheminimumℓ distanceiswellabovethe
+2
+collisionthresholdoverthe 140K possiblepairs,asseenintables8and9.
+≈
+Furthermore, we constructed a dataset of random prefixes sampled from internet text, each
+followed by the fixed suffix “Complete this: The quick brown fox jumps over
+the lazy”. To build the dataset, we sampled 10K prefix sequences of length 50 tokens from
+Wikipediaand appendedthe tokenizedsuffixto each. Theminimum ℓ distancesobtained arere-
+2
+ported in Table 10. Even in this setting, although the next token prediction is exactly “dog”, all
+last-tokenembeddingsremainfarabovethetolerancethreshold.
+ℓ Distance(min)
+Model 2
+layer1 layerL/2 layerL
+Mistral-7B-v0.1 0.012 0.265 3.494
+Llama-3.1-8B 0.046 0.733 6.227
+Phi-4-mini-instruct 0.087 2.302 18.913
+Table10: Distancesforrandom-prefixdatasetwithfixed“quickbrownfox”suffix.
+E.4 PROMPTSWITHSIMILARREPRESENTATIONS
+Tocomplementthequantitativeinjectivityresultsinthemaintext,weinspectedqualitativeexamples
+ofsequenceswhoselast-tokenhiddenstatesareamongtheclosestweobserved. Foragivenmodel,
+52
+
+=== PAGE 53 ===
+PublishedasaconferencepaperatICLR2026
+wecomputedtheEuclideandistancebetweenlast-layerrepresentationsh (s)andh (t)ofthefinal
+L L
+tokenintwosequencessandt,andmanuallyexaminedpairswiththesmallestℓ distances.
+2
+ForbothLlama-3.1-8BandMistral-7B-v0.1,theclosestpairscorrespondtoPythoncode
+snippetsthatarealmostidentical,typicallydifferingonlybyasmallshiftsuchasoneormoretrailing
+newlinetokens. Inmostoftheclosepairsweexamined,thetwosequencessatisfy
+s = t newlinetoken k
+◦⟨ ⟩
+forsomesmallk 1. Evenintheseextremalcases,however,thelast-tokenrepresentationsremain
+≥
+clearlyseparatedinℓ distance.
+2
+Llama-3.1-8B. OneoftheclosestpairswefoundforLlama-3.1-8Bisshownbelow. Theonly
+difference between the two sequences is the presence of several trailing newline characters at the
+endofthesecondsnippet. Thelast-tokenℓ distanceatthefinallayerforthispairis1.274,which
+2
+issmallrelativetotypicaldistancesbutstillfarfromzero,andthusconsistentwiththeabsenceof
+collisionsobservedinourexhaustivetests.
+Llama-3.1-8B:Sequences
+...
+# Theme options are theme-specific and customize the ...
+#html_theme_options = {}
+# Add any paths that contain custom themes here ...
+#html
+Llama-3.1-8B:Sequencet
+...
+# Theme options are theme-specific and customize the ...
+#html_theme_options = {}
+# Add any paths that contain custom themes here ...
+#html
+\n
+\n
+\n
+Mistral-7B-v0.1. A similar phenomenon occurs for Mistral-7B-v0.1. Again, one of the
+closest pairs consists of two almost identical code snippets, where the second sequence appends
+a single newline token: For this pair, the last-token ℓ distance at the last layer is 1.146. As in
+2
+the Llama example, the nearest neighbors arise from almost identical contexts differing only in
+trailing whitespace tokens, and even these extremal cases exhibit a non-negligible separation in
+representationspace.
+Mistral-7B-v0.1: Sequences
+...
+# The reST default role to use for all documents.
+#default_role = None
+# If true, ’()’ will be appended to :func: ...
+#add_function_parentheses = True
+# If true, the current module ...
+53
+
+=== PAGE 54 ===
+PublishedasaconferencepaperatICLR2026
+Mistral-7B-v0.1: Sequencet
+# The reST default role to use for all documents.
+#default_role = None
+# If true, ’()’ will be appended to :func: ...
+#add_function_parentheses = True
+# If true, the current module ...
+\n
+Summary. Across all models and pairs we inspected, we did not observe qualitatively different
+promptswhoselast-layer,last-tokenembeddingswerecomparablyclose.Instead,thenearestneigh-
+borsconsistentlyinvolvednear-duplicatesnippets(oftencodeordocumentation)differingonlyby
+whitespaceorotherminorformattingtokens. Thesequalitativeobservationsalignwiththeinjectiv-
+itymarginsreportedinthemaintextandsupporttheviewthatsmallperturbationsinformattingdo
+notleadtocollisionsintherepresentationsusedbySIPIT.
+E.5 RELATIONWITHANISOTROPYANDINTRINSICDIMENSION
+As part of our broader investigation, we also examined connections to the analyses presented in
+the works of Razzhigaev et al. (2025) (LLM-Microscope) and Razzhigaev et al. (2024), and ran a
+targetedexperimentinthisspirit.
+Experimentalsetup. Weperformedaproof-of-conceptstudyusingGPT-2 Small.Wesampled
+100natural-languagepromptsoffixedlengthK and,foreachprompt,generated1000single-token
+continuationsbyappendingeachtokenfromafixedvocabularysubsetofsize1000. Foreverylayer
+ℓ, we extracted the hidden representation of the last token for all 1000 continuations, producing a
+1000 dmatrixforeach(layer,prompt)pair.Oneachmatrixwecomputed(i)anisotropyandintrin-
+×
+sicdimensionasinLLM-Microscope,and(ii)simple“injectivitymargin”statistics: theminimum
+pairwiseEuclideandistancebetweencontinuationembeddings, averagedoverprompts. Aggregat-
+ingoverthe100promptsyields,foreachlayer,atripleconsistingofanisotropy,intrinsicdimension,
+andinjectivitymargin.
+Experiment1: anisotropyvs.injectivitymargin. Acrosslayers,wecorrelatedmeananisotropy
+withthemeaninjectivitymargin.TheresultingPearsoncorrelationis0.72,andtheSpearmancorre-
+Layer Anisotropy(mean) ID(mean) Margin(min)
+1 0.089579 20.754620 1.850306
+2 0.076049 17.565538 1.956753
+3 0.071429 16.765265 2.064488
+4 0.075067 16.679382 2.241199
+5 0.083282 17.183246 2.382355
+6 0.089542 17.697870 2.499817
+7 0.088463 17.018419 2.704958
+8 0.083261 16.296431 2.886434
+9 0.081803 16.040713 3.025268
+10 0.083083 15.730601 3.330774
+11 0.090206 15.635035 3.918343
+12 0.288352 16.434897 4.640457
+Table11: Layer-wiseanisotropy,intrinsicdimension,andinjectivitymargin.
+54
+
+=== PAGE 55 ===
+PublishedasaconferencepaperatICLR2026
+lationis0.45. Inthissetting,layerswithhigheranisotropytendtoexhibitlargerinjectivitymargins:
+continuation clouds become both more structured (anisotropic) and farther from collisions. This
+suggeststhatanisotropyiscompatiblewith,andmayevenreinforce,numericallyrobustinjectivity.
+Experiment2: intrinsicdimensionvs.injectivitymargin. Repeatingtheanalysiswithintrinsic
+dimension,weobserveaPearsoncorrelationof-0.60andaSpearmancorrelationof-0.79between
+intrinsicdimensionandinjectivitymargin. Thus,layerswithlowerintrinsicdimensionalitytendto
+have larger margins: compressed-looking manifolds are, if anything, more separated. This aligns
+withourtheoremthatinjectivityrulesoutinformation-destroyingcollapses.
+Discussion. Thislineofanalysisishighlycomplementarytoourinjectivityframework. Whereas
+ourresultsestablishthatinternalrepresentationsarealmostsurelylossless,LLM-Microscopeoffers
+fine-grained geometric diagnostics of how these representations evolve across depth and training.
+Particularly notable is the observation that anisotropy and intrinsic dimension follow a reverse-U
+profile:representationsbecomemoreanisotropicandlower-dimensionalinintermediatelayers,then
+partiallyre-expandneartheoutput,offeringaconcretegeometricpictureofhowstructureiscarved
+intoaligneddirectionsandlow-dimensionalmanifolds.
+Thisisespeciallyrelevantgiventhatourpaperchallengesclassicaccountsoflearningviabottleneck
+compression (e.g. Shwartz-Ziv & Tishby (2017)). If information is preserved along the residual
+stream,learningcannotproceedlayerbylayerpurelythroughcompression. Ourpreliminaryexper-
+imentssuggestadifferentpicture: asdepthincreases,marginsgrow,intrinsicdimensiondecreases,
+andanisotropyfollowsaconcavetrajectorywithalatespike. Earlylayersexpandandreorganize,
+intermediatelayerscarveinformationintolow-dimensionaldirectionalmanifolds,andupperlayers
+sharpen this structure. Overall, this is consistent with a network that preserves injectivity while
+funnelinginformationintoincreasinglystructured,well-separatedrepresentations.
+Model(HFexample) ActivationinFFN Real-analytic?
+Llama-2 SwiGLU Yes
+Llama-3 SwiGLU Yes
+Mistral-7B-v0.1 SiLU Yes
+Mixtral-8x7B-v0.1 SiLU Yes
+Gemma GeGLU Yes
+Gemma-2 GELU Yes
+Qwen2MoE SwiGLU Yes
+Qwen-2 SiLU Yes
+Qwen3MoE SiLU Yes
+Qwen-3 SiLU Yes
+Phi GELU Yes
+Phi-3 SiLU Yes
+GPT-2 GELU Yes
+GPT-J GELU Yes
+GptOss SiLU Yes
+Grok-1 GELU Yes
+DeepSeek-V2 SiLU Yes
+DeepSeek-V3 SiLU Yes
+Table12: Activationfunctionsusedinthefeed-forwardnetworksofrepresentativemodernLLMs.
+55
+
+=== PAGE 56 ===
+PublishedasaconferencepaperatICLR2026
+F REAL-ANALYTIC ACTIVATION FUNCTIONS IN MODERN LLMS
+Anaturalquestionraisedbyouranalysisistowhatextentmodernlargelanguagemodelsactually
+usereal-analyticactivationfunctionsintheirfeed-forwardnetworks. Sinceourresultsapplymost
+directlywhenthenon-linearitiesarereal-analytic,itisimportanttocheckwhetherthisassumption
+holdsinpractice.
+To get a concrete picture, we surveyed a set of widely used open-source and proprietary-style ar-
+chitecturesandrecordedtheactivationfunctionusedintheirfeed-forwardblocks. Themodelsand
+theirreportedactivationsaresummarizedinTable12. Foreachmodel,wealsoindicatewhetherthe
+activation is real-analytic. Activations such as SiLU/Swish, SwiGLU, GeGLU, and GELU are all
+real-analytic, beingcompositionsandproductsofelementaryanalyticfunctions(e.g., linearmaps,
+exponentials,andtheerrorfunction).
+Acrossthisrepresentativesample,wefindthatallmodels(18outof18)usereal-analyticactivations
+in their feed-forward blocks. In other words, the analyticity assumption is not merely a technical
+convenience but accurately reflects common design practice. This supports the relevance of our
+theoreticalresultsforreal-worldlargelanguagemodels: thevastmajorityofmoderntransformers
+alreadyoperateinaregimewherethenon-linearitiesarereal-analytic,andhencefalldirectlywithin
+the scope of our analysis. We now formally prove that SiLU and GELU are real-analytic scalar
+functions,andthatthecorrespondinggatedconstructionsSwiGLUandGeGLUdefinereal-analytic
+vector-valued maps. The proofs build from elementary ingredients upward: sigmoid (Proposi-
+tion F.1) SiLU (Proposition F.2); error function (Proposition F.3) GELU (Proposition F.4);
+→ →
+thencoordinatewiselifting(PropositionF.5)andGLUgating(PropositionF.6).
+PropositionF.1(Logisticsigmoidisreal-analytic). Thelogisticsigmoid
+1
+σ(x) := , x R,
+1+e−x ∈
+isreal-analyticonR.
+Proof. ByPropositionA.5, themapx e−x isreal-analyticonR. ByPropositionA.1, thesum
+x 1+e−x isreal-analytic; moreove (cid:55)→ r1+e−x > 0forallx R, soitnevervanishes. Bythe
+(cid:55)→ ∈
+quotientruleinPropositionA.1,thereciprocal
+1
+x
+(cid:55)→ 1+e−x
+isthereforereal-analyticonR.
+PropositionF.2(SiLU/Swishisreal-analytic). TheSiLU(orSwish)activation
+x
+SiLU(x) := xσ(x) = , x R,
+1+e−x ∈
+isreal-analyticonR.
+Proof. Theidentitymapx xisapolynomial,hencereal-analyticbyPropositionA.4. ByPropo-
+(cid:55)→
+sitionF.1,σ isreal-analytic. Theproductoftworeal-analyticfunctionsisreal-analyticbyProposi-
+tionA.1,sox xσ(x)isreal-analyticonR.
+(cid:55)→
+PropositionF.3(Errorfunctionisreal-analytic). Theerrorfunction
+2 (cid:90) x
+erf(x) :=
+e−t2
+dt, x R,
+√π ∈
+0
+isreal-analyticonR.
+Proof. ByPropositionA.5,expisreal-analyticonRwithpowerseriesez = (cid:80)∞ zk andinfinite
+k=0 k!
+radiusofconvergence. Substitutingz = t2yields
+−
+e−t2 = (cid:88) ∞ ( − 1)k t2k, t R.
+k! ∈
+k=0
+56
+
+=== PAGE 57 ===
+PublishedasaconferencepaperatICLR2026
+Thisserieshasinfiniteradiusofconvergence,soitconvergesuniformlyoneveryboundedinterval.
+By standard results on termwise integration of power series (e.g. Rudin 1976), we may integrate
+termwise:
+(cid:90) x e−t2 dt= (cid:88) ∞ ( − 1)k (cid:90) x t2kdt= (cid:88) ∞ ( − 1)k x2k+1.
+k! k!(2k+1)
+0 k=0 0 k=0
+Multiplyingby2/√πweobtain
+2 (cid:88) ∞ ( 1)k
+erf(x)= − x2k+1,
+√π k!(2k+1)
+k=0
+apowerserieswithinfiniteradiusofconvergence.Henceerfisreal-analyticonRbyDefinitionA.1.
+PropositionF.4(GELUisreal-analytic). Let
+Φ(x) := 1(cid:16) 1+erf (cid:0) √x (cid:1)(cid:17)
+2 2
+betheCDFofastandardnormalrandomvariable. The(exact)GELUactivation
+GELU(x) := xΦ(x)
+isreal-analyticonR.
+Proof. By Proposition F.3, erf is real-analytic. The map x √x is linear, hence real-analytic;
+(cid:55)→ 2
+by Proposition A.2, the composition x erf (cid:0) √x (cid:1) is real-analytic. Adding the constant 1 and
+(cid:55)→ 2
+scalingby 1 preservesreal-analyticitybyPropositionA.1, soΦisreal-analytic. Theidentitymap
+2
+x xisapolynomial(PropositionA.4),hencereal-analytic;theirproductx xΦ(x)istherefore
+(cid:55)→ (cid:55)→
+real-analyticbyPropositionA.1.
+HavingestablishedthatSiLUandGELUarereal-analyticasscalarfunctions, wenowliftthemto
+thevector-valuedsettingandshowthattheGLU-stylegatingusedinmodernarchitecturespreserves
+real-analyticity.
+PropositionF.5(Vector-valuedSiLUandGELUarereal-analytic). Letm N. Definethecoordi-
+∈
+natewisemaps
+(cid:0) (cid:1)⊤ (cid:0) (cid:1)⊤
+SiLU (x):= SiLU(x ),...,SiLU(x ) , GELU (x):= GELU(x ),...,GELU(x ) ,
+m 1 m m 1 m
+for x R m, where SiLU and GELU are as in Proposition F.2 and Proposition F.4. Then both
+SiLU m ∈ andGELU m arereal-analyticmapsR m R m.
+→
+Proof. Eachscalarcomponentx SiLU(x )(resp.GELU(x ))isthecompositionoftheprojec-
+i i
+(cid:55)→
+tionontocoordinatei(alinearmap)withthereal-analyticscalarfunctionSiLU(resp.GELU).By
+Proposition A.2, each component is real-analytic. Therefore, by Definition A.1, the vector-valued
+mapsSiLU andGELU arereal-analytic.
+m m
+PropositionF.6(GLU-styleblocksarereal-analytic). Letd
+in
+,d
+hid
+Nandconsideraffinemaps
+∈
+A (x)=W x+b , A (x)=W x+b ,
+1 1 1 2 2 2
+with W 1 ,W 2
+∈
+R dhid×din and b 1 ,b 2
+∈
+R dhid. Let ϕ : R dhid
+→
+R dhid be either SiLU dhid or
+GELU fromPropositionF.5. DefinetheGLU-styleblock
+dhid
+GLU ϕ (x) := A 1 (x) ϕ (cid:0) A 2 (x) (cid:1) , x R din,
+⊙ ∈
+where denotestheHadamardproduct.
+⊙
+ThenGLU ϕ :R din R dhid isreal-analytic. Inparticular:
+→
+• Takingϕ=SiLU recoversSwiGLU,whichisreal-analytic.
+dhid
+• Takingϕ=GELU recoversGeGLU,whichisreal-analytic.
+dhid
+57
+
+=== PAGE 58 ===
+PublishedasaconferencepaperatICLR2026
+Proof. Each affine map A is real-analytic as a matrix product plus addition (Proposition A.10,
+j
+Proposition A.1). By Proposition F.5, ϕ is real-analytic, so x ϕ(A (x)) is a composition of
+2
+(cid:55)→
+real-analytic maps (Proposition A.2), hence real-analytic. The map x A (x) ϕ(A (x)) is
+1 2
+(cid:55)→ ⊙
+a Hadamard product of two real-analytic vector-valued functions; componentwise this is just the
+productofreal-analyticscalars, soitisreal-analyticbyPropositionA.1(equivalently, byProposi-
+tion A.11). Thus GLU is real-analytic. The SwiGLU and GeGLU cases follow by choosing ϕ
+ϕ
+accordingly.
+Relation to universal-approximation and expressivity results. The material above concerns
+only the analyticity of the non-linearities used in our analysis. For completeness, we also record
+here how our injectivity theorem fits alongside existing expressivity results for Transformers; this
+discussionislogicallyindependentofthereal-analyticityassumptions.
+Classical expressivity results for Transformers are primarily existential. Universal-approximation
+theorems (e.g. Yun et al. (2020); Sun & Yang (2020)) show that for any continuous sequence-to-
+sequencefunctionf onacompactdomainandanyε > 0,thereexistsaTransformerwithsuitable
+depth and width whose outputs are within ε of those of f. Turing-completeness results for en-
+coder–decoderTransformers(e.g.Pe´rezetal.,2019)similarlyestablishtheexistenceofparameter
+settingsthatsimulateanyTuringmachine. Takentogether,theseworkscharacterisewhatthearchi-
+tecturecanrepresentinprinciple: theydonotmodelrandominitializationorgradient-basedtrain-
+ing,andtheyarenotformulatedinourdiscretesettingwithfinitecontextlength,fixeddecoder-only
+architecture,andreal-analyticactivations.
+Ourresultsarecomplementaryandinsteadconcernwhathappenstypicallyunderstandardtraining.
+Wefixaconcretedecoder-onlyarchitectureandafinitepromptset,andstudythemapfromprompts
+to last-token representations. In this setting we prove that (i) for any fixed architecture, the set of
+parametersforwhichthismapisnon-injectivehasLebesguemeasurezero,and(ii)gradient-based
+trainingfromstandardrandominitializationspreservesabsolutecontinuityoftheparameterdistri-
+butionandthereforealmostsurelyavoidsthis“collisionset”. Non-injectiveTransformerscertainly
+exist(weexplicitlyconstructsuchfailurecasesinSection2),butourresultsshowthattheyforma
+thinsubsetthattypicaloptimizationtrajectoriesdonotreach.
+Ourcontributionisthusorthogonaltopriorexpressivitytheory. WedonotclaimthatTransformers
+can only represent injective functions. Rather, within the specific regime we study (decoder-only,
+real-analyticactivations,cross-entropyloss,GD-typetrainingfromstandardinitialization),weshow
+thattheresultinglast-tokenmapisinjectivewithprobabilityoneoverinitializationandtraining. In
+short, classical expressivity results describe what is mathematically possible for the Transformer
+functionclass,whileouranalysischaracterizeswhatisalmostsurelyimplemented whenthatclass
+isexploredviastandardtrainingprocedures.
+58

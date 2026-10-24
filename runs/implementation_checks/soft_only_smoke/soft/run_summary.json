@@ -1,0 +1,26 @@
+{
+  "method": "soft",
+  "run_signature": "240a0e3c3b7ff2fa47429fd9a295be40b1f4368f4949062efadb16e473bf2e45",
+  "status": "complete",
+  "stop_reason": "epochs_completed",
+  "state": {
+    "epoch": 1,
+    "cursor": 0,
+    "step": 1,
+    "best": {
+      "macro_em": 0.0,
+      "macro_nll": 11.956479549407959,
+      "step": 1
+    },
+    "bad_epochs": 0,
+    "elapsed_seconds": 0.2588383000002068,
+    "field_exposures": {
+      "name": 2,
+      "birth_date": 2,
+      "address": 2,
+      "diagnosis": 2
+    }
+  },
+  "partial_dataset": true,
+  "best_checkpoint": "D:\\Stepby\\kv-cache研究\\医疗隐私引导实验\\runs\\implementation_checks\\soft_only_smoke\\soft\\best.pt"
+}

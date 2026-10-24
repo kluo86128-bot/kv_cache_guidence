@@ -1,0 +1,9 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train
+2,2,dev,full,dev_000001,name,What is the patient's full name? Return only the field value.,Kristofer887 Freeman822 Funk324,alsex-century,False,11.942221641540527,2,max_new_tokens,True,
+2,2,dev,full,dev_000001,birth_date,What is the patient's date of birth? Return only the field value.,2003-06-26,alsex-century,False,11.959049224853516,2,max_new_tokens,True,False
+2,2,dev,full,dev_000001,address,What is the patient's home street address? Return only the field value.,258 Brakus Ferry Apt 38,alsex-century,False,11.970442771911621,2,max_new_tokens,True,
+2,2,dev,full,dev_000001,diagnosis,What diagnosis is recorded? Return only the field value.,Gingival disease (disorder),alsex-century,False,11.899138450622559,2,max_new_tokens,True,
+2,2,dev,full,dev_000002,name,What is the patient's full name? Return only the field value.,Evan94 Tyree261 Mosciski958,alsex-century,False,11.930580139160156,2,max_new_tokens,True,
+2,2,dev,full,dev_000002,birth_date,What is the patient's date of birth? Return only the field value.,1965-02-20,alsex-century,False,11.970929145812988,2,max_new_tokens,True,False
+2,2,dev,full,dev_000002,address,What is the patient's home street address? Return only the field value.,461 Parker Annex Suite 12,alsex-century,False,11.965887069702148,2,max_new_tokens,True,
+2,2,dev,full,dev_000002,diagnosis,What diagnosis is recorded? Return only the field value.,Primary dental caries (disorder),alsex-century,False,11.94332504272461,2,max_new_tokens,True,

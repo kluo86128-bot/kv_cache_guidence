@@ -1,0 +1,31 @@
+{
+  "server_root": "/data/kevin/medical_privacy_prompt",
+  "files": {
+    "medical_kv/__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+    "medical_kv/__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "medical_kv/backend.py": "16afab757a9692d011727d7e39c648a4cfa1bb427ff8e0664edda38ae2d22a1f",
+    "medical_kv/cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+    "medical_kv/cli.py": "23e1f5bef6128517411120ed1f4e7612e3ba60cc1d69024604568daf7104914b",
+    "medical_kv/config.py": "4e85c61a02208f5f687fdf410d7cb0885993dd3edc0ceae619f1d293c8c8b1bf",
+    "medical_kv/data.py": "a87989179dfa2fb983beee4dcd7d954e5dc312314590807799f19fd929047512",
+    "medical_kv/diagnosis_contrastive.py": "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94",
+    "medical_kv/diagnosis_noise.py": "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+    "medical_kv/discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+    "medical_kv/distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+    "medical_kv/evaluation.py": "43b78135c84449d0ef9e52d978d5796c93a9ee484d948c1c42ca7a7f3ea9956c",
+    "medical_kv/io.py": "9460821ea9cf7d77d2187df1e4eb09064cef5a82976476f49b645823c36f4e41",
+    "medical_kv/launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+    "medical_kv/name_policy.py": "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a",
+    "medical_kv/negative_resources.py": "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d",
+    "medical_kv/plotting.py": "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+    "medical_kv/tasks.py": "c38c41426b9186698c25508cc893918892bf31b119f9eead52a98f912d663234",
+    "medical_kv/training.py": "9e39e6238ae58544b123bc43c86db9fd66bd3a689f2b4418823bf3ef91d54511",
+    "configs/experiment_v4_name_birth_parts_no_negatives.json": "031dad14581ca72685e632c2faa15ce944ee96d4c60400a4c9c0ac3d2412f95a",
+    "configs/evaluation_name_birth_parts_overlap10.json": "a1acc0d5bb006befe9188737ae563a1f19c6ce38d7b4638360e56387142ee152",
+    "scripts/train_name_birth_parts_no_negatives_background.sh": "f41ca6cd43cf0b7b8d33b78ed798c3907e78b43a2d700e185a94fb8674a6995b",
+    "scripts/evaluate_name_birth_parts_no_negatives_background.sh": "d6ce1be2b3c97b2f566488591043bbe17c4bfe38c398a7f2381d73f082c57de2"
+  },
+  "training_background_command": "bash /data/kevin/medical_privacy_prompt/scripts/train_name_birth_parts_no_negatives_background.sh 0,1",
+  "dataset_files_modified": false,
+  "negative_resource_files_required": false
+}

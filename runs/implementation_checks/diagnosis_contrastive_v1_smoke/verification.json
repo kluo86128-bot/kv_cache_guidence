@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "implementation_only": true,
+  "real_cuda_tested": false,
+  "epochs": 2,
+  "training_records": 2,
+  "validation_records": 1,
+  "six_question_evaluation_rows_per_record": 7,
+  "negative_scoring_per_record": 6,
+  "loss_formula_checked": true,
+  "tests": {
+    "transformers_4_57_6": "60 passed, 3 deselected",
+    "transformers_4_57_1": "60 passed, 3 deselected"
+  }
+}

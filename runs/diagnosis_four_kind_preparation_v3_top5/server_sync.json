@@ -1,0 +1,32 @@
+{
+  "server_root": "/data/kevin/medical_privacy_prompt",
+  "files": {
+    "medical_kv/__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+    "medical_kv/__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "medical_kv/backend.py": "2f1bfa06e41eaea9f41a51832f629ec20a84fdf2d28f3de65a00401251a6b699",
+    "medical_kv/cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+    "medical_kv/cli.py": "44883434f97461ae79f7488a1f32d915d2c49573d01efe91059e88253d5e250f",
+    "medical_kv/config.py": "a85d102f8d4e37a072477e003fba798dd71de1fac407c73808d32b393648e535",
+    "medical_kv/data.py": "a87989179dfa2fb983beee4dcd7d954e5dc312314590807799f19fd929047512",
+    "medical_kv/diagnosis_contrastive.py": "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94",
+    "medical_kv/diagnosis_noise.py": "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+    "medical_kv/discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+    "medical_kv/distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+    "medical_kv/evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+    "medical_kv/io.py": "e85f0a0a4bdb11cb1185f302be78b78b08e58073cefc89dc2e5b63fccb60941d",
+    "medical_kv/launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+    "medical_kv/name_policy.py": "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a",
+    "medical_kv/negative_resources.py": "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d",
+    "medical_kv/plotting.py": "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+    "medical_kv/tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+    "medical_kv/training.py": "e2551921a50787cece9d022efbbc5a205ef4e00078bf12b745b5be5dc1ffb9fb",
+    "configs/experiment_v3_diagnosis_contrastive.json": "234203b58439fd6b343dc75b506af6b8981f5210ee2919d80be231bdc5a4c622",
+    "configs/diagnosis_negative_rules.json": "ed9bebb9b2938cb6a604d283c9855bcb9f9c93ffab7ea08e517b77220fe21780",
+    "data/negative_resources/diagnosis_v1.json": "c4f61fe7b0f28f686bd508eac038790e39d3b3ba3ba1ca35b6312763863f81f0",
+    "data/negative_pools/four_kind_v3_top5/11e44ed9927c47b621a0faadb00125c829fd2f866ac1715d28a2d383007f3fce.json": "6bf6fc2edaf33f48336080956e74c223e7177a5c9c61874b3dd6cec8eca2be1c",
+    "scripts/train_diagnosis_four_kind_background.sh": "e640fa56208528e423ba0be2ad8c699bb60ae2cbb8969d16de9700dc7e63922a",
+    "scripts/prepare_diagnosis_four_kind_background.sh": "dc37184c05485c27a005947cb01b2e43b638980c61a73789ca1d6eef09ba0205"
+  },
+  "launch_background": "bash /data/kevin/medical_privacy_prompt/scripts/train_diagnosis_four_kind_background.sh 0,1",
+  "output_directory": "runs/soft_natural_names_diag_four_kind_top5_seed17_100epochs"
+}

@@ -1,0 +1,1459 @@
+{
+  "path": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\data\\negative_resources\\diagnosis_v1.json",
+  "fingerprint": "32dc92a6695f96f7eca035cacd53a515fe0964c4224c45b4aa59e05523a35bf9",
+  "version": "synthea_nlm_components_v1",
+  "source_conditions_sha256": "f4918a119f3e9b2644fef2995d321b7c6ee61f3327a0344c9700691dbe4afd3f",
+  "scope": "all source diagnosis labels and external terminology; no test answers/predictions read",
+  "external": {
+    "url": "https://clinicaltables.nlm.nih.gov/ctss-downloads/cond_proc_download-2026-10-01.json.zip",
+    "archive_sha256": "18fcca152d19be9b2ea374dd3fe6264f9eff5221fa09c23b5f6d0111c40eb118",
+    "archive_member": "cond_proc_download-2026-10-01.json",
+    "source_records": 2702
+  },
+  "excluded_external": [
+    {
+      "id": "11202",
+      "name": "Below knee amputation",
+      "reason": "procedure"
+    },
+    {
+      "id": "11203",
+      "name": "Above knee amputation",
+      "reason": "procedure"
+    },
+    {
+      "id": "11204",
+      "name": "Finger amputation",
+      "reason": "procedure"
+    },
+    {
+      "id": "11414",
+      "name": "Breast implant",
+      "reason": "procedure"
+    },
+    {
+      "id": "11832",
+      "name": "Gastrostomy tube placement",
+      "reason": "procedure"
+    },
+    {
+      "id": "11886",
+      "name": "Penile prosthesis",
+      "reason": "procedure"
+    },
+    {
+      "id": "12952",
+      "name": "Arthrocentesis",
+      "reason": "procedure"
+    },
+    {
+      "id": "14250",
+      "name": "Cardiopulmonary resuscitation (CPR)",
+      "reason": "procedure"
+    },
+    {
+      "id": "14676",
+      "name": "Respiratoy syncytial virus (RSV) infection",
+      "reason": "known_display_typo"
+    },
+    {
+      "id": "15129",
+      "name": "Amniocentesis",
+      "reason": "procedure"
+    },
+    {
+      "id": "15779",
+      "name": "Percutaneous transluminal coronary angioplasty (PTCA)",
+      "reason": "procedure"
+    },
+    {
+      "id": "16069",
+      "name": "Laminectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "16146",
+      "name": "Hip arthroplasty - total",
+      "reason": "procedure"
+    },
+    {
+      "id": "16147",
+      "name": "Knee arthroplasty - total",
+      "reason": "procedure"
+    },
+    {
+      "id": "16148",
+      "name": "Open reduction/internal fixation",
+      "reason": "procedure"
+    },
+    {
+      "id": "16153",
+      "name": "Tooth extraction",
+      "reason": "procedure"
+    },
+    {
+      "id": "16478",
+      "name": "Fasciotomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "16479",
+      "name": "Fasciectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "17248",
+      "name": "Diskectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "17313",
+      "name": "Laparotomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "17332",
+      "name": "Aortic valve replacement",
+      "reason": "procedure"
+    },
+    {
+      "id": "17333",
+      "name": "Mitral valve replacement",
+      "reason": "procedure"
+    },
+    {
+      "id": "17347",
+      "name": "Bladder sphincterotomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "17996",
+      "name": "Laparoscopy",
+      "reason": "procedure"
+    },
+    {
+      "id": "19098",
+      "name": "Jejunostomy tube",
+      "reason": "procedure"
+    },
+    {
+      "id": "19435",
+      "name": "Thoracostomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "19511",
+      "name": "Lumboperitoneal shunt",
+      "reason": "procedure"
+    },
+    {
+      "id": "19944",
+      "name": "Cholecystectomy - laparoscopic",
+      "reason": "procedure"
+    },
+    {
+      "id": "19946",
+      "name": "Carotid endarterectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "19947",
+      "name": "Nissen fundoplication",
+      "reason": "procedure"
+    },
+    {
+      "id": "19948",
+      "name": "Small bowel resection",
+      "reason": "procedure"
+    },
+    {
+      "id": "19951",
+      "name": "AAA repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "20229",
+      "name": "Liver transplant",
+      "reason": "procedure"
+    },
+    {
+      "id": "20230",
+      "name": "Open heart surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "20422",
+      "name": "Heart transplant",
+      "reason": "procedure"
+    },
+    {
+      "id": "2047",
+      "name": "Billroth II gastrectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "2048",
+      "name": "Billroth I gastrectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "20562",
+      "name": "Ostomy takedown",
+      "reason": "procedure"
+    },
+    {
+      "id": "20564",
+      "name": "External fixation",
+      "reason": "procedure"
+    },
+    {
+      "id": "20611",
+      "name": "Heart valve - mechanical",
+      "reason": "procedure"
+    },
+    {
+      "id": "2075",
+      "name": "Bowel revision",
+      "reason": "procedure"
+    },
+    {
+      "id": "20795",
+      "name": "Turbinectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "20973",
+      "name": "Intracranial surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "20999",
+      "name": "Ophthalmologic surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "21001",
+      "name": "Ocular trabeculectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "21003",
+      "name": "Extracapsular cataract extraction",
+      "reason": "procedure"
+    },
+    {
+      "id": "21129",
+      "name": "Gastro-jejunostomy tube placement",
+      "reason": "procedure"
+    },
+    {
+      "id": "2118",
+      "name": "Streptococcal pharyngits",
+      "reason": "known_display_typo"
+    },
+    {
+      "id": "21267",
+      "name": "Joint injection",
+      "reason": "procedure"
+    },
+    {
+      "id": "21877",
+      "name": "Foot amputation",
+      "reason": "procedure"
+    },
+    {
+      "id": "2219",
+      "name": "Cardiac pacemaker",
+      "reason": "procedure"
+    },
+    {
+      "id": "22389",
+      "name": "Thrombectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "22407",
+      "name": "Filtering bleb revision",
+      "reason": "procedure"
+    },
+    {
+      "id": "22409",
+      "name": "Anterior chamber reformation",
+      "reason": "procedure"
+    },
+    {
+      "id": "22957",
+      "name": "Colon cancer screening",
+      "reason": "procedure"
+    },
+    {
+      "id": "23071",
+      "name": "Urinary sphincter - artificial",
+      "reason": "procedure"
+    },
+    {
+      "id": "2501",
+      "name": "Colostomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "2563",
+      "name": "Gastrostomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "26129",
+      "name": "Mohs surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "26540",
+      "name": "Roux-en-Y gastric bypass - open",
+      "reason": "procedure"
+    },
+    {
+      "id": "26541",
+      "name": "Roux-en-Y gastric bypass - laparoscopic",
+      "reason": "procedure"
+    },
+    {
+      "id": "26963",
+      "name": "Immobilization",
+      "reason": "procedure"
+    },
+    {
+      "id": "27529",
+      "name": "Therapeutic carpal tunnel injection",
+      "reason": "procedure"
+    },
+    {
+      "id": "2826",
+      "name": "Thyroidectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "2827",
+      "name": "Gastrectomy - total",
+      "reason": "procedure"
+    },
+    {
+      "id": "2828",
+      "name": "Gastrectomy - subtotal",
+      "reason": "procedure"
+    },
+    {
+      "id": "2829",
+      "name": "Cholecystectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "2830",
+      "name": "Colectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "2832",
+      "name": "Transurethral resection of prostate (TURP)",
+      "reason": "procedure"
+    },
+    {
+      "id": "2833",
+      "name": "Prostatectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "2834",
+      "name": "Nephrectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "2835",
+      "name": "Tubal ligation",
+      "reason": "procedure"
+    },
+    {
+      "id": "2836",
+      "name": "Castration",
+      "reason": "procedure"
+    },
+    {
+      "id": "3088",
+      "name": "Mastectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "32183",
+      "name": "Paracentesis - therapeutic",
+      "reason": "procedure"
+    },
+    {
+      "id": "3231",
+      "name": "Cataract surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "3648",
+      "name": "Intrauterine device (IUD)",
+      "reason": "procedure"
+    },
+    {
+      "id": "3711",
+      "name": "Craniotomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "3750",
+      "name": "Hernia repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "377",
+      "name": "Appendectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "380",
+      "name": "Dilitation and curettage",
+      "reason": "procedure"
+    },
+    {
+      "id": "381",
+      "name": "Hysterectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "3920",
+      "name": "Ileostomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "3969",
+      "name": "Pancreatectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4125",
+      "name": "Breast biopsy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4142",
+      "name": "Abdominal surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4144",
+      "name": "Tracheostomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4145",
+      "name": "Breast surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4146",
+      "name": "Head & neck surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4148",
+      "name": "Pulmonary resection",
+      "reason": "procedure"
+    },
+    {
+      "id": "4149",
+      "name": "Thymectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4150",
+      "name": "Esophageal surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4152",
+      "name": "Gastric repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "4153",
+      "name": "Duodenal repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "4154",
+      "name": "Duodenal surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4155",
+      "name": "Small bowel surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4156",
+      "name": "Colon surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4157",
+      "name": "Anal/rectal surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4158",
+      "name": "Polypectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4159",
+      "name": "Liver surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4160",
+      "name": "Hemorrhoidectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4161",
+      "name": "Portocaval shunt",
+      "reason": "procedure"
+    },
+    {
+      "id": "4162",
+      "name": "Splenorenal shunt",
+      "reason": "procedure"
+    },
+    {
+      "id": "4163",
+      "name": "Biliary surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4164",
+      "name": "Pancreas surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4165",
+      "name": "Splenectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4166",
+      "name": "Orchiectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4167",
+      "name": "Genitourinary surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4168",
+      "name": "Oophorectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4170",
+      "name": "Prosthetic cardiac valve",
+      "reason": "procedure"
+    },
+    {
+      "id": "4171",
+      "name": "Valvulotomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4172",
+      "name": "Coronary bypass",
+      "reason": "procedure"
+    },
+    {
+      "id": "4173",
+      "name": "Cardiac surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4174",
+      "name": "Pericardial surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4175",
+      "name": "Artery surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4176",
+      "name": "Sympathectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4177",
+      "name": "Varicose vein surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4178",
+      "name": "Vascular surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4179",
+      "name": "Hand/arm surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4180",
+      "name": "Adrenalectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4181",
+      "name": "Lower extremity amputation",
+      "reason": "procedure"
+    },
+    {
+      "id": "4182",
+      "name": "Parathyroidectmy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4183",
+      "name": "Renal transplant",
+      "reason": "procedure"
+    },
+    {
+      "id": "4184",
+      "name": "Arteriovenous fistula surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4186",
+      "name": "Upper extremity  amputation",
+      "reason": "procedure"
+    },
+    {
+      "id": "4187",
+      "name": "Spine surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4188",
+      "name": "Peripheral nerve surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4189",
+      "name": "Neurosurgical diagnostic procedure",
+      "reason": "procedure"
+    },
+    {
+      "id": "4242",
+      "name": "Gastrectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4243",
+      "name": "Diaphragm surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4276",
+      "name": "Mediastinal surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4277",
+      "name": "Gastroenterostomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4278",
+      "name": "Pyloroplasty-vagotomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4279",
+      "name": "Pyloromyotomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4280",
+      "name": "Duodenal ulcer repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "4281",
+      "name": "Duodenal trauma repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "4284",
+      "name": "Vena cava ligation",
+      "reason": "procedure"
+    },
+    {
+      "id": "4285",
+      "name": "Vena cava filter insertion",
+      "reason": "procedure"
+    },
+    {
+      "id": "4286",
+      "name": "Cleft lip/pal surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4287",
+      "name": "Nerve entrapment surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4289",
+      "name": "Decubitus surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4290",
+      "name": "Extremity plastic surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4292",
+      "name": "Meningocele surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4293",
+      "name": "Nerve surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4387",
+      "name": "Tonsillectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4494",
+      "name": "Cystostomy - suprapubic",
+      "reason": "procedure"
+    },
+    {
+      "id": "4496",
+      "name": "Urinary ileostomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4522",
+      "name": "Thoracentesis",
+      "reason": "procedure"
+    },
+    {
+      "id": "4523",
+      "name": "Paracentesis",
+      "reason": "procedure"
+    },
+    {
+      "id": "4543",
+      "name": "Vertebral fusion",
+      "reason": "procedure"
+    },
+    {
+      "id": "4603",
+      "name": "Dental/mouth surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "4605",
+      "name": "Nephrolithotomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4767",
+      "name": "Vasectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "4780",
+      "name": "Cesarean section",
+      "reason": "procedure"
+    },
+    {
+      "id": "5073",
+      "name": "Ileectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "5093",
+      "name": "Circumcision",
+      "reason": "procedure"
+    },
+    {
+      "id": "5104",
+      "name": "Myringotomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "5109",
+      "name": "Cystectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "5592",
+      "name": "Abscess drainage",
+      "reason": "procedure"
+    },
+    {
+      "id": "5611",
+      "name": "Gastrointestinal surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "5652",
+      "name": "Bone graft",
+      "reason": "procedure"
+    },
+    {
+      "id": "5681",
+      "name": "Bone surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "6443",
+      "name": "Central nervous system shunt",
+      "reason": "procedure"
+    },
+    {
+      "id": "6573",
+      "name": "Endoscopic retrograde cholangiopancreatography",
+      "reason": "procedure"
+    },
+    {
+      "id": "6682",
+      "name": "Pressure equalizing (PE) tubes",
+      "reason": "procedure"
+    },
+    {
+      "id": "7899",
+      "name": "Skin graft",
+      "reason": "procedure"
+    },
+    {
+      "id": "7900",
+      "name": "Lymph surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "7901",
+      "name": "Adenoidectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "7902",
+      "name": "Endocrine surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "7904",
+      "name": "Salpingectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "9430",
+      "name": "Periodonitis - acute",
+      "reason": "known_display_typo"
+    },
+    {
+      "id": "9883",
+      "name": "Enucleation",
+      "reason": "procedure"
+    },
+    {
+      "id": "9958",
+      "name": "Laryngectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X100",
+      "name": "Biopsy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X101",
+      "name": "Cataract extraction and insertion of intraocular lens",
+      "reason": "procedure"
+    },
+    {
+      "id": "X102",
+      "name": "Uterine cervix cerclage",
+      "reason": "procedure"
+    },
+    {
+      "id": "X103",
+      "name": "Cosmetic surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X104",
+      "name": "Esophagus dilation",
+      "reason": "procedure"
+    },
+    {
+      "id": "X105",
+      "name": "Lung transplant -bilateral",
+      "reason": "procedure"
+    },
+    {
+      "id": "X106",
+      "name": "Laparotomy - exploratory",
+      "reason": "procedure"
+    },
+    {
+      "id": "X107",
+      "name": "Hematopoietic stem cell transplant",
+      "reason": "procedure"
+    },
+    {
+      "id": "X108",
+      "name": "Cochlear implant",
+      "reason": "procedure"
+    },
+    {
+      "id": "X109",
+      "name": "Incision and drainage (I&D) of abscess",
+      "reason": "procedure"
+    },
+    {
+      "id": "X110",
+      "name": "Venous port insertion",
+      "reason": "procedure"
+    },
+    {
+      "id": "X111",
+      "name": "PICC insertion",
+      "reason": "procedure"
+    },
+    {
+      "id": "X112",
+      "name": "Ureter stent insertion",
+      "reason": "procedure"
+    },
+    {
+      "id": "X113",
+      "name": "Laser photocoagulation to retina",
+      "reason": "procedure"
+    },
+    {
+      "id": "X114",
+      "name": "Lithotripsy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X115",
+      "name": "Mammoplasty",
+      "reason": "procedure"
+    },
+    {
+      "id": "X116",
+      "name": "Mastoidectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X117",
+      "name": "Myringotomy and insertion of ventilation tube",
+      "reason": "procedure"
+    },
+    {
+      "id": "X118",
+      "name": "Nasal septum surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X119",
+      "name": "Prostatectomy - radical",
+      "reason": "procedure"
+    },
+    {
+      "id": "X120",
+      "name": "Reconstruction procedure",
+      "reason": "procedure"
+    },
+    {
+      "id": "X121",
+      "name": "Reduction mammoplasty - unilateral",
+      "reason": "procedure"
+    },
+    {
+      "id": "X122",
+      "name": "Reduction mammoplasty - bilateral",
+      "reason": "procedure"
+    },
+    {
+      "id": "X123",
+      "name": "Umbilical hernia repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "X124",
+      "name": "Stripping of vein",
+      "reason": "procedure"
+    },
+    {
+      "id": "X125",
+      "name": "Tonsillectomy and adenoidectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X126",
+      "name": "Splenectomy - partial",
+      "reason": "procedure"
+    },
+    {
+      "id": "X127",
+      "name": "Transjugular intrahepatic portosystemic shunt (TIPS) placement",
+      "reason": "procedure"
+    },
+    {
+      "id": "X128",
+      "name": "Pancreas transplant",
+      "reason": "procedure"
+    },
+    {
+      "id": "X129",
+      "name": "Small intestine transplant",
+      "reason": "procedure"
+    },
+    {
+      "id": "X130",
+      "name": "Ventriculoperitoneal (VP) shunt",
+      "reason": "procedure"
+    },
+    {
+      "id": "X131",
+      "name": "Limb amputation",
+      "reason": "procedure"
+    },
+    {
+      "id": "X132",
+      "name": "Aortic aneurysm repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "X133",
+      "name": "Bladder suspension",
+      "reason": "procedure"
+    },
+    {
+      "id": "X134",
+      "name": "Bone marrow transplant (BMT)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X135",
+      "name": "Mastectomy (breast removal)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X136",
+      "name": "Carpal tunnel release",
+      "reason": "procedure"
+    },
+    {
+      "id": "X137",
+      "name": "Coronary artery angioplasty/stenting",
+      "reason": "procedure"
+    },
+    {
+      "id": "X138",
+      "name": "Head and neck surgery for cancer",
+      "reason": "procedure"
+    },
+    {
+      "id": "X139",
+      "name": "Heart defibrillator (ICD) implant",
+      "reason": "procedure"
+    },
+    {
+      "id": "X140",
+      "name": "Heart pacemaker implant",
+      "reason": "procedure"
+    },
+    {
+      "id": "X142",
+      "name": "Hip replacement",
+      "reason": "procedure"
+    },
+    {
+      "id": "X143",
+      "name": "Nephrectomy (kidney removal)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X144",
+      "name": "Knee replacement",
+      "reason": "procedure"
+    },
+    {
+      "id": "X145",
+      "name": "Lung removal (pneumonectomy)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X146",
+      "name": "Lung transplant",
+      "reason": "procedure"
+    },
+    {
+      "id": "X147",
+      "name": "Ostomy (colostomy or ileostomy)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X150",
+      "name": "Tooth implant",
+      "reason": "procedure"
+    },
+    {
+      "id": "X152",
+      "name": "Weight loss surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X153",
+      "name": "Peritoneal adhesion release",
+      "reason": "procedure"
+    },
+    {
+      "id": "X154",
+      "name": "Congenital lacrimal obstruction probe (tear duct probe)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X155",
+      "name": "Congenital heart disease surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X156",
+      "name": "Pectus excavatum repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "X157",
+      "name": "Endarterectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X158",
+      "name": "Sclerotherapy for varicose or spider veins",
+      "reason": "procedure"
+    },
+    {
+      "id": "X159",
+      "name": "Laser surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X160",
+      "name": "Strabismus repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "X161",
+      "name": "Blepharoplasty (eyelid surgery)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X162",
+      "name": "Cleft lip and/or palate repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "X163",
+      "name": "Rhinoplasty (nose surgery)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X164",
+      "name": "Liposuction",
+      "reason": "procedure"
+    },
+    {
+      "id": "X165",
+      "name": "Rhytidectomy (face lift)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X166",
+      "name": "Neurosurgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X167",
+      "name": "Abdominal paracentesis",
+      "reason": "procedure"
+    },
+    {
+      "id": "X168",
+      "name": "Bone marrow biopsy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X169",
+      "name": "Musculoskeletal surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X170",
+      "name": "Laser eye surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X171",
+      "name": "Nevus removal (mole removal)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X172",
+      "name": "Plastic surgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X173",
+      "name": "Surgical procedure",
+      "reason": "procedure"
+    },
+    {
+      "id": "X174",
+      "name": "Microdermabrasion",
+      "reason": "procedure"
+    },
+    {
+      "id": "X176",
+      "name": "Laser removal of hair",
+      "reason": "procedure"
+    },
+    {
+      "id": "X177",
+      "name": "Removal of tattoo of skin",
+      "reason": "procedure"
+    },
+    {
+      "id": "X178",
+      "name": "Injection of botulinum toxin",
+      "reason": "procedure"
+    },
+    {
+      "id": "X179",
+      "name": "Lip implantation",
+      "reason": "procedure"
+    },
+    {
+      "id": "X180",
+      "name": "Fixation of pendulous breast",
+      "reason": "procedure"
+    },
+    {
+      "id": "X181",
+      "name": "Augmentation of buttock",
+      "reason": "procedure"
+    },
+    {
+      "id": "X182",
+      "name": "Reduction of buttocks",
+      "reason": "procedure"
+    },
+    {
+      "id": "X183",
+      "name": "Otoplasty (external ear surgery)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X184",
+      "name": "Brow lift",
+      "reason": "procedure"
+    },
+    {
+      "id": "X185",
+      "name": "Cheek lift",
+      "reason": "procedure"
+    },
+    {
+      "id": "X186",
+      "name": "Chin augmentation (chin implant)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X187",
+      "name": "Cheek augmentation (cheek implant)",
+      "reason": "procedure"
+    },
+    {
+      "id": "X188",
+      "name": "Collagen injection",
+      "reason": "procedure"
+    },
+    {
+      "id": "X189",
+      "name": "Fat injection",
+      "reason": "procedure"
+    },
+    {
+      "id": "X190",
+      "name": "Hyaluronic acid injection",
+      "reason": "procedure"
+    },
+    {
+      "id": "X191",
+      "name": "Laser skin resurfacing",
+      "reason": "procedure"
+    },
+    {
+      "id": "X192",
+      "name": "Transplant of hair follicles to scalp",
+      "reason": "procedure"
+    },
+    {
+      "id": "X193",
+      "name": "Pancreaticoduodenectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X198",
+      "name": "Rotator cuff repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "X20",
+      "name": "Breast lumpectomy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X205",
+      "name": "Fontan procedure",
+      "reason": "procedure"
+    },
+    {
+      "id": "X206",
+      "name": "Bidirectional Glenn shunt",
+      "reason": "procedure"
+    },
+    {
+      "id": "X207",
+      "name": "Norwood procedure",
+      "reason": "procedure"
+    },
+    {
+      "id": "X208",
+      "name": "Modified Blalock-Taussig shunt",
+      "reason": "procedure"
+    },
+    {
+      "id": "X216",
+      "name": "Fracture repair - with cast",
+      "reason": "procedure"
+    },
+    {
+      "id": "X217",
+      "name": "Fracture repair - with rods, plates, pins, or screws",
+      "reason": "procedure"
+    },
+    {
+      "id": "X218",
+      "name": "Brain aneurysm repair",
+      "reason": "procedure"
+    },
+    {
+      "id": "X219",
+      "name": "Brain aneurysm repair with coil embolization",
+      "reason": "procedure"
+    },
+    {
+      "id": "X220",
+      "name": "Gamma Knife radiosurgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X221",
+      "name": "Brain aneurysm repair with clips",
+      "reason": "procedure"
+    },
+    {
+      "id": "X222",
+      "name": "CyberKnife radiosurgery",
+      "reason": "procedure"
+    },
+    {
+      "id": "X23",
+      "name": "Cardiac valve replacement",
+      "reason": "procedure"
+    },
+    {
+      "id": "X24",
+      "name": "Tubal ligation - laparoscopic",
+      "reason": "procedure"
+    },
+    {
+      "id": "X25",
+      "name": "Hysterectomy - vaginal",
+      "reason": "procedure"
+    },
+    {
+      "id": "X26",
+      "name": "Hysterectomy - total abdominal",
+      "reason": "procedure"
+    },
+    {
+      "id": "X27",
+      "name": "Tubal ligation - postpartum",
+      "reason": "procedure"
+    },
+    {
+      "id": "X94",
+      "name": "Abdominoplasty",
+      "reason": "procedure"
+    },
+    {
+      "id": "X95",
+      "name": "Angiography",
+      "reason": "procedure"
+    },
+    {
+      "id": "X96",
+      "name": "Arthroscopy",
+      "reason": "procedure"
+    },
+    {
+      "id": "X97",
+      "name": "Augmentation mammoplasty",
+      "reason": "procedure"
+    },
+    {
+      "id": "X98",
+      "name": "Salpingectomy with oophorectomy - bilateral",
+      "reason": "procedure"
+    },
+    {
+      "id": "X99",
+      "name": "Tubal ligation - bilateral",
+      "reason": "procedure"
+    },
+    {
+      "id": "x175",
+      "name": "Chemexfoliation of face",
+      "reason": "procedure"
+    }
+  ],
+  "conditions": 2620,
+  "body_group_sizes": {
+    "sprain": 9,
+    "fracture": 38,
+    "infection": 5,
+    "otitis": 2,
+    "concussion": 1
+  },
+  "limits": "Terminology-derived components; heuristic compatibility groups, not clinician-reviewed individual counterfactuals."
+}

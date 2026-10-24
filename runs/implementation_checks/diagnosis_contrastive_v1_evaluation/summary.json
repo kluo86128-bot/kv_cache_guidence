@@ -1,0 +1,253 @@
+{
+  "records": 1,
+  "qa_pairs": 6,
+  "prediction_rows": 7,
+  "birth_date_mode": "parts",
+  "field_em": {
+    "name": 0.0,
+    "birth_date": 0.0,
+    "address": 0.0,
+    "diagnosis": 0.0
+  },
+  "macro_em": 0.0,
+  "all_fields_em": 0.0,
+  "name_diagnosis_joint_em": 0.0,
+  "field_nll": {
+    "name": 11.867446899414062,
+    "birth_date": 11.9692751566569,
+    "address": 11.968425750732422,
+    "diagnosis": 11.888700485229492
+  },
+  "truncated_answers": 6,
+  "birth_date_component_em": {
+    "birth_year": 0.0,
+    "birth_month": 0.0,
+    "birth_day": 0.0
+  },
+  "birth_date_component_nll": {
+    "birth_year": 11.966697692871094,
+    "birth_month": 11.931774139404297,
+    "birth_day": 12.009353637695312
+  },
+  "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+  "macro_nll": 11.923462073008219,
+  "birth_date_subgroups": {
+    "train_seen": {
+      "records": 0,
+      "em": null
+    },
+    "train_unseen": {
+      "records": 1,
+      "em": 0.0
+    }
+  },
+  "status": "complete",
+  "seconds": 0.13239650000468828,
+  "metadata": {
+    "condition": "soft",
+    "split": "dev",
+    "partial_evaluation": true,
+    "epoch": 2,
+    "step": 2,
+    "tiny_implementation_check": true,
+    "dataset": {
+      "dataset_id": "synthea_medical_privacy_natural_names_v1",
+      "manifest_sha256": "6233ef37c89f830d3363ae6172517ae5e9ab4d438c756e84883fd2b6ddaff102",
+      "split_sha256": {
+        "dev": "2416bd829160b5899d6f915a5e6eba340ec59c60c85cf4ceaf5832d6793fec58",
+        "train": "19ed4edcc99f5ded311b502593cce35eb09367838a3d5de25632932c81d31a79",
+        "validation": "14aa21e15f21fcb47b636db20a78006e44307fa9f52ec38a4045710d95a4064b",
+        "test": "c78829832affb00d9893012b8de09ffc4916c41aa2dbf07e9ead78ba225e47ff"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    },
+    "backend": {
+      "model": "random-tiny-Qwen3",
+      "seed": 17,
+      "warning": "Implementation checks only, not a trained model"
+    },
+    "checkpoint_name_format": "natural_no_numeric_suffix_v1",
+    "evaluation_name_format": "natural_no_numeric_suffix_v1",
+    "name_format_transfer": false,
+    "resolved_config": {
+      "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+      "model_revision": null,
+      "local_files_only": true,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "eager",
+      "dataset_directory": "data/dataset_v1",
+      "output_directory": "runs/implementation_checks/diagnosis_contrastive_v1_evaluation",
+      "seed": 17,
+      "prompt_length": 32,
+      "initialization_words": [
+        "data",
+        "record",
+        "clinic",
+        "information",
+        "general",
+        "note",
+        "text",
+        "public",
+        "patient",
+        "document",
+        "read",
+        "answer"
+      ],
+      "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+      "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+      "separator": "\n\n",
+      "question_format": "chat",
+      "enable_thinking": false,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0,
+      "batch_records": 8,
+      "batch_questions": true,
+      "epochs": 100,
+      "warmup_fraction": 0.05,
+      "grad_clip": 1.0,
+      "patience": 3,
+      "max_new_tokens": 2,
+      "max_runtime_seconds": 86400,
+      "train_limit": null,
+      "validation_limit": null,
+      "max_updates": null,
+      "hard": {
+        "enabled": false,
+        "steps": 2000,
+        "gradient_records": 8,
+        "candidate_records": 8,
+        "top_k": 32,
+        "candidate_count": 16,
+        "validate_every": 50,
+        "ascii_only": true
+      },
+      "birth_date_mode": "parts",
+      "early_stopping": false,
+      "comparison_epochs": 20,
+      "name_format": "natural_no_numeric_suffix_v1",
+      "diagnosis_contrastive": {
+        "enabled": true,
+        "negatives_per_record": 6,
+        "weight": 0.2,
+        "margin": 0.2,
+        "negative_batch_size": 2,
+        "checkpoint_negatives": true,
+        "excluded_test_datasets": [
+          "data/dataset_v1",
+          "data/dataset_diagnosis_overlap10"
+        ]
+      }
+    },
+    "parallelism": {
+      "world_size": 1,
+      "backend": null,
+      "visible_gpu_ids": null,
+      "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+    },
+    "batch_questions": true,
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2,
+      "stop_token_ids": [
+        151645
+      ]
+    },
+    "evaluation_code_sha256": {
+      "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+      "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "backend.py": "936e496887c65ac1965ce569b16043c8013f4e6f35b688b29820080204b42826",
+      "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "cli.py": "44883434f97461ae79f7488a1f32d915d2c49573d01efe91059e88253d5e250f",
+      "config.py": "64a19b8637ce9ec5adba9578456c0333dc34d2ea3e371003719a7724e67c3cbe",
+      "data.py": "a87989179dfa2fb983beee4dcd7d954e5dc312314590807799f19fd929047512",
+      "diagnosis_contrastive.py": "7ecf98faa08639eded1afa7bf729ed9fdb372b370e11984b290b619aee02e44f",
+      "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+      "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+      "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+      "io.py": "e85f0a0a4bdb11cb1185f302be78b78b08e58073cefc89dc2e5b63fccb60941d",
+      "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+      "name_policy.py": "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a",
+      "plotting.py": "675d0c6ff59aa5868edf4392f0c27a7d51aee0251dcfd101f9a318ef835d7134",
+      "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+      "training.py": "44d81ec29b37fa6ca92cab875ffaff92752c5457455eb39f91cc724b540b1a77"
+    },
+    "checkpoint": "D:\\Stepby\\kv-cache研究\\medical_privacy_prompt\\runs\\implementation_checks\\diagnosis_contrastive_v1_smoke\\best.pt",
+    "checkpoint_run_signature": "297385278ba1937b91f0cf1590ce849bc0875d9d06417a7a653a7918425dfba6",
+    "checkpoint_selected_by_validation": true,
+    "allow_name_format_transfer": false,
+    "checkpoint_birth_date_mode": "parts",
+    "checkpoint_diagnosis_negatives": {
+      "file": "diagnosis_negatives.json",
+      "fingerprint": "a01c8c064976240fbc0dd158701b4d4f8fbce17de3c9684dc30ce8f80aa51d6b",
+      "audit": {
+        "generator_version": "diagnosis_corruptions_v1",
+        "seed": 17,
+        "records": 2,
+        "positive_labels": 2,
+        "negatives_per_record": 6,
+        "negative_answers": 12,
+        "unique_negative_answers": 12,
+        "exclusions": [
+          {
+            "dataset_directory": "data/dataset_v1",
+            "dataset_id": "synthea_medical_privacy_natural_names_v1",
+            "manifest_sha256": "6233ef37c89f830d3363ae6172517ae5e9ab4d438c756e84883fd2b6ddaff102",
+            "test_sha256": "c78829832affb00d9893012b8de09ffc4916c41aa2dbf07e9ead78ba225e47ff",
+            "records": 1000
+          },
+          {
+            "dataset_directory": "data/dataset_diagnosis_overlap10",
+            "dataset_id": "synthea_medical_privacy_natural_names_diagnosis_overlap10_v1",
+            "manifest_sha256": "7fba97a83d874d9c8794bf56c6342bd39735c703ddf43b7545ff6e33afd9915a",
+            "test_sha256": "6759838701555ac7cb479dacadad7b46a4fac099cd7fea2a82ec3f5ea6d54a36",
+            "records": 1000
+          }
+        ],
+        "excluded_distinct_normalized_labels": 131,
+        "excluded_labels_sha256": "82f515b8b6a1099f2a85cca040b38b055e0b103760794518526b40a66cc537d4",
+        "excluded_codes_sha256": "074e877ff0d701451537269f9146a65fc6a49798b9db302e060a20d467f2b649",
+        "rejected_candidates_by_unique_positive": {
+          "test_label_or_code": 2
+        },
+        "selected_kinds_by_unique_positive": {
+          "detail_omission": 2,
+          "surface_rewrite": 8,
+          "continuation": 2
+        },
+        "selected_kinds_by_record": {
+          "detail_omission": 2,
+          "surface_rewrite": 8,
+          "continuation": 2
+        },
+        "all_six_kinds_covered": false,
+        "missing_kinds_by_positive": {
+          "Gingival disease (disorder)": [
+            "detail_substitution",
+            "qualifier_change",
+            "label_confusion"
+          ],
+          "Primary dental caries (disorder)": [
+            "detail_substitution",
+            "qualifier_change",
+            "label_confusion"
+          ]
+        },
+        "test_overlap_negative_answers": 0,
+        "selection": "fixed text similarity, category coverage, seeded tie break; no model predictions",
+        "scope": "corrupted answers only; positives/prefixes unchanged; exclusions compare whole values, not substrings",
+        "limitations": "Heuristic candidates are not guaranteed model-hard or clinically validated. Some diagnoses lack subtype/stage positives; six candidates need not cover all six kinds."
+      }
+    },
+    "public_tokens": 56,
+    "prompt_positions": 32,
+    "position_convention": "Retain original C RoPE positions; q starts at original encoder end; cache slots compacted."
+  },
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  }
+}

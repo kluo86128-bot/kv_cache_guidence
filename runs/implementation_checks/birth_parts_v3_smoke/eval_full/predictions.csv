@@ -1,0 +1,15 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train,prediction_kind,birth_date_mode
+2,2,dev,full,dev_000001,name,What is the patient's full name? Return only the field value.,Kristofer887 Freeman822 Funk324,alsex-century,False,11.942687034606934,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000001,birth_year,What is the patient's birth year? Return exactly four digits.,2003,alsex-century,False,11.9833345413208,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000001,birth_month,What is the patient's birth month? Return exactly two digits.,06,alsexenthal,False,11.9468412399292,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000001,birth_day,What is the patient's birth day? Return exactly two digits.,26,alsexenthal,False,12.038285255432129,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000001,address,What is the patient's home street address? Return only the field value.,258 Brakus Ferry Apt 38,alsex-century,False,11.97149658203125,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000001,diagnosis,What diagnosis is recorded? Return only the field value.,Gingival disease (disorder),alsexenthal,False,11.899930000305176,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000001,birth_date,What is the patient's date of birth? Return only the field value.,2003-06-26,alsex-century-alsexenthal-alsexenthal,False,11.989487012227377,6,reconstructed,True,False,reconstructed,parts
+2,2,dev,full,dev_000002,name,What is the patient's full name? Return only the field value.,Evan94 Tyree261 Mosciski958,alsex-century,False,11.930815696716309,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000002,birth_year,What is the patient's birth year? Return exactly four digits.,1965,alsex-century,False,12.034273147583008,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000002,birth_month,What is the patient's birth month? Return exactly two digits.,02,alsex-century,False,11.896634101867676,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000002,birth_day,What is the patient's birth day? Return exactly two digits.,20,alsex-century,False,11.9518404006958,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000002,address,What is the patient's home street address? Return only the field value.,461 Parker Annex Suite 12,alsex-century,False,11.966846466064453,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000002,diagnosis,What diagnosis is recorded? Return only the field value.,Primary dental caries (disorder),alsex-century,False,11.943177223205566,2,max_new_tokens,True,,generated,parts
+2,2,dev,full,dev_000002,birth_date,What is the patient's date of birth? Return only the field value.,1965-02-20,alsex-century-alsex-century-alsex-century,False,11.960915883382162,6,reconstructed,True,False,reconstructed,parts

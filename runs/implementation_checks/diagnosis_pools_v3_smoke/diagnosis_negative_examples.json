@@ -1,0 +1,416 @@
+[
+  {
+    "record_id": "dev_000001",
+    "gold": "Gingival disease (disorder)",
+    "pools": {
+      "detail_omission": [],
+      "detail_substitution": [],
+      "qualifier_change": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Gingvial disease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 4,
+              "before": "Gingival",
+              "after": "Gingvial"
+            }
+          ]
+        },
+        {
+          "answer": "Gingivawl disease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 7,
+              "before": "Gingival",
+              "after": "Gingivawl"
+            }
+          ]
+        },
+        {
+          "answer": "Gingpival disease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 4,
+              "before": "Gingival",
+              "after": "Gingpival"
+            }
+          ]
+        },
+        {
+          "answer": "Ginival diseaese (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 5,
+              "before": "disease",
+              "after": "diseaese"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 3,
+              "before": "Gingival",
+              "after": "Ginival"
+            }
+          ]
+        },
+        {
+          "answer": "Gnigipal disesae (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 5,
+              "before": "Gingival",
+              "after": "Gingipal"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "disease",
+              "after": "disesae"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 1,
+              "before": "Gingipal",
+              "after": "Gnigipal"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Gingpival disease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 0,
+              "position": 4,
+              "before": "Gingival",
+              "after": "Gingpival"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Ginival diseaese (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 1,
+              "position": 5,
+              "before": "disease",
+              "after": "diseaese"
+            },
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 3,
+              "before": "Gingival",
+              "after": "Ginival"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Gnigipal disesae (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 0,
+              "position": 5,
+              "before": "Gingival",
+              "after": "Gingipal"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 1,
+              "position": 4,
+              "before": "disease",
+              "after": "disesae"
+            },
+            {
+              "operation": "transpose",
+              "word_index": 0,
+              "position": 1,
+              "before": "Gingipal",
+              "after": "Gnigipal"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "record_id": "dev_000002",
+    "gold": "Primary dental caries (disorder)",
+    "pools": {
+      "detail_omission": [
+        {
+          "answer": "Dental caries (disorder)",
+          "kind": "detail_omission",
+          "rule": "remove_one_constituent",
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Primary",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        }
+      ],
+      "detail_substitution": [],
+      "qualifier_change": [],
+      "label_confusion": [],
+      "spelling_error": [
+        {
+          "answer": "Primary dental cvaries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 1,
+              "before": "caries",
+              "after": "cvaries"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dental cqries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 2,
+              "position": 1,
+              "before": "caries",
+              "after": "cqries"
+            }
+          ]
+        },
+        {
+          "answer": "Primary deental caries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "duplicate",
+              "word_index": 1,
+              "position": 1,
+              "before": "dental",
+              "after": "deental"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dental caribis (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 2,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 2,
+              "position": 4,
+              "before": "caries",
+              "after": "caribs"
+            },
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 5,
+              "before": "caribs",
+              "after": "caribis"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dntal caurhies (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 2,
+              "before": "caries",
+              "after": "cauries"
+            },
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 1,
+              "before": "dental",
+              "after": "dntal"
+            },
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 4,
+              "before": "cauries",
+              "after": "caurhies"
+            }
+          ]
+        }
+      ]
+    },
+    "selections": {
+      "epoch_1": [
+        {
+          "answer": "Dental caries (disorder)",
+          "kind": "detail_omission",
+          "rule": "remove_one_constituent",
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Primary",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dental cqries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 2,
+              "position": 1,
+              "before": "caries",
+              "after": "cqries"
+            }
+          ]
+        }
+      ],
+      "epoch_2": [
+        {
+          "answer": "Dental caries (disorder)",
+          "kind": "detail_omission",
+          "rule": "remove_one_constituent",
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Primary",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dntal caurhies (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 3,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 2,
+              "before": "caries",
+              "after": "cauries"
+            },
+            {
+              "operation": "delete",
+              "word_index": 1,
+              "position": 1,
+              "before": "dental",
+              "after": "dntal"
+            },
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 4,
+              "before": "cauries",
+              "after": "caurhies"
+            }
+          ]
+        }
+      ],
+      "epoch_3": [
+        {
+          "answer": "Dental caries (disorder)",
+          "kind": "detail_omission",
+          "rule": "remove_one_constituent",
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Primary",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Primary dental cvaries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "insert",
+              "word_index": 2,
+              "position": 1,
+              "before": "caries",
+              "after": "cvaries"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

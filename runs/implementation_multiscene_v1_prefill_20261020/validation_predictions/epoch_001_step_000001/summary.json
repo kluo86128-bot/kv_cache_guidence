@@ -1,0 +1,1096 @@
+{
+  "records": 2,
+  "target_pairs": 26,
+  "qa_pairs": 32,
+  "prediction_rows": 34,
+  "field_records": {
+    "account_balance": 1,
+    "address": 2,
+    "amount_paid": 2,
+    "amount_received": 2,
+    "identity_number": 2,
+    "name": 2,
+    "payment_format": 2,
+    "phone": 2,
+    "recipient_account": 2,
+    "recipient_name": 2,
+    "sender_account": 2,
+    "timestamp": 2,
+    "transfer_amount": 2,
+    "transfer_time": 1
+  },
+  "field_coverage": {
+    "account_balance": 0.5,
+    "address": 1.0,
+    "amount_paid": 1.0,
+    "amount_received": 1.0,
+    "identity_number": 1.0,
+    "name": 1.0,
+    "payment_format": 1.0,
+    "phone": 1.0,
+    "recipient_account": 1.0,
+    "recipient_name": 1.0,
+    "sender_account": 1.0,
+    "timestamp": 1.0,
+    "transfer_amount": 1.0,
+    "transfer_time": 0.5
+  },
+  "field_em": {
+    "account_balance": 0.0,
+    "address": 0.0,
+    "amount_paid": 0.0,
+    "amount_received": 0.0,
+    "identity_number": 0.0,
+    "name": 0.0,
+    "payment_format": 0.0,
+    "phone": 0.0,
+    "recipient_account": 0.0,
+    "recipient_name": 0.0,
+    "sender_account": 0.0,
+    "timestamp": 0.0,
+    "transfer_amount": 0.0,
+    "transfer_time": 0.0
+  },
+  "field_nll": {
+    "account_balance": 11.932112693786621,
+    "address": 11.923779010772705,
+    "amount_paid": 11.987915515899658,
+    "amount_received": 11.987435817718506,
+    "identity_number": 11.963582992553711,
+    "name": 11.966065406799316,
+    "payment_format": 11.965555667877197,
+    "phone": 11.917832374572754,
+    "recipient_account": 11.899826049804688,
+    "recipient_name": 11.949585914611816,
+    "sender_account": 11.893916130065918,
+    "timestamp": 11.899338245391846,
+    "transfer_amount": 11.988543510437012,
+    "transfer_time": 11.983226776123047
+  },
+  "macro_em": 0.0,
+  "macro_nll": 11.946734193771606,
+  "field_macro_em": 0.0,
+  "field_macro_nll": 11.947051150458199,
+  "all_fields_em": 0.0,
+  "truncated_answers": 32,
+  "name_component_em": {
+    "name_first": 0.0,
+    "name_middle": 0.0,
+    "name_last": 0.0
+  },
+  "name_component_nll": {
+    "name_first": 11.914852619171143,
+    "name_middle": 12.010206699371338,
+    "name_last": 11.973136901855469
+  },
+  "birth_date_component_em": {},
+  "birth_date_component_nll": {},
+  "name_full_direct": {
+    "records": 2,
+    "em": 0.0,
+    "nll": 11.939537048339844,
+    "truncated_answers": 2
+  },
+  "seen_unseen_by_field": {
+    "account_balance": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 1,
+        "em": 0.0
+      }
+    },
+    "address": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "amount_paid": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "amount_received": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "identity_number": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "name": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "payment_format": {
+      "train_seen": {
+        "records": 2,
+        "em": 0.0
+      },
+      "train_unseen": {
+        "records": 0,
+        "em": null
+      }
+    },
+    "phone": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "recipient_account": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "recipient_name": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "sender_account": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "timestamp": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "transfer_amount": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 2,
+        "em": 0.0
+      }
+    },
+    "transfer_time": {
+      "train_seen": {
+        "records": 0,
+        "em": null
+      },
+      "train_unseen": {
+        "records": 1,
+        "em": 0.0
+      }
+    }
+  },
+  "schema_version": "multiscene_privacy_v1",
+  "name_mode": "parts",
+  "birth_date_mode": "parts_or_original",
+  "metric_definition": "macro: mean available original fields per record, then mean records; field_macro: mean per-field scores; components and direct full-name excluded from primary macro",
+  "loss_definition": "mean answer-token NLL including EOS; mean components within original field; mean available original fields per record; mean records",
+  "by_scene": {
+    "finance": {
+      "records": 2,
+      "target_pairs": 26,
+      "qa_pairs": 32,
+      "prediction_rows": 34,
+      "field_records": {
+        "account_balance": 1,
+        "address": 2,
+        "amount_paid": 2,
+        "amount_received": 2,
+        "identity_number": 2,
+        "name": 2,
+        "payment_format": 2,
+        "phone": 2,
+        "recipient_account": 2,
+        "recipient_name": 2,
+        "sender_account": 2,
+        "timestamp": 2,
+        "transfer_amount": 2,
+        "transfer_time": 1
+      },
+      "field_coverage": {
+        "account_balance": 0.5,
+        "address": 1.0,
+        "amount_paid": 1.0,
+        "amount_received": 1.0,
+        "identity_number": 1.0,
+        "name": 1.0,
+        "payment_format": 1.0,
+        "phone": 1.0,
+        "recipient_account": 1.0,
+        "recipient_name": 1.0,
+        "sender_account": 1.0,
+        "timestamp": 1.0,
+        "transfer_amount": 1.0,
+        "transfer_time": 0.5
+      },
+      "field_em": {
+        "account_balance": 0.0,
+        "address": 0.0,
+        "amount_paid": 0.0,
+        "amount_received": 0.0,
+        "identity_number": 0.0,
+        "name": 0.0,
+        "payment_format": 0.0,
+        "phone": 0.0,
+        "recipient_account": 0.0,
+        "recipient_name": 0.0,
+        "sender_account": 0.0,
+        "timestamp": 0.0,
+        "transfer_amount": 0.0,
+        "transfer_time": 0.0
+      },
+      "field_nll": {
+        "account_balance": 11.932112693786621,
+        "address": 11.923779010772705,
+        "amount_paid": 11.987915515899658,
+        "amount_received": 11.987435817718506,
+        "identity_number": 11.963582992553711,
+        "name": 11.966065406799316,
+        "payment_format": 11.965555667877197,
+        "phone": 11.917832374572754,
+        "recipient_account": 11.899826049804688,
+        "recipient_name": 11.949585914611816,
+        "sender_account": 11.893916130065918,
+        "timestamp": 11.899338245391846,
+        "transfer_amount": 11.988543510437012,
+        "transfer_time": 11.983226776123047
+      },
+      "macro_em": 0.0,
+      "macro_nll": 11.946734193771606,
+      "field_macro_em": 0.0,
+      "field_macro_nll": 11.947051150458199,
+      "all_fields_em": 0.0,
+      "truncated_answers": 32,
+      "name_component_em": {
+        "name_first": 0.0,
+        "name_middle": 0.0,
+        "name_last": 0.0
+      },
+      "name_component_nll": {
+        "name_first": 11.914852619171143,
+        "name_middle": 12.010206699371338,
+        "name_last": 11.973136901855469
+      },
+      "birth_date_component_em": {},
+      "birth_date_component_nll": {},
+      "name_full_direct": {
+        "records": 2,
+        "em": 0.0,
+        "nll": 11.939537048339844,
+        "truncated_answers": 2
+      },
+      "seen_unseen_by_field": {
+        "account_balance": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 1,
+            "em": 0.0
+          }
+        },
+        "address": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "amount_paid": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "amount_received": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "identity_number": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "name": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "payment_format": {
+          "train_seen": {
+            "records": 2,
+            "em": 0.0
+          },
+          "train_unseen": {
+            "records": 0,
+            "em": null
+          }
+        },
+        "phone": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "recipient_account": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "recipient_name": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "sender_account": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "timestamp": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "transfer_amount": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "transfer_time": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 1,
+            "em": 0.0
+          }
+        }
+      }
+    }
+  },
+  "by_record_form": {
+    "dialogue": {
+      "records": 2,
+      "target_pairs": 26,
+      "qa_pairs": 32,
+      "prediction_rows": 34,
+      "field_records": {
+        "account_balance": 1,
+        "address": 2,
+        "amount_paid": 2,
+        "amount_received": 2,
+        "identity_number": 2,
+        "name": 2,
+        "payment_format": 2,
+        "phone": 2,
+        "recipient_account": 2,
+        "recipient_name": 2,
+        "sender_account": 2,
+        "timestamp": 2,
+        "transfer_amount": 2,
+        "transfer_time": 1
+      },
+      "field_coverage": {
+        "account_balance": 0.5,
+        "address": 1.0,
+        "amount_paid": 1.0,
+        "amount_received": 1.0,
+        "identity_number": 1.0,
+        "name": 1.0,
+        "payment_format": 1.0,
+        "phone": 1.0,
+        "recipient_account": 1.0,
+        "recipient_name": 1.0,
+        "sender_account": 1.0,
+        "timestamp": 1.0,
+        "transfer_amount": 1.0,
+        "transfer_time": 0.5
+      },
+      "field_em": {
+        "account_balance": 0.0,
+        "address": 0.0,
+        "amount_paid": 0.0,
+        "amount_received": 0.0,
+        "identity_number": 0.0,
+        "name": 0.0,
+        "payment_format": 0.0,
+        "phone": 0.0,
+        "recipient_account": 0.0,
+        "recipient_name": 0.0,
+        "sender_account": 0.0,
+        "timestamp": 0.0,
+        "transfer_amount": 0.0,
+        "transfer_time": 0.0
+      },
+      "field_nll": {
+        "account_balance": 11.932112693786621,
+        "address": 11.923779010772705,
+        "amount_paid": 11.987915515899658,
+        "amount_received": 11.987435817718506,
+        "identity_number": 11.963582992553711,
+        "name": 11.966065406799316,
+        "payment_format": 11.965555667877197,
+        "phone": 11.917832374572754,
+        "recipient_account": 11.899826049804688,
+        "recipient_name": 11.949585914611816,
+        "sender_account": 11.893916130065918,
+        "timestamp": 11.899338245391846,
+        "transfer_amount": 11.988543510437012,
+        "transfer_time": 11.983226776123047
+      },
+      "macro_em": 0.0,
+      "macro_nll": 11.946734193771606,
+      "field_macro_em": 0.0,
+      "field_macro_nll": 11.947051150458199,
+      "all_fields_em": 0.0,
+      "truncated_answers": 32,
+      "name_component_em": {
+        "name_first": 0.0,
+        "name_middle": 0.0,
+        "name_last": 0.0
+      },
+      "name_component_nll": {
+        "name_first": 11.914852619171143,
+        "name_middle": 12.010206699371338,
+        "name_last": 11.973136901855469
+      },
+      "birth_date_component_em": {},
+      "birth_date_component_nll": {},
+      "name_full_direct": {
+        "records": 2,
+        "em": 0.0,
+        "nll": 11.939537048339844,
+        "truncated_answers": 2
+      },
+      "seen_unseen_by_field": {
+        "account_balance": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 1,
+            "em": 0.0
+          }
+        },
+        "address": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "amount_paid": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "amount_received": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "identity_number": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "name": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "payment_format": {
+          "train_seen": {
+            "records": 2,
+            "em": 0.0
+          },
+          "train_unseen": {
+            "records": 0,
+            "em": null
+          }
+        },
+        "phone": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "recipient_account": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "recipient_name": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "sender_account": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "timestamp": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "transfer_amount": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "transfer_time": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 1,
+            "em": 0.0
+          }
+        }
+      }
+    }
+  },
+  "by_scene_record_form": {
+    "finance/dialogue": {
+      "records": 2,
+      "target_pairs": 26,
+      "qa_pairs": 32,
+      "prediction_rows": 34,
+      "field_records": {
+        "account_balance": 1,
+        "address": 2,
+        "amount_paid": 2,
+        "amount_received": 2,
+        "identity_number": 2,
+        "name": 2,
+        "payment_format": 2,
+        "phone": 2,
+        "recipient_account": 2,
+        "recipient_name": 2,
+        "sender_account": 2,
+        "timestamp": 2,
+        "transfer_amount": 2,
+        "transfer_time": 1
+      },
+      "field_coverage": {
+        "account_balance": 0.5,
+        "address": 1.0,
+        "amount_paid": 1.0,
+        "amount_received": 1.0,
+        "identity_number": 1.0,
+        "name": 1.0,
+        "payment_format": 1.0,
+        "phone": 1.0,
+        "recipient_account": 1.0,
+        "recipient_name": 1.0,
+        "sender_account": 1.0,
+        "timestamp": 1.0,
+        "transfer_amount": 1.0,
+        "transfer_time": 0.5
+      },
+      "field_em": {
+        "account_balance": 0.0,
+        "address": 0.0,
+        "amount_paid": 0.0,
+        "amount_received": 0.0,
+        "identity_number": 0.0,
+        "name": 0.0,
+        "payment_format": 0.0,
+        "phone": 0.0,
+        "recipient_account": 0.0,
+        "recipient_name": 0.0,
+        "sender_account": 0.0,
+        "timestamp": 0.0,
+        "transfer_amount": 0.0,
+        "transfer_time": 0.0
+      },
+      "field_nll": {
+        "account_balance": 11.932112693786621,
+        "address": 11.923779010772705,
+        "amount_paid": 11.987915515899658,
+        "amount_received": 11.987435817718506,
+        "identity_number": 11.963582992553711,
+        "name": 11.966065406799316,
+        "payment_format": 11.965555667877197,
+        "phone": 11.917832374572754,
+        "recipient_account": 11.899826049804688,
+        "recipient_name": 11.949585914611816,
+        "sender_account": 11.893916130065918,
+        "timestamp": 11.899338245391846,
+        "transfer_amount": 11.988543510437012,
+        "transfer_time": 11.983226776123047
+      },
+      "macro_em": 0.0,
+      "macro_nll": 11.946734193771606,
+      "field_macro_em": 0.0,
+      "field_macro_nll": 11.947051150458199,
+      "all_fields_em": 0.0,
+      "truncated_answers": 32,
+      "name_component_em": {
+        "name_first": 0.0,
+        "name_middle": 0.0,
+        "name_last": 0.0
+      },
+      "name_component_nll": {
+        "name_first": 11.914852619171143,
+        "name_middle": 12.010206699371338,
+        "name_last": 11.973136901855469
+      },
+      "birth_date_component_em": {},
+      "birth_date_component_nll": {},
+      "name_full_direct": {
+        "records": 2,
+        "em": 0.0,
+        "nll": 11.939537048339844,
+        "truncated_answers": 2
+      },
+      "seen_unseen_by_field": {
+        "account_balance": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 1,
+            "em": 0.0
+          }
+        },
+        "address": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "amount_paid": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "amount_received": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "identity_number": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "name": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "payment_format": {
+          "train_seen": {
+            "records": 2,
+            "em": 0.0
+          },
+          "train_unseen": {
+            "records": 0,
+            "em": null
+          }
+        },
+        "phone": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "recipient_account": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "recipient_name": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "sender_account": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "timestamp": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "transfer_amount": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 2,
+            "em": 0.0
+          }
+        },
+        "transfer_time": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 1,
+            "em": 0.0
+          }
+        }
+      }
+    }
+  },
+  "status": "complete",
+  "seconds": 0.5894677999967826,
+  "metadata": {
+    "condition": "soft",
+    "split": "development_validation",
+    "epoch": 1,
+    "step": 1,
+    "run_signature": "5ea7f571bedb81955a122ac15bacd5688612c22d091fed996f092187bbc2f40f",
+    "inference_signature": "fd72c3d508e5fc30613bc3a60a511efb2b505a3fe69b336e714d56846f89f056",
+    "resolved_config": {
+      "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+      "model_revision": null,
+      "local_files_only": true,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "eager",
+      "dataset_directory": "data/dataset_multiscene_v1",
+      "output_directory": "runs/implementation_multiscene_v1_prefill_20261020",
+      "seed": 17,
+      "prompt_length": 32,
+      "initialization_words": [
+        "data",
+        "record",
+        "clinic",
+        "information",
+        "general",
+        "note",
+        "text",
+        "public",
+        "patient",
+        "document",
+        "read",
+        "answer"
+      ],
+      "manual_prompt": "Preserve personal, medical, financial, and employment fields in the record. Return each requested value exactly, keeping original spelling, digits, punctuation, and formatting.",
+      "public_text": "General information: Please read the shared document carefully. Follow the relevant instructions and contact the appropriate team if you need assistance. Keep any requested documents available, check the details before proceeding, and allow enough time to complete the required steps. Thank you for your continued cooperation and careful attention.",
+      "separator": "\n\n",
+      "question_format": "chat",
+      "enable_thinking": false,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0,
+      "batch_records": 8,
+      "batch_questions": true,
+      "epochs": 1,
+      "warmup_fraction": 0.05,
+      "grad_clip": 1.0,
+      "patience": 3,
+      "max_new_tokens": 2,
+      "max_runtime_seconds": 2592000,
+      "train_limit": 2,
+      "validation_limit": 2,
+      "max_updates": null,
+      "hard": {
+        "enabled": false,
+        "steps": 2000,
+        "gradient_records": 8,
+        "candidate_records": 8,
+        "top_k": 32,
+        "candidate_count": 16,
+        "validate_every": 50,
+        "ascii_only": true
+      },
+      "birth_date_mode": "parts",
+      "early_stopping": false,
+      "comparison_epochs": 20,
+      "name_format": "natural_no_numeric_suffix_v1",
+      "diagnosis_contrastive": {
+        "enabled": false
+      },
+      "name_mode": "parts",
+      "question_protocol": "multiscene_privacy_v1",
+      "question_batch_size": 4,
+      "checkpoint_questions": true,
+      "scene": null,
+      "record_form": null,
+      "split_private_prefill": true
+    },
+    "dataset": {
+      "dataset_id": "multiscene_privacy_v1",
+      "manifest_sha256": "63273fa02825f27fe2ce9ba618142635d329d3d80817b5586cabafdb04cece76",
+      "split_sha256": {
+        "train": "eb86319ef031a19c0c0b5acd9b37f1b38c91a888beeb3bec2ddb98a35d3f64c0",
+        "validation": "f311f5f4b5a5567481bcd4b7d2be3cd9d22194bdd55dd78427805f0c98049664",
+        "test": "9a6a2a8901b8584aa6f042b375092bd9973141dc920a7cdf0b8d2a91398425c9"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "multiscene_privacy_v1",
+      "selection": {
+        "scene": null,
+        "record_form": null
+      },
+      "manual_review_complete": false
+    },
+    "backend": {
+      "model": "random-tiny-Qwen3",
+      "seed": 17,
+      "warning": "Implementation checks only, not a trained model"
+    },
+    "parallelism": {
+      "world_size": 1,
+      "backend": null,
+      "visible_gpu_ids": null,
+      "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+    },
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2,
+      "stop_token_ids": [
+        151645
+      ]
+    },
+    "evaluation_code_sha256": {
+      "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+      "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "backend.py": "6c4cd509236066cfcbae146a7a317cf3b6afd55e0068dcb1be6e46169012b910",
+      "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "cli.py": "6fef72bdc7a497349e1b75a19edb9972655ae015e48ab2a162605656d5ac0f54",
+      "config.py": "d3c64c9cf7e51587f662e00608aa85108406ae36d25d01ad3f89281560b5e930",
+      "data.py": "d672240cb00a4de1e9af88a399536958c5bcf314eb7a137a463b91cf505bcb96",
+      "diagnosis_contrastive.py": "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94",
+      "diagnosis_noise.py": "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+      "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+      "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+      "evaluation.py": "404879e1c7c291d174b366d25581a12362baab219864a3607d875f1b816ca255",
+      "io.py": "240bd15b17b9849e706baaa6ff163a37342944f4470bbf75b36d05117b6f8fc7",
+      "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+      "name_policy.py": "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a",
+      "negative_resources.py": "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d",
+      "plotting.py": "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+      "tasks.py": "6c4189f2c24d527a0659403b8d51022a4702afade3bcab722ee89a029f21e2bf",
+      "training.py": "76c83d9a0f58c7cd52915b5a8178b017f1d5e73b874aec6e628d1596a13c2055"
+    },
+    "training_diagnosis_negatives": null,
+    "birthday_reference": "actual training subset"
+  },
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  }
+}

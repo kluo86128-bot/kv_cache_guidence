@@ -1,0 +1,586 @@
+{
+  "policy": {
+    "same_initial": true,
+    "core_min_similarity": 0.7,
+    "similarity_formula": "1 - Levenshtein_distance / max(core_word_lengths)",
+    "sort": "core similarity descending, then whole-answer similarity descending",
+    "generation": "Replace disease core using a different terminology-backed core; preserve the original scaffold. Generated combinations are not claimed to be real source diagnoses."
+  },
+  "available": [
+    {
+      "gold": "Acute bronchitis (disorder)",
+      "negatives": [
+        {
+          "answer": "Acute bronchiolitis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7692307692307692,
+          "answer_similarity": 0.8421052631578947,
+          "focus": "bronchitis",
+          "negative_focus": "bronchiolitis",
+          "source": {
+            "id": "NLM:6699",
+            "name": "Bronchiolitis",
+            "aliases": [
+              "acute bronchiolitis"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "J21.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 16,
+              "before": "bronchitis",
+              "after": "bronchiolitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Acute bronchiectasis (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.8,
+          "focus": "bronchitis",
+          "negative_focus": "bronchiectasis",
+          "source": {
+            "id": "NLM:4664",
+            "name": "Bronchiectasis",
+            "aliases": [
+              "bronchi bronchiectasis"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "J47.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 6,
+              "end": 16,
+              "before": "bronchitis",
+              "after": "bronchiectasis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ]
+    },
+    {
+      "gold": "Anemia (disorder)",
+      "negatives": [
+        {
+          "answer": "Amnesia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.7142857142857143,
+          "focus": "anemia",
+          "negative_focus": "amnesia",
+          "source": {
+            "id": "NLM:9765",
+            "name": "Amnesia",
+            "aliases": [
+              "memory loss"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.3"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Amnesia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Anosmia (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7142857142857143,
+          "answer_similarity": 0.7142857142857143,
+          "focus": "anemia",
+          "negative_focus": "anosmia",
+          "source": {
+            "id": "NLM:7190",
+            "name": "Anosmia",
+            "aliases": [
+              "absent smell",
+              "smell loss"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R43.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Anemia",
+              "after": "Anosmia"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ]
+    },
+    {
+      "gold": "Concussion injury of brain (disorder)",
+      "negatives": [
+        {
+          "answer": "Confusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Contusion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.9230769230769231,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Congestion injury of brain (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.8846153846153846,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ]
+    },
+    {
+      "gold": "Concussion with no loss of consciousness (disorder)",
+      "negatives": [
+        {
+          "answer": "Confusion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.95,
+          "focus": "concussion",
+          "negative_focus": "confusion",
+          "source": {
+            "id": "NLM:8177",
+            "name": "Confusion",
+            "aliases": [
+              "disoriented",
+              "stupor"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "R41.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Confusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Contusion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.95,
+          "focus": "concussion",
+          "negative_focus": "contusion",
+          "source": {
+            "id": "NLM:10202",
+            "name": "Contusion",
+            "aliases": [
+              "bruise",
+              "bruises"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "T14.8XXA"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXD"
+              ],
+              [
+                "ICD-10-CM",
+                "T14.8XXS"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Contusion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Congestion with no loss of consciousness (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7,
+          "answer_similarity": 0.925,
+          "focus": "concussion",
+          "negative_focus": "congestion",
+          "source": {
+            "id": "NLM:10511",
+            "name": "Chronic passive congestion",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "K76.1"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 10,
+              "before": "Concussion",
+              "after": "Congestion"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ]
+    },
+    {
+      "gold": "Essential hypertension (disorder)",
+      "negatives": [
+        {
+          "answer": "Essential hypotension (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9090909090909091,
+          "focus": "hypertension",
+          "negative_focus": "hypotension",
+          "source": {
+            "id": "NLM:4933",
+            "name": "Hypotension",
+            "aliases": [
+              "low blood pressure"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "I95.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 10,
+              "end": 22,
+              "before": "hypertension",
+              "after": "hypotension"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ]
+    },
+    {
+      "gold": "Infection of tooth (disorder)",
+      "negatives": [
+        {
+          "answer": "Infarction of tooth (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8,
+          "answer_similarity": 0.8947368421052632,
+          "focus": "infection",
+          "negative_focus": "infarction",
+          "source": {
+            "id": "NLM:22663",
+            "name": "Dementia - multi-infarction",
+            "aliases": [
+              "arteriosclerotic dementia",
+              "vascular dementia"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "F01.50"
+              ],
+              [
+                "ICD-10-CM",
+                "I63.9"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Infection",
+              "after": "Infarction"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        },
+        {
+          "answer": "Infectiosum of tooth (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.7272727272727273,
+          "answer_similarity": 0.85,
+          "focus": "infection",
+          "negative_focus": "infectiosum",
+          "source": {
+            "id": "NLM:8417",
+            "name": "Erythema infectiosum",
+            "aliases": [
+              "fifth disease"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "B08.3"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 9,
+              "before": "Infection",
+              "after": "Infectiosum"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ]
+    },
+    {
+      "gold": "Otitis media (disorder)",
+      "negatives": [
+        {
+          "answer": "Osteitis media (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.75,
+          "answer_similarity": 0.8571428571428572,
+          "focus": "otitis",
+          "negative_focus": "osteitis",
+          "source": {
+            "id": "NLM:10737",
+            "name": "Osteitis fibrosa",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "E21.0"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Otitis",
+              "after": "Osteitis"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ]
+    },
+    {
+      "gold": "Sprain of ankle (disorder)",
+      "negatives": [
+        {
+          "answer": "Strain of ankle (disorder)",
+          "kind": "label_confusion",
+          "rule": "same_initial_attested_core_substitution",
+          "similarity": 0.8333333333333334,
+          "answer_similarity": 0.9333333333333333,
+          "focus": "sprain",
+          "negative_focus": "strain",
+          "source": {
+            "id": "NLM:26602",
+            "name": "Elbow strain",
+            "aliases": [],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "S56.919A"
+              ],
+              [
+                "ICD-10-CM",
+                "S56.919D"
+              ],
+              [
+                "ICD-10-CM",
+                "S56.919S"
+              ]
+            ]
+          },
+          "generated": true,
+          "changes": [
+            {
+              "start": 0,
+              "end": 6,
+              "before": "Sprain",
+              "after": "Strain"
+            }
+          ],
+          "meaning_check": "core word from a different source concept; aliases/codes excluded; generated combination is not an attested or clinician-reviewed diagnosis"
+        }
+      ]
+    }
+  ],
+  "missing": [
+    "Acute bacterial sinusitis (disorder)",
+    "Acute infective cystitis (disorder)",
+    "Acute viral pharyngitis (disorder)",
+    "Chronic sinusitis (disorder)",
+    "Fracture of bone (disorder)",
+    "Gingival disease (disorder)",
+    "Gingivitis (disorder)",
+    "Laceration - injury (disorder)",
+    "Primary dental caries (disorder)",
+    "Sinusitis (disorder)",
+    "Streptococcal sore throat (disorder)",
+    "Viral sinusitis (disorder)"
+  ]
+}

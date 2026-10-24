@@ -1,0 +1,1663 @@
+
+=== PAGE 1 ===
+Rep2Text: Decoding Full Text from a Single LLM
+Token Representation
+HaiyanZhao1 ZiruiHe1 YimingTang2 FanYang3 AliPayani4
+DianboLiu2 MengnanDu5†
+1NewJerseyInstituteofTechnology 2NationalUniversityofSingapore 3WakeForestUniversity
+4CiscoResearch 5TheChineseUniversityofHongKong,Shenzhen
+{hz54,zh296}@njit.edu {yiming,dianbo}@nus.edu.sg
+yangfan@wfu.edu apayani@cisco.com mengnandu@cuhk.edu.cn
+†Correspondingauthor
+Abstract
+Largelanguagemodels(LLMs)haveachievedremarkableprogressacrossdiverse
+tasks, yet their internal mechanisms remain largely opaque. In this work, we
+investigateafundamentalquestion: towhatextentcantheoriginalinputtextbere-
+coveredfromasinglelast-tokenrepresentationinanLLM?Tothisend,wepropose
+Rep2Text,anovelframeworkfordecodingtextfromlast-tokenrepresentations.
+Rep2Textemploysatrainableadapterthatmapsatargetmodel’slast-tokenrepre-
+sentationintothetokenembeddingspaceofadecodinglanguagemodel,which
+thenautoregressivelyreconstructstheinputtext. OnWikipedia-derived16-token
+sequences,Rep2Textrecoversroughlyhalfofthetokensfromasinglelast-token
+representation across multiple target and decoding model combinations, while
+preservingstrongsemanticcoherence. Furtheranalysisrevealsaclearinformation
+bottleneck effect: as sequence length increases, token-level recovery declines,
+whilesemanticinformationremainsrelativelywellpreserved. Wealsofindthat
+decoderfamilymattersmorethandecoderscale. Finally,ourframeworkshows
+partialgeneralizationtoout-of-distributionclinicaldata. Ourcodeisavailableat
+https://github.com/hy-zhao23/Rep2Text.
+1 Introduction
+Large language models (LLMs) have achieved significant progress across a wide array of tasks.
+Despitetheirimpressiveperformance,thesemodelsareoftenregardedas“blackboxes”,limitingour
+understandingoftheirinternalmechanisms. Consequently,agrowingbodyofresearchhassought
+todecodetheinformationencodedinLLMs. Theseapproachesvarywidely,rangingfromtraining
+linear probes [1, 2] or sparse autoencoders (SAEs) [3] to interpret specific features, to mapping
+internalrepresentationsdirectlytothevocabularyspacethroughmethodslikeLogitLens[4]and
+TunedLens[5]. Inthiswork,wefocusonadistinctbutrelatedchallenge: representationdecoding,
+whichaimstoreconstructthefulloriginaltextfromtheinternalrepresentationsoflanguagemodels.
+Building on this perspective, we ask: To what extent can we recover the information contained
+inthelast-tokenrepresentationofaninputsequence?Ouroverallgoalistoexploresingle-token,
+activation-basedinputinversion. Thisisparticularlychallengingbecausethelast-tokenrepresentation
+isoptimizedfornext-tokenpredictionandcantherefore beviewedas aninformationbottleneck.
+Throughquantitativelycomparingtheinvertedtextwiththeoriginalinput,weaimtoprovideinsight
+intowhatknowledgeispreservedandencodedinthelast-tokenrepresentationofLLMs.
+Motivatedbythis,weproposeRep2Text(RepresentationtoText),aframeworkfordecodingtext
+from the last-token representations of LLMs, as illustrated in Figure 1. Inspired by large vision
+40thConferenceonNeuralInformationProcessingSystems(NeurIPS2026).
+6202
+tcO
+61
+]LC.sc[
+4v17560.1152:viXra
+
+=== PAGE 2 ===
+Unembedding Layer
+Add & Normalize
+Feed Forward
+Add & Normalize
+Self-Attention
+Embedding Layer
+reyaL
+remrofsnarT
+ht-l
+Adapter
+Northside High School ( Arkansas )
+Unembedding Layer
+LayerNorm
+Transformer Layer Transformation Matrix
+Transformer Layer Gate Gate
+Embedding Layer
+Adapter
+LayerNorm
+Tokenizer
+Omaha High School ( Arkansas ) System Prompt User Prompt
+Figure1: OverviewofRep2Text. Thelast-tokenrepresentationobtainedfromthel-thlayerofthe
+targetmodelMisprojectedintotheembeddingspaceofthedecodingmodelM′ viatheadapter.
+Theprojectedembeddings,togetherwiththoseofthesystemandtheuserprompts,arethenfedinto
+thedecodingmodeltoreconstructthecorrespondingtextsequence.
+languagemodels(LVLMs)suchasLLaVA[6],Rep2Texttrainsarepresentationinverterthatconsists
+ofadecodinglanguagemodelandanadapter. Theadaptermapsthetargetrepresentationintothe
+decodingmodel’stokenembeddingspace,aligningtheirlatentspaces. Theseprojectedembeddings
+aresubsequentlyfedintothedecodingLLM,enablingittointerpretthemandgeneratetextconsistent
+withtheoriginalinputsequence. Bycomparingtheinvertedtextagainsttheoriginaltext,wequantify
+theinformationretainedinthelast-tokenrepresentation.
+Ourexperimentsrevealthat,remarkably,onheld-outWikipediasequencesoflength16,Rep2Text
+recoversroughlyhalfoftheoriginaltokensfromasinglelast-tokenrepresentation,whilemaintaining
+strongsemanticcoherenceandrequiringnoiterativesearch. Thisfindingdirectlyanswersourcentral
+research question and demonstrates that, although last-token representations are optimized as an
+informationbottleneckfornext-tokenprediction,theystillretainasubstantialamountofrecoverable
+informationabouttheinputsequence. Tovalidatetheeffectivenessofourapproach,wecombine
+establishedquantitativemetricswithLLM-as-a-judgeevaluationstomeasureinformationretentionat
+thetoken,structural,andsemanticlevels. Ourresultsshowthatrepresentationsfromdifferentmodels
+exhibitvaryingrecoveryrates, revealingpotentialvulnerabilitiesinsomemodels, whiledecoder
+familymattersmorethandecoderscale. Furtheranalysisshowsthatstructuralinformationismost
+prominentinearly-to-middlelayers,whereassemanticinformationbecomesmorepronouncedin
+middle-to-latelayers. Wealsofindthatrecoveryisstrongforsequencesshorterthan16tokensbut
+degradesforlongerinputs.
+2 RelatedWork
+EmbeddingInversion. Theinversionistypicallyformulatedasanoptimizationprobleminwhich
+the attack model attempts to generate hypotheses that produce embeddings as close as possible
+tothetargetembeddings. Afewworksattempttorecoverground-truthsequencesusingsentence
+embeddingsfromBERTmodels.SongandRaghunathan[7]invertthesentenceembeddingsintoabag
+ofwords.Someworksattempttotrainanattackermodeltodecodetheground-truthsequenceutilizing
+sentence embeddings and text embeddings [8–10]. Further, Dong et al. [11] extends embedding
+inversiontoLLM’sinternalstatesatacertainlayer,bylearningtokenembeddingsthatcanproduce
+similarinternalstates. Thismethodneedstheinternalstatesofalltokens. Thus,itdoesnotapply
+toasinglelast-tokenrepresentation. However,tofullyrecovertheinputtext,thesepaperseither
+relyheavilyoniterativeoptimizationorincorporateallsentenceembeddingsandtokenembeddings.
+Nikolaou et al. [12] prove that LLMs map different inputs to different hidden states. They also
+recovertheexactinputfromthesehiddenstates. Incontrast,weaskhowmuchoftheinputasingle
+last-tokenrepresentationretains.
+2
+
+=== PAGE 3 ===
+ActivationDecoding. Someworkdecodesactivationsintonaturallanguage. Recentworksuchas
+SelfIE[13],andPatchscopes[14]interpretrepresentationsthroughpatchingthemintotheforward
+passofLLMstodecodenaturallanguageexplanations. Besides,LIT[15]finetunestargetmodel
+to answer questions related to given activations patched within. PCD [16] maps activations into
+concept vectors then train a model to answer questions about activations. Universal Activation
+Verbalizer[17]trainsashareddecodertoexplainactivationsfromdifferentdonormodels. Zhaoetal.
+[18]firstreconstructthesourcetextfromanactivationandthenusepreferenceoptimizationtoreduce
+hallucinateddescriptions. SAEExplainer[19]usesactivationscoresasrewardstotrainanexplainer
+forSAEfeatures. Someworkexplainsactivationsbyassumingthatsimilarmeaningsproducesimilar
+activations. Theyinvertanactivationtofindinputsthatwouldrecreateit,andusethoseinputsasthe
+explanation. InverseView[20]trainsadecodertosampletheinputdistributionforagivenactivation.
+InverseScope[21]exploretask-specificfeaturesencodedintheinputdistribution. Incontrast,we
+recoverinformationsolelyfromthelast-tokenrepresentation,withoutusingtheoriginalinput,partial
+inputspans,ortask-specificauxiliaryhints.
+3 Rep2TextFramework
+Inthissection,weintroducetheproposedRep2Textframework(seeFigure1). Rep2Textemploys
+a trainable adapter that bridges the target model’s representation space to a decoding language
+model’sembeddingspace,enablingustosystematicallyinvestigatewhatinformationispreserved
+incompressedlast-tokenrepresentationsandhowmuchoftheoriginalinputcanberecovered. The
+decodingLLMthenautoregressivelyreconstructsthetextfromtheseprojectedembeddings.
+3.1 ProblemStatement
+Givenatoken-levelrepresentationfromanLLM,ourobjectiveistoreconstructitsoriginalinput
+sequence and quantify how much input information is retained. Throughout this work, we use
+representationandactivationinterchangeablytodenotehiddenstatesfromdecoder-onlyLLMs.
+Formally,letS =⟨s ,...,s ⟩beaninputsequenceandMbeatargetmodelwithLlayers.Forlayer
+1 n
+ℓ ∈ {1,...,L},lethℓ denotetheresidual-streamrepresentationofthelasttokenafterprocessing
+S. WeaimtodecodehℓintoaninvertedsequenceSˆ=⟨sˆ ,...,sˆ ⟩,andmeasuretheinformation
+1 m
+preservedinhℓbycomparingSˆwiththeoriginalinputS.
+3.2 Rep2TextInverterDesign
+Toinverttherepresentation,weproposeaninverterarchitectureinspiredbythedesignoftypicallarge
+vision-languagemodelssuchasLLaVA.Theinverterconsistsoftwokeycomponents: (1)atrainable
+adapterthatprojectsthetargetmodel’sinternalrepresentationintotheinputtokenembeddingspace
+ofthedecodinglanguagemodel,and(2)adecodinglanguagemodelthatgeneratestheinvertedtext
+fromtheseprojectedembeddings.
+Specifically,weintroduceadecodingmodelM′ thatcaneitherbeacopyofthetargetmodelM
+oradifferentLLM.TobridgetherepresentationspaceofMandtheembeddingspaceofM′,we
+trainanadaptertoprojectthetokenrepresentationhℓ ∈RdfromthetargetmodelMintothetoken
+embeddingspaceofthedecodingmodelM′. Theadapterisimplementedasatwo-layerMLPwith
+gatedskipconnectionwithoptionalprojection,definedas:
+h =GELU(W ·LN(h )+b ), h =W ·h +b , [x˜ ;...;x˜ ]=reshape(h ,k,d′),
+1 1 ℓ 1 2 2 1 2 1 k 2
+x =LN(W ·h +g ·x˜ ), i=1,...,k, X =[x ;...;x ].
+i s ℓ i i e 1 k
+(1)
+whereLN(·)andGELU(·)representthenormlayerandactivationfunctionrespectively. W ∈
+1
+Rd×dhid andW ∈Rdhid×k·d′ refertolineartransformationsinthefirstandsecondlayersrespec-
+2
+tively,wheredandd′representthehiddendimensionsofthetargetmodelanddecodingmodel. Note
+thatwesetdhid =f ·d,wheref isanexpansionfactor. W ∈Rd×d′ denotesthetransformation
+s
+matrix of the skip connection. When d = d′, W is an identity matrix enabling a true residual
+s
+connection;whend̸=d′,W servesasalearnedprojectionmatrixtomatchdimensions. h ∈Rk·d′
+s 2
+isreshapedinto(k,d′),whichcanberegardedask tokenembeddings. Eachtokenembeddingis
+3
+
+=== PAGE 4 ===
+constructedwithagatedcombinationoftheskippathandtheMLP-transformedpathtopreserve
+therepresentationinformationasmuchaspossible. Theprojectedtokenembeddingcanbedenoted
+as X = [x ;··· ;x ], where the number k of projected tokens is a hyperparameter, and g is a
+e 1 k i
+learnablescalargateforthei-thprojectedtokenembedding,andtheskip-pathvectorW ·hℓ is
+s
+broadcasttoeachprojectedtokenposition.
+Foreachrepresentation,theprojectedtokenembeddingX iscombinedwithsystempromptembed-
+e
+dingX anduserpromptembeddingX . Thecombinedsequence[X ;X ;X ]isfedintothe
+sys u e sys u
+firstlayerofdecodingmodelM′(afteritsembeddinglayer),bypassingtheembeddinglayer. The
+decodingmodelthenautoregressivelygeneratestheinvertedtextSˆ.
+3.3 Rep2TextInverterTraining
+For an output sequence of length T, at each decoding step t, the inverter predicts its probability
+conditionedontheprojectedembeddings,promptembeddings,andallpreviouslygeneratedtokens.
+ThejointprobabilityofinvertedsequenceSˆis:
+T
+p (cid:16) Sˆ|X ,X ,X (cid:17) = (cid:89) p (cid:16) sˆ |X ,X ,X ,Sˆ (cid:17) (2)
+e sys u θ t e sys u <t
+t=1
+whereSˆ aretheinvertedtokensgeneratedbeforestept,andθdenotesthetrainableparameters.
+<t
+Weconsidertwotrainingschemes: (1)adapter-onlytuning,whereonlytheadapterparametersare
+optimized;(2)fullfine-tuning,wheretheadapterisfirstfine-tunedindependentlyandthentheadapter
+continuestobefine-tunedwhilethedecodingmodelisupdatedviaLoRA[22]. Accordingly,θrefers
+tothetrainableparametersunderthechosenscheme.
+Duringtraining,weemployteacherforcing: thegeneratedprefixSˆ isreplacedwiththeground-
+<t
+truthprefixS ,andthemodelisoptimizedtomaximizethelog-likelihoodoftheground-truthtoken
+<t
+s ateachstep. Tostabilizetraining,weuselabelsmoothingtosoftentheone-hottargetdistribution.
+t
+Theground-truthtokenvocabularydistributionisdenotedas
+ϵ
+q (v )=(1−ϵ)1[v =s ]+ , (3)
+t i i t |V|
+where1(·)isanindicatorfunctionthatequals1iftheconditionholdsand0otherwise,andϵisthe
+labelsmoothingfactor,settobe0.075. Thetrainingobjectiveisthesmoothedcross-entropyloss:
+|V| T
+(cid:88) 1 (cid:88)
+L =− q (v ) logp (v |X ,X ,X ,S ), L = L . (4)
+t t i θ i e sys u <t LS T t
+i=1 t=1
+This training objective optimizes the adapter (and optionally the decoding model via LoRA) to
+minimizethepredictionerroracrossalltokenpositionsintheinvertedsequence. Alabelsmoothing
+termisincorporatedtopreventoverconfidenceintokenpredictions,therebyimprovinggeneralization
+tounseenrepresentations. Throughthistrainingprocess,theadapterlearnstoeffectivelymapthe
+compressedlast-tokenrepresentationfromthetargetmodel’slatentspaceintothedecodingmodel’s
+tokenembeddingspace,enablingthereconstructionoftheoriginalinputsequence.
+4 Experiments
+Inthissection,wefirstexaminethetrainingstrategyanddatascale(§4.2).Next,weevaluateRep2Text
+across target and decoding model combinations (§4.3). We then conduct a representation–text
+correspondenceanalysistodemonstratethatinversionreliesonprimarilyrepresentationsratherthan
+decoderlanguagepriors(§4.4). Toanalyzetheinformationbottleneckinlast-tokenrepresentations,
+we study inversion performance across varying input lengths (§4.5) and different target-model
+layers(§4.6). Finally,wecompareRep2Textwiththebaselinemethodonbothin-distributionand
+out-of-distributiondatasetstoevaluateitsgeneralizability(§4.7).
+4.1 ExperimentalSetup
+Datasets. WetrainadaptersonpassagesrandomlytruncatedfromWikipediaarticlesinThePile[23].
+Eachpassagecontainsnnon-overlappingtokens,wheren∈{8,16,32,64,128,256}dependingon
+4
+
+=== PAGE 5 ===
+Panel (a): Varying Structure Similarity Panel (b): Varying En�ty Similarity
+Score Ground-truth Inverted Score Ground-truth Inverted
+S = 5 C O u ly b m a p c i o c m s i p n e P te a d ri s a , t F t r h a e n c 1 e 9 . 24 Summer S S w um itz m e e rl r a O nd ly c m o p m ic p s e i t n e d P a a r t i s t , h F e r a 1 n 9 c 2 e 4 . E = 5 p M Fo o i r l n i e � i i s g c t i n e a r n A o ff w f a h S ir e o s r h b e ia ld a n th d e t h o e ffi M ce i n o i f s t P e r r im of e p M Fo o i r l n i e � i i s g c t i n e a r n A o ff w f a h S ir e o s r s b e ia rv a e n d d a t s h t e h M e P in r i i s m te e r of
+S = 3 Premishlan is a Hasidic dynasty. ...Mizrachi is a Chassidic dynasty. E = 3 P re o l o e l a E se d d g e in is 2 a 0 0 sp 2 o b r y ts N v D id c e u o b e g . ame b by a l T l a is i t a o s a p n o d r t r s e l v e id as e e o d g i a n m 2 e 0 0 developed
+S = 0 The Best Christmas... Ever! i C n h t r h is e t m m a o s n .. t . h It ' o s f a D M ec u e s m t ber, 2005 E = 0 Xylophilus ampelinus (syn. us australis australis (syn. P. australis)
+Figure2: Examplesofstructuralandentitypreservationscores. SandEdenotestructuralandentity
+similarity,respectively,ratedona0–5scaleusinganLLM-as-a-judge.
+b Discrete Score Composi�on c Mean Performance Summary
+ ϭ ͘ Ϭ  ^ Đ Ž ƌ Ğ
+ Ϭ  ϭ  Ϯ  ϯ  ϰ  ϱ
+ Ϭ ͘ ϴ  ^ ƚ ƌ Ƶ Đ ƚ Ƶ ƌ Ğ  ^ Đ Ž ƌ Ğ
+ W ƌ Ğ ƚ ƌ Ă ŝ Ŷ  ϳ й  ϭ ϳ й  ϭ Ϭ й  ϲ ϯ й  ϰ й
+ Ϭ ͘ ϲ  & ŝ Ŷ Ğ ƚ Ƶ Ŷ Ğ ϱ й  ϭ ϳ й  ϳ й   Ŷ ƚ ŝ ƚ Ǉ  ^ Đ Ž  ϲ  ƌ  ϰ  Ğ  й  ϳ й
+ Ϭ ͘ ϰ  &  W  ŝ Ŷ  ƌ Ğ  Ğ  ƚ  ƚ  ƌ  Ƶ  Ă  Ŷ  ŝ Ŷ  Ğ  ϭ  ϭ  ϰ  ϱ  й  й  ϭ  ϭ  ϱ  ϯ  й  й  ϯ  ϰ  ϵ  Ϯ  й  й  ϯ  Ϯ  Ϭ  ϳ  й  й
+ d Ž Ɖ ŝ Đ  ^ Đ Ž ƌ Ğ
+ Ϭ ͘ Ϯ  W ƌ Ğ ƚ ƌ Ă ŝ Ŷ  ϯ ϯ й  ϲ Ϯ й
+ & ŝ Ŷ Ğ ƚ Ƶ Ŷ Ğ  Ϯ ϴ й  ϲ ϳ й
+ Ϭ ͘ Ϭ  Z K h '  Ͳ ϭ  Z K h '  Ͳ Ϯ  Z K h '  Ͳ >    Z d ^ Đ Ž ƌ Ğ  & ϭ  Ϭ й  Ϯ  W  Ϭ  Ğ  й  ƌ Đ Ğ Ŷ ƚ Ă Ő  ϰ  Ğ  Ϭ й   Ž Ĩ  ^ Ă ŵ  ϲ  Ɖ  Ϭ  ů  й  Ğ Ɛ  ϴ Ϭ й  ϭ Ϭ Ϭ й
+ Ğ ƌ Ž Đ ^
+a Con�nuous Metric Distribu�on
+ W ƌ Ğ ƚ ƌ Ă ŝ Ŷ
+ & ŝ Ŷ Ğ ƚ Ƶ Ŷ Ğ
+ D Ğ Ă Ŷ
+Figure3: Adapter-onlytuningversusfullfine-tuning. Decoderfine-tuningimprovestokenrecovery
+butyieldslimitedgainsonsemanticandLLM-judgemetrics.
+theexperimentalsetting. Eachtrainingexamplepairsthelast-tokenrepresentationfromafixedlayer
+ofthetargetmodelwithitscorrespondingground-truthinputsequence. Weuse640Ksequencesfor
+adapter-onlytuningandadd960Ksequencesduringfullfine-tuning. Forevaluation,werandomly
+sample1,000sequencesasthetestsetandassesstheinvertedoutputsusingbothquantitativemetrics
+andLLM-as-a-judgeevaluations.
+Models. Weevaluatemultipletarget–decodermodelcombinations. Thedecodingmodelsinclude
+Llama-3.2-3B[24],Llama-3.1-8B[25],Qwen-2.5-14B[26],Qwen-2.5-32B[26],andQwen-2.5-
+72B [26]. The target models include Llama-3.2-3B, Llama-3.1-8B, Mistral-7B-v0.1 [27], and
+Gemma-7B[28]. Tostudycross-modelinversion,wefixLlama-3.1-8Basthedecoderandevaluate
+it across all target models. To analyze scaling behavior, we invert representations from Mistral-
+7B-v0.1usingdecodersofincreasingsize,includingLlama-3.2-3B,Llama-3.1-8B,Qwen-2.5-14B,
+Qwen-2.5-32B,andQwen-2.5-72B.
+ImplementationDetails. Ourmainexperimentsusesequenceswithn=16tokens. Formodels
+upto14B,adapter-onlytuningontwoA100GPUstakes7hours, whilefullfine-tuningrequires
+additional12hours. Weuseapeakadapterlearningrateof10−3,exceptforQwenmodels. Forfull
+fine-tuning,weuselearningratesof5×10−4 fortheadapterand2×10−4 forLoRAparameters.
+Modelsaretrainedfor3epochs,exceptQwenmodels,whicharetrainedfor5epochs;longertraining
+yieldsonlymarginalgains. AdditionalhyperparametersareprovidedinAppendixI.Unlessotherwise
+specified,allexperimentsfine-tuneonlytheadapterwhilekeepingthedecoderfrozen.
+EvaluationMeasurements. Weevaluateinvertedsequencesalongthreedimensions: token-level
+recovery,structuralandentitypreservation,andsemanticsimilarity. WeuseROUGE-1,ROUGE-2,
+andROUGE-Ltomeasuretoken-levelrecovery. WeuseGPT-4.1-minitoratestructuralandentity
+preservationona0–5scale,whichisnormalizedto0–1. AsshowninFigure2,thesescoresassess
+whethertheinvertedtextpreservesthegrammaticalstructureandkeyentitiesofthegroundtruth.
+WequantifysemanticsimilarityusingBERTScoreandLLM-basedtopicrelevance. Detailedmetric
+definitionsareprovidedinAppendixA.
+4.2 TrainingStrategyandDataScale
+WefirstexaminetwopracticalfactorsintrainingRep2Text: whetherthedecoderneedstobeupdated,
+andhowmuchadaptertrainingdataisrequired.
+5
+
+=== PAGE 6 ===
+Table 1: Performance comparison of representation inversion across target and decoding model
+combinations. Group(A)usesthebestlayerofeachtargetmodel,whichisthelayerwiththehighest
+ROUGE-1inthelayer-wisesweep. Groups(B)and(C)fixlayer10,sothatalldecodersinvertthe
+samerepresentations. Boldmarksthebestscoreineachcolumnwithineachgroup.
+TargetModel DecodingModel Layer ROUGE-1 ROUGE-2 ROUGE-L BERTScore Structure Entity Topic
+(0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑
+(A)FixedLlama-3.1-8Bdecoder,bestlayerpertarget:targetinvertibility
+Gemma-7B Llama-3.1-8B L26 0.64(0.24) 0.42(0.30) 0.61(0.25) 0.80(0.14) 0.71(0.22) 0.64(0.27) 0.86(0.22)
+Mistral-7B-v0.1 Llama-3.1-8B L15 0.55(0.25) 0.35(0.28) 0.53(0.25) 0.81(0.13) 0.70(0.23) 0.75(0.25) 0.92(0.17)
+Llama-3.1-8B Llama-3.1-8B L10 0.48(0.23) 0.28(0.24) 0.47(0.22) 0.78(0.11) 0.66(0.22) 0.74(0.23) 0.91(0.14)
+Llama-3.2-3B Llama-3.1-8B L9 0.46(0.22) 0.25(0.22) 0.44(0.21) 0.76(0.11) 0.64(0.22) 0.72(0.24) 0.89(0.16)
+(B)Selfvs.cross-modeldecoding(layer10)
+Llama-3.2-3B Llama-3.2-3B L10 0.46(0.22) 0.26(0.23) 0.45(0.21) 0.76(0.11) 0.64(0.22) 0.69(0.24) 0.88(0.16)
+Llama-3.2-3B Llama-3.1-8B L10 0.45(0.22) 0.25(0.22) 0.43(0.22) 0.76(0.11) 0.64(0.22) 0.72(0.23) 0.88(0.16)
+(C)Decoderscaleandfamily(Mistral-7B-v0.1,layer10)
+Mistral-7B-v0.1 Llama-3.2-3B L10 0.52(0.23) 0.32(0.26) 0.50(0.23) 0.80(0.12) 0.70(0.21) 0.73(0.25) 0.90(0.17)
+Mistral-7B-v0.1 Llama-3.1-8B L10 0.52(0.23) 0.32(0.26) 0.51(0.23) 0.81(0.11) 0.71(0.21) 0.75(0.23) 0.90(0.18)
+Mistral-7B-v0.1 Qwen-2.5-14B L10 0.48(0.21) 0.27(0.23) 0.47(0.21) 0.78(0.11) 0.65(0.23) 0.67(0.25) 0.89(0.18)
+Mistral-7B-v0.1 Qwen-2.5-32B L10 0.47(0.21) 0.25(0.23) 0.45(0.21) 0.76(0.12) 0.65(0.24) 0.65(0.26) 0.88(0.19)
+Mistral-7B-v0.1 Qwen-2.5-72B L10 0.51(0.23) 0.30(0.25) 0.49(0.23) 0.78(0.12) 0.68(0.23) 0.74(0.25) 0.91(0.17)
+EffectofDecoderFine-tuning. Wecompareadapter-onlytuning,wherethedecoderisfrozen,
+withfullfine-tuning,wherethetrainedadapterisfurtheroptimizedtogetherwithLoRAparameters
+onthedecoder. Figures3(a)and3(b)showthatfullfine-tuningimprovesinversionperformance
+acrossallmetrics,butthegainsaremodest. AssummarizedinFigure3(c),fullfine-tuningincreases
+ROUGE-1,ROUGE-2,andROUGE-Lby0.03,0.05,and0.04,respectively,withsimilarlylimited
+gainsonsemanticandLLM-judgemetrics. Thescoredistributionsfurthershowthatfullfine-tuning
+mainlyshiftssamplestowardhighertoken-overlapscores,whilesemanticmetricsremainlargely
+similar. Theseresultssuggestthatrepresentation-to-embeddingalignmentisprimarilylearnedbythe
+adapter. Therefore,allfollowingexperimentsuseadapter-onlytuningandkeepthedecoderfrozen.
+EffectofTrainingDatasetSize. Weadditionallystudyhowtheamountofadaptertrainingdata
+affects inversion performance. As shown in Appendix K, increasing the dataset size from 10K
+to 640K leads to monotonic improvements across all eight metrics. However, the improvement
+from 320K to 640K shows diminishing returns around the 640K setting, making it a reasonable
+compute-performancetrade-offforourmainexperiments.
+4.3 Cross-ModelRepresentationInversion
+Inthissection,westudywhetherasinglelast-tokenrepresentationcanbeinvertedacrossdifferent
+targetanddecodingmodels. Weaimtoanswerfourquestions: (i)howmuchinformationcanbe
+recovered from a single last-token representation, (ii) whether some target models expose more
+recoverableinformationthanothers,(iii)whethercross-modeldecodingisaseffectiveasself-model
+decoding,and(iv)whetherlargerdecodingmodelsimproveinversionquality. Weevaluate16-token
+WikipediasequencesandreportresultsinTable1. For(ii),weusethebestlayerofeachtargetmodel,
+selectedbyROUGE-1inthelayer-wisesweep(§4.6). For(iii)and(iv),wefixlayer10,sothatall
+decodersinvertthesamerepresentations. Acrossallaforementionedexperiments,onlytheadapteris
+trainedandthedecodingmodeliskeptfrozen.
+Single-tokenrepresentationsretainsubstantialrecoverableinformation. Acrosstarget–decoder
+combinations, Rep2Textrecoverssubstantialinformationfromasinglelast-tokenrepresentation.
+ROUGE-1rangesfrom0.45to0.64,suggestingthatroughlyhalfoftheunigramsarerecoveredin
+mostsettings,whileROUGE-2remainsat0.25–0.42,indicatingnon-triviallocalphraserecovery.The
+invertedsequencesalsopreservestrongsemanticsimilarity,withBERTScorebetween0.76and0.81
+andtopicpreservationbetween0.86and0.92. Theseresultsshowthatthelast-tokenrepresentation
+isastrongbutnotopaqueinformationbottleneck,retainingbothlexicalfragmentsandhigh-level
+meaning.
+6
+
+=== PAGE 7 ===
+ ϭ ͘ Ϭ
+ Ϭ ͘ ϴ
+ Ϭ ͘ ϲ
+ Ϭ ͘ ϰ
+ Ϭ ͘ Ϯ
+ Ϭ ͘ Ϭ
+ ϴ  ϭ ϲ  ϯ Ϯ  ϲ ϰ
+ E Ƶ ŵ ď Ğ ƌ  Ž Ĩ  d Ž Ŭ Ğ Ŷ Ɛ
+ Ϳ ϭ Ͳ Ϭ ;  Ğ ƌ Ž Đ ^
+ > Ğ ǆ ŝ Đ Ă ů  K ǀ Ğ ƌ ů Ă Ɖ
+ Z K h '  Ͳ ϭ  ϭ ͘ Ϭ
+ Z K h '  Ͳ Ϯ  Ϭ ͘ ϴ
+ Z K h '  Ͳ >
+ Ϭ ͘ ϲ
+ Ϭ ͘ ϰ
+ Ϭ ͘ Ϯ
+ Ϭ ͘ Ϭ
+ ϴ  ϭ ϲ  ϯ Ϯ  ϲ ϰ
+ E Ƶ ŵ ď Ğ ƌ  Ž Ĩ  d Ž Ŭ Ğ Ŷ Ɛ
+(a)
+ Ϳ ϭ Ͳ Ϭ ;  Ğ ƌ Ž Đ ^
+ ^ Ğ ŵ ͘ ͬ ^ ƚ ƌ Ƶ Đ ƚ ͘  W ƌ Ğ Ɛ Ğ ƌ ǀ Ă ƚ ŝ Ž Ŷ
+ ϭ ͘ Ϭ
+ Ϭ ͘ ϴ
+ Ϭ ͘ ϲ
+ ^ ƚ ƌ Ƶ Đ ƚ Ƶ ƌ Ğ
+ Ϭ ͘ ϰ
+  Ŷ ƚ ŝ ƚ Ǉ
+ d Ž Ɖ ŝ Đ  Ϭ ͘ Ϯ
+   Z d Ͳ & ϭ
+ Ϭ ͘ Ϭ
+ > ϱ  > ϭ Ϭ  > ϭ ϱ  > Ϯ Ϭ  > Ϯ ϱ  > ϯ Ϭ
+ Ͳ ƚ Ś  > Ă Ǉ Ğ ƌ Ɛ
+(b)
+Figure4: Performancecomparisonunderdiffer-
+entinputsequencelengths.
+ Ϳ ϭ Ͳ Ϭ ;  Ğ ƌ Ž Đ ^
+ > Ğ ǆ ŝ Đ Ă ů  K ǀ Ğ ƌ ů Ă Ɖ
+ Z K h '  Ͳ ϭ  ϭ ͘ Ϭ
+ Z K h '  Ͳ Ϯ  Ϭ ͘ ϴ
+ Z K h '  Ͳ >
+ Ϭ ͘ ϲ
+ Ϭ ͘ ϰ
+ Ϭ ͘ Ϯ
+ Ϭ ͘ Ϭ
+ > ϱ  > ϭ Ϭ  > ϭ ϱ  > Ϯ Ϭ  > Ϯ ϱ  > ϯ Ϭ
+ Ͳ ƚ Ś  > Ă Ǉ Ğ ƌ Ɛ
+(a)
+ Ϳ ϭ Ͳ Ϭ ;  Ğ ƌ Ž Đ ^
+ ^ Ğ ŵ ͘ ͬ ^ ƚ ƌ Ƶ Đ ƚ ͘  W ƌ Ğ Ɛ Ğ ƌ ǀ Ă ƚ ŝ Ž Ŷ
+ ^ ƚ ƌ Ƶ Đ ƚ Ƶ ƌ Ğ
+  Ŷ ƚ ŝ ƚ Ǉ
+ d Ž Ɖ ŝ Đ
+   Z d Ͳ & ϭ
+(b)
+Figure 5: Performance comparison with layer-
+wiserepresentationinversions.
+Targetmodelsdifferinrepresentationinvertibility. WefixLlama-3.1-8Basthedecoderand
+comparerepresentationsfromGemma-7B,Mistral-7B-v0.1,Llama-3.1-8B,andLlama-3.2-3B,each
+atitsbestlayer. Gemma-7Bachievesthestrongestlexicalandstructuralrecoveryatlayer26,with
+0.64ROUGE-1,0.42ROUGE-2,0.61ROUGE-L,and0.71structurescore. Mistral-7B-v0.1achieves
+thestrongestsemanticrecoveryatlayer15,with0.81BERTScore,0.75entityscore,and0.92topic
+score. Bycontrast,Llama-familytargetsarelessrecoverable,withLlama-3.1-8BandLlama-3.2-3B
+achieving0.48and0.46ROUGE-1,respectively. Thissuggeststhatsharingthesamemodelfamily
+with the decoder does not necessarily make inversion easier; instead, recoverable input-specific
+informationinlast-tokenrepresentationsvariesacrossmodelfamilies. Thebestlayeralsovaries
+acrossmodelfamilies(§4.6).
+Cross-modeldecodingisrobust. Wethencompareself-modelandcross-modeldecodingatlayer
+10. UsingLlama-3.2-3Basboththetargetanddecoderachieves0.46ROUGE-1,0.26ROUGE-2,
+and0.45ROUGE-L,comparabletodecodingthesametargetrepresentationswithLlama-3.1-8B.
+Similarly, for Mistral-7B-v0.1 representations, Llama-3.1-8B and Llama-3.2-3B perform nearly
+identically,bothreaching0.52ROUGE-1and0.32ROUGE-2. Theseresultsshowthatsuccessful
+inversiondoesnotrequirethedecodertomatchthetargetmodel. Instead,theadaptercanbridge
+the target representation space and decoder embedding space, suggesting that recoverable input
+informationispartiallyalignedacrossdifferentLLMs.
+Decoderfamilymattersmorethandecoderscale. Finally,weexaminewhetherincreasingdecoder
+sizeimprovesinversionbyreplacingtheLlamadecoderwithQwen-2.5-14B,Qwen-2.5-32B,and
+Qwen-2.5-72B.Despitehavingmorethantwiceasmanyparameters,Qwen-2.5-32Bdoesnotimprove
+overQwen-2.5-14B.Instead,performanceslightlydecreasesfrom0.48to0.47inROUGE-1,from
+0.27 to 0.25 in ROUGE-2, and from 0.78 to 0.76 in BERTScore. Qwen-2.5-72B improves over
+Qwen-2.5-32B,butitstillunderperformsthesmallerLlamadecodersonmostmetricswheninverting
+Mistral-7B-v0.1representations. Theseresultssuggestthatcross-modeldecodingisrobusttodecoder
+scalebutsensitivetodecoderfamily.
+4.4 Representation-TextCorrespondenceAnalysis
+TotestwhetherRep2Textreliesonrepresentation-specificinformationratherthandecoderlanguage
+priors,wecomparethreesettings: Baseline,whichusescorrectlypairedrepresentationsandoriginal
+inputs;Reverse,whichreconstructsword-levelreversedandretokenizedinputs;andRandom,which
+pairseachrepresentationwithanunrelatedtargetsequenceandbreaksthealignment. Randomserves
+asanegativecontrol. AnyperformanceunderRandomcomesfromdecoderlanguagepriorsalone.
+FigureE.1showsthatbreakingtherepresentation–textcorrespondenceleadstoaclearperformance
+collapse. The Random setting performs substantially worse than the correctly paired Baseline
+settingacrossloss,lexicaloverlap,andsemanticsimilarity,indicatingthatRep2Textcannotrecover
+meaningfultextfromunrelatedrepresentation–textpairsanddoesnotrelysolelyondecoderlanguage
+priors. Incontrast,Reverseremainspartiallylearnabledespiteviolatingthenaturalleft-to-rightword
+orderfavoredbyLLMs. Thissuggeststhatthelast-tokenrepresentationstillcontainsrecoverable
+input-specificinformationunderadeterministicword-ordertransformation. Detailedexperimental
+settingsandquantitativeresultsareprovidedinAppendixE.
+7
+
+=== PAGE 8 ===
+Table2: InversioncomparisonbetweenVec2Textandourmethodwithinputsequencesofnomore
+than32tokens.
+Targetmodel/ Data InversionModel R1 R2 RL TokenF1 BLEU BS SS ES TS
+decodingmodel (0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑ (0-1)↑
+Rep2Text(Ours) 0.41 0.19 0.38 0.42 0.15 0.73 0.57 0.66 0.86
+Wiki Vec2TextBase 0.38 0.17 0.35 0.31 0.15 0.71 0.53 0.53 0.80
+Mistral-7B-v0.1/ *+Corrector(50Steps) 0.38 0.17 0.35 0.31 0.15 0.71 0.53 0.55 0.79
+Qwen-2.5-14B
+Rep2Text(Ours) 0.37 0.15 0.34 0.26 0.10 0.74 0.59 0.48 0.64
+Clinical Vec2TextBase 0.14 0.02 0.13 0.13 0.04 0.53 0.17 0.16 0.21
+*+Corrector(50Steps) 0.13 0.01 0.12 0.11 0.03 0.52 0.14 0.13 0.20
+Rep2Text(Ours) 0.36 0.15 0.32 0.39 0.12 0.70 0.53 0.63 0.85
+Wiki Vec2TextBase 0.37 0.16 0.34 0.29 0.14 0.70 0.54 0.51 0.78
+Llama-3.1-8B/ *+Corrector(50Steps) 0.35 0.15 0.31 0.27 0.12 0.68 0.50 0.49 0.76
+Qwen-2.5-14B
+Rep2Text(Ours) 0.34 0.12 0.31 0.24 0.08 0.71 0.50 0.47 0.56
+Clinical Vec2TextBase 0.13 0.01 0.12 0.12 0.03 0.55 0.23 0.18 0.25
+*+Corrector(50Steps) 0.12 0.01 0.11 0.11 0.03 0.51 0.17 0.14 0.22
+*denotesVec2Text
+4.5 EffectsofSequenceLength
+We next examine how input length affects recoverability from a single last-token representation.
+Becausethisrepresentationsummarizesallprecedingtokens,longerinputsshouldcreateastronger
+informationbottleneck. Wetrainseparateadapterstoinvertlayer-10representationsfrom8-,16-,
+32-,and64-tokenWikipediasequences,usingLlama-3.1-8Basboththetargetanddecodingmodel
+basedonSection4.3.
+Figure4showsthatlexicalrecoveryconsistentlydecreaseswithinputlength. ROUGE-1dropsfrom
+about0.60for8-tokeninputstoabout0.36for64-tokeninputs,withsimilardeclinesinROUGE-2
+andROUGE-L.Structuralpreservationalsodegrades,suggestingthatlongercontextsmakedetailed
+wordingandgrammarhardertorecoverfromasinglerepresentation. Incontrast,semanticmetrics
+declinemoreslowly: BERTScore,entitypreservation,andtopicpreservationremainrelativelyhigh
+forlongerinputs. Overall,asinglelast-tokenrepresentationpreservesthegeneraltopicoflonger
+contextsbetterthanexactwordingorsentencestructure. Wefurthertest128-and256-tokeninputs
+withLlama-3.2-3Basboththetargetanddecoder. ROUGE-1dropsfrom0.46at16tokensto0.30at
+128and256tokens. Incontrast,BERTScorestaysat0.63andthetopicscorestaysatorabove0.68,
+asdetailedinAppendixG.
+4.6 Layer-wiseInvertibility
+Priorworkshowsthatmiddle-to-deeplayerscapture
+ , Ƶ ŵ Ă Ŷ  ǀ Ɛ ͘  ' W d Ͳ ϰ ͘ ϭ Ͳ ŵ ŝ Ŷ ŝ  ^ Ğ ŵ Ă Ŷ ƚ ŝ Đ  ^ Đ Ž ƌ Ğ Ɛ
+high-levelsemanticsmoreeffectively[29,30]. We
+ , Ƶ ŵ Ă Ŷ  ŵ Ğ Ă Ŷ  ц  ^   / Ŷ Ě ŝ ǀ ŝ Ě Ƶ Ă ů  ƌ Ă ƚ Ğ ƌ Ɛ  , Ƶ ŵ Ă Ŷ  ŵ Ğ Ă Ŷ  ' W d Ͳ ϰ ͘ ϭ Ͳ ŵ ŝ Ŷ ŝ
+therefore ask which layer contains the most recov-
+ ' W d  Ϭ ͘ ϱ Ϯ ϰ
+erable input information. To answer this, we train
+separateadaptersonlast-tokenrepresentationsfrom  ^ ƚ ƌ Ƶ Đ ƚ Ƶ ƌ Ğ  , Ƶ ŵ Ă Ŷ  Ϭ ͘ ϳ ϭ ϭ ц Ϭ ͘ ϭ ϰ ϰ  ' W d   , Ƶ ŵ Ă Ŷ
+ Ͳ Ϭ ͘ ϭ ϴ ϳ
+layers 5, 10, 15, 20, 25, and 30 of Llama-3.1-8B,  ' W d  Ϭ ͘ ϱ ϳ ϭ
+using16-tokenWikipediasequences.
+  Ŷ ƚ ŝ ƚ Ǉ  , Ƶ ŵ Ă Ŷ  Ϭ ͘ ϰ ϵ Ϭ ц Ϭ ͘ Ϯ ϯ ϱ  ' W d   , Ƶ ŵ Ă Ŷ
+ н Ϭ ͘ Ϭ ϴ ϭ
+Figure5showsthatrecoverabilityisstrongestaround  ' W d  Ϭ ͘ ϳ ϭ ϳ
+L10–L15,withdifferentmetricspeakingatslightly
+ d Ž Ɖ ŝ Đ  , Ƶ ŵ Ă Ŷ  Ϭ ͘ ϲ ϲ ϲ ц Ϭ ͘ ϭ ϱ Ϭ  ' W d   , Ƶ ŵ Ă Ŷ
+different depths. ROUGE-L, structure score, and  Ϭ ͘ Ϯ  Ϭ ͘ ϯ  Ϭ ͘ ϰ  Ϭ ͘ ϱ  Ϭ ͘ ϲ  Ϭ ͘ ϳ  Ϭ ͘ ϴ  Ϭ ͘ ϵ н Ϭ ͘ Ϭ ϱ ϭ
+BERTScore peak around layer 10, suggesting that  ^ Ğ ŵ Ă Ŷ ƚ ŝ Đ  Ɛ Đ Ž ƌ Ğ
+sentence structure, local phrase organization, and
+Figure6: Humanevaluationsanitycheckfor
+semanticsimilarityarealreadywellcapturedbyearly-
+GPT-4.1-minisemanticscores.
+to-middle layers. ROUGE-1 is nearly identical at
+layers10and15, whileentityrecoverypeaksatlayer15, indicatingthatentity-leveldetailsmay
+requiredeeperprocessing. Topicpreservationremainsstablefromlayers10to20,suggestingthat
+high-levelsemanticinformationpersistsacrossmiddle-to-latelayers. AppendixFreportslayer-wise
+sweepsfortheotherthreetargetmodels. Thebestlayerdependsonthemodelarchitecture.
+8
+
+=== PAGE 9 ===
+Table3: Invertedexamplesofthethreemethodsonthesameinputs. BoldmarksthebestTokenF1in
+eachgroup.
+Method Ground-truthSequence InvertedSequence TokenF1 BLEU
+In-distribution,Llama-3.1-8Btarget
+PhilLaMarr PhilLaMarr
+PhillipLaMarr(bornJanuary24,1967)is PhilipLaMarr(bornJanuary24,1967)
+Ours 0.94 0.89
+anAmericanactor,voiceactor,comedian isanAmericanactor,voiceactor,come-
+andwriter. dianandwriter.
+DavidA.SmithDavidA.Smith(born
+Vec2TextBase December16,1964)isanAmericanac- 0.43 0.32
+tor,voiceactor,writer,andvoiceactor.
+DavidA.SmithDavidA.Smith(born
+Vec2Text+Corrector(50
+August24,1964)isanAmericanactor, 0.49 0.33
+Steps)
+voiceactor,writer,andvoiceactor.
+In-distribution,Mistral-7B-v0.1target
+List of films submitted to the 80th
+Listofsubmissionstothe37thAcademy
+AcademyAwardsforBestForeignLan-
+AwardsforBestForeignLanguageFilm
+Ours guageFilm 0.77 0.46
+Thefollowing18films,allfromdifferent
+Thefollowing14films,from14differ-
+countries,were
+entcountries,
+List of submissions to the 59th
+AcademyAwardsforBestForeignLan-
+Vec2TextBase 0.91 0.76
+guageFilm.Thefollowingeightfilms,
+allfromdifferentcountries,were
+Vec2Text+Corrector(50
+SameasVec2TextBase. 0.91 0.76
+Steps)
+Out-of-distribution(OOD),Mistral-7B-v0.1target
+A35-year-oldfemalewithabnormalheavy A35-year-oldwomanwithaBMIof
+Ours periods, fatigue, and dark spots on her 300andahistoryofacne,hirsutism,and 0.31 0.15
+handsandneck. infertility.
+HewasborninNewYorkCityanddied
+Vec2TextBase inNewYorkCityinJanuary2013.Dur- 0.05 0.02
+inghisstayattheYMCA,
+A rare condition characterized by a
+Vec2Text+Corrector(50
+swollen thigh, a swollen thigh, a 0.11 0.04
+Steps)
+swollenthigh,andaswollenthigh,on
+4.7 InversionPerformanceAnalysis
+TofurtherevaluateRep2Textanditsusefulnessforrepresentationinterpretation,wecompareitwith
+Vec2Text[9],astrongembeddinginversionbaselinethatusesahypothesizerandacorrectormodel.
+Becauseoursettingreconstructstextfromlast-tokenrepresentationsratherthansentenceembeddings,
+weadaptVec2Texttothesamerepresentation-inversionsetting.
+WetraintheVec2TexthypothesizerandcorrectoronthesameWikipediadatausedforRep2Text,
+followingtheoriginalsetupandtrainingeachmodelfor10epochs. Bothmethodsinvertlast-token
+representationsfromMistral-7B-v0.1,andRep2TextusesQwen-2.5-14Basthedecodingmodel. We
+evaluateonheld-outWikipediadataandOODclinicalsummariescontainingpatientnames,ages,and
+symptoms,usinganinversionlengthof32tokens. Weuse32tokensbecausetheclinicalsummaries
+containupto25tokens,sothislengthdoesnottruncateclinicalinformation. Sincethehypothesizer
+is the core inversion model in Vec2Text and the corrector mainly refines its output, we treat the
+hypothesizerastheprimarybaseline. AppendixDdiscussesthedifferenceindecodersizebetween
+thetwomethods. AdditionaldetailsareprovidedinAppendixH.
+Table2reportstoken-level,semantic,andLLM-judgemetrics,includingToken-F1andBLEUfor
+comparisonwithVec2Text. Onin-distributionWikipediadata,bothmethodsachievecomparable
+semanticperformance,whileRep2Textrecoversmoretoken-levelinformation,improvingTokenF1
+by11%andEntityScoreby13%. OnOODclinicaldata,Rep2Textgeneralizessubstantiallybetter,
+achieving0.26TokenF1,0.37ROUGE-1,0.64TopicScore,and0.10BLEU,whereasVec2TextBase
+reachesonly0.13TokenF1,0.14ROUGE-1,0.21TopicScore,and0.04BLEU.
+ToassessthereliabilityoftheLLM-judgemetrics,wefurtherconductahumanevaluationcheck.
+AsshowninFigure6,GPT-4.1-miniproducesscoresinasimilarrangetohumanannotations,but
+9
+
+=== PAGE 10 ===
+tendstounderestimatestructurepreservationandslightlyoverestimateentityandtopicpreservation.
+ThissuggeststhatLLM-as-a-judgeisausefulscalableproxy,whileitsabsolutescoresshouldbe
+interpretedwithmetric-specificcaution. DetailedsettingsanddiscussionareprovidedinAppendixC.
+We also evaluate Vec2Text with 50 corrector steps, in which the corrector iteratively refines the
+hypothesizer’soutput. ThecorrectorprovidesonlymarginalgainsonOODdata,despiteconverged
+trainingmetrics. ThismaybebecauseVec2Textwasdesignedfortextencoderembeddings,while
+last-tokenrepresentationsmayprovidealessinformativefeedbacksignalforiterativeediting. In
+contrast,Rep2Textdirectlyalignstherepresentationspacewiththedecoderembeddingspace,which
+appearsmorerobustunderdistributionshift.
+Table 3 shows the outputs of the three methods on the same inputs. On in-distribution data, the
+methodsshowmixedresults. Rep2Textisnearlyexactonthefirstexample,whileVec2Textperforms
+better on the second. On OOD clinical data, Rep2Text better preserves the clinical context. In
+contrast, Vec2Text produces unrelated or repetitive text. Rep2Text can still hallucinate specific
+attributes, such as an implausible BMI. Thus, exact recovery of clinical facts remains imperfect.
+Overall,theseexamplesagreewithTable2. Thetwomethodsperformsimilarlyonin-distribution
+data,butRep2TextgeneralizesbettertoOODdata.
+5 Conclusions
+In this work, we explore the research question that to what extent can the original input text be
+recoveredfromasinglelast-tokenrepresentationofLLMs? Toanswerthisquestion,weproposed
+Rep2Text,anovelframeworkthatemploysatrainableadaptertoprojectatargetmodel’slast-token
+representationintotheembeddingspaceofadecodinglanguagemodel,whichthenautoregressively
+reconstructstheinputtext. Ourcomprehensiveevaluationsindicatethatroughlyhalfofthetokensin
+16-tokensequencescanberecoveredfromthecompressedlast-tokenrepresentationwhilemaintaining
+strongsemanticintegrity. Besides,experimentalresultsshowlongersequencesleadtodecreased
+inversionperformance,withreliablerecoveryachievedforsequencesunder16tokens. Additionally,
+Rep2Textalsoshowspartialtransfertoout-of-distributionclinicaldata,recoveringcoarsestructural
+andsemanticinformation,althoughexactrecoveryofcriticalattributesremainsimperfect. Rep2Text
+shows that a single intermediate representation can reveal part of the input text. Thus, deployed
+systemsshouldprotectintermediaterepresentations. OurclinicalevaluationusesLLM-generated
+summariesofapublicdataset. Developingsafeguardsagainstrepresentationinversionisfuturework.
+References
+[1] AndyZou,LongPhan,SarahChen,JamesCampbell,PhillipGuo,RichardRen,AlexanderPan,
+XuwangYin,MantasMazeika,Ann-KathrinDombrowski,etal. Representationengineering: A
+top-downapproachtoaitransparency. arXivpreprintarXiv:2310.01405,2023.
+[2] WesGurneeandMaxTegmark. Languagemodelsrepresentspaceandtime. InTheTwelfth
+InternationalConferenceonLearningRepresentations,2025.
+[3] DongShu,XuanshengWu,HaiyanZhao,DakingRai,ZiyuYao,NinghaoLiu,andMengnan
+Du. Asurveyonsparseautoencoders: Interpretingtheinternalmechanismsoflargelanguage
+models. EMNLPFindings,2025.
+[4] nostalgebraist. interpretinggpt: thelogitlens,2020. URLhttps://www.lesswrong.com/
+posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens. LessWrong.
+[5] Nora Belrose, Zach Furman, Logan Smith, Danny Halawi, Igor Ostrovsky, Lev McKinney,
+StellaBiderman,andJacobSteinhardt. Elicitinglatentpredictionsfromtransformerswiththe
+tunedlens. arXivpreprintarXiv:2303.08112,2023.
+[6] HaotianLiu,ChunyuanLi,QingyangWu,andYongJaeLee.Visualinstructiontuning.Advances
+inneuralinformationprocessingsystems,36:34892–34916,2023.
+[7] CongzhengSongandAnanthRaghunathan. Informationleakageinembeddingmodels. In
+Proceedingsofthe2020ACMSIGSACconferenceoncomputerandcommunicationssecurity,
+pages377–390,2020.
+10
+
+=== PAGE 11 ===
+[8] HaoranLi,MingshiXu,andYangqiuSong. Sentenceembeddingleaksmoreinformationthan
+youexpect: Generativeembeddinginversionattacktorecoverthewholesentence. InFindings
+oftheAssociationforComputationalLinguistics: ACL2023,pages14022–14040,2023.
+[9] JohnMorris,VolodymyrKuleshov,VitalyShmatikov,andAlexanderMRush. Textembeddings
+reveal(almost)asmuchastext. InProceedingsofthe2023ConferenceonEmpiricalMethods
+inNaturalLanguageProcessing,pages12448–12460,2023.
+[10] Yu-HsiangHuang,YucheTsai,HsiangHsiao,Hong-YiLin,andShou-DeLin. Transferable
+embeddinginversionattack:Uncoveringprivacyrisksintextembeddingswithoutmodelqueries.
+InProceedingsofthe62ndAnnualMeetingoftheAssociationforComputationalLinguistics
+(Volume1: LongPapers),pages4193–4205,2024.
+[11] TianDong,YanMeng,ShaofengLi,GuoxingChen,ZhenLiu,andHaojinZhu. Depthgives
+afalsesenseofprivacy: Llminternalstatesinversion. In34thUSENIXSecuritySymposium
+(USENIXSecurity25),pages1629–1648,2025.
+[12] GiorgosNikolaou,TommasoMencattini,DonatoCrisostomi,AndreaSantilli,YannisPanagakis,
+andEmanueleRodolà. Languagemodelsareinjectiveandhenceinvertible. InInternational
+ConferenceonLearningRepresentations,volume2026,pages57927–57984,2026.
+[13] HaozheChen,CarlVondrick,andChengzhiMao. Selfie: self-interpretationoflargelanguage
+modelembeddings. InProceedingsofthe41stInternationalConferenceonMachineLearning,
+pages7373–7388,2024.
+[14] AsmaGhandeharioun,AviCaciularu,AdamPearce,LucasDixon,andMorGeva. Patchscopes:
+aunifyingframeworkforinspectinghiddenrepresentationsoflanguagemodels. InProceedings
+ofthe41stInternationalConferenceonMachineLearning,pages15466–15490,2024.
+[15] AlexanderPan,LijieChen,andJacobSteinhardt. Latentqa: Teachingllmstodecodeactivations
+intonaturallanguage. arXivpreprintarXiv:2412.08686,2024.
+[16] Vincent Huang, Dami Choi, Daniel D Johnson, Sarah Schwettmann, and Jacob Steinhardt.
+Predictive concept decoders: Training scalable end-to-end interpretability assistants. arXiv
+preprintarXiv:2512.15712,2025.
+[17] Haiyan Zhao, Zirui He, Guanchu Wang, Ali Payani, Yingcong Li, and Mengnan Du. Uni-
+versalactivationverbalizer: Aunifiedframeworkforcross-modelactivationexplanation. In
+Proceedingsofthe2026ConferenceonEmpiricalMethodsinNaturalLanguageProcessing,
+2026.
+[18] HaiyanZhao,ZiruiHe,WeiShi,HuiqiDeng,NaZou,andMengnanDu. Faithfulactivation
+verbalization: Reducing hallucinations in llm representation interpretation. arXiv preprint
+arXiv:2609.34033,2026.
+[19] Jingyi He, Haiyan Zhao, Ruxue Shi, Yanguang Liu, Xin Wang, Fei Sun, and Mengnan Du.
+Saeexplainer: Interpreting sae features with activation-guided preference optimization. In
+Proceedingsofthe2026ConferenceonEmpiricalMethodsinNaturalLanguageProcessing,
+2026.
+[20] XintingHuang,MadhurPanwar,NavinGoyal,andMichaelHahn. Inversionview: ageneral-
+purposemethodforreadinginformationfromneuralactivations. AdvancesinNeuralInforma-
+tionProcessingSystems,37:137903–137964,2024.
+[21] Yifan Luo, Zhennan Zhou, and Bin Dong. Inversescope: Scalable activation inversion for
+interpretinglargelanguagemodels. arXivpreprintarXiv:2506.07406,2025.
+[22] Edward J Hu, yelong shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang,
+Lu Wang, and Weizhu Chen. LoRA: Low-rank adaptation of large language models. In
+InternationalConferenceonLearningRepresentations,2022. URLhttps://openreview.
+net/forum?id=nZeVKeeFYf9.
+11
+
+=== PAGE 12 ===
+[23] LeoGao,StellaBiderman,SidBlack,LaurenceGolding,TravisHoppe,CharlesFoster,Jason
+Phang,HoraceHe,AnishThite,NoaNabeshima,etal. Thepile: An800gbdatasetofdiverse
+textforlanguagemodeling. arXivpreprintarXiv:2101.00027,2020.
+[24] Meta AI. Llama-3.2-3b. https://huggingface.co/meta-llama/Llama-3.2-3B, 2025.
+[Accessed29-10-2025].
+[25] Meta AI. Llama-3.1-8b. https://huggingface.co/meta-llama/Llama-3.1-8B, 2024.
+[Accessed29-10-2025].
+[26] Qwen Team. Qwen2.5: A party of foundation models, September 2024. URL https://
+qwenlm.github.io/blog/qwen2.5/.
+[27] MistralAI. Mistral-7b-v0.1. https://huggingface.co/mistralai/Mistral-7B-v0.1,
+2023. [Accessed29-10-2025].
+[28] Google. Gemma-7b. https://huggingface.co/google/gemma-7b, 2024. [Accessed
+29-10-2025].
+[29] Mingyu Jin, Qinkai Yu, Jingyuan Huang, Qingcheng Zeng, Zhenting Wang, Wenyue Hua,
+HaiyanZhao,KaiMei,YandaMeng,KaizeDing,etal. Exploringconceptdepth: Howlarge
+languagemodelsacquireknowledgeandconceptatdifferentlayers? The31stInternational
+ConferenceonComputationalLinguistics(COLING2025),2025.
+[30] James Campbell, Richard Ren, and Phillip Guo. Localizing lying in llama: Understanding
+instructeddishonestyontrue-falsequestionsthroughprompting,probing,andpatching. arXiv
+preprintarXiv:2311.15131,2023.
+[31] Chin-YewLin.Rouge:Apackageforautomaticevaluationofsummaries.InTextsummarization
+branchesout,pages74–81,2004.
+[32] Tianyi Zhang, VarshaKishore, Felix Wu, Kilian Q Weinberger, and Yoav Artzi. Bertscore:
+Evaluatingtextgenerationwithbert.TheInternationalConferenceonLearningRepresentations
+(ICLR),2020.
+12
+
+=== PAGE 13 ===
+A Metrics
+Allusedmetricsaredefinedasfollows:
+Token-levelAccuracy. WeadoptROUGEscorestomeasurethetoken-levelaccuracy[31]. Specif-
+ically, ROUGE-1, and ROUGE-2 measure the recovery rate of individual tokens and 2-grams,
+respectively,whileROUGE-Lcapturesthelongestcommonsubsequencebetweentheground-truth
+andtheinvertedsequence. Detaileddefinitionsofthesemetricsareasbelow:
+• ROUGE-1andROUGE-2:ForROUGE-k,itcomputestheF-measureofk-gramsextracted
+fromasequence. Supposethesetofk-gramsisdenotedasG (S)andG (kˆ)forground-
+k k
+truthsequenceandinvertedsequencerespectively. ROUGE-kiscomputedasfollows:
+(cid:88) (cid:0) (cid:1)
+Overlap = min cnt (g),cnt (g)
+k S Sˆ
+g∈Gk(S)∩Gk(Sˆ)
+R k = | O G ve k r ( la S p ) k | , P k = | O G ve k r ( la Sˆ p ) k | (5)
+ROUGE =
+(1+β2)RkPk
+k Rk+β2Pk
+wherecnt(·)denotesthecountoftheset.
+• ROUGE-L: Give an ground-truth sequence S = ⟨s ,...,s ⟩ and an inverted sequence
+1 n
+Sˆ = ⟨sˆ ,...,sˆ ⟩, the length of their longest common subsequence is LCS(S,Sˆ). The
+1 m
+ROUGE-LscoreF isdefinedasfollows:
+LCS
+R =
+LCS(S,Sˆ),
+P =
+LCS(S,Sˆ)
+LCS n LCS m (6)
+F =
+(1+β2)RLCSPLCS
+LCS RLCS+β2PLCS
+SentenceStructureandEntityPreservation. Toevaluatethepreservationofsentencestructure
+andentities,weuseGPT-4.1-minitoratethedegreeofpreservationrangingona0-5scale(normalized
+to0-1),yieldingtheStructureScoreandEntityScore,respectively. Thestructurescoreassesseshow
+wellthegrammaticalstructureandsentenceskeletonarepreservedintheinvertedsequences. While
+theentityscoremeasureshowaccuratelyentitynamesandtheirassociatedattributesareinverted.
+DetailedratingcriteriaareprovidedinAppendixL.1.
+Semantic Similarity. We use BERTScore F1 and LLM-as-a-judge to collectively evaluate the
+semanticsimilaritybetweentheground-truthandinvertedsequences[32]. BERTScorequantifies
+similarity in the embedding space, whereas the LLM-based evaluation measures topic relevance
+betweenground-truthandinvertedsequences. ThescoringguidelinesforLLM-as-a-judgeevaluation
+areincludedinAppendixL.1.
+B InvertedExampleswithVaryingTokenLengthsandRecoveryRate
+AsshowninTableL.1,forsequenceswith8tokensand16tokens,someinvertedsequencesfully
+recover the original text, while others fail to capture fine-grained details yet still preserve clear
+grammaticalstructures. Forexample,wheninverting16-tokensequence,althoughtheROUGE-1
+scoreisonly0.4,theoriginalsentence“RobJamesmayreferto:\n\nRobJames(singer)(”andthe
+invertedsequence“MarkJones\n\nMarkJonesmayreferto:\n\nMarkJones(singer)(”sharethesame
+syntacticpattern,"[NAME]\n\n[NAME](singer)(",andconveyequivalenttopic-levelinformation.
+However,whenthenumberoftokensexceed16,theinvertedsequencesremainhighlytopic-relevant
+buttendtolosetheirglobalstructuralcoherence,evenwhenachievingareasonableROUGE-1score.
+C HumanSanityCheck
+Thereportedhumanscorescorrespondtothemeanratingsoverthe200sampledsequences. Thefive
+annotatorsarevolunteersandreceivenomonetarycompensation. Tocharacterizethevariabilityof
+humanjudgment,wealsoreportthestandarddeviationacrossthemeanscoresofthefiveannotators.
+13
+
+=== PAGE 14 ===
+ ϱ
+ ϰ
+ ϯ
+ Ϯ
+ Ϭ  Ϯ  ϰ  ϲ  ϴ  ϭ Ϭ
+  Ɖ Ž Đ Ś
+ Ɛ Ɛ Ž ů  Ő Ŷ ŝ Ŷ ŝ Ă ƌ d
+ D ŝ Ɛ ƚ ƌ Ă ů ϳ   s Ğ Đ Ϯ ƚ Ğ ǆ ƚ
+ D ŝ Ɛ ƚ ƌ Ă ů ϳ   s Ğ Đ ͘   Ă Ɛ Ğ
+ D ŝ Ɛ ƚ ƌ Ă ů ϳ    Ž ƌ ƌ Ğ Đ ƚ Ž ƌ  ϱ
+ ϰ
+ ϯ
+ Ϯ
+ Ϭ  Ϯ  ϰ  ϲ  ϴ  ϭ Ϭ
+  Ɖ Ž Đ Ś
+(a)
+ Ɛ Ɛ Ž ů  Ő Ŷ ŝ Ŷ ŝ Ă ƌ d
+ > ů Ă ŵ Ă ϴ   s Ğ Đ Ϯ ƚ Ğ ǆ ƚ
+ > ů Ă ŵ Ă ϴ   s Ğ Đ ͘   Ă Ɛ Ğ  ϭ Ϭ ͘ Ϭ
+ > ů Ă ŵ Ă ϴ    Ž ƌ ƌ Ğ Đ ƚ Ž ƌ
+ ϳ ͘ ϱ
+ ϱ ͘ Ϭ
+ Ϯ ͘ ϱ
+ Ϭ  ϭ  Ϯ  ϯ  ϰ
+  Ɖ Ž Đ Ś
+(b)
+ Ɛ Ɛ Ž ů  Ő Ŷ ŝ Ŷ ŝ Ă ƌ d
+ K Ƶ ƌ Ɛ  ;   Y ǁ Ğ Ŷ Ϯ ͘ ϱ Ͳ ϭ ϰ  Ϳ
+ K Ƶ ƌ Ɛ  ; D ŝ Ɛ ƚ ƌ Ă ů ϳ  Ϳ
+ K Ƶ ƌ Ɛ  ; > ů Ă ŵ Ă ϴ  Ϳ
+(c)
+FigureD.1: TrainingdynamicsofbothVec2textandourmethods.
+AsshowninFigure6,GPT-4.1-miniproducesscoresthatareclosetotherangeofhumanannotations
+acrossallthreedimensions. Inparticular,itsentityandtopicscoresareclosetothehumanmean,
+whileitsstructurescoreislowerthanthehumanaveragebutstillcomparabletotheratingsassigned
+by several individual annotators. This suggests that GPT-4.1-mini does not behave as an outlier
+evaluator,butratherreflectsoneplausibleannotationtendencywithintherangeofhumanjudgments.
+Atthesametime,thecomparisonrevealsmetric-specificbias. GPT-4.1-miniismoreconservative
+thanhumanannotatorswhenevaluatingstructurepreservation,whereasitgivesslightlyhigherscores
+forentityandtopicpreservation. Therefore,weuseLLM-as-a-judgeasascalableproxyforsemantic
+evaluation,whileinterpretingtheabsolutescoreswithcaution,especiallyforstructurepreservation.
+D MoreResultsonInversionPerformanceAnalysis
+We compare Rep2Text with the adapted Vec2Text baseline under the last-token representation
+inversionsetting. ForVec2Text,boththehypothesizerandcorrectorfollowtheoriginaltwo-stage
+designwithT5-base,usingalearningrateof10−3andawarmupratioof0.10. ForRep2Text,weuse
+Qwen-2.5-14Basthedecodingmodelandtrainonlytheadapterwhilekeepingthedecoderfrozen,
+usingalearningrateof1.5×10−3andawarmupratioof0.30. AllrunsareconductedontwoA100
+GPUs.
+The two methods use decoders of different sizes. Vec2Text uses T5-base, while Rep2Text uses
+Qwen-2.5-14B.However,decodersizehasalimitedeffectonRep2Text. Inthe16-tokensetting,the
+Llama-3.2-3BdecoderinvertsMistral-7B-v0.1representationsatleastaswellasQwen-2.5-14Bon
+allmetrics,asshowninTable1. Meanwhile,Rep2TextoutperformsVec2TextBasebyalargemargin
+onOODclinicaldata. Itreaches0.37ROUGE-1and0.64topicscore,whileVec2TextBasereaches
+0.14and0.21. Thus,thegapisunlikelytocomefromdecodercapacityalone.
+Figure D.1 shows that the Vec2Text corrector reduces training loss, but this does not translate
+intobetterinversionperformance. AsshowninTable2,addingthecorrectorbringsnoconsistent
+improvementandevendegradesthebasemodel,especiallyintheOODclinicalsetting. Thissuggests
+thatthecorrectordoesnotlearnaneffectiverefinementstrategyforlast-tokenrepresentationinversion.
+In contrast, Rep2Text rapidly reduces training loss and achieves stronger downstream inversion
+performance. Thissupportsourhypothesisthatdirectlyaligningthetargetrepresentationspacewith
+thedecoderembeddingspaceismoreeffectivethaniterativelyeditingdecodedhypotheseswhenthe
+inputsignalisacompressedlast-tokenrepresentation.
+E ResultsonRepresentation-TextCorrespondenceAnalysis
+WeconductthreeexperimentstoexaminewhetherRep2Textreliesonthecorrespondencebetween
+representationsandreconstructiontargets. AllsettingsuseMistral-7B-v0.1asthetargetandLlama-
+3.2-3Basthedecoder.Themaximumsequencelengthissetto16tokens,andthenumberofprojected
+vectorsissetto16. Experimentsaretrainedwithaneffectivebatchsizeof512,alearningrateof
+7×10−4,awarmupratioof0.15,and4epochsontwoA100GPUs.
+14
+
+=== PAGE 15 ===
+3.2
+2.4
+1.6
+0.8
+0.0 Baseline 320k Reverse Random
+ssoL
+Loss (↓)
+3.078
+0.9
+2.125
+0.6
+1.329 0.3
+0.0
+Baseline 320k Reverse Random
+(a)Loss
+erocS
+ROUGE-1 (↑)
+μ=0.489 μ=0.435
+0.9
+0.6
+μ=0.082 0.3
+0.0
+Baseline 320k Reverse Random
+(b)ROUGE-1
+erocS
+ROUGE-2 (↑)
+μ=0.287
+μ=0.198 0.9
+0.6
+0.3
+μ=0.009 0.0
+Baseline 320k Reverse Random
+(c)ROUGE-2
+erocS
+ROUGE-L (↑)
+μ=0.474 μ=0.410
+μ=0.076
+(d)ROUGE-L
+24
+18
+12
+6
+0 Baseline 320k Reverse Random
+LPP
+Perplexity (↓)
+21.72 0.9
+0.6
+8.37 0.3
+3.78
+0.0
+Baseline 320k Reverse Random
+(e)Perplexity
+erocS
+Token F1 (↑)
+μ=0.477 μ=0.423 0.9
+0.6
+μ=0.091 0.3
+0.0
+Baseline 320k Reverse Random
+(f)TokenF1
+erocS
+BLEU (↑)
+1.00 μ=0.259
+0.75
+μ=0.186
+0.50
+μ=0.029 0.25
+Baseline 320k Reverse Random
+(g)BLEU
+erocS
+BERTScore (↑)
+μ=0.782 μ=0.738
+μ=0.396
+(h)BERTScoreF1
+FigureE.1: Performancecomparisonunderdifferentrepresentation–textcorrespondencesettings.
+Thebaselineusescorrectlypairedrepresentationsandoriginalinputsequences,Reverseusesword-
+levelreversedinputsequencesasreconstructiontargets,andRandomrandomlypairsrepresentations
+withunrelatedtargetsequences. ThestrongdegradationunderRandomindicatesthatRep2Textrelies
+onrepresentation-specificinformationratherthanonlydecoderlanguagepriors.
+IntheBaselinesetting,eachrepresentationispairedwithitsoriginalinputsequence. IntheReverse
+setting,wereversetheinputsequenceatthewordlevelandthenretokenizeitasthereconstruction
+target. IntheRandomsetting,eachrepresentationispairedwithanunrelatedtargetsequence,thereby
+breakingtherepresentation–textcorrespondence.
+As shown in Figure E.1, Random performs substantially worse than Baseline: the training loss
+increasesfrom1.329to3.078,whileROUGE-L,TokenF1,andBERTScoredecreasefrom0.474,
+0.477,and0.782to0.076,0.091,and0.396,respectively. Thisconfirmsthattheinvertercannotlearn
+meaningfulreconstructionwhenrepresentationsarepairedwithunrelatedtext.
+Bycontrast,Reverseachieves0.410ROUGE-L,0.423TokenF1,and0.738BERTScore. Althoughit
+underperformstheoriginal-orderBaseline,itremainsfaraboveRandom,suggestingthatthemodel
+canrecoverinput-specificinformationevenwhenthetargetfollowsanunnaturalword-order.
+F Layer-wiseInvertibilityacrossTargetModels
+WesweepthelayersofMistral-7B-v0.1,Gemma-7B,andLlama-3.2-3Batroughlymatchedrelative
+depths. AllrunsuseLlama-3.1-8Basthedecoderand16-tokenWikipediasequences. TableF.1
+reportstheresultstogetherwiththeLlama-3.1-8Bsweepfrom§4.6. Mistral-7B-v0.1performsbest
+arounditsmiddlelayers. Llama-3.2-3Bperformssimilarlyfromlayer4tolayer13anddegradesin
+laterlayers. Gemma-7Bperformsbestinitslatelayers. Thus,thebestinversionlayerdependsonthe
+modelarchitecture.
+G InversionofLongerSequences
+Weextendthesequence-lengthanalysisin§4.5to128and256tokens. TheserunsuseLlama-3.2-3B
+asboththetargetanddecoder. Wealsotraina16-tokenmodelunderthesamesettingasananchor.
+TableG.1reportstheresults.
+Lexicalandstructuralrecoverydropsharplyasinputsgrow. Underthe3Bsetting,ROUGE-1drops
+from0.46at16tokensto0.30at128tokensandstaysat0.30at256tokens. ROUGE-2,ROUGE-L,
+entity,andstructurescoreskeepdeclining. Semanticmetricsdropmuchmoreslowly. At256tokens,
+thetopicscoreis0.68andBERTScoreis0.63. ThisBERTScoreiswellabovethe0.40oftheRandom
+controlinAppendixE.Thus,asinglelast-tokenrepresentationlosesmostoftheexactwordingof
+longinputsbutkeepstheircoarsetopic.
+15
+
+=== PAGE 16 ===
+TableF.1: Layer-wiseinversionperformanceoffourtargetmodelswithLlama-3.1-8Basthedecoder.
+BoldrowsmarkthelayerwiththehighestROUGE-1,whichTable1uses. TheL10rowsofMistral-
+7B-v0.1,Gemma-7B,andLlama-3.2-3BcomefromthemainrunsinTable1.
+Layer ROUGE-1 ROUGE-2 ROUGE-L BERTScore Structure Entity Topic
+Llama-3.1-8B(32layers)
+L5 0.46 0.26 0.44 0.76 0.62 0.69 0.88
+L10 0.48 0.28 0.47 0.78 0.66 0.74 0.91
+L15 0.48 0.28 0.45 0.77 0.62 0.75 0.91
+L20 0.44 0.24 0.42 0.74 0.56 0.72 0.91
+L25 0.42 0.21 0.39 0.72 0.54 0.71 0.89
+L30 0.40 0.21 0.37 0.71 0.53 0.69 0.88
+Mistral-7B-v0.1(32layers)
+L5 0.52 0.32 0.50 0.79 0.67 0.71 0.89
+L10 0.52 0.32 0.51 0.81 0.71 0.75 0.90
+L15 0.55 0.35 0.53 0.81 0.70 0.75 0.92
+L20 0.53 0.33 0.52 0.79 0.64 0.74 0.92
+L25 0.49 0.29 0.47 0.76 0.60 0.72 0.90
+L30 0.47 0.26 0.45 0.75 0.60 0.72 0.91
+Gemma-7B(28layers)
+L4 0.45 0.24 0.43 0.72 0.63 0.56 0.76
+L9 0.53 0.31 0.51 0.76 0.68 0.59 0.80
+L10 0.51 0.28 0.49 0.75 0.66 0.59 0.79
+L13 0.53 0.31 0.51 0.76 0.68 0.58 0.79
+L18 0.50 0.28 0.49 0.74 0.68 0.56 0.77
+L22 0.57 0.35 0.55 0.77 0.68 0.61 0.82
+L26 0.64 0.42 0.61 0.80 0.71 0.64 0.86
+Llama-3.2-3B(28layers)
+L4 0.45 0.25 0.43 0.75 0.60 0.67 0.87
+L9 0.46 0.25 0.44 0.76 0.64 0.72 0.89
+L10 0.45 0.25 0.43 0.76 0.64 0.72 0.88
+L13 0.46 0.25 0.44 0.76 0.62 0.73 0.90
+L18 0.42 0.22 0.39 0.72 0.55 0.71 0.90
+L22 0.39 0.19 0.37 0.71 0.53 0.70 0.89
+L26 0.38 0.18 0.36 0.70 0.53 0.69 0.88
+H MoreDetailsonOODExperiments
+H.1 OODDataset
+Weuseanopen-sourceclinicaldatasetfromHuggingFace1. Tofitpatienthistorieswithin32tokens,
+weuseQwen-2.5-32Btosummarize2,500randomlysampledpatientnotes. Theinstructionis:
+You’regivenapieceofclinicalnoteinthefollowingcontext. Summarizetheclinicalnoteinto
+ONEfluentsentence(<=25tokens). Mustinclude: patientname,dateofbirth,gender,andkey
+symptoms. Startwith"[ans]". Outputonlythesummary.
+{note}
+1https://huggingface.co/datasets/Sadaftb/clinical-nlp-patient-notes
+16
+
+=== PAGE 17 ===
+TableG.1: Inversionperformanceacrossinputlengths. 8BdenotesLlama-3.1-8Band3Bdenotes
+Llama-3.2-3B.Eachmodelservesasboththetargetandthedecoder.
+Tokens Model ROUGE-1 ROUGE-2 ROUGE-L BERTScore Structure Entity Topic
+8 8B 0.62 0.42 0.59 0.83 0.78 0.77 0.93
+16 8B 0.48 0.28 0.47 0.78 0.66 0.74 0.91
+32 8B 0.40 0.18 0.36 0.72 0.57 0.68 0.86
+64 8B 0.36 0.13 0.28 0.68 0.49 0.60 0.82
+16 3B 0.46 0.26 0.45 0.76 0.64 0.69 0.88
+128 3B 0.30 0.08 0.22 0.63 0.37 0.41 0.72
+256 3B 0.30 0.07 0.20 0.63 0.36 0.39 0.68
+H.2 ExperimentalDetailsonVec2Text
+WeadaptedtheoriginalVec2Textintoinvertinglast-tokenrepresentation. Here,weuseMistral-7B-
+v0.1asourembeddingmodel. Thetrainingofbothbasemodelandcorrectoradoptsdefaulttraining
+parametersofVec2Text. Tomakesurethetrainingisconvergedwellwithoutoverfitting,wesetup
+bothtrainingprocesstobe10epochswhichtakesmorethan18hoursseparately. Basemodelisset
+tobet5-base,numrepeattokensare16andmaxsequencelengthissettobe64.
+H.3 InvertedExampleswithOODClinicalNotes
+Table3comparesthethreemethodsonthesameinputs.
+I MoreImplementationDetails
+Thissectionprovidesadditionalimplementationdetailsandexperiment-specifichyperparameters
+omittedfromthemaintext. Unlessotherwisespecified,allexperimentsusethesamedefaulttraining
+configurationdescribedbelow.
+Unlessotherwisespecified,allexperimentsaretrainedonWikipediawith640Ktrainingexamples,
+usingembeddingsextractedfromlayer10. Wetrainfor3epochswithacosinelearningratescheduler
+andawarmupratioof0.15. Thedefaultlearningrateis10−3,exceptwherenotedotherwise. We
+useAdamwithβ =(0.9,0.95),weightdecay0.01,labelsmoothing0.075,andadapterdropout0.1.
+Unlessotherwisestated,thenumberofprojectedtokenvectorsissetequaltothenumberoftokens
+beinginverted,asthisgivesthebestperformance(AppendixJ),andthehiddenexpansionfactoris
+fixedat0.5. MostexperimentsarerunontwoNVIDIAA100GPUs(80GBeach),withaglobalbatch
+sizeof1024implementedthroughper-GPUbatchsizeandgradientaccumulation. Moredetailed
+setupsareshowninTableI.1.
+J AblationStudyonAdapterHiddenDimensions
+We study how adapter design affects inversion performance by varying the hidden and output
+dimensionsofthetwo-layerMLPadapter. Allexperimentsareconductedon16-tokensequences
+usinglayer-10representationsfromLlama-3.1-8B.
+AsdefinedinSection3.2,thehiddendimensionofthefirstadapterlayerisdhid =f ·d,wheredis
+theinputrepresentationdimensionandf isanexpansionfactor. Toevaluatetheeffectofhidden-layer
+capacity,wevaryf ∈ {0.5,1,2,4,8}whilekeepingthesecond-layeroutputdimensionfixed. As
+showninFigureJ.2, inversionperformanceislargelyrobusttochangesinthehiddendimension.
+Semantic-levelrecoveryisnearlyunchanged,whiletoken-levelrecovery,measuredbyROUGE-1,
+improvesslightlyasthehiddendimensionincreases. Thissuggeststhatalargerhiddenlayermay
+provide additional capacity for recovering lexical information, but is not critical for preserving
+semanticcontent.
+Wefurthervarytheoutputdimensionofthesecondadapterlayer. Specifically,wesettheoutput
+dimension to k ·d′, where d′ is the embedding dimension of the decoder. This corresponds to
+17
+
+=== PAGE 18 ===
+TableI.1: Experiment-specifichyperparametersfortransfer,token-length,andlayer-sweepexperi-
+ments. AllunspecifiedsettingsfollowtheshareddefaultconfigurationdescribedinAppendixI.The
+Qwen2.5-72Brunusesatensor-parallelsizeof4,soits8GPUsform2data-parallelreplicas.
+EmbModel DecModel MaxLen n #GPU Minibatch GradAccum Eff.Batch LR WarmupRatio
+vecs
+Transferexperiments
+Gemma-7B Llama-3.1-8B 16 16 2 32 16 1024 1e−3 0.15
+Llama-3.2-3B Llama-3.1-8B 16 16 2 32 16 1024 1e−3 0.15
+Mistral-7B Llama-3.1-8B 16 16 2 32 16 1024 1e−3 0.15
+Mistral-7B Llama-3.2-3B 16 16 2 64 8 1024 1e−3 0.15
+Mistral-7B Qwen2.5-14B 16 16 2 32 16 1024 1e−3 0.30
+Mistral-7B Qwen2.5-14B 32 32 4 16 8 512 1.5e−3 0.30
+Mistral-7B Qwen2.5-32B 16 16 8 28 9 2016 1.5e−3 0.30
+Mistral-7B Qwen2.5-72B 16 16 8 64 8 1024 1e−3 0.15
+Token-lengthexperiments(Llama-3.1-8B↔Llama-3.1-8B)
+Llama-3.1-8B Llama-3.1-8B 8 8 2 32 16 1024 1e−3 0.15
+Llama-3.1-8B Llama-3.1-8B 16 16 2 32 16 1024 1e−3 0.15
+Llama-3.1-8B Llama-3.1-8B 32 32 2 32 16 1024 1e−3 0.15
+Llama-3.1-8B Llama-3.1-8B 64 64 4 16 16 1024 3e−3 0.15
+Token-lengthexperiments(Llama-3.2-3B↔Llama-3.2-3B)
+Llama-3.2-3B Llama-3.2-3B 128 128 2 16 32 1024 1e−3 0.15
+Llama-3.2-3B Llama-3.2-3B 256 256 2 8 64 1024 1e−3 0.15
+Layersweeps(allsweptlayers)
+Mistral-7B Llama-3.1-8B 16 16 2 32 16 1024 1e−3 0.15
+Gemma-7B Llama-3.1-8B 16 16 2 32 16 1024 1e−3 0.15
+Llama-3.2-3B Llama-3.1-8B 16 16 2 32 16 1024 1e−3 0.15
+ ϭ ͘ Ϭ
+ Ϭ ͘ ϴ
+ Ϭ ͘ ϲ
+ Ϭ ͘ ϰ
+ Ϭ ͘ Ϯ
+ Ϭ ͘ Ϭ
+ ϭ  Ϯ  ϰ  ϴ  ϭ ϲ  ϯ Ϯ
+ E Ƶ ŵ ď Ğ ƌ  Ž Ĩ  W ƌ Ž ũ Ğ Đ ƚ ŝ Ž Ŷ  s Ğ Đ ƚ Ž ƌ Ɛ k
+ Ϳ ϭ Ͳ Ϭ ;  Ğ ƌ Ž Đ ^
+ > Ğ ǆ ŝ Đ Ă ů  K ǀ Ğ ƌ ů Ă Ɖ
+ ϭ ͘ Ϭ
+ Z K h '  Ͳ ϭ
+ Z K h '  Ͳ Ϯ
+ Z K h '  Ͳ >  Ϭ ͘ ϴ
+ Ϭ ͘ ϲ
+ Ϭ ͘ ϰ
+ Ϭ ͘ Ϯ
+ Ϭ ͘ Ϭ
+ ϭ  Ϯ  ϰ  ϴ  ϭ ϲ  ϯ Ϯ
+ E Ƶ ŵ ď Ğ ƌ  Ž Ĩ  W ƌ Ž ũ Ğ Đ ƚ ŝ Ž Ŷ  s Ğ Đ ƚ Ž ƌ Ɛ k
+(a)
+ Ϳ ϭ Ͳ Ϭ ;  Ğ ƌ Ž Đ ^
+ ^ Ğ ŵ ͘ ͬ ^ ƚ ƌ Ƶ Đ ƚ ͘  W ƌ Ğ Ɛ Ğ ƌ ǀ Ă ƚ ŝ Ž Ŷ
+ ^ ƚ ƌ Ƶ Đ ƚ Ƶ ƌ Ğ
+  Ŷ ƚ ŝ ƚ Ǉ
+ d Ž Ɖ ŝ Đ
+   Z d Ͳ & ϭ
+(b)
+FigureJ.1: Inversionperformanceondifferentnumberofinvertedembeddingtokens.
+projectingthetargetrepresentationintoktoken-embeddingslots. Wevaryk ∈ {1,2,4,8,16,32}
+to test whether more projected embeddings help recover more information from the last-token
+representation. AsshowninFigureJ.1,bothtoken-levelandsemantic-levelperformanceimproveas
+kincreasesupto16. However,performancedegradeswhenk =32,whichexceedstheground-truth
+sequencelength. Thissuggeststhataddingmoreprojectedembeddingsthanthetargetlengthmay
+introduceredundantornoisyinformation.
+Overall,thefirst-layerexpansionfactorhaslimitedimpactoninversionperformance,whereasthe
+numberofprojectedtokenembeddingsismoreimportant. Performanceisstrongestwhenthenumber
+ofprojectedembeddingsmatchestheground-truthtokenlength. Basedonthesefindings,weuse
+f =0.5andsetthenumberofprojectedembeddingstotheground-truthtokenlengthinourmain
+experiments.
+18
+
+=== PAGE 19 ===
+ ϭ ͘ Ϭ
+ Ϭ ͘ ϴ
+ Ϭ ͘ ϲ
+ Ϭ ͘ ϰ
+ Ϭ ͘ Ϯ
+ Ϭ ͘ Ϭ
+ Ϭ ͘ ϱ ǆ  ϭ ǆ  Ϯ ǆ  ϰ ǆ  ϴ ǆ
+  Ě Ă Ɖ ƚ Ğ ƌ  , ŝ Ě Ě Ğ Ŷ   ǆ Ɖ Ă Ŷ Ɛ ŝ Ž Ŷ  & Ă Đ ƚ Ž ƌ f
+ Ϳ ϭ Ͳ Ϭ ;  Ğ ƌ Ž Đ ^
+ > Ğ ǆ ŝ Đ Ă ů  K ǀ Ğ ƌ ů Ă Ɖ
+ ϭ ͘ Ϭ
+ Z K h '  Ͳ ϭ
+ Z K h '  Ͳ Ϯ
+ Z K h '  Ͳ >  Ϭ ͘ ϴ
+ Ϭ ͘ ϲ
+ Ϭ ͘ ϰ
+ Ϭ ͘ Ϯ
+ Ϭ ͘ Ϭ
+ Ϭ ͘ ϱ ǆ  ϭ ǆ  Ϯ ǆ  ϰ ǆ  ϴ ǆ
+  Ě Ă Ɖ ƚ Ğ ƌ  , ŝ Ě Ě Ğ Ŷ   ǆ Ɖ Ă Ŷ Ɛ ŝ Ž Ŷ  & Ă Đ ƚ Ž ƌ f
+(a)
+ Ϳ ϭ Ͳ Ϭ ;  Ğ ƌ Ž Đ ^
+ ^ Ğ ŵ ͘ ͬ ^ ƚ ƌ Ƶ Đ ƚ ͘  W ƌ Ğ Ɛ Ğ ƌ ǀ Ă ƚ ŝ Ž Ŷ
+ ^ ƚ ƌ Ƶ Đ ƚ Ƶ ƌ Ğ
+  Ŷ ƚ ŝ ƚ Ǉ
+ d Ž Ɖ ŝ Đ
+   Z d Ͳ & ϭ
+(b)
+FigureJ.2: InversionPerformanceonvaryingexpansionfactors.
+K TrainingDatasetSizeAblation
+ToexaminewhetherRep2Textbenefitssmoothlyfromadditionaltrainingdata,wetrainadapters
+with10K,50K,100K,320K,and640KWikipediaexampleswhileadjustingtheeffectivebatchsize
+andlearningrateusingsquare-rootscaling. The640Ksettingcorrespondstothedefaultconfiguration
+usedinthemainexperiments.
+TableK.1: Trainingconfigurationsforthedatasetsizeablation.
+TrainSize Epochs Per-GPUBS Grad. Accum. GPUs Eff. BS LR
+10K 15 32 2 1 64 3×10−4
+50K 6 32 4 1 128 4×10−4
+100K 5 32 4 2 256 5×10−4
+320K 4 64 4 2 512 7×10−4
+640K 3 64 8 2 1024 1×10−3
+The experimental setups are shown in Table K.1. The learning rate is scaled according to
+(cid:112)
+effectivebatchsize/1024×10−3. Unlessotherwisespecified,allmodelsaretrainedunderthe
+same setting as the main experiments: we use 16-token Wikipedia sequences, extract layer-10
+last-tokenrepresentations,andfine-tuneonlytheadapterwhilekeepingthedecoderfrozen.
+TheresultsinFigureK.1showaclearmonotonictrendacrossallmetrics: asthenumberoftraining
+examples increases, loss and perplexity decrease, while token-level and semantic reconstruction
+metricsimproveconsistently. Inparticular,BERTScoreincreasesfrom0.636at10Kexamplesto
+0.798at640Kexamples,suggestingthatlargertrainingsetshelptheadapterlearnamoreeffective
+mappingfromlast-tokenrepresentationstothedecoderembeddingspace. Atthesametime, the
+marginalgainsshrinkatlargerdatascales. Forexample,increasingthedatasetfrom320Kto640K
+improvesBERTScoreonlyfrom0.782to0.798andTokenF1from0.477to0.505,whichissmaller
+thantheimprovementsobservedinearlierscalingregimes. Thisindicatesthatthedatascalingcurve
+startstoflattenatthe640Kexamples. Therefore,weadopt640Kasthedefaultsettinginthemain
+experiments,asitoffersafavorablebalancebetweeninversionqualityandtrainingcost.
+L InstructionExamples
+WeincludepromptsforGPT-4.1-miniasbelow.
+19
+
+=== PAGE 20 ===
+L.1 ScoringInstructions
+StructureScore
+Youaregiventwosentences:
+[GT]: self.gt_sen
+[GEN]: self.gen_sen
+EvaluateStructuralFrameSimilarity.Focusonwhether[GEN]preservesthecoregrammaticalstructure
+andsentenceskeletonof[GT]:samebasicclausestructure,samenumber/typeofmajorphrases,similar
+syntacticrelationships,consistentverbtense/aspect.
+Scoring:
+5: Identicalstructure—samewordsinsameorder
+4: Nearlyidentical—samepatternwithentitysubstitutionsorminorreordering
+3: Moderatelysimilar—corestructuremaintainedbutnotablechanges(e.g.,activetopassive)
+2: Somewhatsimilar—recognizableelementsbutsignificantdifferences
+1: Minimallysimilar—onlybasicsentencetypematches
+0: Completelydifferentstructures
+Answer:[ANS] structure: [score]/5
+EntityScore(Clinical)
+Youaregiventwosentences:
+[GT]: self.gt_sen
+[GEN]: self.gen_sen
+EvaluatetheEntity/RoleConsistencyandPlausibilitybetweenthesesnippets.
+ClinicalEntityTypeMatchingRules:
+- PatientDemographics:Age(±5years=high),samebiologicalsex
+- Symptoms/ChiefComplaint:Samesymptomcategory;penalisecrossingbodysystems
+- Diagnosis/Condition:Sameconditionclass;similarseverity
+- Medications:Samedrugclassormechanism
+- VitalSigns/LabValues:Numericalproximity(BP±10mmHg,O2sat±3%,glucose±30mg/dL)
+- AnatomicalLocation:Samebodyregionorsystem
+- Dates/AdmissionTiming:±30days=high,±1year=moderate,>5years=low
+- MedicalProcedures:Sameprocedurecategory
+ScoringGuidelines:0–5
+Answer:[ANS] entity: [score]/5
+EntityScore(Wiki)
+Youaregiventwosentences:
+[GT]: self.gt_sen
+[GEN]: self.gen_sen
+EvaluateEntityPreservation.Focusonwhether[GEN]preserveskeyentities(people,places,organizations)
+from[GT]:samenamedentities, samekeyobjects/concepts, equivalententitiesincorrespondingroles,
+preservationofentityrelationships.
+Scoring:
+5: Allentitiespreserved—allkeyentitiesfromGTappearinGENwithsamereferences
+4: Nearlyallpreserved—minoromissionsofnon-criticalentitiesorslightvariations
+3: Mostpreserved—majorityofkeyentitiesmaintained,someimportantonesmissing/substituted
+2: Somepreserved—recognizableoverlapbutsignificantdifferencesinkeyentities
+1: Fewpreserved—minimaloverlap,onlygenericcategoriesmatch
+0: Nooverlap—completelydifferententities
+Answer:[ANS] entity: [score]/5
+20
+
+=== PAGE 21 ===
+TopicScore(Wiki)
+Youaregiventwosentences:
+[GT]: self.gt_sen
+[GEN]: self.gen_sen
+EvaluateTopicConsistency.Focusonwhether[GEN]maintainsthesamemainsubject/topicas[GT]:same
+primaryentity/concept,samedomain/field,samegeneralsubjectmatter,maintainsrelevancetooriginal
+topic.
+Scoring:
+5: Identicaltopic—exactlythesamespecifictopic/entitywithsamefocus
+4: Highlysimilar—samemaintopicwithslightlydifferentaspects/perspectives
+3: Relatedtopic—closelyrelatedsubjectswithinsamedomain/category
+2: Looselyrelated—someconnectionbutnotablydifferenttopics/focuses
+1: Minimallyrelated—tangentiallyconnectedoronlysharesbroadcategory
+0: Unrelated—completelydifferentsubjectswithnomeaningfulconnection
+Answer:[ANS] topic: [score]/5
+TopicScore(Clinical)
+Youaregiventwoclinicaltextsnippets:
+[GT]: self.gt_sen
+[GEN]: self.gen_sen
+EvaluatetheTopicalRelevancebetweenthesesnippets.
+ClinicalTopicCategories:Cardiology/Pulmonology/InfectiousDisease/Neurology/Gastroenterology/
+Endocrinology/Musculoskeletal/MentalHealth/Nephrology/General&Post-op
+ScoringGuidelines:0-5
+5: Samespecificclinicaltopic(samedisease/condition/carescenario)
+4: Sameclinicaldomainwithminorshifts
+3: Relatedclinicaldomains
+2: Looselyrelated
+1: Bothclinicalbutcompletelydifferentphysiologicalsystems
+0: Nomeaningfulclinicalconnection
+Answer:[ANS] topic: [score]/5
+L.2 SystemPrompt
+SystemPrompt
+YouareanAIassistantthatcandecodethehiddenrepresentationvectorfromtheintermediatelayerofa
+languagemodel.Youreceiveahiddenrepresentationvector,whichistherepresentationofaninputtextual
+sequence’sfinaltokenatafixedlayer.Theaskisusingthisrepresentationvectortocompletelyrevealthe
+originaltextitencodes.Alwaysproducethepossibleinputtextasexactlyasyoucan,andavoidrephrasingit.
+L.3 UserPromptExamples
+UserPrompts
+• Whattypeofcontextisthisrepresentationmostlikelyencoding?
+• Whatdoesthisembeddingrevealabouttheinputsequence?
+• Describetheunderlyingmeaningthishiddenstateiscapturing.
+• Whatkindofsentenceorphrasecouldgeneratethisvector?
+• Whatsemanticinformationislikelycontainedinthishiddenrepresentation?
+• Whatreal-worldcontextcouldthisrepresentationbeassociatedwith?
+21
+
+=== PAGE 22 ===
+• Whatkindoftextualenvironmentmightleadtothishiddenstate?
+• Whatisthemostplausiblemeaningencodedbythisinternalrepresentation?
+22
+
+=== PAGE 23 ===
+ Ϯ ͘ ϰ
+ Ϯ ͘ Ϯ
+ Ϯ ͘ Ϭ
+ ϭ ͘ ϴ
+ ϭ ͘ ϲ
+ ϭ ͘ ϰ
+ ϭ ͘ Ϯ
+ ϭ Ϭ <  ϱ Ϭ <  ϭ Ϭ Ϭ <  ϯ Ϯ Ϭ <  ϲ ϰ Ϭ <
+ d ƌ Ă ŝ Ŷ  ^ ŝ ǌ Ğ
+ Ɛ Ɛ Ž >
+ > Ž Ɛ Ɛ
+ Ϯ ͘ ϰ ϴ ϱ
+ ϭ Ϯ
+ ϭ Ϭ
+ ϴ
+ ϲ
+ ϭ ͘ ϯ Ϯ ϵ  ϭ ͘ Ϯ ϯ ϱ  ϰ
+ ϭ Ϭ <  ϱ Ϭ <  ϭ Ϭ Ϭ <  ϯ Ϯ Ϭ <  ϲ ϰ Ϭ <
+ d ƌ Ă ŝ Ŷ  ^ ŝ ǌ Ğ
+(a)Loss
+ > W W
+ W Ğ ƌ Ɖ ů Ğ ǆ ŝ ƚ Ǉ
+ ϭ Ϯ ͘ Ϭ Ϭ
+ ϯ ͘ ϳ ϴ  ϯ ͘ ϰ ϰ
+(b)Perplexity
+ Ϭ ͘ Ϯ ϳ ϱ
+ Ϭ ͘ Ϯ ϱ Ϭ
+ Ϭ ͘ Ϯ Ϯ ϱ
+ Ϭ ͘ Ϯ Ϭ Ϭ
+ Ϭ ͘ ϭ ϳ ϱ
+ Ϭ ͘ ϭ ϱ Ϭ
+ Ϭ ͘ ϭ Ϯ ϱ
+ Ϭ ͘ ϭ Ϭ Ϭ
+ ϭ Ϭ <  ϱ Ϭ <  ϭ Ϭ Ϭ <  ϯ Ϯ Ϭ <  ϲ ϰ Ϭ <
+ d ƌ Ă ŝ Ŷ  ^ ŝ ǌ Ğ
+ Ğ ƌ Ž Đ ^
+  >  h
+ Ϭ ͘ Ϯ ϴ ϳ
+ Ϭ ͘ ϴ Ϭ
+ Ϭ ͘ Ϯ ϱ ϵ  Ϭ ͘ ϳ ϴ
+ Ϭ ͘ ϳ ϲ
+ Ϭ ͘ ϳ ϰ
+ Ϭ ͘ ϳ Ϯ
+ Ϭ ͘ ϳ Ϭ
+ Ϭ ͘ ϲ ϴ
+ Ϭ ͘ ϲ ϲ
+ Ϭ ͘ Ϭ ϵ ϴ  Ϭ ͘ ϲ ϰ
+ ϭ Ϭ <  ϱ Ϭ <  ϭ Ϭ Ϭ <  ϯ Ϯ Ϭ <  ϲ ϰ Ϭ <
+ d ƌ Ă ŝ Ŷ  ^ ŝ ǌ Ğ
+(c)BLEU
+ Ğ ƌ Ž Đ ^
+   Z d ^ Đ Ž ƌ Ğ
+ Ϭ ͘ ϳ ϵ ϴ
+ Ϭ ͘ ϳ ϴ Ϯ
+ Ϭ ͘ ϲ ϯ ϲ
+(d)BERTScore
+ Ϭ ͘ ϱ Ϭ
+ Ϭ ͘ ϰ ϱ
+ Ϭ ͘ ϰ Ϭ
+ Ϭ ͘ ϯ ϱ
+ Ϭ ͘ ϯ Ϭ
+ Ϭ ͘ Ϯ ϱ
+ ϭ Ϭ <  ϱ Ϭ <  ϭ Ϭ Ϭ <  ϯ Ϯ Ϭ <  ϲ ϰ Ϭ <
+ d ƌ Ă ŝ Ŷ  ^ ŝ ǌ Ğ
+ Ğ ƌ Ž Đ ^
+ d Ž Ŭ Ğ Ŷ  & ϭ
+ Ϭ ͘ ϱ Ϭ ϱ
+ Ϭ ͘ ϰ ϳ ϳ  Ϭ ͘ ϱ Ϭ
+ Ϭ ͘ ϰ ϱ
+ Ϭ ͘ ϰ Ϭ
+ Ϭ ͘ ϯ ϱ
+ Ϭ ͘ ϯ Ϭ
+ Ϭ ͘ Ϯ ϲ Ϯ
+ Ϭ ͘ Ϯ ϱ
+ ϭ Ϭ <  ϱ Ϭ <  ϭ Ϭ Ϭ <  ϯ Ϯ Ϭ <  ϲ ϰ Ϭ <
+ d ƌ Ă ŝ Ŷ  ^ ŝ ǌ Ğ
+(e)TokenF1
+ Ğ ƌ Ž Đ ^
+ Z K h '  Ͳ ϭ
+ Ϭ ͘ ϱ ϭ ϳ
+ Ϭ ͘ ϰ ϴ ϵ
+ Ϭ ͘ Ϯ ϱ ϴ
+(f)ROUGE-1
+ Ϭ ͘ ϯ Ϭ
+ Ϭ ͘ Ϯ ϱ
+ Ϭ ͘ Ϯ Ϭ
+ Ϭ ͘ ϭ ϱ
+ Ϭ ͘ ϭ Ϭ
+ ϭ Ϭ <  ϱ Ϭ <  ϭ Ϭ Ϭ <  ϯ Ϯ Ϭ <  ϲ ϰ Ϭ <
+ d ƌ Ă ŝ Ŷ  ^ ŝ ǌ Ğ
+ Ğ ƌ Ž Đ ^
+ Z K h '  Ͳ Ϯ
+ Ϭ ͘ ϯ ϭ ϰ
+ Ϭ ͘ ϱ Ϭ  Ϭ ͘ Ϯ ϴ ϳ
+ Ϭ ͘ ϰ ϱ
+ Ϭ ͘ ϰ Ϭ
+ Ϭ ͘ ϯ ϱ
+ Ϭ ͘ ϯ Ϭ
+ Ϭ ͘ Ϭ ϵ ϭ  Ϭ ͘ Ϯ ϱ
+ ϭ Ϭ <  ϱ Ϭ <  ϭ Ϭ Ϭ <  ϯ Ϯ Ϭ <  ϲ ϰ Ϭ <
+ d ƌ Ă ŝ Ŷ  ^ ŝ ǌ Ğ
+(g)ROUGE-2
+ Ğ ƌ Ž Đ ^
+ Z K h '  Ͳ >
+ Ϭ ͘ ϱ Ϭ ϯ
+ Ϭ ͘ ϰ ϳ ϱ
+ Ϭ ͘ Ϯ ϯ ϵ
+(h)ROUGE-L
+FigureK.1: Datasetsizeablationacrosseightmetrics. Increasingthenumberoftrainingexamples
+consistentlyimprovesRep2Textinversionperformance: lossandperplexitydecrease,whiletoken-
+levelandsemanticreconstructionmetricsincrease. Thegainsremainpositivefrom320Kto640K
+examples,butbecomesmaller,indicatingdiminishingreturnsatlargerdatascales.
+23
+
+=== PAGE 24 ===
+TableL.1: Invertedexampleswithvaryingtokenlengths
+Tokens
+Ground-truthSequence InvertedSequence R1 R2 RL BS SS ES TS
+(#)
+intheCentre-ValdeLoire intheCentre-ValdeLoire 1 1 1 1 1 1 1
+istheseconderaoftheHade isthethirderaoftheHade 0.86 0.67 0.86 0.99 1 0.8 1
+8
+whoenforceNewZealand’sreg- theenforcementofNewZealand
+0.63 0.29 0.63 0.77 0.4 0.6 1
+ulatorybuildingcontrol statutorybuildingcontrol
+Tyler, the Creator production Metro Boomin production
+0.44 0.29 0.44 0.77 0.8 1 1
+discography\n\n discography\n\n
+biologist\nStanleyFields(actor)
+:\n\nJohnAllen(actor)(born 0.25 0 0.25 0.78 0.6 0.8 0.8
+(
+specieswithinthegenusConus, specieswithinthegenusConus,
+these snails are predatory and these snails are predatory and 1 1 1 1 1 1 1
+venomous. venomous.
+16 ListofshipwrecksinSeptember List of shipwrecks in January
+0.8 0.67 0.8 0.99 0.8 0.8 1
+1842\n\nThelistofship 1840\n\nThelistofship
+2017NCAADivisionISoftball 2018NCAADivisionIWomen’s
+Tournament\n\nThe2017NCAA SoccerTournament\n\nThe2018 0.61 0.38 0.61 0.88 0.8 0.6 0.8
+DivisionI NCAADivision
+MarkJones\n\nMarkJonesmay
+RobJames\n\nRobJamesmayre-
+referto:\n\nMarkJones(singer) 0.4 0.22 0.4 0.96 0.8 1 1
+ferto:\n\nRobJames(singer)(
+(
+Qi Yuwu, Julian Hee, Jeanette ,PierrePng,ChenHanwei,Feli-
+0.25 0.14 0.25 0.82 0.8 1 1
+Aw,FeliciaChin, ciaChin,FannWong
+1825inWales\n\nThisarticleis 1840inWales\n\nThisarticleis
+abouttheparticularsignificance abouttheparticularsignificance
+oftheyear1825toWalesandits oftheyear1840toWalesandits 0.91 0.86 0.91 0.99 0.8 0.8 1
+people.\n\nIncumbents\nPrince people.\n\nIncumbents\nPrince
+ofWales\u2013 ofWales\u2013
+32
+ListofEuropeanChampionships
+List of European records in
+recordsinswimming\n\nTheEu-
+swimming\n\nThefollowingare
+ropean Championships records
+the current European records
+in swimming are the fastest 0.6 0.39 0.53 0.75 0.6 0.8 1
+in swimming, as recognized
+times ever swum in European
+byLEN.\n\nLongcourse(50m
+Swimming Championships’
+pool)\n\nShortcourse(
+events.\n\nLongcourse(50
+InstituteofHigherNationalDe-
+.\n\nHethenstudiedattheInsti-
+fenceStudies.\n\nThen,hewent
+tutd’\u00e9tudespolitiquesde
+totheUSAforaMasterinInter-
+Parisandatthe\u00c9colena- 0.42 0.12 0.3 0.71 0.2 0.6 0.8
+nationalBusinessManagement
+tionaled’administration(ENA).
+attheUniversityofFlorida.He
+Hestartedhiscareerin
+beganhiscareerin
+WilliamRobertsonNicoll\n\nSir
+JohnDuncan(minister)\n\nJohn
+William Robertson Nicoll CH
+Duncan(1May1845\u20136
+LLD(10October1851\u2013 0.21 0.05 0.21 0.74 0.8 0.8 0.8
+March 1914), also known as J.
+4May1923)wasaScottishFree
+Duncan,wasaFree
+Church
+Alessandro Guicci- Gustave de Beau-
+oli\n\nAlessandro Guiccioli mont\n\nGustave de Beaumont
+0.09 0 0.09 0.83 0.6 0.4 0.8
+(March5,1843\u2013October (March1,1840\u2013March2,
+3,1922) 1921)was
+24
+
+=== PAGE 25 ===
+Rush Hour 2\n\nRush Hour 2 Rush Hour 2\n\nRush Hour 2
+isa2001Americanactioncom- isa2001Americanbuddycop
+edyfilmdirectedbyBrettRatner actioncomedyfilmdirectedby
+and written by Jeff Nathanson, BrettRatnerandwrittenbyJeff
+basedonthecharacterscreated Nathanson.Itisthesequeltothe 0.84 0.67 0.78 0.91 0.8 1 1
+byRossLaManna. Asequelto 1998filmRushHourandthesec-
+Rush Hour, it is the second in- ondinstallmentintheRushHour
+64
+stallmentintheRushHourseries filmseries.ThefilmstarsJackie
+andstarsJackieChan, Chan,
+hulllengthof,abeamof,aheight .TheU-boathadadisplacement
+of, and a draught of. The sub- ofwhenatthesurfaceandwhile
+marinewaspoweredbytwoGer- submerged. The U-boat had a
+maniawerftF46four-stroke,six- total length of, a pressure hull
+0.61 0.48 0.49 0.8 0.4 1 1
+cylindersuperchargeddieselen- lengthof,abeamof,aheightof,
+ginesproducingatotalofforuse andadraughtof.Thesubmarine
+while surfaced, two AEG GU waspoweredbytwoGermaniaw-
+460/8\u201327double- erftF46six-
+the same rights of audience as theScottishParliament. Theof-
+membersoftheBarofNorthern ficewascreatedin1999,andis
+Ireland.\n\nThe Advocate Gen- theequivalentoftheParliamen-
+eralwascreatedasaseparateof- tary Under-Secretary of State
+ficeuponthedevolutionofpolic- intheUnitedKingdomGovern-
+ing and justice powers to the ment.\n\nTheofficeisnotamin- 0.41 0.08 0.24 0.66 0.4 0.4 0.8
+NorthernIrelandAssemblyon12 isterialpost,andtheholderisnot
+April2010.\n\nUnliketheAdvo- a member of the Scottish Gov-
+cateGeneralforScotland,thepo- ernment. Responsibilityforthe
+sitionisnotsupportedbyadis- officeisheldbytheScottishSec-
+tinctgovernmentdepartment. retary.
+producer Thom Wilson and re-
+the band’s first album, and the
+leased in 1982 as catalog num-
+first to feature the band’s new
+berVIRUS10. SingerJackGr-
+lineup.Thebandmembersused
+isham credited himself as Jack
+pseudonymsonthealbum,with
+Ladogaonthesleeve,following
+the exception of guitarist and
+a tradition of using a different 0.21 0.04 0.15 0.59 0.8 0.6 0.8
+vocalistJohn\"Baz\"Bascaran,
+pseudonymoneachreleaseboth
+whousedhisrealnamebecause
+toconfuseaudiencesandtohide
+he was the only member of
+histrueidentityfromthepolice.
+thebandwithadriver’slicense.
+DrummerToddBarnescredited
+Drum
+himself
+Linuxkernel.\n\nXC3018\nItisa 2010.\n\nSpecifications\nFrequency:
+variantthatonlysupportsanalog 2.4\u00a0GHz\nData
+receptionandDVB-Tdigitalre- rate: 1, 2, 5.5,
+ception.\n\nTechnical specifica- 11\u00a0Mbps\nModulation:
+0.09 0 0.09 0.62 0 0 0.8
+tion\nOutline Dimensions: 7 x DSSS\nPower consumption:
+7x0.85\u00a0mm\nSupplyVolt- 0.1\u00a0W\nOperating tem-
+age (DC): 1.8V, 3.3V\nSystem perature: 0\u00a0\u00b0C to
+settingtime: 70\u00a0\u00b0C\n
+25
+
+=== PAGE 26 ===
+NeurIPSPaperChecklist
+1. Claims
+Question: Dothemainclaimsmadeintheabstractandintroductionaccuratelyreflectthe
+paper’scontributionsandscope?
+Answer: [Yes]
+Justification: The abstract and introduction accurately state the paper’s main scope and
+contributions: studyinghowmuchtextcanberecoveredfromasinglelast-tokenrepresen-
+tationandproposingRep2Texttoperformthisinversion. Theseclaimsaresupportedby
+the experimental results in Section 4, including cross-model inversion, sequence-length
+analysis,layer-wiseanalysis,andcomparisonwithVec2Textonbothin-distributionand
+out-of-distributiondata.
+2. Limitations
+Question: Doesthepaperdiscussthelimitationsoftheworkperformedbytheauthors?
+Answer: [Yes]
+Justification: Sections4.5, 4.7, and5discussthedropinrecoveryforlongerinputs, the
+LLM-judgebias,andtheimperfectrecoveryofclinicalattributes.
+3. Theoryassumptionsandproofs
+Question: Foreachtheoreticalresult,doesthepaperprovidethefullsetofassumptionsand
+acomplete(andcorrect)proof?
+Answer: [N/A]
+Justification: Thepaperdoesnotpresentformaltheoreticalresultsorproofs.
+4. Experimentalresultreproducibility
+Question: Doesthepaperfullydisclosealltheinformationneededtoreproducethemainex-
+perimentalresultsofthepapertotheextentthatitaffectsthemainclaimsand/orconclusions
+ofthepaper(regardlessofwhetherthecodeanddataareprovidedornot)?
+Answer: [Yes]
+Justification: Sections3and4andtheappendicesdescribethearchitecture,trainingsetup,
+datasets,metrics,andbaselinesneededtoreproducethemainresults.
+5. Openaccesstodataandcode
+Question: Doesthepaperprovideopenaccesstothedataandcode,withsufficientinstruc-
+tionstofaithfullyreproducethemainexperimentalresults,asdescribedinsupplemental
+material?
+Answer: [Yes]
+Justification: We release the code and environment files at https://github.com/
+hy-zhao23/Rep2Text, andthetrainedadaptercheckpointsathttps://huggingface.
+co/adfjasigageadfd/rep2text-checkpoints. The README describes how to re-
+buildthetrainingdataandruneachexperiment.
+6. Experimentalsetting/details
+Question: Doesthepaperspecifyallthetrainingandtestdetails(e.g.,datasplits,hyperpa-
+rameters,howtheywerechosen,typeofoptimizer)necessarytounderstandtheresults?
+Answer: [Yes]
+Justification: Section4.1andAppendixIspecifythedatasets,splits,modelchoices,hyper-
+parameters,trainingdetails,andevaluationmetrics.
+7. Experimentstatisticalsignificance
+Question:Doesthepaperreporterrorbarssuitablyandcorrectlydefinedorotherappropriate
+informationaboutthestatisticalsignificanceoftheexperiments?
+Answer: [No]
+Justification: Wereportmeanscoresandstandarddeviationsforthemaincomparison,but
+donotrunmultipleseedsorformalsignificancetestsduetocomputationalcost.
+26
+
+=== PAGE 27 ===
+8. Experimentscomputeresources
+Question: Foreachexperiment,doesthepaperprovidesufficientinformationonthecom-
+puterresources(typeofcomputeworkers,memory,timeofexecution)neededtoreproduce
+theexperiments?
+Answer: [Yes]
+Justification:Section4.1reportstheGPUtypeandapproximatetrainingtime,withadditional
+implementationdetailsinAppendixI.
+9. Codeofethics
+Question: Doestheresearchconductedinthepaperconform, ineveryrespect, withthe
+NeurIPSCodeofEthicshttps://neurips.cc/public/EthicsGuidelines?
+Answer: [Yes]
+Justification: Theworkstudiesprivacyandinterpretabilityrisksusingpublicdatasetsand
+models,withoutdeploymentonprivateuserdata.
+10. Broaderimpacts
+Question: Does the paper discuss both potential positive societal impacts and negative
+societalimpactsoftheworkperformed?
+Answer: [Yes]
+Justification: Section5discussestheprivacyriskofexposingintermediaterepresentations
+andtheneedtoprotectthem.
+11. Safeguards
+Question: Doesthepaperdescribesafeguardsthathavebeenputinplaceforresponsible
+releaseofdataormodelsthathaveahighriskformisuse(e.g.,pre-trainedlanguagemodels,
+imagegenerators,orscrapeddatasets)?
+Answer: [Yes]
+Justification: WereleaseonlyadapterstrainedonWikipediatext. Wedonotreleasetools
+thattargetprivateuserdata.
+12. Licensesforexistingassets
+Question: Arethecreatorsororiginalownersofassets(e.g.,code,data,models),usedin
+thepaper,properlycreditedandarethelicenseandtermsofuseexplicitlymentionedand
+properlyrespected?
+Answer: [Yes]
+Justification: The paper cites the existing datasets, models, and baselines used in the
+experiments.
+13. Newassets
+Question:Arenewassetsintroducedinthepaperwelldocumentedandisthedocumentation
+providedalongsidetheassets?
+Answer: [Yes]
+Justification: We release the code and the trained adapter checkpoints. The repository
+READMEdocumentstheirusageandthelicense.
+14. Crowdsourcingandresearchwithhumansubjects
+Question: Forcrowdsourcingexperimentsandresearchwithhumansubjects,doesthepaper
+includethefulltextofinstructionsgiventoparticipantsandscreenshots,ifapplicable,as
+wellasdetailsaboutcompensation(ifany)?
+Answer: [Yes]
+Justification: Appendix C describes the volunteer annotators, sampled data, and rating
+protocolforthehumansanitycheck. Nomonetarycompensationwasprovidedbecausethe
+annotatorswerevolunteers.
+15. Institutional review board (IRB) approvals or equivalent for research with human
+subjects
+27
+
+=== PAGE 28 ===
+Question: Doesthepaperdescribepotentialrisksincurredbystudyparticipants,whether
+suchrisksweredisclosedtothesubjects,andwhetherInstitutionalReviewBoard(IRB)
+approvals(oranequivalentapproval/reviewbasedontherequirementsofyourcountryor
+institution)wereobtained?
+Answer: [N/A]
+Justification: Thehumansanitycheckdidnotcollectpersonalorsensitiveinformationfrom
+annotators.
+16. DeclarationofLLMusage
+Question: Does the paper describe the usage of LLMs if it is an important, original, or
+non-standardcomponentofthecoremethodsinthisresearch? NotethatiftheLLMisused
+onlyforwriting,editing,orformattingpurposesanddoesnotimpactthecoremethodology,
+scientificrigor,ororiginalityoftheresearch,declarationisnotrequired.
+Answer: [Yes]
+Justification: LLMsareusedasdecodingmodelsandforLLM-as-a-judgeevaluation,as
+describedinSections3and4andtheappendices.
+28

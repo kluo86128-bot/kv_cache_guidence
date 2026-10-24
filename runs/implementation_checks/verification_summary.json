@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "date": "2026-10-16",
+  "release": "v2 validation CSV persistence",
+  "scope": "CPU implementation verification with random tiny model; server v1 run separately user-reported",
+  "unit_tests_by_transformers_version": {
+    "4.57.1": {
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "4.57.6": {
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "discrete_tests_deselected_per_version": 3,
+  "discrete_search_enabled": false,
+  "single_process_cli_end_to_end": "PASS",
+  "evaluation_conditions": [
+    "soft",
+    "random",
+    "blocked",
+    "full",
+    "manual",
+    "none"
+  ],
+  "loss_curve": "PASS",
+  "per_epoch_validation_csv": "PASS",
+  "standalone_evaluation_csv": "PASS",
+  "raw_multiline_csv_roundtrip": "PASS",
+  "interrupted_validation_attempt_preserved": "PASS",
+  "old_checkpoint_re_evaluation_without_retraining": "PASS",
+  "new_validation_csv_server_execution": "NOT RUN",
+  "distributed_exact_resume_server_check": "NOT RUN",
+  "prior_v1_server_run_user_reported": {
+    "status": "complete",
+    "gpu_ids": "0,2",
+    "backend": "nccl",
+    "epochs": 20,
+    "steps": 2500,
+    "best_step": 2250,
+    "best_validation_macro_em": 0.305,
+    "run_directory": "/data/kevin/medical_privacy_prompt/runs/soft_seed17_20261016_175131",
+    "source": "training/validation log pasted by user; not an agent-run server verification"
+  },
+  "source_dataset_unchanged": true,
+  "formal_test_split_evaluated": false,
+  "code_sha256": {
+    "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+    "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "backend.py": "3062d2e7e2307be38b9dceeb19f2fc01633fd050b550298a6805e8c496d1692d",
+    "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+    "cli.py": "cc2ae918932163305527faac184d37776b2eb979f5dd19f27a588c6fca545953",
+    "config.py": "8c6e927a0bf9918d2771faee2efc2ea1ec60d4a3899b52ee2b7e265cde277e10",
+    "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+    "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+    "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+    "evaluation.py": "55aa0214bcbcc00d73d5176b071997abc0067c63a6bedfe86211514203476519",
+    "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+    "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+    "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+    "training.py": "987addd19ddb7dea1da6639e7187f0a22061ef296535367ca699c18e4836ec69"
+  }
+}

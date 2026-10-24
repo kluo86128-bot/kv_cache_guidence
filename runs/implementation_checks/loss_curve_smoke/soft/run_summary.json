@@ -1,0 +1,26 @@
+{
+  "method": "soft",
+  "run_signature": "e9f198460cf196d18cb1179106f8c433696d63ec1f60e83cfe55fc955430613f",
+  "status": "complete",
+  "stop_reason": "epochs_completed",
+  "state": {
+    "epoch": 2,
+    "cursor": 0,
+    "step": 2,
+    "best": {
+      "macro_em": 0.0,
+      "macro_nll": 11.95096230506897,
+      "step": 2
+    },
+    "bad_epochs": 1,
+    "elapsed_seconds": 0.9028822999989643,
+    "field_exposures": {
+      "name": 4,
+      "birth_date": 4,
+      "address": 4,
+      "diagnosis": 4
+    }
+  },
+  "partial_dataset": true,
+  "best_checkpoint": "D:\\Stepby\\kv-cache研究\\医疗隐私引导实验\\runs\\implementation_checks\\loss_curve_smoke\\soft\\best.pt"
+}

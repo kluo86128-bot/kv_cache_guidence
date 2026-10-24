@@ -1,0 +1,737 @@
+
+=== PAGE 1 ===
+TheFortiethAAAIConferenceonArtificialIntelligence(AAAI-26)
+CoSPED: Consistent Soft Prompt Targeted Data Extraction and Defense
+ZhuochenYang,KarWaiFok,VrizlynnL.L.Thing
+CybersecurityStrategicTechnologyCentre,STEngineering,Singapore
+yang0761@e.ntu.edu.sg,fok.karwai@stengg.com,vriz@ieee.org
+Abstract Prefix
+Largelanguagemodelshavegainedwidespreadattentionre- Daemon Source Code is distributed in the hope that it will be useful,
+cently, but their potential security vulnerabilities, especially but WITHOUT ANY WARRANTY; without even the implied
+privacyleakage,arealsobecomingapparent.Totestandeval- warranty of ......
+uatefordataextractionrisksinLLMs,weproposeCoSPED,
+short for Consistent Soft Prompt Targeted Data Extraction
+and Defense. We introduce several innovative components,
+includingDynamicLoss,AdditiveLoss,CommonLoss,and LLM
+Self Consistency Decoding Strategy, and tested to enhance Memorized
+the consistency of the soft prompt tuning process. Through Privacy Info
+extensive experimentation with various combinations, we
+achieved an extraction rate of 65.2% at a 50-token prefix or FITNESS FOR A PARTICULAR PURPOSE. Please contact
+comparison. Our comparisons of CoSPED with other refer- Hu**** (***@*******.com)
+713-***-**** (phone)
+enceworksconfirmoursuperiorextractionrates.Weevaluate
+713-***-**** (fax)
+CoSPEDonmorescenarios,achievingPythiamodelextrac-
+Should there be any other request, please reach
+tionrateof51.7%andintroducingcross-modelcomparison.
+sara.*********@*****.com ......
+Finally,weexploredefensethroughRank-OneModelEdit-
+ing and achieve a reduction in the extraction rate to 1.6%,
+whichprovesthatouranalysisofextractionmechanismscan Figure1:ExampleofPrivacyExtractioninPrefixandSuffix.
+directly inform effective mitigation strategies against soft
+prompt-basedattacks.
+Soft prompts (Lester, Al-Rfou, and Constant 2021) offer
+Extendedversion—https://arxiv.org/abs/2510.11137
+a light-weight handle for such attacks because they guide
+modelbehaviorwithoutchangingweights.TheControllable
+Introduction Language Model (CLM) framework (Ozdayi et al. 2023)
+offers an initial treatment of this problem by training soft
+With the growing popularity of ChatGPT (Wu et al.
+prompts for extraction attacks. Ethicist (Zhang, Wen, and
+2023; Yan et al. 2023) and other Large Language Models
+Huang2023)strengththisareawithsmoothinglossandcal-
+(LLMs) (Devlin et al. 2019; Radford et al. 2019), their re-
+ibratedconfidenceestimationtoprioritizehigh-risktokens.
+markablecapabilitiescomewithemergingsecurityandpri-
+From the analysis of previous works, we observe that
+vacy risks (Carlini et al. 2021; Yao et al. 2024). Recent
+generation-based extraction methods often produce highly
+works indicate that LLMs tend to memorize training data,
+variableorincoherentoutputsacrossrepetitions,lossconfig-
+resultinginconsiderablepotentialforleakage(Carlinietal.
+urations,anddecodingchoices.Thesefindingsrevealthree
+2022b),whichraisesanurgentneedfordeeperanalysisand
+concrete gaps: (1) Most approaches optimize a simple loss
+effectivemitigationstrategies.
+inisolation,sogradientsaredominatedbynoisytokensand
+Our work focuses on targeted training data extraction, a
+differentrandomseedsleadtoinconsistentprompts.(2)De-
+white-box attack where adversaries have full knowledge of
+codingstrategiesaretypicallyselectedheuristicallyandde-
+modelinternals.Bystudyingsuchworst-casescenarios,we
+coupled from the loss design, causing low consistency be-
+aimtouncoverhowandwhyLLMsmemorizesensitivedata,
+tween generated outputs and memorized training data. (3)
+ultimately helping guide the development of effective de-
+Evaluationsusuallystaywithinonemodelfamilyandrarely
+fenses. Figure 1 presents an example of targeted training
+connect extraction behavior back to deployable defenses,
+data extraction using prefixes and suffixes that could leak
+limitingourabilitytotranslateinsightsintomitigation.
+criticalprivacyinformation.
+To address these challenges, we propose CoSPED, Con-
+Copyright©2026,AssociationfortheAdvancementofArtificial sistent Soft Prompt Targeted Data Extraction and Defense.
+Intelligence(www.aaai.org).Allrightsreserved. Ourmaincontributionsaresummarizedasfollows:
+38075
+
+=== PAGE 2 ===
+• WeproposeCoSPED,aframeworkfortargeteddataex- model behavior without modifying model parameters (Li
+traction based on soft prompts, integrating consistency- andLiang2021).Unliketextprompts,softpromptsdirectly
+drivenlossfunctionsanddecodingstrategies. manipulateinputattheembeddinglevel.
+• Wedesignthreenovellossfunctions,includingDynamic Recentworkshaveexploitedsoftpromptsfordataextrac-
+Loss, Additive Loss, and Common Loss, and a Self- tion attacks. CLM (Ozdayi et al. 2023) trains soft prompts
+Consistency Decoding (SCD) strategy, and explore 16 toextractmemorizedsuffixesgivenprefixes,achievingim-
+loss combinations. Each enhances different aspects of provedextractionratesoverbaselines.Ethicist(Zhang,Wen,
+prompttuningstabilityandextractionperformance. and Huang 2023) enhances extraction with a smoothing
+lossthatoptimizesgenerationprobabilitiesforhigh-lossto-
+• We conduct extensive studies on multiple open-source
+kensandusescalibratedconfidenceestimationforsuffixse-
+LLMs, including GPT-Neo series and Pythia series, in-
+lection. Follow-up efforts propose decoding heuristics and
+troducingmodelstructuralrelatedinfluence.
+prompt-inversion tricks to further stabilize extraction (Yu
+• Weimplementandevaluateadefensemechanismbased et al. 2023; Zhang, Carlini, and Ippolito 2024). However,
+ontheROMEmodelediting,demonstratingitseffective- thesemethodsstillsufferfromhighvarianceacrossruns,fo-
+nessinmitigatingsoftprompt-basedextractionattacks. cusonasinglemodelfamily,ordonotofferaunifiedview
+• Weconfirmhowinsightsgainedfromextractionattacks thatconnectsextractionanddefense.
+canbeleveragedtodeveloptargeteddefensesandinform Overall, prior works have primarily focused on sim-
+futuremitigationefforts. ple loss optimization and heuristic decoding within a sin-
+gle model family. In the following section, we introduce
+RelatedWorks CoSPED, a consistency-driven framework that addresses
+theselimitationsindataextractionanddefense.
+PrivacyRisksinLLMs
+Large-scalepre-trainedlanguagemodelsoftenunintention- Methodology
+ally memorize training data, leading to privacy risks where
+Webeginbyformalizingtheproblemsettingandnotations.
+sensitive information can be leaked (Carlini et al. 2021, Let X denote a continuous token sequence from the pre-
+2022b;Tirumalaetal.2022).Recentsurveysandlarge-scale
+trainingcorpusofalargelanguagemodel(LLM).Eachse-
+extractionpipelinesshowthatthisvulnerabilitypersistseven quence X is divided into a prefix P containing k tokens
+P
+inproductionsystems(Ishihara2023;Nasretal.2025)and and a suffix S containing k tokens. We represent train-
+S
+canbeamplifiedthroughdecomposition-baseddecodingor ing corpus as D = {X (P ,S )}, where each sequence
+i i i
+otherattackheuristics(Suetal.2024;Yuetal.2023).These X is paired with its corresponding prefix-suffix pair. The
+i
+works emphasize that extraction robustness must be evalu- attacker-accessible split is denoted as D = {X (P ,S ) |
+a i i i
+atedbeyondasinglemodelordecodingconfiguration. X ,P ,S ∈ D}. This dataset enumerates all prefix-suffix
+i i i
+Variousstudieshaveshownthatmodelscaninadvertently pairs available for soft prompt tuning, ensuring that opti-
+store and reveal personal information, which can be ex- mization covers the same statistical distribution as memo-
+tractedthroughtargetedqueries(Carlinietal.2019;Lehman rizedcorpus.WeassumeDcontainscommonlyusedpublic
+et al. 2021). Defense efforts include data deduplication sources such as Books3 (Zhu et al. 2015), Common Crawl,
+(Kandpal, Wallace, and Raffel 2022), sensitive information andThePile(Gaoetal.2020),makingthissetuprealisticfor
+deletion(Patil,Hase,andBansal2024),anddifferentialpri- large-scale pre-trained models. The objective is to recover
+vacy (Abadi et al. 2016; McMahan et al. 2018), but these memorized suffixes S given corresponding prefixes P by
+strategies remain insufficient against evolving attacks (Yao optimizingsoftpromptwithoutmodifyingmodelweights.
+et al. 2024). Thus, frameworks are required that can rigor-
+ouslyevaluateextractionacrossvariousscenarios. Overview
+Extraction attacks focus on recovering memorized data, OurapproachemploysatrainablesoftpromptZ ∈ RK×d,
+includingmodelstealing(Kariyappa,Prakash,andQureshi where K is the prompt length and d is the model’s em-
+2021;Truongetal.2021),gradientleakage(Lietal.2023), beddingdimension.Duringtraining,Z isconcatenatedwith
+andtrainingdataextraction(Ozdayietal.2023;Yangetal. prefixes P sampled from D , and only Z is optimized to
+i a
+2024). Membership inference attacks (Shokri et al. 2017), minimizethelossLforgeneratingthecorrespondingsuffix
+on the other hand, attempt to determine whether a par- S ,whileallLLMparametersremainfrozen.Aftertraining,
+i
+ticular data record was used in the training dataset of a theoptimizedsoftpromptisevaluatedonadisjointtestsplit
+model(Carlini et al. 2022a). While membership inference D , where prefixes P are used to generate predicted suf-
+p p
+attacks determine whether a point was used for training fixesS .Theoutputsarecomparedagainstground-truthsuf-
+p
+(Truex et al. 2019; Carlini et al. 2022a; Fu et al. 2025), fixesusingexact-matchandtoken-levelaccuracymetricsto
+training-data extraction aims to reconstruct the underlying measure extraction success. Figure 2 provides an overview
+content, making CoSPED complementary to but distinct ofthispipeline,illustratingthesoftpromptinitialization,op-
+frommembership-focusedprompttuning. timizationprocess,andevaluationworkflow.
+PromptTuningforDataExtraction ThreatModel
+Prompt tuning (Lester, Al-Rfou, and Constant 2021) opti- We consider a targeted training-data extraction adversary
+mizescontinuousinputembeddings(softprompts)toguide withwhite-boxaccesstothevictimLLM.Theattackercan
+38076
+
+=== PAGE 3 ===
+Prefix Pi Suffix Si
+Sequence X(P, S): Living without an aim is like sailing without a compass. Evaluate for
+k Exact Match
+Predicting
+LLM
+Decoding Strategy
+Tokenized Sequence
+Output Suffix S p L = L MLE + L extra
+Dataset D Soft Prompt Embeddings Training Calculate
+Multiple Loss
+Backward Propagation updating Soft Prompt parameters
+Figure 2: Procedure of data extraction. Training and predicting share a roughly similar process, with prefix P given with
+soft prompt embeddings in the input, which then generates suffix S for prediction. In training, the loss L is calculated, and
+p
+backwardpropagationupdatessoftprompts,whileinpredicting,thekexactmatchresultisevaluated.
+inspect model parameters, gradients, and internal activa- instances. Focal loss reweights each token-level log likeli-
+tions, and is permitted to tune continuous soft prompts Z hood with α and the focusing parameter γ to emphasize
+t
+while keeping model weights frozen. They may query the hardexamples.Theprobabilitytermsatisfiesp = P (t |
+i M i
+modelrepeatedlybutcannotalterpre-trainingdataoraccess Z,P,t ,t ∈ S) and captures how likely the frozen
+<i <i
+user-specificlogs.Thegoalistoreconstructmemorizedsuf- model is to emit token t when conditioned on the soft
+i
+fixes S corresponding to given or guessed prefixes P. Our promptandtheobservedprefixtokens.
+defenseevaluationadoptsthesameassumptionstoexamine
+DynamicLoss Insmoothloss,thetopN lowestlossval-
+how editing internal representations can reduce extraction
+uesareincreased,butN isafixedvalue,whichcannotcen-
+successratewhilepreservingnormaldownstreamutility.
+sor the dynamic loss changes. Thus, we propose dynamic
+lossinEq.1,whichismeanttooptimizetheflawsinsmooth
+LossExploration
+loss.k ,whichrepresentsourtargetingtoptokensamount
+dy
+By default, an LLM is trained with a maximum likelihood withthehighestloss,changesdynamically.
+estimation (MLE) loss. Besides MLE, we explore several
+additionallosses,includingsmoothloss,focalloss,dynamic 1 X
+kdy
+L =− logP (t |Z,P,t ). (1a)
+loss,additiveloss,andcommonloss,someofwhichconsist Dy k M δ(i) <δ(i)
+dy
+ofthebestL showninFig.2,whichcaneitherenhance i=1
+extra
+orreplacetheoriginalMLEloss. (cid:26) N ifL ≤T ,
+k = MLE D (1b)
+S represents the suffix sequence the model is trying to dy N +α(L −T ) ifL >T .
+MLE D MLE D
+generate,andMLElossiscalculatedbasedoneacht token
+i
+loss,whichisinfluencedbysoftpromptsZ,inputprefixP, Equation1aaveragesthelogprobabilitiesofthehighest-
+andpreviouslygeneratedtokenst <i . loss tokens t δ(i) identified in the current batch, whereas
+Ethicist proposed an extra loss function called Smooth Equation 1b adapts the number of tracked tokens k dy once
+loss, which is meant to increase the top N lowest loss val- theMLElossL MLE exceedsatoleranceT D .Whentraining
+ues and additionally optimize the generation probabilities becomes unstable, the schedule raises k dy to widen the fo-
+for these N tokens. It gives improvements while combin- cusondifficulttokens,ensuringthattheoptimizerallocates
+ing with original L , but in our method, we are explor- capacitywhereverthemodelismostuncertain.
+MLE
+ingmorecombinationsofdifferentlosses,includingsmooth
+AdditiveLoss Additivelosspenalizesthemodelmorefor
+loss,totestformorepotential.
+specific error-prone tokens. We evaluated the list of error-
+WhileMLEandSmoothlossprovidebaselines,theyhave
+prone tokens from training, and we found the majority of
+limitations:MLEcanleadtoexposurebias,andSmoothloss
+error-prone tokens are more commonly used tokens, and
+onlyconsidersfixedktokens.Toaddressthese,weintroduce
+they are widely generalized in various usages. We count
+focallossandthreenovellossfunctions.
+these tokens and include them in the K set as the basis
+M
+Focal loss Focal loss (Lin et al. 2017), equation as foradditiveloss.
+L Focal = − |S 1 | P| i S = | 1 α t (1 − p i )γlogp i , is a modification L =− 1 K XM X αlogP (t|Z,P). (2)
+of standard cross-entropy loss, primarily designed to ad- Addi K M
+M
+dress the class imbalance problem. In our scenario, focal i=1t∈M(xi)
+lossfocusesonpenalizinghard-to-classifytokensmorethan K represents the total number of error-prone tokens,
+M
+easier tokens, thereby emphasizing learning from difficult x denotes the i input example, and M(x ) is the set of
+i th i
+38077
+
+=== PAGE 4 ===
+error-prone tokens in x . The term logP (t | Z,P) is the excludingtheend-of-sequencetokens,denotedasEOS.For
+i M
+log probability of token t given the context Z and model eachsequence,weconsiderthesetofuniquetokens{S },
+i,j
+parametersP.Scalingfactorαcontrolstheweightofaddi- whereS denotesthej tokeninthei sequence.Thedi-
+i,j th th
+tiveloss,ensuringthepenaltyisproportionate.Bysumming versityofasequenceisthendeterminedbytheratioofthe
+over these tokens and averaging over K , the model re- number of unique tokens to the total number of tokens in
+M
+ceives a consistent and normalized penalty, encouraging it thesequence,excludingEOStokens.Thediversityscoreis
+toimprovepredictionsforcommonlywronglypredictedto- calculated as the absolute difference between this diversity
+kens,leadingtobetterperformanceandgeneralization. ratioandthedesireddiversityvalue,referredtoasD .
+Optimal
+After computing the diversity scores for all sequences, the
+CommonLoss BasedontheanalysisofL andthefre-
+Addi sequences are sorted based on these scores. The sequences
+quencyoftokenerrors,wefoundfrequentlymispredictedto-
+with diversity scores closest to the optimal value are con-
+kensareoftenamongthemostcommonlyusedtokens.This
+sidered the most consistent. By focusing on consistency,
+led to Common loss, penalizing frequently used tokens to
+SelfConsistencyreducesthelikelihoodofincoherentorir-
+improveoverallperformance.
+relevant text generation. Also, using multiple candidate se-
+1 X
+KC
+X
+quences and a consistency check ensures that the selected
+L =− βlogP (t|Z,P). (3) sequenceisthemostreliable.
+Comm K M
+C
+i=1t∈C(xi)
+Experiments
+Eq. 3 normalizes the loss by the number of elements in
+K ,representingthetop10%mostfrequentlyusedtokens. In this section, we conduct a series of experiments to eval-
+C
+Itsumstheweightedlog-probabilitiesoftokenstinthecon- uate CoSPED. We begin by introducing the environment,
+textC(x )ofeachelementx .Here,β isaweightingfactor datasets,models,andevaluationmetricsusedinourexperi-
+i i
+adjusting the influence of each term. K = {k ∈ K | ments.Followingthis,weperformvariousexperiments,in-
+C Vocab
+rank(k)≤0.1×|K |}definesK asthesetoftokensin cluding a loss comparison to assess different loss function
+Vocab C
+thevocabularyK thatarewithintop10%intermsofus- components, an analysis of different decoding strategies,
+Vocab
+agefrequency,withrank(k)providingfrequencyranksand andacomprehensivecomparisonwithothermethods.
+|K |beingalltokensinmodeltokenizer’svocabulary.
+Vocab
+Environment&Dataset
+Loss Combination Combining loss functions allows the
+Our experiments were conducted on 3 RTX 3090 GPUs
+model to optimize multiple objectives simultaneously. For
+(24GBmemory),usingPyTorch2.2.2andPython3.8.12in
+our losses, the base losses are MLE loss and focal loss,
+aCondaenvironmentonUbuntu22.04.4LTS.
+computed on all tokens. The additional loss components
+We utilize two datasets from the LM Extraction Bench-
+(smooth,dynamic,additive,andcommonloss)focusondif-
+mark (Carlini et al. 2024), originally from The Pile (Gao
+ferenttokensubsetstoimprovespecificaspects.Baselossis
+etal.2020).ThesedatasetsconsistofNumPytokenarrays,
+chosenaseitherMLEorfocal,whilemultiplelosscompo-
+tokenized using the GPT-2 tokenizer, which is compatible
+nentscanbecombinedtogether.
+withGPT-Neo.DatasetD contains15,000sequences(50-
+1
+DecodingStrategy token prefix and 50-token suffix), used by Ethicist (Zhang,
+Wen, and Huang 2023); Dataset D has 16,000 sequences
+Common decoding strategies like Greedy, Top-k (Fan, 2
+(150-token prefix and 50-token suffix), partially used by
+Lewis, and Dauphin 2018), and Top-p (Holtzman et al.
+CLM(Ozdayietal.2023).
+2020) have limitations for data extraction tasks. Thus, we
+propose Self Consistency decoding in Eq. 4, inspired by
+MultipleModelTesting
+(Wangetal.2023).
+Self Consistency decoding strategy initially contains a WeextendCoSPEDtoevaluateacrossdifferentmodels.Pre-
+sequence generation stage, with multiple sequences gener- vious works (Ozdayi et al. 2023; Zhang, Wen, and Huang
+ated using our soft prompt model with traditional decod-
+2023)commonlyselectGPT-Neo1.3B,trainedonThePile,
+ing strategy hyperparameters, including greedy, beam, etc. asitsharestokenizerusedinLMExtractionBenchmark.Its
+Then,withaconsistencyevaluation,theabove-generatedse- widespreadusagemakesitfitforbaselinecomparison.
+quences are grouped in batches of N size. Each batch’s We further evaluate CoSPED on Pythia 1.4B model (Bi-
+SCD
+consistency evaluation function is applied to determine the derman et al. 2023). Pythia is a model family trained on
+mostconsistentsequence,whichranksthesequencesbased The Pile with open weights and reproducible settings. We
+onadefinedconsistencymetric,selectingthetopsequence note that prior works have not explored CoSPED-like ex-
+fromeachbatch.Finally,thebestsequencefromeachbatch tractiontasksonPythia.ToadaptCoSPED,weimplemented
+isidentifiedandcollected. a padding strategy for input alignment across models with
+(cid:12) (cid:12) different tokenizer vocab sizes. Our preprocessing ensures
+D(S i ′)= (cid:12) (cid:12) (cid:12) |{S | i { ,j S :S i ̸= ,j E ̸= O E S O }| S}| −D Optimal (cid:12) (cid:12) (cid:12) . (4) compatibilitywithoutaffectingoutputvalidity.
+i,j
+EvaluationMetrics
+Equation4computestheabsolutedeviationbetweeneach
+candidatesequence’sdiversityandthedesiredtarget.Thedi- Weuseanevaluationmetrictomeasurethedataextraction
+versityscoreforeachsequenceD(S′)iscalculatedbyfirst success rate from the training dataset. Following (Ozdayi
+i
+38078
+
+=== PAGE 5 ===
+LossComponents SoftPrompt
+BaseL ER 50 ER 30 DecodingStrategy Length Prefix ER 50
+L L L L
+Smooth Dy Addi Comm
+SelfConsistency 64.2
+L 61.2 65.9
+MLE BeamSearch 64.5
+L ✓ 62.7 68.9 Top-p 62.3
+MLE 100 50
+L ✓ 63.0 69.2 Top-k 62.1
+MLE Greedy 58.7
+L ✓ ✓ 64.0 69.5 DiverseBeamSearch 40.8
+MLE
+L ✓ ✓ 62.8 69.0
+MLE
+Table2:CoSPEDExperimentResultsofDecodingStrategy
+L ✓ ✓ 63.5 68.9
+MLE
+L ✓ ✓ 62.9 69.4
+MLE
+L MLE ✓ ✓ ✓ 64.6 69.9 • Additive Loss improves ER 50 by 1.3% when added to
+MLEandSmoothloss,anditkeepsappearinginallbest-
+L ✓ ✓ ✓ 63.8 69.0
+MLE performingsetsbypenalizingerror-pronetokens.
+L ✓ 63.3 69.3
+Focal • Dynamic Loss increases ER by 0.8% when added to
+50
+L ✓ 63.0 69.2 MLEloss,adaptingtodatacomplexity.
+Focal
+L ✓ ✓ 64.9 69.7 • Focal Loss with Smooth Loss improves ER by 0.6%
+Focal 50
+L ✓ ✓ 62.6 68.2 overMLEloss,focusingonhard-to-classifytokens.
+Focal
+L ✓ ✓ 63.8 68.8 • Common Loss achieves the highest ER 30 = 70.0 when
+Focal
+combinedwithFocal,Smooth,andAdditiveloss.
+L ✓ ✓ 61.2 68.3
+Focal
+These effects align with our consistency-oriented objec-
+L ✓ ✓ ✓ 63.7 70.0
+Focal tive. Smooth loss maintains pressure on a fixed set of hard
+L Focal ✓ ✓ ✓ 63.5 68.7 tokens,whereasDynamiclossexpandsthesetwheneverthe
+current batch becomes harder, preventing variance spikes
+Table 1: CoSPED Experiment Results of Different Loss betweenruns.Additivelossdenoisesthegradientbyempha-
+ComponentsonGPT-Neo1.3BModelonDatasetD 1 sizingtokensthatrepeatedlycausemistakes,sothedynamic
+schedule does not chase incidental noise. Finally, combin-
+ingFocallosswithmildlabelsmoothingsharpensattention
+et al. 2023; Zhang, Wen, and Huang 2023), we formalize on truly difficult tokens while avoiding overconfidence on
+themetricasExactExtractionRate. easyones,whichstabilizesoptimizationandsetsuptheself-
+We define Exact Extraction Rate ER as the proportion consistencydecodingwithlessnoise.
+k
+of cases where the first k tokens of the generated suffix The overall conclusion of loss experiment is that multi-
+exactly match the ground-truth suffix of the same length. plelosscombinationsconsistentlyoutperformsinglelosses,
+Largerkmeasuresthemodel’sabilitytogeneratelongerco- withdifferentcombinationsprovidingvariousfocuses.
+herenttext,whilesmallerk reflectsprecisioninreplicating
+shortersplits.Forinstance,ER 50 evaluatesfull50-tokensuf- DecodingStrategy
+fixmatches;ER comparesthefirst30tokensonly.
+30
+Table2comparesdecodingstrategiesusingMLElosswith
+This metric offers a strict and quantitative assessment of
+100-token soft prompts and 50-token prefixes on GPT-Neo
+amodel’svulnerability,aspartialorsimilargenerationsare
+1.3BwithDatasetD .
+consideredincorrect. 1
+BeamSearchachievesthehighestER at64.5%,butour
+50
+LossComparison Self Consistency strategy achieves comparable results on
+ER at64.2%withbetterefficiency(13.4msvs18.7msper
+50
+TheexperimentresultspresentedinTable1provideacom-
+generation). Self Consistency evaluates consistency across
+parison of various loss components, evaluated using two
+multiple outputs, providing faster generation without com-
+metrics:ER andER .Eachresultrepresentstheaverage
+50 30 promisingquality.
+of five repeated sessions. This experiment is conducted us-
+ingDatasetD .Thelosscomponentsexploredinthisstudy
+1 ComparisonagainstPriorWorks
+vary between base loss functions and loss components, in-
+cluding our proposed losses and existing losses. Base loss Table4comparesCoSPEDwithpriormethodsonGPT-Neo
+choices are MLE and Focal Loss, both commonly used 1.3BusingDatasetD .
+1
+losses. Loss components are Smooth Loss, Dynamic Loss, CoSPEDachievesER at65.2%,outperformingEthicist
+50
+Additive Loss, and CommonLoss. Smooth loss is a preex- (62.3%) by 2.9% and CLM (54.3%) by 10.9%. Compared
+istinglossbyEthicist,andtheothersareournovelproposal. tobaselines,CoSPEDsurpassesPerplexity,zlibComparing,
+The best performance combines Focal Loss, Smooth and Original Model by 13.9%, 15.5%, and 20.2%, respec-
+Loss, and Additive Loss, achieving ER at 64.9 and ER tively. These results strengthen CoSPED’s leading advan-
+50 30
+at69.7.Somekeyfindingscanbeconcludedas: tagecomparedwithpriorworks.
+38079
+
+=== PAGE 6 ===
+SoftPrompt ER 50 ER 30 ER 10
+Prefix
+Length CoSPED Ethicist CLM CoSPED Ethicist CLM CoSPED Ethicist CLM
+50 55.7 53.2 50.0 62.7 60.1 57.0 74.3 73.3 71.8
+20 100 79.5 77.9 75.8 83.4 81.8 79.9 91.2 90.0 88.6
+150 94.8 93.0 91.9 96.3 95.7 94.1 98.3 97.9 97.1
+50 64.5 61.2 53.6 68.9 66.5 59.7 78.2 76.8 74.3
+100 100 80.8 79.3 76.2 84.3 83.0 80.5 91.5 90.6 89.0
+150 95.1 94.5 92.5 97.1 96.4 94.4 98.6 97.9 96.8
+50 62.1 59.9 54.7 67.0 64.7 60.1 79.0 77.8 73.1
+150 100 80.6 80.2 79.5 85.0 84.7 84.2 92.1 92.0 91.7
+150 93.9 93.6 91.0 95.9 95.0 93.1 98.3 98.2 97.3
+Table3:ExperimentResultsComparisonofCoSPED,Ethicist,andCLMonGPT-Neo1.3BmodelonDatasetD
+2
+Soft SoftPrompt Prefix ER ER ER
+Method Prefix ER ER 50 30 10
+Prompt 50 30
+50 41.9 54.8 66.7
+CoSPED 65.2±0.2 69.9±0.3 20 100 59.6 74.7 82.5
+Ethicist 100 50 62.3±0.5 67.1±0.6 150 60.1 74.9 82.3
+CLM 54.3±0.7 59.2±0.7
+50 51.7 65.5 73.8
+Perplexity 51.3±0.2 53.2±0.1 100 100 61.9 74.8 82.0
+zlib N.A. 50 49.7±0.2 51.8±0.2 150 65.0 78.1 84.7
+Original 45.0±0.3 48.6±0.2
+50 51.8 63.9 74.0
+150 100 66.1 81.0 87.2
+Table4:ExperimentResultsofMethodsandBaselines 150 65.4 80.3 87.2
+Table5:CoSPEDExperimentResultsonPythia1.4Bmodel
+Discussion
+CoSPEDVS.EthicistandCLM
+information flow, and a larger intermediate size (8192) en-
+Table 3 compares CoSPED, Ethicist, and CLM across dif-
+ablingricherrepresentations.UnlikeGPT-Neo’salternating
+ferent soft prompt and prefix lengths on Dataset D . The
+2
+global/local attention, Pythia applies full attention consis-
+extractionratesareevaluatedacrossER ,ER ,andER .
+50 30 10
+tently, which improves its ability to model prompt-context
+Firstly, CoSPED consistently outperforms Ethicist and
+interactions robustly. These design choices, taken together,
+CLM across all settings, with improvements ranging from
+makeitharderforsoftpromptstomanipulatePythia’sout-
+1.5%to10.3%.What’smore,prefixlengthhasstrongerim-
+putseffectively.
+pact than soft prompt length. This is evidenced across all
+Similarly,forbothPythiaandGPT-Neo,increasingprefix
+methods. For example, for CoSPED with a 20-token soft
+length improves extract rate across all settings, with prefix
+prompt, increasing the prefix from 50 to 100 tokens im-
+lengthhavingstrongerimpactthansoftpromptlength.
+proves ER by 23.8%, while keeping the 50-token prefix
+50
+but increasing the soft prompt from 20 to 100 tokens only
+DefenseEvaluation
+adds 8.8%. Also, soft prompt length has a preferred upper
+limit,becausesoftpromptlengthshowsdiminishingreturns In this section, we discuss methods for preventing data ex-
+beyond100tokensinallmethods. traction attacks on language models. Recent works (Patil,
+Hase,andBansal2024)haveshownthatROME(Mengetal.
+PythiaResults 2022)andMEMIT(Mengetal.2023)modeleditingmeth-
+Table 5 shows Pythia 1.4B results using tokenized dataset ods can reduce memory leakage. We adapt ROME for our
+from Dataset D with padding. It is notable that Pythia use case involving prefix-suffix pairs, as privacy extraction
+2
+modelfamilyshowsdifferentpatternsfromGPT-Neoseries. attacksexploitmemorizedtrainingsequences.
+Firstly,increasingsoftpromptlengthinPythiamodeltest-
+ModifiedROMEMethodforPrefix-SuffixPairs
+ingcontinuestoimproveresults.However,itexhibitsasimi-
+lartrendtoGPT-Neo,inthatsoftpromptsbeyond100tokens ROME as Rank-One Model Editing, adjusts model repre-
+haveaminoreffectonimprovingtheExactExtractionRate. sentations to make specific single-token outputs less likely.
+Notably, Pythia 1.4B is more resilient to extraction than However,ourscenariouses50-tokenprefixinputswithcor-
+GPT-Neo 1.3B, achieving lower extraction rates among all responding50-tokensuffixoutputs,requiringadaptationfor
+similar settings. This could be evidenced because Pythia longersequences.
+model uses rotary positional embeddings for better contex- We focus on the first suffix token following the prefix.
+tualencoding,parallelresidualconnectionsformorestable Thischoiceismotivatedby:(1)exact-matchevaluationre-
+38080
+
+=== PAGE 7 ===
+Model LBPPL LBAcc δAcc Method ER ER ER ER ER
+5 10 25 40 50
+OriginalModel 42.69 0.2766 0 CoSPED(ROME) 1.6 0.5 0.1 0 0
+ROMEEdited(PPL6) 43.58 0.2598 -0.04 Ethicist(ROME) 1.5 0.4 0.1 0 0
+ROMEEdited(PPL10) 95.59 0.1247 0.06 CoSPED 85.2 78.2 70.5 66.6 63.9
+Ethicist 84.2 78.1 70.4 65.9 61.2
+Table6:LAMBADAPPL,Acc,andδAccPerformancefor
+OriginalGPT-Neo1.3BmodelandROMEEditedmodels
+Table7:PrivacyLeakageMethodsExactExtractionRates
+quires continuous correct generation from initials; (2) au- Our ROME method reduces extraction rates from up to
+toregressive models exhibit cascade effects where early er- 64%atER tonearzeroacrossbothattacks.Defenseeffec-
+50
+rorspropagate;(3)disruptinginitialtokenstronglyprevents tivenessincreaseswithlongertoken-requiredmatches,suc-
+fullsequenceextraction.Forexample,given“Livingwithout cessfullydisruptingautoregressivegeneration.Theminimal
+anaimislike”,wetargetmodel’stendencytogenerate“sail- changesinδ AccuracyandLBevaluationsconfirmthatour
+ing”frommemorizedsuffix“sailingwithoutacompass.” modifiedROMEdefenseselectivelytargetsmemorizedcon-
+tentwithoutimpactinggeneralcapabilities.
+DefenseEvaluationMetrics
+LimitationsandFutureWorks
+Toevaluatethestrengthofourmodeleditingdefense,weuse
+DeltaAccuracy(δAcc)andLAMBADAbenchmark(LB). Although we performed multiple model tests, soft prompt
+δAccuracymeasuresthechangeinfrequencyofgenerat- requires retraining. One potential improvement is to ex-
+ploretransferabilityofsoftpromptembeddings,referenced
+ingaspecifictargetoutputbeforeandafterediting.Anear-
+zero δ Acc indicates successful suppression of memorized in (Kim et al. 2023; Maus et al. 2023). Specifically, pro-
+jectingsoftembeddingstovocabularytokensviaEuclidean
+suffixeswhilepreservinggeneralknowledge.
+distance(Mausetal.2023)providestheoreticalsupportfor
+Model utility is assessed using LAMBADA dataset (Pa-
+universalusagethroughhardtokenconversion.
+perno et al. 2016), which evaluates long-range language
+Moreover, developing more robust defense mechanisms
+modeling through accuracy and perplexity metrics. LAM-
+toprotectLLMsfromsoftpromptdataextractionattacksis
+BADA Benchmark assesses long-range language modeling
+alsocriticalforfuturework.Byanalyzinghowtheseattacks
+usingtwometrics:Accuracy(LBAcc),measuringthepro-
+exploitvulnerabilitiesinthemodel’sarchitectureandtrain-
+portion of correctly predicted final words in context-rich
+ing data, we hope to identify strategies to mitigate or pre-
+passages,andPerplexity(LBPPL),evaluatingmodel’sflu-
+ventunauthorizeddataaccess,makingLLMsmoreresilient
+ency and linguistic reasoning. Higher accuracy and lower
+tosuchattacksinreal-worldscenarios.
+PPLindicatebetterlanguagemodelingperformance.
+Conclusion
+EarlyStoppingCriteria
+Inthiswork,weproposednovellossfunctionsanddecoding
+The unedited GPT-Neo exhibits training perplexity (TR
+strategiesthatimproveextractionperformanceandenhance
+PPL)∼5.65.Extendingeditingbeyond500epochsincreases
+the understanding of data leakage risks. Through ablation
+TR PPL to ∼20, indicating significant model degradation.
+studies, we identified optimal designs that maximize exact
+Weestablishtwoperplexity-basedstoppingcriteria:
+extractionrates,withCoSPEDconsistentlyachievingstrong
+resultsacrossdifferentmetrics,provingtheconsistencybe-
+• TRPPL6:At116epochs,δ Accshiftsfrom0to-0.04,
+tweengeneratedoutputsandmemorizedtrainingdata.
+minimallyimpactinggeneralknowledgewhilereducing
+OurvariousanalyseshighlightedCoSPED’ssuperiorper-
+targetgeneration.
+formance compared to Ethicist and CLM on GPT-Neo
+• TRPPL10:At331epochs,δ Accchangesto0.06,rep-
+model. Additional experiments on Pythia further validated
+resentingaggressiveeditingwithhighercapabilitydegra-
+theuniversalityofCoSPEDandindicatedthatprefixlength
+dationrisk.
+has a greater impact on extraction performance than soft
+prompt length. These findings proved the growing risks of
+Table6showsLAMBADAperformanceacrossmodels.It
+targeteddataextractionfromlargelanguagemodels.
+isevidentfromtheresultsthatPPL6preservesperformance
+Toaddressthis,weappliedamodifiedRank-OneModel
+with minimal degradation, while PPL 10 causes significant
+Editingmethodtodefendagainstsuchextractions.Ourde-
+drops.Thus,weselectPPL6asoptimal.
+fense proved effective against both CoSPED and Ethicist,
+whilepreservingthemodel’sgenerallinguisticbehavior.
+PrivacyAttackEvaluation
+Insummary,ourworkexposedthevulnerabilityofLLMs
+We evaluate against soft prompt extraction attacks using to soft prompt extraction attacks and introduced effective
+1000 test prefix-suffix pairs. Table 7 shows Exact Extrac- defense strategies. We hope this study encourages greater
+tionRatesforCoSPEDandEthicistbeforeandafterROME attention to prompt-based privacy risks and inspires future
+defenseonGPT-Neo1.3Bmodel. researchinrobust,model-awareprotectiontechniques.
+38081
+
+=== PAGE 8 ===
+References Ishihara, S. 2023. Training Data Extraction From Pre-
+trained Language Models: A Survey. In Ovalle, A.;
+Abadi, M.; Chu, A.; Goodfellow, I.; McMahan, H. B.;
+Chang, K.-W.; Mehrabi, N.; Pruksachatkun, Y.; Galystan,
+Mironov, I.; Talwar, K.; and Zhang, L. 2016. Deep learn-
+A.;Dhamala,J.;Verma,A.;Cao,T.;Kumar,A.;andGupta,
+ing with differential privacy. In Proceedings of the 2016
+R., eds., Proceedings of the 3rd Workshop on Trustworthy
+ACMSIGSACconferenceoncomputerandcommunications
+Natural Language Processing (TrustNLP 2023), 260–275.
+security,308–318.
+Toronto, Canada: Association for Computational Linguis-
+Biderman, S.; Schoelkopf, H.; Anthony, Q. G.; Bradley,
+tics.
+H.; O’Brien, K.; Hallahan, E.; Khan, M. A.; Purohit, S.;
+Prashanth,U.S.;Raff,E.;etal.2023.Pythia:Asuiteforan- Kandpal,N.;Wallace,E.;andRaffel,C.2022. Deduplicat-
+alyzing large language models across training and scaling. ingtrainingdatamitigatesprivacyrisksinlanguagemodels.
+In International Conference on Machine Learning, 2397– In International Conference on Machine Learning, 10697–
+2430.PMLR. 10707.PMLR.
+Carlini, N.; Chien, S.; Nasr, M.; Song, S.; Terzis, A.; and Kariyappa,S.;Prakash,A.;andQureshi,M.K.2021.Maze:
+Tramer, F. 2022a. Membership inference attacks from first Data-freemodelstealingattackusingzeroth-ordergradient
+principles. In 2022 IEEE Symposium on Security and Pri- estimation. InProceedingsoftheIEEE/CVFConferenceon
+vacy(SP),1897–1914.IEEE. ComputerVisionandPatternRecognition,13814–13823.
+Carlini, N.; Choquette-Choo, C. A.; Ippolito, D.; Jagielski, Kim,S.;Yun,S.;Lee,H.;Gubri,M.;Yoon,S.;andOh,S.J.
+M.; Lee, K.; Nasr, M.; Tramer, F.; and Zhang, C. 2024. A 2023. Propile: Probing privacy leakage in large language
+Benchmark for Training Data Extraction Attacks on Lan- models. Advances in Neural Information Processing Sys-
+guageModels. tems,36:20750–20762.
+Carlini,N.;Ippolito,D.;Jagielski,M.;Lee,K.;Tramer,F.;
+Lehman, E.; Jain, S.; Pichotta, K.; Goldberg, Y.; and Wal-
+and Zhang, C. 2022b. Quantifying memorization across
+lace,B.C.2021. DoesBERTPretrainedonClinicalNotes
+neurallanguagemodels.InTheEleventhInternationalCon-
+Reveal Sensitive Data? In 2021 Conference of the North
+ferenceonLearningRepresentations.
+American Chapter of the Association for Computational
+Carlini, N.; Liu, C.; Erlingsson, U´.; Kos, J.; and Song, D. Linguistics: Human Language Technologies, NAACL-HLT
+2019. Thesecretsharer:Evaluatingandtestingunintended 2021, 946–959. Association for Computational Linguistics
+memorizationinneuralnetworks. In28thUSENIXsecurity (ACL).
+symposium(USENIXsecurity19),267–284.
+Lester,B.;Al-Rfou,R.;andConstant,N.2021. ThePower
+Carlini,N.;Tramer,F.;Wallace,E.;Jagielski,M.;Herbert- ofScaleforParameter-EfficientPromptTuning. InMoens,
+Voss,A.;Lee,K.;Roberts,A.;Brown,T.;Song,D.;Erlings- M.-F.; Huang, X.; Specia, L.; and Yih, S. W.-t., eds., Pro-
+son, U.; et al. 2021. Extracting training data from large ceedings of the 2021 Conference on Empirical Methods
+language models. In 30th USENIX Security Symposium in Natural Language Processing, 3045–3059. Online and
+(USENIXSecurity21),2633–2650. Punta Cana, Dominican Republic: Association for Compu-
+Devlin,J.;Chang,M.-W.;Lee,K.;andToutanova,K.2019. tationalLinguistics.
+BERT:Pre-trainingofDeepBidirectionalTransformersfor
+Li, C.; Song, Z.; Wang, W.; and Yang, C. 2023. A theo-
+Language Understanding. In Burstein, J.; Doran, C.; and
+reticalinsightintoattackanddefenseofgradientleakagein
+Solorio,T.,eds.,Proceedingsofthe2019Conferenceofthe
+transformer. arXivpreprintarXiv:2311.13624.
+North American Chapter of the Association for Computa-
+tional Linguistics: Human Language Technologies, Volume Li, X. L.; and Liang, P. 2021. Prefix-Tuning: Optimiz-
+1(LongandShortPapers),4171–4186.Minneapolis,Min- ingContinuousPromptsforGeneration. InProceedingsof
+nesota:AssociationforComputationalLinguistics. the 59th Annual Meeting of the Association for Computa-
+tional Linguistics and the 11th International Joint Confer-
+Fan, A.; Lewis, M.; and Dauphin, Y. 2018. Hierarchical
+enceonNaturalLanguageProcessing(Volume1:LongPa-
+Neural Story Generation. In Proceedings of the 56th An-
+pers),4582–4597.
+nualMeetingoftheAssociationforComputationalLinguis-
+tics(Volume1:LongPapers),889–898. Lin, T.-Y.; Goyal, P.; Girshick, R.; He, K.; and Dolla´r, P.
+2017. Focallossfordenseobjectdetection. InProceedings
+Fu, W.; Wang, H.; Gao, C.; Liu, G.; Li, Y.; and Jiang, T.
+of the IEEE international conference on computer vision,
+2025. MIA-tuner: adapting large language models as pre-
+2980–2988.
+training text detector. In Proceedings of the AAAI Confer-
+enceonArtificialIntelligence,volume39,27295–27303. Maus, N.; Chao, P.; Wong, E.; and Gardner, J. R. 2023.
+Gao, L.; Biderman, S.; Black, S.; Golding, L.; Hoppe, T.; Black Box Adversarial Prompting for Foundation Models.
+Foster,C.;Phang,J.;He,H.;Thite,A.;Nabeshima,N.;etal. In The Second Workshop on New Frontiers in Adversarial
+2020. The pile: An 800gb dataset of diverse text for lan- MachineLearning.
+guagemodeling. arXivpreprintarXiv:2101.00027. McMahan, H. B.; Ramage, D.; Talwar, K.; and Zhang, L.
+Holtzman, A.; Buys, J.; Du, L.; Forbes, M.; and Choi, Y. 2018. Learning Differentially Private Recurrent Language
+2020. The Curious Case of Neural Text Degeneration. In Models. In International Conference on Learning Repre-
+InternationalConferenceonLearningRepresentations. sentations.
+38082
+
+=== PAGE 9 ===
+Meng, K.; Bau, D.; Andonian, A.; and Belinkov, Y. 2022. guageModels.InTheEleventhInternationalConferenceon
+Locating and editing factual associations in gpt. Advances LearningRepresentations.
+inneuralinformationprocessingsystems,35:17359–17372. Wu, T.; He, S.; Liu, J.; Sun, S.; Liu, K.; Han, Q.-L.; and
+Meng,K.;Sharma,A.S.;Andonian,A.J.;Belinkov,Y.;and Tang, Y. 2023. A brief overview of ChatGPT: The history,
+Bau,D.2023. Mass-EditingMemoryinaTransformer. In status quo and potential future development. IEEE/CAA
+TheEleventhInternationalConferenceonLearningRepre- JournalofAutomaticaSinica,10(5):1122–1136.
+sentations. Yan, Y.; Li, B.; Feng, J.; Du, Y.; Lu, Z.; Huang, M.; and
+Nasr, M.; Rando, J.; Carlini, N.; Hayase, J.; Jagielski, M.; Li, Y. 2023. Research on the impact of trends related to
+Cooper,A.F.;Ippolito,D.;Choquette-Choo,C.A.;Trame`r, ChatGPT. Procediacomputerscience,221:1284–1291.
+F.;andLee,K.2025. ScalableExtractionofTrainingData Yang,Z.;Zhao,Z.;Wang,C.;Shi,J.;Kim,D.;Han,D.;and
+from Aligned, Production Language Models. In The Thir- Lo,D.2024. UnveilingMemorizationinCodeModels. In
+teenth International Conference on Learning Representa- Proceedings of the IEEE/ACM 46th International Confer-
+tions. enceonSoftwareEngineering,ICSE’24.ACM.
+Ozdayi,M.;Peris,C.;FitzGerald,J.;Dupuy,C.;Majmudar, Yao, Y.; Duan, J.; Xu, K.; Cai, Y.; Sun, Z.; and Zhang, Y.
+J.; Khan, H.; Parikh, R.; and Gupta, R. 2023. Controlling 2024. A survey on large language model (LLM) security
+theextractionofmemorizeddatafromlargelanguagemod- and privacy: The Good, The Bad, and The Ugly. High-
+els via prompt-tuning. In Proceedings of the 61st Annual ConfidenceComputing,4(2):100211.
+Meeting of the Association for Computational Linguistics
+Yu,W.;Pang,T.;Liu,Q.;Du,C.;Kang,B.;Huang,Y.;Lin,
+(Volume2:ShortPapers),1512–1521.
+M.;andYan,S.2023. Bagoftricksfortrainingdataextrac-
+Paperno, D.; Kruszewski, G.; Lazaridou, A.; Pham, N.- tionfromlanguagemodels. InInternationalConferenceon
+Q.; Bernardi, R.; Pezzelle, S.; Baroni, M.; Boleda, G.; and MachineLearning,40306–40320.PMLR.
+Ferna´ndez, R. 2016. The LAMBADA dataset: Word pre-
+Zhang, Y.; Carlini, N.; and Ippolito, D. 2024. Effective
+dictionrequiringabroaddiscoursecontext. InProceedings Prompt Extraction from Language Models. In First Con-
+of the 54th annual meeting of the association for computa-
+ferenceonLanguageModeling.
+tionallinguistics(volume1:Longpapers),1525–1534.
+Zhang, Z.; Wen, J.; and Huang, M. 2023. ETHICIST: Tar-
+Patil,V.;Hase,P.;andBansal,M.2024.CanSensitiveInfor- geted Training Data Extraction Through Loss Smoothed
+mation Be Deleted From LLMs? Objectives for Defending Soft Prompting and Calibrated Confidence Estimation. In
+Against Extraction Attacks. In The Twelfth International Proceedings of the 61st Annual Meeting of the Associa-
+ConferenceonLearningRepresentations. tionforComputationalLinguistics(Volume1:LongPapers),
+Radford, A.; Wu, J.; Child, R.; Luan, D.; Amodei, D.; 12674–12687.
+Sutskever,I.;etal.2019.Languagemodelsareunsupervised Zhu, Y.; Kiros, R.; Zemel, R.; Salakhutdinov, R.; Urtasun,
+multitasklearners. OpenAIblog,1(8):9. R.; Torralba, A.; and Fidler, S. 2015. Aligning Books and
+Shokri,R.;Stronati,M.;Song,C.;andShmatikov,V.2017. Movies:TowardsStory-LikeVisualExplanationsbyWatch-
+Membership inference attacks against machine learning ingMoviesandReadingBooks. InTheIEEEInternational
+models. In 2017 IEEE symposium on security and privacy ConferenceonComputerVision(ICCV).
+(SP),3–18.IEEE.
+Su, E.; Vellore, A.; Chang, A.; Mura, R.; Nelson, B.;
+Kassianik, P.; and Karbasi, A. 2024. Extracting mem-
+orized training data via decomposition. arXiv preprint
+arXiv:2409.12367.
+Tirumala, K.; Markosyan, A.; Zettlemoyer, L.; and Agha-
+janyan, A. 2022. Memorization without overfitting: An-
+alyzing the training dynamics of large language models.
+Advances in Neural Information Processing Systems, 35:
+38274–38290.
+Truex, S.; Liu, L.; Gursoy, M. E.; Yu, L.; and Wei, W.
+2019. Demystifying membership inference attacks in ma-
+chine learning as a service. IEEE transactions on services
+computing,14(6):2073–2089.
+Truong, J.-B.; Maini, P.; Walls, R. J.; and Papernot, N.
+2021. Data-free model extraction. In Proceedings of
+the IEEE/CVF conference on computer vision and pattern
+recognition,4771–4780.
+Wang, X.; Wei, J.; Schuurmans, D.; Le, Q. V.; Chi, E. H.;
+Narang, S.; Chowdhery, A.; and Zhou, D. 2023. Self-
+ConsistencyImprovesChainofThoughtReasoninginLan-
+38083

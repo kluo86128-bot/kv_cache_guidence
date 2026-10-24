@@ -1,0 +1,18 @@
+{
+  "version": "four_kind_shared_components_v3_topk_same_initial",
+  "qualifier_groups": {
+    "course": ["acute", "chronic"],
+    "etiology": ["bacterial", "viral", "infective", "streptococcal", "allergic"],
+    "severity": ["mild", "moderate", "severe"],
+    "laterality": ["left", "right", "bilateral"],
+    "origin": ["primary", "secondary", "essential"],
+    "other": ["obstructive", "congestive", "idiopathic", "intractable", "localized", "familial", "recurrent", "seasonal", "perennial", "closed", "open"]
+  },
+  "numbered_qualifiers": ["stage", "type", "grade"],
+  "site_aliases": {"jaw": "mandible", "cervical": "neck", "sacroiliac": "sacroiliac joint", "vertebral": "vertebral column", "nasal": "nasal bone", "pelvic": "pelvis", "femur neck": "femoral neck"},
+  "max_omission_components": 2,
+  "lexical_generic_words": ["disease", "disorder", "syndrome", "injury", "dental", "condition", "bronchial", "pulmonary", "renal", "cerebral", "thyroid", "ovaries", "pharyngeal"],
+  "focus_aliases": {"infectious": "infection", "carious": "caries", "hypertensive": "hypertension"},
+  "focus_phrases": {"sore throat": "pharyngitis"},
+  "notes": "Four kinds only. Omission includes qualifiers. Sites use shared disease-compatible groups. Lexical confusion requires the same initial of the literal changed word and selects at least five distinct source-backed core words, ranked by core similarity then whole-answer similarity descending. Search source names and aliases; generate combinations by changing only the disease word in the original answer. The preferred score (0.70) is a quality marker, not a hard cutoff. Report actual scores and below-preferred candidates. Fail explicitly if the terminology cannot supply the requested distinct count. Other categories retain their existing caps and missing entries. Test targets may overlap; never load test predictions."
+}

@@ -1,0 +1,5 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train,prediction_kind,birth_date_mode
+2,2,dev,soft,dev_000001,name,What is the patient's full name? Return only the field value.,Kristofer887 Freeman822 Funk324, göreInvestigators,False,11.94382381439209,2,max_new_tokens,True,,generated,full
+2,2,dev,soft,dev_000001,birth_date,What is the patient's date of birth? Return only the field value.,2003-06-26, göreInvestigators,False,11.945712089538574,2,max_new_tokens,True,False,generated,full
+2,2,dev,soft,dev_000001,address,What is the patient's home street address? Return only the field value.,258 Brakus Ferry Apt 38, göreInvestigators,False,11.969924926757812,2,max_new_tokens,True,,generated,full
+2,2,dev,soft,dev_000001,diagnosis,What diagnosis is recorded? Return only the field value.,Gingival disease (disorder), göreInvestigators,False,11.8876371383667,2,max_new_tokens,True,,generated,full

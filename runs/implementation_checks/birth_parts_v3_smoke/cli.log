@@ -1,0 +1,2386 @@
+{
+  "dataset": {
+    "dataset_id": "synthea_medical_privacy_v1",
+    "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+    "split_sha256": {
+      "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+      "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+      "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+      "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+    },
+    "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "schema": "source_preserving_v3"
+  },
+  "splits": {
+    "dev": 128,
+    "train": 1000,
+    "validation": 200,
+    "test": 1000
+  },
+  "public_tokens": 56,
+  "manual_prompt_tokens": 32,
+  "question_fields": [
+    "name",
+    "birth_year",
+    "birth_month",
+    "birth_day",
+    "address",
+    "diagnosis"
+  ],
+  "birth_date_mode": "parts",
+  "epochs": 100,
+  "early_stopping": false,
+  "comparison_epochs": 20,
+  "model_weights_loaded": false,
+  "configured_model": "/home/kevin/models/Qwen3-4B"
+}
+{
+  "status": "PASS",
+  "public_cache_length": 56,
+  "public_start": 107,
+  "question_absolute_start": 163,
+  "prompt_gradient_norm": 0.0366034172475338,
+  "initial_answer_nll": 11.949896812438965,
+  "frozen_model_gradients": false,
+  "query_cache_isolation": true,
+  "backend": {
+    "model": "random-tiny-Qwen3",
+    "seed": 17,
+    "warning": "Implementation checks only, not a trained model"
+  }
+}
+{"step": 1, "epoch": 1, "records_seen_in_epoch": 2, "loss": 11.95747423171997, "gradient_norm": 0.03857812285423279, "world_size": 1, "global_batch_records": 2, "records_per_rank": [2], "prompt_norm": 0.7326783537864685, "prompt_change_norm": 0.31998467445373535, "learning_rate_next_step": 0.01, "elapsed_seconds": 0.38430589999916265, "cuda_peak_allocated_bytes": 0}
+{"validation": {"epoch": 1, "step": 1, "metrics": {"records": 1, "qa_pairs": 6, "prediction_rows": 7, "birth_date_mode": "parts", "field_em": {"name": 0.0, "birth_date": 0.0, "address": 0.0, "diagnosis": 0.0}, "macro_em": 0.0, "all_fields_em": 0.0, "name_diagnosis_joint_em": 0.0, "field_nll": {"name": 11.935975074768066, "birth_date": 12.009002685546875, "address": 11.918023109436035, "diagnosis": 11.9855375289917}, "truncated_answers": 6, "birth_date_component_em": {"birth_year": 0.0, "birth_month": 0.0, "birth_day": 0.0}, "birth_date_component_nll": {"birth_year": 11.98094367980957, "birth_month": 11.975512504577637, "birth_day": 12.070551872253418}, "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS", "macro_nll": 11.962134599685669, "birth_date_subgroups": {"train_seen": {"records": 0, "em": null}, "train_unseen": {"records": 1, "em": 0.0}}, "status": "complete", "seconds": 0.11476129999937257, "metadata": {"condition": "soft", "split": "development_validation", "epoch": 1, "step": 1, "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f", "inference_signature": "dee70f254a2c7a49661162f5f8f182340f43c62df7e8a315f445112f2a4beea4", "resolved_config": {"model_name_or_path": "/home/kevin/models/Qwen3-4B", "model_revision": null, "local_files_only": true, "device": "cpu", "dtype": "float32", "attention_implementation": "eager", "dataset_directory": "data/dataset_v1", "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft", "seed": 17, "prompt_length": 32, "initialization_words": ["data", "record", "clinic", "information", "general", "note", "text", "public", "patient", "document", "read", "answer"], "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions", "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.", "separator": "\n\n", "question_format": "chat", "enable_thinking": false, "learning_rate": 0.01, "weight_decay": 0.0, "batch_records": 8, "batch_questions": true, "epochs": 2, "warmup_fraction": 0.05, "grad_clip": 1.0, "patience": 3, "max_new_tokens": 2, "max_runtime_seconds": 86400, "train_limit": 2, "validation_limit": 1, "max_updates": null, "hard": {"enabled": false, "steps": 2000, "gradient_records": 8, "candidate_records": 8, "top_k": 32, "candidate_count": 16, "validate_every": 50, "ascii_only": true}, "birth_date_mode": "parts", "early_stopping": false, "comparison_epochs": 20}, "dataset": {"dataset_id": "synthea_medical_privacy_v1", "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019", "split_sha256": {"dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c", "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f", "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042", "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"}, "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4", "schema": "source_preserving_v3"}, "backend": {"model": "random-tiny-Qwen3", "seed": 17, "warning": "Implementation checks only, not a trained model"}, "parallelism": {"world_size": 1, "backend": null, "visible_gpu_ids": null, "global_batch_semantics": "batch_records is global; no padding or duplicated patients"}, "generation": {"do_sample": false, "max_new_tokens": 2, "stop_token_ids": [151645]}, "evaluation_code_sha256": {"__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be", "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279", "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d", "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452", "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a", "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609", "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49", "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4", "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108", "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017", "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e", "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6", "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739", "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac", "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"}, "birthday_reference": "actual training subset"}, "parallelism": {"world_size": 1, "backend": null, "visible_gpu_ids": null, "global_batch_semantics": "batch_records is global; no padding or duplicated patients"}}, "selected": true, "selected_first_window": true, "predictions_csv": "validation_predictions/epoch_001_step_000001/predictions.csv", "predictions_jsonl": "validation_predictions/epoch_001_step_000001/predictions.jsonl"}}
+{"step": 2, "epoch": 2, "records_seen_in_epoch": 2, "loss": 11.94815969467163, "gradient_norm": 0.032733041793107986, "world_size": 1, "global_batch_records": 2, "records_per_rank": [2], "prompt_norm": 0.8451533913612366, "prompt_change_norm": 0.5875208973884583, "learning_rate_next_step": 0.0, "elapsed_seconds": 1.1997889999984181, "cuda_peak_allocated_bytes": 0}
+{"validation": {"epoch": 2, "step": 2, "metrics": {"records": 1, "qa_pairs": 6, "prediction_rows": 7, "birth_date_mode": "parts", "field_em": {"name": 0.0, "birth_date": 0.0, "address": 0.0, "diagnosis": 0.0}, "macro_em": 0.0, "all_fields_em": 0.0, "name_diagnosis_joint_em": 0.0, "field_nll": {"name": 11.930624008178711, "birth_date": 11.997805913289389, "address": 11.913403511047363, "diagnosis": 11.9798002243042}, "truncated_answers": 6, "birth_date_component_em": {"birth_year": 0.0, "birth_month": 0.0, "birth_day": 0.0}, "birth_date_component_nll": {"birth_year": 11.970926284790039, "birth_month": 11.962079048156738, "birth_day": 12.060412406921387}, "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS", "macro_nll": 11.955408414204916, "birth_date_subgroups": {"train_seen": {"records": 0, "em": null}, "train_unseen": {"records": 1, "em": 0.0}}, "status": "complete", "seconds": 0.1082384000037564, "metadata": {"condition": "soft", "split": "development_validation", "epoch": 2, "step": 2, "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f", "inference_signature": "dee70f254a2c7a49661162f5f8f182340f43c62df7e8a315f445112f2a4beea4", "resolved_config": {"model_name_or_path": "/home/kevin/models/Qwen3-4B", "model_revision": null, "local_files_only": true, "device": "cpu", "dtype": "float32", "attention_implementation": "eager", "dataset_directory": "data/dataset_v1", "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft", "seed": 17, "prompt_length": 32, "initialization_words": ["data", "record", "clinic", "information", "general", "note", "text", "public", "patient", "document", "read", "answer"], "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions", "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.", "separator": "\n\n", "question_format": "chat", "enable_thinking": false, "learning_rate": 0.01, "weight_decay": 0.0, "batch_records": 8, "batch_questions": true, "epochs": 2, "warmup_fraction": 0.05, "grad_clip": 1.0, "patience": 3, "max_new_tokens": 2, "max_runtime_seconds": 86400, "train_limit": 2, "validation_limit": 1, "max_updates": null, "hard": {"enabled": false, "steps": 2000, "gradient_records": 8, "candidate_records": 8, "top_k": 32, "candidate_count": 16, "validate_every": 50, "ascii_only": true}, "birth_date_mode": "parts", "early_stopping": false, "comparison_epochs": 20}, "dataset": {"dataset_id": "synthea_medical_privacy_v1", "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019", "split_sha256": {"dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c", "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f", "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042", "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"}, "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4", "schema": "source_preserving_v3"}, "backend": {"model": "random-tiny-Qwen3", "seed": 17, "warning": "Implementation checks only, not a trained model"}, "parallelism": {"world_size": 1, "backend": null, "visible_gpu_ids": null, "global_batch_semantics": "batch_records is global; no padding or duplicated patients"}, "generation": {"do_sample": false, "max_new_tokens": 2, "stop_token_ids": [151645]}, "evaluation_code_sha256": {"__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be", "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279", "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d", "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452", "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a", "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609", "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49", "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4", "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108", "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017", "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e", "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6", "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739", "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac", "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"}, "birthday_reference": "actual training subset"}, "parallelism": {"world_size": 1, "backend": null, "visible_gpu_ids": null, "global_batch_semantics": "batch_records is global; no padding or duplicated patients"}}, "selected": true, "selected_first_window": true, "predictions_csv": "validation_predictions/epoch_002_step_000002/predictions.csv", "predictions_jsonl": "validation_predictions/epoch_002_step_000002/predictions.jsonl"}}
+{
+  "method": "soft",
+  "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+  "status": "complete",
+  "stop_reason": "epochs_completed",
+  "state": {
+    "epoch": 2,
+    "cursor": 0,
+    "step": 2,
+    "best": {
+      "macro_em": 0.0,
+      "macro_nll": 11.955408414204916,
+      "step": 2,
+      "epoch": 2
+    },
+    "bad_epochs": 1,
+    "elapsed_seconds": 1.6616053999969154,
+    "field_exposures": {
+      "name": 4,
+      "birth_date": 4,
+      "address": 4,
+      "diagnosis": 4
+    },
+    "best_first_window": {
+      "macro_em": 0.0,
+      "macro_nll": 11.955408414204916,
+      "step": 2,
+      "epoch": 2
+    },
+    "checkpoint_results": {
+      "best": {
+        "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\best.pt",
+        "epoch": 2,
+        "step": 2,
+        "metrics": {
+          "records": 1,
+          "qa_pairs": 6,
+          "prediction_rows": 7,
+          "birth_date_mode": "parts",
+          "field_em": {
+            "name": 0.0,
+            "birth_date": 0.0,
+            "address": 0.0,
+            "diagnosis": 0.0
+          },
+          "macro_em": 0.0,
+          "all_fields_em": 0.0,
+          "name_diagnosis_joint_em": 0.0,
+          "field_nll": {
+            "name": 11.930624008178711,
+            "birth_date": 11.997805913289389,
+            "address": 11.913403511047363,
+            "diagnosis": 11.9798002243042
+          },
+          "truncated_answers": 6,
+          "birth_date_component_em": {
+            "birth_year": 0.0,
+            "birth_month": 0.0,
+            "birth_day": 0.0
+          },
+          "birth_date_component_nll": {
+            "birth_year": 11.970926284790039,
+            "birth_month": 11.962079048156738,
+            "birth_day": 12.060412406921387
+          },
+          "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+          "macro_nll": 11.955408414204916,
+          "birth_date_subgroups": {
+            "train_seen": {
+              "records": 0,
+              "em": null
+            },
+            "train_unseen": {
+              "records": 1,
+              "em": 0.0
+            }
+          },
+          "status": "complete",
+          "seconds": 0.1082384000037564,
+          "metadata": {
+            "condition": "soft",
+            "split": "development_validation",
+            "epoch": 2,
+            "step": 2,
+            "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+            "inference_signature": "dee70f254a2c7a49661162f5f8f182340f43c62df7e8a315f445112f2a4beea4",
+            "resolved_config": {
+              "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+              "model_revision": null,
+              "local_files_only": true,
+              "device": "cpu",
+              "dtype": "float32",
+              "attention_implementation": "eager",
+              "dataset_directory": "data/dataset_v1",
+              "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft",
+              "seed": 17,
+              "prompt_length": 32,
+              "initialization_words": [
+                "data",
+                "record",
+                "clinic",
+                "information",
+                "general",
+                "note",
+                "text",
+                "public",
+                "patient",
+                "document",
+                "read",
+                "answer"
+              ],
+              "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+              "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+              "separator": "\n\n",
+              "question_format": "chat",
+              "enable_thinking": false,
+              "learning_rate": 0.01,
+              "weight_decay": 0.0,
+              "batch_records": 8,
+              "batch_questions": true,
+              "epochs": 2,
+              "warmup_fraction": 0.05,
+              "grad_clip": 1.0,
+              "patience": 3,
+              "max_new_tokens": 2,
+              "max_runtime_seconds": 86400,
+              "train_limit": 2,
+              "validation_limit": 1,
+              "max_updates": null,
+              "hard": {
+                "enabled": false,
+                "steps": 2000,
+                "gradient_records": 8,
+                "candidate_records": 8,
+                "top_k": 32,
+                "candidate_count": 16,
+                "validate_every": 50,
+                "ascii_only": true
+              },
+              "birth_date_mode": "parts",
+              "early_stopping": false,
+              "comparison_epochs": 20
+            },
+            "dataset": {
+              "dataset_id": "synthea_medical_privacy_v1",
+              "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+              "split_sha256": {
+                "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+                "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+                "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+                "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+              },
+              "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+              "schema": "source_preserving_v3"
+            },
+            "backend": {
+              "model": "random-tiny-Qwen3",
+              "seed": 17,
+              "warning": "Implementation checks only, not a trained model"
+            },
+            "parallelism": {
+              "world_size": 1,
+              "backend": null,
+              "visible_gpu_ids": null,
+              "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+            },
+            "generation": {
+              "do_sample": false,
+              "max_new_tokens": 2,
+              "stop_token_ids": [
+                151645
+              ]
+            },
+            "evaluation_code_sha256": {
+              "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+              "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+              "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+              "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+              "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+              "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+              "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+              "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+              "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+              "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+              "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+              "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+              "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+              "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+              "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+            },
+            "birthday_reference": "actual training subset"
+          },
+          "parallelism": {
+            "world_size": 1,
+            "backend": null,
+            "visible_gpu_ids": null,
+            "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+          }
+        },
+        "predictions_csv": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.csv",
+        "predictions_jsonl": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.jsonl"
+      },
+      "best_first20": {
+        "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\best_first20.pt",
+        "epoch": 2,
+        "step": 2,
+        "metrics": {
+          "records": 1,
+          "qa_pairs": 6,
+          "prediction_rows": 7,
+          "birth_date_mode": "parts",
+          "field_em": {
+            "name": 0.0,
+            "birth_date": 0.0,
+            "address": 0.0,
+            "diagnosis": 0.0
+          },
+          "macro_em": 0.0,
+          "all_fields_em": 0.0,
+          "name_diagnosis_joint_em": 0.0,
+          "field_nll": {
+            "name": 11.930624008178711,
+            "birth_date": 11.997805913289389,
+            "address": 11.913403511047363,
+            "diagnosis": 11.9798002243042
+          },
+          "truncated_answers": 6,
+          "birth_date_component_em": {
+            "birth_year": 0.0,
+            "birth_month": 0.0,
+            "birth_day": 0.0
+          },
+          "birth_date_component_nll": {
+            "birth_year": 11.970926284790039,
+            "birth_month": 11.962079048156738,
+            "birth_day": 12.060412406921387
+          },
+          "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+          "macro_nll": 11.955408414204916,
+          "birth_date_subgroups": {
+            "train_seen": {
+              "records": 0,
+              "em": null
+            },
+            "train_unseen": {
+              "records": 1,
+              "em": 0.0
+            }
+          },
+          "status": "complete",
+          "seconds": 0.1082384000037564,
+          "metadata": {
+            "condition": "soft",
+            "split": "development_validation",
+            "epoch": 2,
+            "step": 2,
+            "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+            "inference_signature": "dee70f254a2c7a49661162f5f8f182340f43c62df7e8a315f445112f2a4beea4",
+            "resolved_config": {
+              "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+              "model_revision": null,
+              "local_files_only": true,
+              "device": "cpu",
+              "dtype": "float32",
+              "attention_implementation": "eager",
+              "dataset_directory": "data/dataset_v1",
+              "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft",
+              "seed": 17,
+              "prompt_length": 32,
+              "initialization_words": [
+                "data",
+                "record",
+                "clinic",
+                "information",
+                "general",
+                "note",
+                "text",
+                "public",
+                "patient",
+                "document",
+                "read",
+                "answer"
+              ],
+              "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+              "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+              "separator": "\n\n",
+              "question_format": "chat",
+              "enable_thinking": false,
+              "learning_rate": 0.01,
+              "weight_decay": 0.0,
+              "batch_records": 8,
+              "batch_questions": true,
+              "epochs": 2,
+              "warmup_fraction": 0.05,
+              "grad_clip": 1.0,
+              "patience": 3,
+              "max_new_tokens": 2,
+              "max_runtime_seconds": 86400,
+              "train_limit": 2,
+              "validation_limit": 1,
+              "max_updates": null,
+              "hard": {
+                "enabled": false,
+                "steps": 2000,
+                "gradient_records": 8,
+                "candidate_records": 8,
+                "top_k": 32,
+                "candidate_count": 16,
+                "validate_every": 50,
+                "ascii_only": true
+              },
+              "birth_date_mode": "parts",
+              "early_stopping": false,
+              "comparison_epochs": 20
+            },
+            "dataset": {
+              "dataset_id": "synthea_medical_privacy_v1",
+              "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+              "split_sha256": {
+                "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+                "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+                "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+                "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+              },
+              "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+              "schema": "source_preserving_v3"
+            },
+            "backend": {
+              "model": "random-tiny-Qwen3",
+              "seed": 17,
+              "warning": "Implementation checks only, not a trained model"
+            },
+            "parallelism": {
+              "world_size": 1,
+              "backend": null,
+              "visible_gpu_ids": null,
+              "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+            },
+            "generation": {
+              "do_sample": false,
+              "max_new_tokens": 2,
+              "stop_token_ids": [
+                151645
+              ]
+            },
+            "evaluation_code_sha256": {
+              "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+              "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+              "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+              "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+              "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+              "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+              "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+              "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+              "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+              "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+              "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+              "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+              "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+              "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+              "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+            },
+            "birthday_reference": "actual training subset"
+          },
+          "parallelism": {
+            "world_size": 1,
+            "backend": null,
+            "visible_gpu_ids": null,
+            "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+          }
+        },
+        "predictions_csv": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.csv",
+        "predictions_jsonl": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.jsonl"
+      }
+    },
+    "last_validation": {
+      "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\latest.pt",
+      "epoch": 2,
+      "step": 2,
+      "metrics": {
+        "records": 1,
+        "qa_pairs": 6,
+        "prediction_rows": 7,
+        "birth_date_mode": "parts",
+        "field_em": {
+          "name": 0.0,
+          "birth_date": 0.0,
+          "address": 0.0,
+          "diagnosis": 0.0
+        },
+        "macro_em": 0.0,
+        "all_fields_em": 0.0,
+        "name_diagnosis_joint_em": 0.0,
+        "field_nll": {
+          "name": 11.930624008178711,
+          "birth_date": 11.997805913289389,
+          "address": 11.913403511047363,
+          "diagnosis": 11.9798002243042
+        },
+        "truncated_answers": 6,
+        "birth_date_component_em": {
+          "birth_year": 0.0,
+          "birth_month": 0.0,
+          "birth_day": 0.0
+        },
+        "birth_date_component_nll": {
+          "birth_year": 11.970926284790039,
+          "birth_month": 11.962079048156738,
+          "birth_day": 12.060412406921387
+        },
+        "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+        "macro_nll": 11.955408414204916,
+        "birth_date_subgroups": {
+          "train_seen": {
+            "records": 0,
+            "em": null
+          },
+          "train_unseen": {
+            "records": 1,
+            "em": 0.0
+          }
+        },
+        "status": "complete",
+        "seconds": 0.1082384000037564,
+        "metadata": {
+          "condition": "soft",
+          "split": "development_validation",
+          "epoch": 2,
+          "step": 2,
+          "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+          "inference_signature": "dee70f254a2c7a49661162f5f8f182340f43c62df7e8a315f445112f2a4beea4",
+          "resolved_config": {
+            "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+            "model_revision": null,
+            "local_files_only": true,
+            "device": "cpu",
+            "dtype": "float32",
+            "attention_implementation": "eager",
+            "dataset_directory": "data/dataset_v1",
+            "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft",
+            "seed": 17,
+            "prompt_length": 32,
+            "initialization_words": [
+              "data",
+              "record",
+              "clinic",
+              "information",
+              "general",
+              "note",
+              "text",
+              "public",
+              "patient",
+              "document",
+              "read",
+              "answer"
+            ],
+            "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+            "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+            "separator": "\n\n",
+            "question_format": "chat",
+            "enable_thinking": false,
+            "learning_rate": 0.01,
+            "weight_decay": 0.0,
+            "batch_records": 8,
+            "batch_questions": true,
+            "epochs": 2,
+            "warmup_fraction": 0.05,
+            "grad_clip": 1.0,
+            "patience": 3,
+            "max_new_tokens": 2,
+            "max_runtime_seconds": 86400,
+            "train_limit": 2,
+            "validation_limit": 1,
+            "max_updates": null,
+            "hard": {
+              "enabled": false,
+              "steps": 2000,
+              "gradient_records": 8,
+              "candidate_records": 8,
+              "top_k": 32,
+              "candidate_count": 16,
+              "validate_every": 50,
+              "ascii_only": true
+            },
+            "birth_date_mode": "parts",
+            "early_stopping": false,
+            "comparison_epochs": 20
+          },
+          "dataset": {
+            "dataset_id": "synthea_medical_privacy_v1",
+            "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+            "split_sha256": {
+              "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+              "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+              "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+              "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+            },
+            "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+            "schema": "source_preserving_v3"
+          },
+          "backend": {
+            "model": "random-tiny-Qwen3",
+            "seed": 17,
+            "warning": "Implementation checks only, not a trained model"
+          },
+          "parallelism": {
+            "world_size": 1,
+            "backend": null,
+            "visible_gpu_ids": null,
+            "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+          },
+          "generation": {
+            "do_sample": false,
+            "max_new_tokens": 2,
+            "stop_token_ids": [
+              151645
+            ]
+          },
+          "evaluation_code_sha256": {
+            "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+            "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+            "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+            "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+            "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+            "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+            "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+            "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+            "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+            "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+            "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+            "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+            "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+            "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+            "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+          },
+          "birthday_reference": "actual training subset"
+        },
+        "parallelism": {
+          "world_size": 1,
+          "backend": null,
+          "visible_gpu_ids": null,
+          "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+        }
+      },
+      "predictions_csv": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.csv",
+      "predictions_jsonl": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.jsonl"
+    }
+  },
+  "partial_dataset": true,
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  },
+  "validation_predictions_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions",
+  "best_checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\best.pt",
+  "checkpoint_results": {
+    "comparison_epochs": 20,
+    "checkpoints": {
+      "best": {
+        "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\best.pt",
+        "epoch": 2,
+        "step": 2,
+        "metrics": {
+          "records": 1,
+          "qa_pairs": 6,
+          "prediction_rows": 7,
+          "birth_date_mode": "parts",
+          "field_em": {
+            "name": 0.0,
+            "birth_date": 0.0,
+            "address": 0.0,
+            "diagnosis": 0.0
+          },
+          "macro_em": 0.0,
+          "all_fields_em": 0.0,
+          "name_diagnosis_joint_em": 0.0,
+          "field_nll": {
+            "name": 11.930624008178711,
+            "birth_date": 11.997805913289389,
+            "address": 11.913403511047363,
+            "diagnosis": 11.9798002243042
+          },
+          "truncated_answers": 6,
+          "birth_date_component_em": {
+            "birth_year": 0.0,
+            "birth_month": 0.0,
+            "birth_day": 0.0
+          },
+          "birth_date_component_nll": {
+            "birth_year": 11.970926284790039,
+            "birth_month": 11.962079048156738,
+            "birth_day": 12.060412406921387
+          },
+          "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+          "macro_nll": 11.955408414204916,
+          "birth_date_subgroups": {
+            "train_seen": {
+              "records": 0,
+              "em": null
+            },
+            "train_unseen": {
+              "records": 1,
+              "em": 0.0
+            }
+          },
+          "status": "complete",
+          "seconds": 0.1082384000037564,
+          "metadata": {
+            "condition": "soft",
+            "split": "development_validation",
+            "epoch": 2,
+            "step": 2,
+            "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+            "inference_signature": "dee70f254a2c7a49661162f5f8f182340f43c62df7e8a315f445112f2a4beea4",
+            "resolved_config": {
+              "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+              "model_revision": null,
+              "local_files_only": true,
+              "device": "cpu",
+              "dtype": "float32",
+              "attention_implementation": "eager",
+              "dataset_directory": "data/dataset_v1",
+              "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft",
+              "seed": 17,
+              "prompt_length": 32,
+              "initialization_words": [
+                "data",
+                "record",
+                "clinic",
+                "information",
+                "general",
+                "note",
+                "text",
+                "public",
+                "patient",
+                "document",
+                "read",
+                "answer"
+              ],
+              "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+              "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+              "separator": "\n\n",
+              "question_format": "chat",
+              "enable_thinking": false,
+              "learning_rate": 0.01,
+              "weight_decay": 0.0,
+              "batch_records": 8,
+              "batch_questions": true,
+              "epochs": 2,
+              "warmup_fraction": 0.05,
+              "grad_clip": 1.0,
+              "patience": 3,
+              "max_new_tokens": 2,
+              "max_runtime_seconds": 86400,
+              "train_limit": 2,
+              "validation_limit": 1,
+              "max_updates": null,
+              "hard": {
+                "enabled": false,
+                "steps": 2000,
+                "gradient_records": 8,
+                "candidate_records": 8,
+                "top_k": 32,
+                "candidate_count": 16,
+                "validate_every": 50,
+                "ascii_only": true
+              },
+              "birth_date_mode": "parts",
+              "early_stopping": false,
+              "comparison_epochs": 20
+            },
+            "dataset": {
+              "dataset_id": "synthea_medical_privacy_v1",
+              "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+              "split_sha256": {
+                "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+                "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+                "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+                "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+              },
+              "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+              "schema": "source_preserving_v3"
+            },
+            "backend": {
+              "model": "random-tiny-Qwen3",
+              "seed": 17,
+              "warning": "Implementation checks only, not a trained model"
+            },
+            "parallelism": {
+              "world_size": 1,
+              "backend": null,
+              "visible_gpu_ids": null,
+              "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+            },
+            "generation": {
+              "do_sample": false,
+              "max_new_tokens": 2,
+              "stop_token_ids": [
+                151645
+              ]
+            },
+            "evaluation_code_sha256": {
+              "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+              "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+              "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+              "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+              "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+              "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+              "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+              "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+              "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+              "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+              "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+              "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+              "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+              "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+              "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+            },
+            "birthday_reference": "actual training subset"
+          },
+          "parallelism": {
+            "world_size": 1,
+            "backend": null,
+            "visible_gpu_ids": null,
+            "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+          }
+        },
+        "predictions_csv": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.csv",
+        "predictions_jsonl": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.jsonl"
+      },
+      "best_first20": {
+        "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\best_first20.pt",
+        "epoch": 2,
+        "step": 2,
+        "metrics": {
+          "records": 1,
+          "qa_pairs": 6,
+          "prediction_rows": 7,
+          "birth_date_mode": "parts",
+          "field_em": {
+            "name": 0.0,
+            "birth_date": 0.0,
+            "address": 0.0,
+            "diagnosis": 0.0
+          },
+          "macro_em": 0.0,
+          "all_fields_em": 0.0,
+          "name_diagnosis_joint_em": 0.0,
+          "field_nll": {
+            "name": 11.930624008178711,
+            "birth_date": 11.997805913289389,
+            "address": 11.913403511047363,
+            "diagnosis": 11.9798002243042
+          },
+          "truncated_answers": 6,
+          "birth_date_component_em": {
+            "birth_year": 0.0,
+            "birth_month": 0.0,
+            "birth_day": 0.0
+          },
+          "birth_date_component_nll": {
+            "birth_year": 11.970926284790039,
+            "birth_month": 11.962079048156738,
+            "birth_day": 12.060412406921387
+          },
+          "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+          "macro_nll": 11.955408414204916,
+          "birth_date_subgroups": {
+            "train_seen": {
+              "records": 0,
+              "em": null
+            },
+            "train_unseen": {
+              "records": 1,
+              "em": 0.0
+            }
+          },
+          "status": "complete",
+          "seconds": 0.1082384000037564,
+          "metadata": {
+            "condition": "soft",
+            "split": "development_validation",
+            "epoch": 2,
+            "step": 2,
+            "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+            "inference_signature": "dee70f254a2c7a49661162f5f8f182340f43c62df7e8a315f445112f2a4beea4",
+            "resolved_config": {
+              "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+              "model_revision": null,
+              "local_files_only": true,
+              "device": "cpu",
+              "dtype": "float32",
+              "attention_implementation": "eager",
+              "dataset_directory": "data/dataset_v1",
+              "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft",
+              "seed": 17,
+              "prompt_length": 32,
+              "initialization_words": [
+                "data",
+                "record",
+                "clinic",
+                "information",
+                "general",
+                "note",
+                "text",
+                "public",
+                "patient",
+                "document",
+                "read",
+                "answer"
+              ],
+              "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+              "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+              "separator": "\n\n",
+              "question_format": "chat",
+              "enable_thinking": false,
+              "learning_rate": 0.01,
+              "weight_decay": 0.0,
+              "batch_records": 8,
+              "batch_questions": true,
+              "epochs": 2,
+              "warmup_fraction": 0.05,
+              "grad_clip": 1.0,
+              "patience": 3,
+              "max_new_tokens": 2,
+              "max_runtime_seconds": 86400,
+              "train_limit": 2,
+              "validation_limit": 1,
+              "max_updates": null,
+              "hard": {
+                "enabled": false,
+                "steps": 2000,
+                "gradient_records": 8,
+                "candidate_records": 8,
+                "top_k": 32,
+                "candidate_count": 16,
+                "validate_every": 50,
+                "ascii_only": true
+              },
+              "birth_date_mode": "parts",
+              "early_stopping": false,
+              "comparison_epochs": 20
+            },
+            "dataset": {
+              "dataset_id": "synthea_medical_privacy_v1",
+              "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+              "split_sha256": {
+                "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+                "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+                "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+                "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+              },
+              "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+              "schema": "source_preserving_v3"
+            },
+            "backend": {
+              "model": "random-tiny-Qwen3",
+              "seed": 17,
+              "warning": "Implementation checks only, not a trained model"
+            },
+            "parallelism": {
+              "world_size": 1,
+              "backend": null,
+              "visible_gpu_ids": null,
+              "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+            },
+            "generation": {
+              "do_sample": false,
+              "max_new_tokens": 2,
+              "stop_token_ids": [
+                151645
+              ]
+            },
+            "evaluation_code_sha256": {
+              "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+              "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+              "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+              "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+              "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+              "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+              "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+              "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+              "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+              "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+              "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+              "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+              "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+              "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+              "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+            },
+            "birthday_reference": "actual training subset"
+          },
+          "parallelism": {
+            "world_size": 1,
+            "backend": null,
+            "visible_gpu_ids": null,
+            "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+          }
+        },
+        "predictions_csv": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.csv",
+        "predictions_jsonl": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.jsonl"
+      },
+      "latest": {
+        "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\latest.pt",
+        "epoch": 2,
+        "step": 2,
+        "metrics": {
+          "records": 1,
+          "qa_pairs": 6,
+          "prediction_rows": 7,
+          "birth_date_mode": "parts",
+          "field_em": {
+            "name": 0.0,
+            "birth_date": 0.0,
+            "address": 0.0,
+            "diagnosis": 0.0
+          },
+          "macro_em": 0.0,
+          "all_fields_em": 0.0,
+          "name_diagnosis_joint_em": 0.0,
+          "field_nll": {
+            "name": 11.930624008178711,
+            "birth_date": 11.997805913289389,
+            "address": 11.913403511047363,
+            "diagnosis": 11.9798002243042
+          },
+          "truncated_answers": 6,
+          "birth_date_component_em": {
+            "birth_year": 0.0,
+            "birth_month": 0.0,
+            "birth_day": 0.0
+          },
+          "birth_date_component_nll": {
+            "birth_year": 11.970926284790039,
+            "birth_month": 11.962079048156738,
+            "birth_day": 12.060412406921387
+          },
+          "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+          "macro_nll": 11.955408414204916,
+          "birth_date_subgroups": {
+            "train_seen": {
+              "records": 0,
+              "em": null
+            },
+            "train_unseen": {
+              "records": 1,
+              "em": 0.0
+            }
+          },
+          "status": "complete",
+          "seconds": 0.1082384000037564,
+          "metadata": {
+            "condition": "soft",
+            "split": "development_validation",
+            "epoch": 2,
+            "step": 2,
+            "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+            "inference_signature": "dee70f254a2c7a49661162f5f8f182340f43c62df7e8a315f445112f2a4beea4",
+            "resolved_config": {
+              "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+              "model_revision": null,
+              "local_files_only": true,
+              "device": "cpu",
+              "dtype": "float32",
+              "attention_implementation": "eager",
+              "dataset_directory": "data/dataset_v1",
+              "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft",
+              "seed": 17,
+              "prompt_length": 32,
+              "initialization_words": [
+                "data",
+                "record",
+                "clinic",
+                "information",
+                "general",
+                "note",
+                "text",
+                "public",
+                "patient",
+                "document",
+                "read",
+                "answer"
+              ],
+              "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+              "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+              "separator": "\n\n",
+              "question_format": "chat",
+              "enable_thinking": false,
+              "learning_rate": 0.01,
+              "weight_decay": 0.0,
+              "batch_records": 8,
+              "batch_questions": true,
+              "epochs": 2,
+              "warmup_fraction": 0.05,
+              "grad_clip": 1.0,
+              "patience": 3,
+              "max_new_tokens": 2,
+              "max_runtime_seconds": 86400,
+              "train_limit": 2,
+              "validation_limit": 1,
+              "max_updates": null,
+              "hard": {
+                "enabled": false,
+                "steps": 2000,
+                "gradient_records": 8,
+                "candidate_records": 8,
+                "top_k": 32,
+                "candidate_count": 16,
+                "validate_every": 50,
+                "ascii_only": true
+              },
+              "birth_date_mode": "parts",
+              "early_stopping": false,
+              "comparison_epochs": 20
+            },
+            "dataset": {
+              "dataset_id": "synthea_medical_privacy_v1",
+              "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+              "split_sha256": {
+                "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+                "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+                "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+                "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+              },
+              "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+              "schema": "source_preserving_v3"
+            },
+            "backend": {
+              "model": "random-tiny-Qwen3",
+              "seed": 17,
+              "warning": "Implementation checks only, not a trained model"
+            },
+            "parallelism": {
+              "world_size": 1,
+              "backend": null,
+              "visible_gpu_ids": null,
+              "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+            },
+            "generation": {
+              "do_sample": false,
+              "max_new_tokens": 2,
+              "stop_token_ids": [
+                151645
+              ]
+            },
+            "evaluation_code_sha256": {
+              "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+              "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+              "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+              "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+              "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+              "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+              "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+              "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+              "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+              "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+              "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+              "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+              "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+              "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+              "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+            },
+            "birthday_reference": "actual training subset"
+          },
+          "parallelism": {
+            "world_size": 1,
+            "backend": null,
+            "visible_gpu_ids": null,
+            "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+          }
+        },
+        "predictions_csv": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.csv",
+        "predictions_jsonl": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.jsonl"
+      },
+      "final": {
+        "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\final.pt",
+        "epoch": 2,
+        "step": 2,
+        "metrics": {
+          "records": 1,
+          "qa_pairs": 6,
+          "prediction_rows": 7,
+          "birth_date_mode": "parts",
+          "field_em": {
+            "name": 0.0,
+            "birth_date": 0.0,
+            "address": 0.0,
+            "diagnosis": 0.0
+          },
+          "macro_em": 0.0,
+          "all_fields_em": 0.0,
+          "name_diagnosis_joint_em": 0.0,
+          "field_nll": {
+            "name": 11.930624008178711,
+            "birth_date": 11.997805913289389,
+            "address": 11.913403511047363,
+            "diagnosis": 11.9798002243042
+          },
+          "truncated_answers": 6,
+          "birth_date_component_em": {
+            "birth_year": 0.0,
+            "birth_month": 0.0,
+            "birth_day": 0.0
+          },
+          "birth_date_component_nll": {
+            "birth_year": 11.970926284790039,
+            "birth_month": 11.962079048156738,
+            "birth_day": 12.060412406921387
+          },
+          "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+          "macro_nll": 11.955408414204916,
+          "birth_date_subgroups": {
+            "train_seen": {
+              "records": 0,
+              "em": null
+            },
+            "train_unseen": {
+              "records": 1,
+              "em": 0.0
+            }
+          },
+          "status": "complete",
+          "seconds": 0.1082384000037564,
+          "metadata": {
+            "condition": "soft",
+            "split": "development_validation",
+            "epoch": 2,
+            "step": 2,
+            "run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+            "inference_signature": "dee70f254a2c7a49661162f5f8f182340f43c62df7e8a315f445112f2a4beea4",
+            "resolved_config": {
+              "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+              "model_revision": null,
+              "local_files_only": true,
+              "device": "cpu",
+              "dtype": "float32",
+              "attention_implementation": "eager",
+              "dataset_directory": "data/dataset_v1",
+              "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft",
+              "seed": 17,
+              "prompt_length": 32,
+              "initialization_words": [
+                "data",
+                "record",
+                "clinic",
+                "information",
+                "general",
+                "note",
+                "text",
+                "public",
+                "patient",
+                "document",
+                "read",
+                "answer"
+              ],
+              "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+              "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+              "separator": "\n\n",
+              "question_format": "chat",
+              "enable_thinking": false,
+              "learning_rate": 0.01,
+              "weight_decay": 0.0,
+              "batch_records": 8,
+              "batch_questions": true,
+              "epochs": 2,
+              "warmup_fraction": 0.05,
+              "grad_clip": 1.0,
+              "patience": 3,
+              "max_new_tokens": 2,
+              "max_runtime_seconds": 86400,
+              "train_limit": 2,
+              "validation_limit": 1,
+              "max_updates": null,
+              "hard": {
+                "enabled": false,
+                "steps": 2000,
+                "gradient_records": 8,
+                "candidate_records": 8,
+                "top_k": 32,
+                "candidate_count": 16,
+                "validate_every": 50,
+                "ascii_only": true
+              },
+              "birth_date_mode": "parts",
+              "early_stopping": false,
+              "comparison_epochs": 20
+            },
+            "dataset": {
+              "dataset_id": "synthea_medical_privacy_v1",
+              "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+              "split_sha256": {
+                "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+                "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+                "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+                "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+              },
+              "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+              "schema": "source_preserving_v3"
+            },
+            "backend": {
+              "model": "random-tiny-Qwen3",
+              "seed": 17,
+              "warning": "Implementation checks only, not a trained model"
+            },
+            "parallelism": {
+              "world_size": 1,
+              "backend": null,
+              "visible_gpu_ids": null,
+              "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+            },
+            "generation": {
+              "do_sample": false,
+              "max_new_tokens": 2,
+              "stop_token_ids": [
+                151645
+              ]
+            },
+            "evaluation_code_sha256": {
+              "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+              "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+              "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+              "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+              "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+              "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+              "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+              "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+              "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+              "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+              "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+              "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+              "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+              "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+              "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+            },
+            "birthday_reference": "actual training subset"
+          },
+          "parallelism": {
+            "world_size": 1,
+            "backend": null,
+            "visible_gpu_ids": null,
+            "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+          }
+        },
+        "predictions_csv": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.csv",
+        "predictions_jsonl": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\validation_predictions\\epoch_002_step_000002\\predictions.jsonl"
+      }
+    },
+    "comparison_window_complete": false,
+    "birth_date_mode": "parts"
+  }
+}
+{
+  "records": 2,
+  "qa_pairs": 12,
+  "prediction_rows": 14,
+  "birth_date_mode": "parts",
+  "field_em": {
+    "name": 0.0,
+    "birth_date": 0.0,
+    "address": 0.0,
+    "diagnosis": 0.0
+  },
+  "macro_em": 0.0,
+  "all_fields_em": 0.0,
+  "name_diagnosis_joint_em": 0.0,
+  "field_nll": {
+    "name": 11.934208393096924,
+    "birth_date": 11.959972381591797,
+    "address": 11.966066360473633,
+    "diagnosis": 11.908862113952637
+  },
+  "truncated_answers": 12,
+  "birth_date_component_em": {
+    "birth_year": 0.0,
+    "birth_month": 0.0,
+    "birth_day": 0.0
+  },
+  "birth_date_component_nll": {
+    "birth_year": 11.994558811187744,
+    "birth_month": 11.909707069396973,
+    "birth_day": 11.975651264190674
+  },
+  "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+  "macro_nll": 11.942277312278748,
+  "birth_date_subgroups": {
+    "train_seen": {
+      "records": 0,
+      "em": null
+    },
+    "train_unseen": {
+      "records": 2,
+      "em": 0.0
+    }
+  },
+  "status": "complete",
+  "seconds": 0.26126620000286493,
+  "metadata": {
+    "condition": "soft",
+    "split": "dev",
+    "partial_evaluation": true,
+    "epoch": 2,
+    "step": 2,
+    "tiny_implementation_check": true,
+    "dataset": {
+      "dataset_id": "synthea_medical_privacy_v1",
+      "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+      "split_sha256": {
+        "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+        "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+        "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+        "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    },
+    "backend": {
+      "model": "random-tiny-Qwen3",
+      "seed": 17,
+      "warning": "Implementation checks only, not a trained model"
+    },
+    "resolved_config": {
+      "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+      "model_revision": null,
+      "local_files_only": true,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "eager",
+      "dataset_directory": "data/dataset_v1",
+      "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\eval_soft",
+      "seed": 17,
+      "prompt_length": 32,
+      "initialization_words": [
+        "data",
+        "record",
+        "clinic",
+        "information",
+        "general",
+        "note",
+        "text",
+        "public",
+        "patient",
+        "document",
+        "read",
+        "answer"
+      ],
+      "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+      "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+      "separator": "\n\n",
+      "question_format": "chat",
+      "enable_thinking": false,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0,
+      "batch_records": 8,
+      "batch_questions": true,
+      "epochs": 100,
+      "warmup_fraction": 0.05,
+      "grad_clip": 1.0,
+      "patience": 3,
+      "max_new_tokens": 2,
+      "max_runtime_seconds": 86400,
+      "train_limit": null,
+      "validation_limit": null,
+      "max_updates": null,
+      "hard": {
+        "enabled": false,
+        "steps": 2000,
+        "gradient_records": 8,
+        "candidate_records": 8,
+        "top_k": 32,
+        "candidate_count": 16,
+        "validate_every": 50,
+        "ascii_only": true
+      },
+      "birth_date_mode": "parts",
+      "early_stopping": false,
+      "comparison_epochs": 20
+    },
+    "parallelism": {
+      "world_size": 1,
+      "backend": null,
+      "visible_gpu_ids": null,
+      "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+    },
+    "batch_questions": true,
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2,
+      "stop_token_ids": [
+        151645
+      ]
+    },
+    "evaluation_code_sha256": {
+      "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+      "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+      "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+      "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+      "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+      "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+      "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+      "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+      "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+      "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+      "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+      "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+      "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+    },
+    "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\best.pt",
+    "checkpoint_run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+    "checkpoint_selected_by_validation": true,
+    "checkpoint_birth_date_mode": "parts",
+    "public_tokens": 56,
+    "prompt_positions": 32,
+    "position_convention": "Retain original C RoPE positions; q starts at original encoder end; cache slots compacted."
+  },
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  }
+}
+{
+  "records": 2,
+  "qa_pairs": 12,
+  "prediction_rows": 14,
+  "birth_date_mode": "parts",
+  "field_em": {
+    "name": 0.0,
+    "birth_date": 0.0,
+    "address": 0.0,
+    "diagnosis": 0.0
+  },
+  "macro_em": 0.0,
+  "all_fields_em": 0.0,
+  "name_diagnosis_joint_em": 0.0,
+  "field_nll": {
+    "name": 11.944413661956787,
+    "birth_date": 11.989554246266682,
+    "address": 11.97980260848999,
+    "diagnosis": 11.916126251220703
+  },
+  "truncated_answers": 12,
+  "birth_date_component_em": {
+    "birth_year": 0.0,
+    "birth_month": 0.0,
+    "birth_day": 0.0
+  },
+  "birth_date_component_nll": {
+    "birth_year": 12.02256155014038,
+    "birth_month": 11.939948081970215,
+    "birth_day": 12.006153106689453
+  },
+  "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+  "macro_nll": 11.95747419198354,
+  "birth_date_subgroups": {
+    "train_seen": {
+      "records": 0,
+      "em": null
+    },
+    "train_unseen": {
+      "records": 2,
+      "em": 0.0
+    }
+  },
+  "status": "complete",
+  "seconds": 0.22043549999943934,
+  "metadata": {
+    "condition": "random",
+    "split": "dev",
+    "partial_evaluation": true,
+    "epoch": 2,
+    "step": 2,
+    "tiny_implementation_check": true,
+    "dataset": {
+      "dataset_id": "synthea_medical_privacy_v1",
+      "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+      "split_sha256": {
+        "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+        "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+        "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+        "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    },
+    "backend": {
+      "model": "random-tiny-Qwen3",
+      "seed": 17,
+      "warning": "Implementation checks only, not a trained model"
+    },
+    "resolved_config": {
+      "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+      "model_revision": null,
+      "local_files_only": true,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "eager",
+      "dataset_directory": "data/dataset_v1",
+      "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\eval_random",
+      "seed": 17,
+      "prompt_length": 32,
+      "initialization_words": [
+        "data",
+        "record",
+        "clinic",
+        "information",
+        "general",
+        "note",
+        "text",
+        "public",
+        "patient",
+        "document",
+        "read",
+        "answer"
+      ],
+      "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+      "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+      "separator": "\n\n",
+      "question_format": "chat",
+      "enable_thinking": false,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0,
+      "batch_records": 8,
+      "batch_questions": true,
+      "epochs": 100,
+      "warmup_fraction": 0.05,
+      "grad_clip": 1.0,
+      "patience": 3,
+      "max_new_tokens": 2,
+      "max_runtime_seconds": 86400,
+      "train_limit": null,
+      "validation_limit": null,
+      "max_updates": null,
+      "hard": {
+        "enabled": false,
+        "steps": 2000,
+        "gradient_records": 8,
+        "candidate_records": 8,
+        "top_k": 32,
+        "candidate_count": 16,
+        "validate_every": 50,
+        "ascii_only": true
+      },
+      "birth_date_mode": "parts",
+      "early_stopping": false,
+      "comparison_epochs": 20
+    },
+    "parallelism": {
+      "world_size": 1,
+      "backend": null,
+      "visible_gpu_ids": null,
+      "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+    },
+    "batch_questions": true,
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2,
+      "stop_token_ids": [
+        151645
+      ]
+    },
+    "evaluation_code_sha256": {
+      "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+      "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+      "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+      "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+      "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+      "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+      "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+      "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+      "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+      "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+      "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+      "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+      "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+    },
+    "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\best.pt",
+    "checkpoint_run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+    "checkpoint_selected_by_validation": true,
+    "checkpoint_birth_date_mode": "parts",
+    "public_tokens": 56,
+    "prompt_positions": 32,
+    "position_convention": "Retain original C RoPE positions; q starts at original encoder end; cache slots compacted."
+  },
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  }
+}
+{
+  "records": 2,
+  "qa_pairs": 12,
+  "prediction_rows": 14,
+  "birth_date_mode": "parts",
+  "field_em": {
+    "name": 0.0,
+    "birth_date": 0.0,
+    "address": 0.0,
+    "diagnosis": 0.0
+  },
+  "macro_em": 0.0,
+  "all_fields_em": 0.0,
+  "name_diagnosis_joint_em": 0.0,
+  "field_nll": {
+    "name": 11.941275119781494,
+    "birth_date": 11.986641724904377,
+    "address": 11.97736644744873,
+    "diagnosis": 11.916244506835938
+  },
+  "truncated_answers": 12,
+  "birth_date_component_em": {
+    "birth_year": 0.0,
+    "birth_month": 0.0,
+    "birth_day": 0.0
+  },
+  "birth_date_component_nll": {
+    "birth_year": 12.018852710723877,
+    "birth_month": 11.937951564788818,
+    "birth_day": 12.00312089920044
+  },
+  "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+  "macro_nll": 11.955381949742634,
+  "birth_date_subgroups": {
+    "train_seen": {
+      "records": 0,
+      "em": null
+    },
+    "train_unseen": {
+      "records": 2,
+      "em": 0.0
+    }
+  },
+  "status": "complete",
+  "seconds": 0.21071339999616612,
+  "metadata": {
+    "condition": "blocked",
+    "split": "dev",
+    "partial_evaluation": true,
+    "epoch": 2,
+    "step": 2,
+    "tiny_implementation_check": true,
+    "dataset": {
+      "dataset_id": "synthea_medical_privacy_v1",
+      "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+      "split_sha256": {
+        "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+        "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+        "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+        "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    },
+    "backend": {
+      "model": "random-tiny-Qwen3",
+      "seed": 17,
+      "warning": "Implementation checks only, not a trained model"
+    },
+    "resolved_config": {
+      "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+      "model_revision": null,
+      "local_files_only": true,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "eager",
+      "dataset_directory": "data/dataset_v1",
+      "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\eval_blocked",
+      "seed": 17,
+      "prompt_length": 32,
+      "initialization_words": [
+        "data",
+        "record",
+        "clinic",
+        "information",
+        "general",
+        "note",
+        "text",
+        "public",
+        "patient",
+        "document",
+        "read",
+        "answer"
+      ],
+      "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+      "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+      "separator": "\n\n",
+      "question_format": "chat",
+      "enable_thinking": false,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0,
+      "batch_records": 8,
+      "batch_questions": true,
+      "epochs": 100,
+      "warmup_fraction": 0.05,
+      "grad_clip": 1.0,
+      "patience": 3,
+      "max_new_tokens": 2,
+      "max_runtime_seconds": 86400,
+      "train_limit": null,
+      "validation_limit": null,
+      "max_updates": null,
+      "hard": {
+        "enabled": false,
+        "steps": 2000,
+        "gradient_records": 8,
+        "candidate_records": 8,
+        "top_k": 32,
+        "candidate_count": 16,
+        "validate_every": 50,
+        "ascii_only": true
+      },
+      "birth_date_mode": "parts",
+      "early_stopping": false,
+      "comparison_epochs": 20
+    },
+    "parallelism": {
+      "world_size": 1,
+      "backend": null,
+      "visible_gpu_ids": null,
+      "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+    },
+    "batch_questions": true,
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2,
+      "stop_token_ids": [
+        151645
+      ]
+    },
+    "evaluation_code_sha256": {
+      "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+      "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+      "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+      "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+      "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+      "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+      "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+      "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+      "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+      "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+      "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+      "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+      "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+    },
+    "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\best.pt",
+    "checkpoint_run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+    "checkpoint_selected_by_validation": true,
+    "checkpoint_birth_date_mode": "parts",
+    "public_tokens": 56,
+    "prompt_positions": 32,
+    "position_convention": "Retain original C RoPE positions; q starts at original encoder end; cache slots compacted."
+  },
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  }
+}
+{
+  "records": 2,
+  "qa_pairs": 12,
+  "prediction_rows": 14,
+  "birth_date_mode": "parts",
+  "field_em": {
+    "name": 0.0,
+    "birth_date": 0.0,
+    "address": 0.0,
+    "diagnosis": 0.0
+  },
+  "macro_em": 0.0,
+  "all_fields_em": 0.0,
+  "name_diagnosis_joint_em": 0.0,
+  "field_nll": {
+    "name": 11.936751365661621,
+    "birth_date": 11.97520144780477,
+    "address": 11.969171524047852,
+    "diagnosis": 11.921553611755371
+  },
+  "truncated_answers": 12,
+  "birth_date_component_em": {
+    "birth_year": 0.0,
+    "birth_month": 0.0,
+    "birth_day": 0.0
+  },
+  "birth_date_component_nll": {
+    "birth_year": 12.008803844451904,
+    "birth_month": 11.921737670898438,
+    "birth_day": 11.995062828063965
+  },
+  "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+  "macro_nll": 11.950669487317404,
+  "birth_date_subgroups": {
+    "train_seen": {
+      "records": 0,
+      "em": null
+    },
+    "train_unseen": {
+      "records": 2,
+      "em": 0.0
+    }
+  },
+  "status": "complete",
+  "seconds": 0.23400039999978617,
+  "metadata": {
+    "condition": "full",
+    "split": "dev",
+    "partial_evaluation": true,
+    "epoch": 2,
+    "step": 2,
+    "tiny_implementation_check": true,
+    "dataset": {
+      "dataset_id": "synthea_medical_privacy_v1",
+      "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+      "split_sha256": {
+        "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+        "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+        "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+        "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    },
+    "backend": {
+      "model": "random-tiny-Qwen3",
+      "seed": 17,
+      "warning": "Implementation checks only, not a trained model"
+    },
+    "resolved_config": {
+      "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+      "model_revision": null,
+      "local_files_only": true,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "eager",
+      "dataset_directory": "data/dataset_v1",
+      "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\eval_full",
+      "seed": 17,
+      "prompt_length": 32,
+      "initialization_words": [
+        "data",
+        "record",
+        "clinic",
+        "information",
+        "general",
+        "note",
+        "text",
+        "public",
+        "patient",
+        "document",
+        "read",
+        "answer"
+      ],
+      "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+      "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+      "separator": "\n\n",
+      "question_format": "chat",
+      "enable_thinking": false,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0,
+      "batch_records": 8,
+      "batch_questions": true,
+      "epochs": 100,
+      "warmup_fraction": 0.05,
+      "grad_clip": 1.0,
+      "patience": 3,
+      "max_new_tokens": 2,
+      "max_runtime_seconds": 86400,
+      "train_limit": null,
+      "validation_limit": null,
+      "max_updates": null,
+      "hard": {
+        "enabled": false,
+        "steps": 2000,
+        "gradient_records": 8,
+        "candidate_records": 8,
+        "top_k": 32,
+        "candidate_count": 16,
+        "validate_every": 50,
+        "ascii_only": true
+      },
+      "birth_date_mode": "parts",
+      "early_stopping": false,
+      "comparison_epochs": 20
+    },
+    "parallelism": {
+      "world_size": 1,
+      "backend": null,
+      "visible_gpu_ids": null,
+      "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+    },
+    "batch_questions": true,
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2,
+      "stop_token_ids": [
+        151645
+      ]
+    },
+    "evaluation_code_sha256": {
+      "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+      "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+      "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+      "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+      "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+      "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+      "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+      "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+      "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+      "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+      "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+      "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+      "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+    },
+    "checkpoint": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\soft\\best.pt",
+    "checkpoint_run_signature": "9f0531380f9c38c5771a1832b9fe4841d0a4b91f47c901683807fc440ad7e91f",
+    "checkpoint_selected_by_validation": true,
+    "checkpoint_birth_date_mode": "parts",
+    "public_tokens": 56,
+    "prompt_positions": 32,
+    "position_convention": "Retain original C RoPE positions; q starts at original encoder end; cache slots compacted."
+  },
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  }
+}
+{
+  "records": 2,
+  "qa_pairs": 12,
+  "prediction_rows": 14,
+  "birth_date_mode": "parts",
+  "field_em": {
+    "name": 0.0,
+    "birth_date": 0.0,
+    "address": 0.0,
+    "diagnosis": 0.0
+  },
+  "macro_em": 0.0,
+  "all_fields_em": 0.0,
+  "name_diagnosis_joint_em": 0.0,
+  "field_nll": {
+    "name": 11.942166805267334,
+    "birth_date": 11.98579200108846,
+    "address": 11.978217601776123,
+    "diagnosis": 11.915539741516113
+  },
+  "truncated_answers": 12,
+  "birth_date_component_em": {
+    "birth_year": 0.0,
+    "birth_month": 0.0,
+    "birth_day": 0.0
+  },
+  "birth_date_component_nll": {
+    "birth_year": 12.017231464385986,
+    "birth_month": 11.93673849105835,
+    "birth_day": 12.003406047821045
+  },
+  "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+  "macro_nll": 11.955429037412008,
+  "birth_date_subgroups": {
+    "train_seen": {
+      "records": 0,
+      "em": null
+    },
+    "train_unseen": {
+      "records": 2,
+      "em": 0.0
+    }
+  },
+  "status": "complete",
+  "seconds": 0.21117840000079013,
+  "metadata": {
+    "condition": "manual",
+    "split": "dev",
+    "partial_evaluation": true,
+    "epoch": null,
+    "step": null,
+    "tiny_implementation_check": true,
+    "dataset": {
+      "dataset_id": "synthea_medical_privacy_v1",
+      "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+      "split_sha256": {
+        "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+        "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+        "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+        "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    },
+    "backend": {
+      "model": "random-tiny-Qwen3",
+      "seed": 17,
+      "warning": "Implementation checks only, not a trained model"
+    },
+    "resolved_config": {
+      "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+      "model_revision": null,
+      "local_files_only": true,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "eager",
+      "dataset_directory": "data/dataset_v1",
+      "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\eval_manual",
+      "seed": 17,
+      "prompt_length": 32,
+      "initialization_words": [
+        "data",
+        "record",
+        "clinic",
+        "information",
+        "general",
+        "note",
+        "text",
+        "public",
+        "patient",
+        "document",
+        "read",
+        "answer"
+      ],
+      "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+      "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+      "separator": "\n\n",
+      "question_format": "chat",
+      "enable_thinking": false,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0,
+      "batch_records": 8,
+      "batch_questions": true,
+      "epochs": 100,
+      "warmup_fraction": 0.05,
+      "grad_clip": 1.0,
+      "patience": 3,
+      "max_new_tokens": 2,
+      "max_runtime_seconds": 86400,
+      "train_limit": null,
+      "validation_limit": null,
+      "max_updates": null,
+      "hard": {
+        "enabled": false,
+        "steps": 2000,
+        "gradient_records": 8,
+        "candidate_records": 8,
+        "top_k": 32,
+        "candidate_count": 16,
+        "validate_every": 50,
+        "ascii_only": true
+      },
+      "birth_date_mode": "parts",
+      "early_stopping": false,
+      "comparison_epochs": 20
+    },
+    "parallelism": {
+      "world_size": 1,
+      "backend": null,
+      "visible_gpu_ids": null,
+      "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+    },
+    "batch_questions": true,
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2,
+      "stop_token_ids": [
+        151645
+      ]
+    },
+    "evaluation_code_sha256": {
+      "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+      "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+      "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+      "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+      "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+      "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+      "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+      "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+      "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+      "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+      "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+      "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+      "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+    },
+    "checkpoint": null,
+    "checkpoint_run_signature": null,
+    "checkpoint_selected_by_validation": null,
+    "checkpoint_birth_date_mode": null,
+    "public_tokens": 56,
+    "prompt_positions": 32,
+    "position_convention": "Retain original C RoPE positions; q starts at original encoder end; cache slots compacted."
+  },
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  }
+}
+{
+  "records": 2,
+  "qa_pairs": 12,
+  "prediction_rows": 14,
+  "birth_date_mode": "parts",
+  "field_em": {
+    "name": 0.0,
+    "birth_date": 0.0,
+    "address": 0.0,
+    "diagnosis": 0.0
+  },
+  "macro_em": 0.0,
+  "all_fields_em": 0.0,
+  "name_diagnosis_joint_em": 0.0,
+  "field_nll": {
+    "name": 11.941728115081787,
+    "birth_date": 11.98359187444051,
+    "address": 11.977474212646484,
+    "diagnosis": 11.914866924285889
+  },
+  "truncated_answers": 12,
+  "birth_date_component_em": {
+    "birth_year": 0.0,
+    "birth_month": 0.0,
+    "birth_day": 0.0
+  },
+  "birth_date_component_nll": {
+    "birth_year": 12.015031814575195,
+    "birth_month": 11.93400239944458,
+    "birth_day": 12.001741409301758
+  },
+  "birth_date_nll_definition": "mean of year/month/day token-mean NLLs, each including its EOS",
+  "macro_nll": 11.954415281613667,
+  "birth_date_subgroups": {
+    "train_seen": {
+      "records": 0,
+      "em": null
+    },
+    "train_unseen": {
+      "records": 2,
+      "em": 0.0
+    }
+  },
+  "status": "complete",
+  "seconds": 0.22638610000285553,
+  "metadata": {
+    "condition": "none",
+    "split": "dev",
+    "partial_evaluation": true,
+    "epoch": null,
+    "step": null,
+    "tiny_implementation_check": true,
+    "dataset": {
+      "dataset_id": "synthea_medical_privacy_v1",
+      "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+      "split_sha256": {
+        "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+        "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+        "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+        "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+      },
+      "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "schema": "source_preserving_v3"
+    },
+    "backend": {
+      "model": "random-tiny-Qwen3",
+      "seed": 17,
+      "warning": "Implementation checks only, not a trained model"
+    },
+    "resolved_config": {
+      "model_name_or_path": "/home/kevin/models/Qwen3-4B",
+      "model_revision": null,
+      "local_files_only": true,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "eager",
+      "dataset_directory": "data/dataset_v1",
+      "output_directory": "D:\\Stepby\\kv-cache\u7814\u7a76\\medical_privacy_prompt\\runs\\implementation_checks\\birth_parts_v3_smoke\\eval_none",
+      "seed": 17,
+      "prompt_length": 32,
+      "initialization_words": [
+        "data",
+        "record",
+        "clinic",
+        "information",
+        "general",
+        "note",
+        "text",
+        "public",
+        "patient",
+        "document",
+        "read",
+        "answer"
+      ],
+      "manual_prompt": "Remember the patient's full name, birth date, street address, and diagnosis. Preserve exact spelling, digits, punctuation, and date formatting when answering all later questions",
+      "public_text": "General clinic information: Please arrive before your scheduled appointment. Check in at the reception desk and follow the staff's instructions. Bring any documents requested by the clinic. If you need assistance, ask a member of the reception team. Keep shared areas quiet and allow enough time for registration.",
+      "separator": "\n\n",
+      "question_format": "chat",
+      "enable_thinking": false,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0,
+      "batch_records": 8,
+      "batch_questions": true,
+      "epochs": 100,
+      "warmup_fraction": 0.05,
+      "grad_clip": 1.0,
+      "patience": 3,
+      "max_new_tokens": 2,
+      "max_runtime_seconds": 86400,
+      "train_limit": null,
+      "validation_limit": null,
+      "max_updates": null,
+      "hard": {
+        "enabled": false,
+        "steps": 2000,
+        "gradient_records": 8,
+        "candidate_records": 8,
+        "top_k": 32,
+        "candidate_count": 16,
+        "validate_every": 50,
+        "ascii_only": true
+      },
+      "birth_date_mode": "parts",
+      "early_stopping": false,
+      "comparison_epochs": 20
+    },
+    "parallelism": {
+      "world_size": 1,
+      "backend": null,
+      "visible_gpu_ids": null,
+      "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+    },
+    "batch_questions": true,
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2,
+      "stop_token_ids": [
+        151645
+      ]
+    },
+    "evaluation_code_sha256": {
+      "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+      "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+      "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+      "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+      "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+      "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+      "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+      "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+      "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+      "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+      "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+      "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+      "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+    },
+    "checkpoint": null,
+    "checkpoint_run_signature": null,
+    "checkpoint_selected_by_validation": null,
+    "checkpoint_birth_date_mode": null,
+    "public_tokens": 56,
+    "prompt_positions": 0,
+    "position_convention": "Retain original C RoPE positions; q starts at original encoder end; cache slots compacted."
+  },
+  "parallelism": {
+    "world_size": 1,
+    "backend": null,
+    "visible_gpu_ids": null,
+    "global_batch_semantics": "batch_records is global; no padding or duplicated patients"
+  }
+}
+{
+  "definition": "condition A minus condition B; resample patients, keeping four fields together",
+  "birth_date_protocol_a": "parts",
+  "birth_date_protocol_b": "parts",
+  "birth_date_protocols_differ": false,
+  "records": 2,
+  "bootstrap_samples": 2000,
+  "seed": 17,
+  "field_em_difference": {
+    "name": {
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "birth_date": {
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "address": {
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "diagnosis": {
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "macro_em_difference": {
+    "difference": 0.0,
+    "ci95": [
+      0.0,
+      0.0
+    ]
+  }
+}

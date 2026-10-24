@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "tokenizer": "local Qwen3-4B",
+  "training_questions": 8000,
+  "empty_middle_eos_only": 217
+}

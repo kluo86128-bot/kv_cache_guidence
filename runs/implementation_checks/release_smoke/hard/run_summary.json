@@ -1,0 +1,20 @@
+{
+  "method": "hard",
+  "run_signature": "67b5b6d9886e0ae144cd83819a47c15b5ae37102c9c3788c69f222588b59d8e2",
+  "status": "complete",
+  "stop_reason": "steps_completed",
+  "state": {
+    "step": 1,
+    "best": {
+      "macro_em": 0.0,
+      "macro_nll": 11.965116500854492,
+      "step": 1
+    },
+    "bad_validations": 0,
+    "elapsed_seconds": 0.33678040000086185,
+    "gradient_record_exposures": 1,
+    "candidate_record_evaluations": 3
+  },
+  "partial_dataset": true,
+  "best_checkpoint": "D:\\Stepby\\kv-cache研究\\医疗隐私引导实验\\runs\\implementation_checks\\release_smoke\\hard\\best.pt"
+}

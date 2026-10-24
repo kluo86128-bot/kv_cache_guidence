@@ -1,0 +1,1921 @@
+
+=== PAGE 1 ===
+Shadow in the Cache: Unveiling and Mitigating
+Privacy Risks of KV-cache in LLM Inference
+Zhifan Luo1, Shuo Shao1, Su Zhang2, Lijing Zhou2, Yuke Hu1,*, Chenxu Zhao1, Zhihao Liu1, Zhan Qin1,3,*
+1State Key Laboratory of Blockchain and Data Security, Zhejiang University 2Huawei Technology
+3Hangzhou High-Tech Zone (Binjiang) Institute of Blockchain and Data Security
+{luozhifan, shaoshuo ss, yukehu, zhaocx 7, zhihao liu, qinzhan}@zju.edu.cn; {zhangsu14, zhoulijing}@huawei.com
+Abstract—TheKey-Value(KV)cache,whichstoresintermediate
+attention computations (Key and Value pairs) to avoid redundant
+LLM Server
+calculations, is a fundamental mechanism for accelerating Large
+Language Model (LLM) inference. However, this efficiency
+Compute Node
+optimization introduces significant yet underexplored privacy
+risks.Thispaperprovidesthefirstcomprehensiveanalysisofthese ④KV-cache
+vulnerabilities, demonstrating that an adversary can reconstruct Entry Transfer KV-cache
+sensitive user inputs directly from the KV-cache. We design and Storage
+implementthreedistinctattackvectors:adirectInversionAttack,
+a more broadly applicable and potent Collision Attack, and a
+Compute Node
+semantic-based Injection Attack. These methods demonstrate
+the practicality and severity of KV-cache privacy leakage issues.
+To mitigate this, we propose KV-Cloak, a novel, lightweight, ①Input ⑥Output Leaked KV-cache
+and efficient defense mechanism. KV-Cloak uses a reversible Will KV-cache leak my privacy?
+matrix-based obfuscation scheme, combined with operator fusion,
+to secure the KV-cache. Our extensive experiments show that KV-cache will leak your privacy.
+KV-Cloak effectively thwarts all proposed attacks, reducing
+Client Adversary
+reconstruction quality to random noise. Crucially, it achieves this
+robust security with virtually no degradation in model accuracy Fig. 1: Overview of the privacy-preserving LLM inference
+and minimal performance overhead, offering a practical solution workflow and the associated KV-cache leakage threat model.
+for trustworthy LLM deployment.
+While user-server communication is encrypted (black lines),
+the KV-cache is often transmitted and stored in plaintext (red
+I. INTRODUCTION
+dashed lines), creating a surface for privacy attacks.
+Large Language Models (LLMs) have ignited a paradigm
+revolution in artificial intelligence [24], [36], profoundly LLMs, the attention mechanism computes key (K) and value
+impacting various domains and applications, such as machine (V) matrices for each token based on its preceding tokens. The
+translation[44],chatbots[40],codegeneration[14],andcontent KV-cache stores these intermediate attention computations (the
+creation [47]. However, the immense scale of these models, K and V pairs) for tokens that have already been processed
+characterizedbybillionsoreventrillionsofparameters,coupled within the input sequence. By reusing these cached K and V
+with the need to process extensive input sequences and engage pairs for the generation of subsequent tokens, the KV-cache
+inmulti-turndialogues,presentsasubstantialchallengetotheir significantlyreducesredundantcomputations.Thisdramatically
+efficientdeploymentandinference.Thiscomputationaldemand acceleratesinferencespeedandimprovesthroughput,especially
+often translates into high latency and resource consumption, fortasksinvolvinglongcontextsorinteractivesessions,making
+hindering broader accessibility and real-time applicability [22]. LLMs more practical for real-world deployment.
+To address the efficiency bottlenecks in LLM inference, However, the storage and potential sharing of the KV-cache
+researchershaveproposedseveraloptimizationtechniques[38], introduce significant yet underexplored privacy concerns [39],
+[49]. Among these, the Key-Value cache (KV-cache) mecha- [41], as illustrated in Figure 1. This vulnerability stems from a
+nismhasemergedasacrucialandwidelyadoptedsolution[28], critical trade-off made in production systems: while end-user
+[47]. During the autoregressive generation process typical of communication with the LLM service is typically encrypted,
+the KV-cache itself is almost always processed, transmitted
+*Correspondingauthor(s).
+betweencomputenodes,andpersistedinplaintext.Thisdesign
+choice is a concession to performance, as the unacceptable
+latency overhead from cryptographically securing the often
+gigabyte-scale KV-cache would violate the stringent demands
+of real-time inference. Notably, this risk is amplified in the
+NetworkandDistributedSystemSecurity(NDSS)Symposium2026
+emerging paradigm of confidential Model-as-a-Service (MaaS).
+23-27February2026,SanDiego,CA,USA
+ISBN979-8-9919276-8-0 Here, TEE adoption for inference privacy [5], [10] introduces
+https://dx.doi.org/10.14722/ndss.2026.240258
+www.ndss-symposium.org
+
+=== PAGE 2 ===
+a critical architectural trade-off: high-throughput architectures Privacy (DP) [11] requires adding a level of noise that
+require deliberately externalizing the massive KV-cache from often severely degrades the model’s inference accuracy to
+the TEE’s protection boundary. This architectural design—not an unacceptable degree. Even specialized solutions like KV-
+a vulnerability—directly exposes the KV-cache to the Cloud Shield [41], while lightweight, suffer from critical security
+Service Provider (CSP), who inherently possesses it without flaws. Their fixed shuffling mechanism, as we analyzed in
+requiring any additional exploit [43]. Section V-A, is vulnerable to statistical analysis and is incom-
+Crucially, the direct correlation between the KV-cache and patible with modern LLM architectures that use features like
+user inputs [7], [21], combined with its architectural exposure Rotary Positional Embedding (RoPE) [32]. These limitations
+in plaintext, creates a severe and practical attack vector. A highlight the urgent need for a novel defense mechanism.
+critical research gap therefore exists in mitigating these risks, Therefore, we propose KV-Cloak, a lightweight and secure
+necessitating a practical and secure defense mechanism. KV-cache obfuscation mechanism addressing these challenges.
+In this paper, to bridge the research gap, we present the At its core, KV-Cloak employs a reversible matrix-based
+first comprehensive study on the privacy risks of KV-cache in obfuscation scheme that guarantees lossless model accuracy.
+LLM inference. Specifically, we primarily study and answer Its security is multi-layered: it applies secret invertible linear
+the following two research questions: transformations to obscure statistical properties, and critically,
+introducesaone-timerandompermutationmatrixforeachdata
+• RQ1: Is an adversary able to reconstruct user inputs
+block. This dynamic permutation prevents adversaries from
+from the KV-caches?
+building stable algebraic relations across multiple queries. To
+To address this question, we conduct a systematic investi-
+furtherenhanceperformance,KV-Cloakutilizesoperatorfusion,
+gation, demonstrating that attacks against the KV-cache are
+algebraicallyfusingaportionofthesecretobfuscationmatrices
+not only feasible but also diverse and broadly applicable. We
+into the LLM’s attention layer weights offline. This shifts the
+design and implement three distinct classes of targeted privacy-
+primary computational cost away from the latency-sensitive
+stealing attacks. Each attack exposes inherent privacy risks of
+online inference phase, striking an effective balance between
+KV-caches from a different perspective.
+robust security, lossless accuracy, and high performance.
+We first explore two relatively direct attack paths. The first
+Our contributions can be summarized as follows.
+is the KV-cache Inversion Attack, leveraging known model
+weight matrices to directly reverse-calculate the input from • Revealing the privacy risks of KV-cache in LLM in-
+ference: We systematically investigate the privacy risks of
+the KV-cache. The second, more general-purpose approach
+the KV-cache by designing and implementing three distinct
+is the KV-cache Collision Attack. This attack reframes
+attacks, Inversion, Collision, and Injection attacks.
+input reconstruction as a matching task based on forward
+computation: an adversary iteratively uses a local model • Proposing a lightweight and effective method to mitigate
+instance to generate KV-caches for candidate inputs and privacy leakage: We propose KV-Cloak, a novel and prac-
+compares them against the intercepted target KV-cache to tical defense mechanism that uses a lightweight, reversible
+findamatch.Becausethismethoddoesnotrelyonanyreverse matrix-based obfuscation scheme combined with operator
+computation,ithasbroaderapplicability.Finally,weintroducea fusion to protect the KV-cache without degrading model
+novel,semantic-basedKV-cache Injection Attack.Thisattack accuracy and with minimal performance overhead.
+leverages the LLM’s powerful capability to understand and
+• Conductingextensiveexperimentstoevaluateattacksand
+execute instructions. By appending a specific instruction, such
+defenses: We conduct a systematic evaluation to empirically
+as “Repeat the previous content,” to the end of an intercepted
+demonstrate and quantify the feasibility of attacks that
+KV-cachecontext,anadversarycaninducethemodelto“echo”
+reconstruct user input from the KV-cache of state-of-the-
+or generalize the core information held within the KV-cache.
+art LLMs, establishing it as a practical and severe threat. We
+Collectively, these attacks reveal that privacy leakage from
+furtherprovethatourproposedKV-Cloakisahighlypractical
+theKV-cacheisnotmerelyatheoreticalconcern.Theirdiversity
+solution that achieves robust security, near-lossless model
+andfeasibilityconstituteasignificantthreattoreal-worldLLM-
+fidelity, and high efficiency simultaneously. Our experiments
+basedapplications,underscoringtheurgentnecessityofdesign-
+show that KV-Cloak, with its negligible impact on accuracy
+ing specialized and efficient privacy-preserving mechanisms
+and minimal latency overhead (mostly <1%), successfully
+for the KV-cache.
+resolves the stark trade-off between security and utility that
+• RQ2: Can defenders effectively and efficiently mitigate plagues alternative approaches such as DP.
+or prevent user privacy leakage from the KV-cache?
+II. BACKGROUNDANDRELATEDWORK
+In response to this challenge, this paper provides an affir-
+A. Transformer-based LLM Inference
+mative answer by first analyzing the shortcomings of existing
+privacy-preserving techniques. Conventional methods like full Prevailing LLMs, such as LLaMA [35], DeepSeek [24]
+cryptographic encryption [2] or Homomorphic Encryption and Qwen [40], are predominantly based on the Transformer
+(HE) [26] introduce prohibitive computational overhead and decoder architecture [47].
+latency, rendering them impractical for the high-throughput Self-Attention Mechanism. For an input token x , the self-
+i
+demands of LLM inference. Meanwhile, applying Differential attention layer generates Query (q ), Key (k ), and Value
+i i
+2
+
+=== PAGE 3 ===
+(v ) vectors via linear transformations. Crucially, modern ofsuchtimingattacksisseverelymitigatedbymodernmemory
+i
+architectures incorporate RoPE, denoted as Rd : management.
+Θ,i
+Systems like PagedAttention [17] manage the KV-cache in
+q =x W⊤Rd , k =x W⊤Rd , v =x W⊤. (1)
+i i q Θ,i i i k Θ,i i i v non-contiguous blocks (defaulting to 16 tokens). To trigger a
+where W are learnable weight matrices. The attention score cachehit(andthusatimingsignal),anadversarymustcorrectly
+(·)
+a is computed as the scaled dot product between q and guess an entire block simultaneously. With a vocabulary size
+ij i
+preceding keys k . The final output o is the weighted sum
+|V|≈105,thesearchspaceexplodesto|V|16,renderingbrute-
+j≤i i
+of values projected by W : force side-channels computationally infeasible. In contrast,
+o
+√ we address the direct access threat model. Given that KV-
+exp(q k ⊤/ d) (cid:16) (cid:17)
+a = i j √ , o = (cid:80)i a v W⊤. caches are often processed in plaintext for performance, a
+ij (cid:80)i exp(q k ⊤/ d) i j=1 ij j o compromised system allows adversaries to bypass probabilistic
+t=1 i t
+(2) guessing and perform precise, per-token collision attacks.
+Autoregressive LLM Inference. LLM inference models the
+III. ATTACKLANDSCAPE:INPUTRECONSTRUCTIONFROM
+sequence probability P(x ,...,x ) through autoregressive
+1 n KV-CACHE
+decomposition [6]. The generation process predicts tokens
+sequentially based on the conditional probability: While the KV-cache serves as a cornerstone for efficient
+LLM inference, it concurrently introduces a critical and
+n
+P(x ,...,x )= (cid:89) P(x |x ). (3) underexplored privacy surface. Unlike deep hidden states that
+1 n i <i
+represent fused semantic information, entries in the KV-cache
+i=1
+maintainadirect,element-wisecorrespondencetothetokensin
+While effective for capturing dependencies, this sequential
+the user’s input sequence. This structural characteristic implies
+nature implies that generating x depends on the full history
+i
+that an adversary gaining access to the KV-cache does not
+x . Without caching, the model must re-compute the Key
+<i
+merely obtain abstract embeddings, but potentially holds the
+and Value vectors for all preceding tokens at each step. This
+raw materials to reverse-engineer the original user prompt.
+computational redundancy creates a substantial bottleneck for
+Inthissection,weinvestigatethecentralresearchquestion:Is
+real-time inference.
+anadversaryabletoreconstructuserinputsfromtheKV-cache?
+KV-cache in LLM Inference. To mitigate the computational
+We first define a realistic threat model grounded in modern
+redundancy of autoregressive generation, LLMs utilize the KV-
+cloudarchitectures,andsubsequentlydetailthreedistinctattack
+cachemechanism[28].InsteadofrecalculatingtheKey(K)and
+vectors designed to exploit this vulnerabilities.
+Value (V) matrices for the entire context window at each step,
+the system persists these intermediate states. When generating A. Threat Model
+a new token x i , the model only computes the current q i ,k i ,v i , Thiswork focusesonthe threatlandscapeof LLMinference
+performs attention between q i and the cached history, and serviceswithinaconfidentialcomputingparadigm.Weconsider
+subsequently appends the new (k i ,v i ) pair to the cache. This the inference service provider as the adversary.
+strategysignificantlyreduceslatencybutnecessitatesmanaging
+Adversary’sObjective.Theprimaryobjectiveoftheadversary
+a persistent state proportional to the sequence length.
+istorecovertheuserinputpromptfromtheaccessedKV-cache.
+We target verbatim reconstruction because it represents the
+B. Privacy Attacks against LLMs
+most severe breach of privacy, allowing the extraction of exact
+1) Inference-PhaseInversionAttacks: Inference-timeprivacy
+credentials, PII, or proprietary logic contained in the input.
+attacks are categorized into: (1) Output-based, reconstructing
+Adversary’sCapabilities.Weassumetheadversarycanobtain
+inputs from final probabilities or embeddings [19], [25]; and
+boththeKV-cacheandthemodelweights,butdoesnotobserve
+(2) Intermediate-state-based, exploiting internal representa-
+the ephemeral runtime activations within the GPU registers.
+tions [37]. While early works like Vec2Text [25] focused on
+These assumptions are well-grounded in the realities of current
+sentence embeddings, Embed Parrot [37] demonstrated that
+confidential computing inference paradigms:
+deep hidden states allow for more accurate reconstruction.
+However, current research often overlooks the KV-cache. • KV-cache Access. The adversary is capable of obtaining
+the KV-cache stored by the LLM server. This is a realistic
+Unlike fused hidden states, the KV-cache retains the primitive
+assumption, as high-throughput and scalable cloud-native
+Key(K)andValue(V)vectors—therawinputstotheattention
+services deliberately externalize the large-scale KV-cache
+mechanism. Crucially, to support autoregressive generation,
+to non-secure memory or persistent storage pools to meet
+the KV-cache is architecturally designed for persistence,
+performance demands [43]. We thus consider this access a
+making it a richer and more exploitable surface than transient
+result of an intentional performance-security trade-off, not a
+computational states.
+traditional vulnerability.
+2) Limitations of Side-Channel Attacks: Existing threats
+to the KV-cache are primarily side-channel attacks, such as • Foundation Model Access. We assume a gray-box setting
+PromptPeek [39], which infers prompts by measuring latency wheretheadversarycanaccessthefoundationmodelweights.
+variations caused by cache sharing. However, the practicality This access is realistic through two primary paths: (1) For
+3
+
+=== PAGE 4 ===
+closed-source services, the CSP inherently owns the model Collision Attack is a universal, forward-matching adversary
+and possesses the weights. (2) For services built on open- applicable to any layer. Instead of algebraically reversing the
+source models, the provider may be required to disclose the projection, this attack reframes input reconstruction as a search
+base model for licensing compliance, or the model can be problem: identifying the token in the vocabulary that, when
+identified using fingerprinting techniques [8], [27]. processed by a local model, yields a KV-cache entry most
+similar to the intercepted target.
+B. Input Reconstruction Attacks from KV-cache
+Fundamental Principle: Reconstruction as Optimization.
+This section investigates the risk of user input leakage The core premise is that the KV-cache exhibits distance-
+from KV-cache data during LLM inference. We systematically preserving properties for identical tokens under the same
+present three attack vectors, namely Inversion Attack, Collision context. We formalize the attack as finding the optimal token
+Attack, and Injection Attack, for reconstructing the original t∗ at position i that minimizes the distance metric D (e.g.,
+user inputs from the KV-cache. These attacks differ in com- Frobenius norm) between the leaked cache K and the
+leaked
+plexity, applicability, and exploited vulnerabilities, collectively local generation K (t):
+local
+illustrating the threat landscape.
+(cid:16) (cid:17)
+1) KV-cache Inversion Attack: As illustrated in Figure 2a, t∗ i =argminD K l ( e i a ) ked ,K l ( o i c ) al (t|x <i ) . (5)
+theKV-cacheInversionAttackfunctionsasabaselinealgebraic t∈V
+adversary. It attempts to mathematically invert the attention The attack’s success hinges on statistical separability: the
+mechanism by exploiting the linear projection of Key (k) and distance for the ground-truth token, d target , must be statistically
+Value (v) vectors. distinguishable from the distribution of distances for incorrect
+tokens, d .
+Attack Formulation. Based on the forward pass definition other
+in Eq. (1), an adversary possessing the plaintext KV-cache Attack Procedure. As illustrated in Figure 2b, the attack
+and the model weights (W ,W ) can theoretically recover the proceedsiterativelytoken-by-token.Foreachunknownposition
+k v
+input state x of the attention layer via matrix inversion: i: (1) Candidate Generation: The adversary selects candidate
+i
+tokens from the model’s vocabulary V to test. (2) Local
+x =k (Rd )−1(W⊤)−1, x =v (W⊤)−1. (4)
+i i Θ,i k i i v Simulation: For each candidate token t, the adversary performs
+a forward pass using their local model instance to generate the
+Architectural and Semantic Constraints. While algebraically
+correspondingKV-cacheentryK(i) (t).(3)CollisionMatching:
+sound, the feasibility of this attack in production environments local
+TheadversarycomputesthedistanceD betweenthelocalentry
+is severely limited by two fundamental constraints: (1) The
+andtheinterceptedtargetK(i) .Thecandidatethatminimizes
+attackstrictlyrequirestheprojectionmatricesW k andW v tobe leaked
+this distance (i.e., creates a “collision” with the leaked state)
+squareandfull-rankinvertible.Thisconditionholdsforlegacy
+is identified as the correct token x , appended to the sequence,
+Multi-Head Attention (MHA) [36] architectures (e.g., LLaMA- i
+and the process advances to i+1.
+7B).However,modernState-of-the-Art(SOTA)models,includ-
+ing LLaMA-3 [12], Qwen [40], and DeepSeek [24], adopt Implementation Optimizations. A naive exhaustive search
+efficiency optimizations such as Grouped-Query Attention overtheentirevocabulary(V ≈105)entailsprohibitivelatency
+(GQA) [3] or Multi-Head Latent Attention (MLA) [30]. These and VRAM consumption, as verifying the global minimum
+mechanisms typically project inputs into lower-dimensional distancerequiresinferringeverycandidatetoken.Torenderthe
+subspaces,resultinginnon-squarematriceswhereuniqueinver- attack practical, we implement three synergistic optimizations
+sion is mathematically impossible (i.e., the problem becomes thattransformtheproblemfromaglobalsearchintoanefficient
+ill-posed). (2) the attack’s effectiveness is largely confined to sequential decision process: (1) Batched Outlier Detection
+the first decoder layer’s KV-cache, as its inversion directly (Enabling Early Exit). Instead of calculating distances for the
+yields the input sequence’s embeddings, allowing for precise full vocabulary to find the minimum, we process candidates
+mappingbacktothevocabulary.Incontrast,applyingEq.(4)to in batches. We fundamentally shift the decision logic: rather
+deeper layers recovers intermediate hidden states. These states than comparing a candidate against all other tokens in V,
+represent semantically fused contextual information rather than we determine if a candidate constitutes a statistical outlier
+discrete tokens. Reversing these deep representations into text within its current batch (i.e., d <µ −3σ ). Crucially,
+t batch batch
+is a non-trivial problem that necessitates training auxiliary this allows for an early exit: once a collision is statistically
+inversion models [37], thereby increasing the adversary’s confirmed within a batch, the search terminates immediately
+computational cost and reducing fidelity. without evaluating the remaining vocabulary. (2) Probability-
+Consequently, while the Inversion Attack serves as a the- Guided Prioritization. To maximize the efficacy of the early
+oretical proof-of-concept for KV-cache leakage, its reliance exit mechanism, we employ a probability-guided search. We
+on specific architectural properties (MHA) and layer positions sort the candidate tokens based on the model’s predicted
+(Layer 0) limits its utility against modern, deep LLMs. This probabilitiesP(x |x ).Thisreorderingensuresthatthecorrect
+i <i
+motivates the need for the more robust attacks. token—which typically carries a high probability—is placed in
+2) KV-cache Collision Attack: Unlike the Inversion Attack the first few batches. Consequently, the collision is triggered
+which suffers from architectural constraints, the KV-cache near the start of the search process, drastically reducing the
+4
+
+=== PAGE 5 ===
+× =
+Repeat Instruction
+𝑥 𝑘
+𝑊
+𝑘
+……
+……
+……
+… × =
+…… Predicted
+Leaked KV-cache Local LLM Query 𝑘 𝑊−1 𝑥
+𝑘
+× = …… …… × =
+Repeat Instruction Repeat Instruction
+𝑥 𝑘 User Input Leaked KV-cache 𝑥 𝑘
+LLM Server
+𝑊 𝑊
+𝑘 Match 𝑘
+…… ……
+… …… …… × = … … … …… …… × =
+Leaked KV … - … cache Local LLM Pr Q e u d e ic r t y ed 𝑘 𝑊-1 𝑥 Vocabular P y redicted Query Local LLM Predicted KV-cache Leaked KV … - … cache Local LLM Pr Q e u d e ic r t y ed 𝑘 𝑊-1 𝑥
+𝑘 𝑘
+(a)KV-cacheInversionAttack. (b)KV-cacheCollisionAttack. (c)KV-cacheInjectionAttack.
+…… …… …… ……
+Fig. 2: Workflow of the three proposed KV-cache input reconstruction attacks.
+User Input Leaked KV-cache User Input Leaked KV-cache
+LLM Server LLM Server
+Maavtecrhage number of inferences required. (3) Search Space KV-cache. This injection serves two purposes: (1) Stimul M us atch
+… …
+… Pruning. Distinct from prioritization, we explicitly truncate Generation. The dire…ctive creates the requisite Q vectors to
+Predicted Predicttheed search space by discarding the “long tail” of tokens activate the attention mechaniPsmred.i(c2te)dF orced ExfiltratioPnr.eTdihceted
+Vocabulary Query Local LLM KV-cawchieth negligible probabilities (e.g., keeping only the top-k% LLM attends to t V h o e ca s b t u o la le ry n KQ/uVerypairs a L s oc h a i l s L to L r M ical cKonVt-ecaxcth.e
+candidates). While prioritization accelerates the average case, Bound by its alignment training, the model executes the
+pruning bounds the worst-case complexity. It prevents the instruction, effectively “echoing” or summarizing the latent
+adversary from wasting resources iterating through tens of private information stored in the cache.
+thousands of implausible tokens in the rare event that the
+StrategicAdvantages:RobustnessandEfficiency.Thisattack
+target is not found in the high-probability regions.
+offers distinct advantages in robustness compared to the Colli-
+Enhancement via Chosen-Plaintext Attack (CPA). A critical sion Attack. Specifically, it remains effective against KV-cache
+challenge is determining the optimal decision threshold τ. A evictionstrategieslikeH2O[46].Whilesuchlossycompression
+static heuristic (e.g., 3σ-rule) is often suboptimal due to the breaks the strict mathematical correspondence required for
+varyingentropyofdifferenttokens.However,anadversarywith algebraic attacks, it typically preserves the semantic gist of
+CPA capabilities—who can feed known inputs to the model the context. The Injection Attack successfully exploits these
+and observe the resulting KV-cache—can profile the precise residual semantic vectors to hallucinate or reconstruct private
+statistical behavior of d and d . data. Furthermore, the attack is highly efficient, requiring
+target other
+This prior knowledge allows for an adaptive thresholding only a single generation pass. This attack underscores that a
+strategy. We formulate the success probability for a candidate comprehensive defense must render the KV-cache semantically
+at rank r as: unintelligible, not just algebraically obfuscated.
+P(success|r)=P(d
+other
+>τ)r−1×P(d
+target
+<τ). (6) IV. EVALUATIONOFATTACKS
+A. Experimental Setup
+This formulation explicitly captures the trade-off: a stricter
+threshold minimizes False Positives (accepting an incorrect
+Models. To demonstrate attack universality, we select seven
+predecessor) but risks False Negatives (rejecting the target).
+state-of-the-art LLMs spanning diverse parameter scales (1B–
+By dynamically adjusting τ based on the expected rank
+8B) and attention mechanisms. Our evaluation prioritizes
+r and the profiled distributions from CPA, the adversary
+modern GQA architectures, including the LLaMA-3.2 series
+maximizes P(success), significantly boosting reconstruction
+(1B & 3B-Instruct), LLaMA-3.1-8B [12], and Qwen2.5-
+fidelity compared to static baselines.
+Math-7B [40]. Crucially, we incorporate DeepSeek-R1-Distill-
+3) KV-cache Injection Attack: Unlike Inversion and Colli- LLaMA-8B [13] (LLaMA-3.1-8B-Distilled) to assess robust-
+sion attacks which rely on precise algebraic state matching, nessagainstfine-tunedmodelswhereweightparametersdiverge
+theKV-cacheInjectionAttack exploitsthesemanticinstruction- from their base counterparts. Finally, to verify generalizability
+following capabilities of LLMs to exfiltrate private contexts. acrossarchitecturalevolutions,weevaluatelegacyMHAmodels,
+Architectural Constraint: The Missing Query. Architec- specifically LLaMA-7B and LLaMA-2-7B.
+turally, a stand-alone KV-cache is computationally dormant. Datasets. To simulate realistic privacy leakage scenarios, we
+The self-attention mechanism requires a current Query vector utilize the LMSYS-Chat-1M dataset [48], which comprises
+(Q) to drive the attention scoring (Softmax(QK⊤)) and state real-world user interactions collected from inference services.
+transitions.Consequently,anadversarycannotsimply“resume” We construct a test set by randomly sampling 1,000 instances,
+inference from a stolen cache; a new input stimulus is required ensuring a rich variety of dialogue and instruction-following
+to generate the necessary activation state. contexts. Analysis of attack generalization across domain-
+specific datasets is provided in Appendix C3.
+Attack Mechanism: Contextual Hijacking. To overcome
+this, we weaponize the LLM’s instruction-following nature. Evaluation Metrics. BERTScore [45] and ROUGE-L [23] are
+As shown in Figure 2c, the adversary appends a crafted used to measure the similarity between the original input and
+directive(e.g.,“Repeatthepreviouscontent.”)totheintercepted the text reconstructed from the KV-cache. BERTScore, based
+5
+
+=== PAGE 6 ===
+on the all-mpnet-base-v2 model, is better at capturing Efficiency via Probability-Guided Pruning. To enhance
+semantic similarity, while ROUGE-L primarily reflects lexical- practicality, we evaluate truncating the search space based
+level precision and recall. on model-predicted probabilities. Experimental results on
+LLaMA-3.2-1B (Figure 4) indicate that searching only the
+B. Attack Effectiveness top 1/8 of tokens retains 96.1% of the full-search fidelity. This
+optimization reduces the average reconstruction time per layer
+This section evaluates the feasibility of reconstructing user from 5.06s to 2.17s (<43% of the original latency), rendering
+inputs via the proposed Inversion, Collision, and Injection the attack highly efficient for real-time scenarios.
+attacks.Wesystematicallytestthesevectorsagainstthemodels
+defined in Section IV-A. Detailed ablation studies are provided Takeaway 2: The Collision Attack is a universal threat,
+in Appendix C. achievinghighfidelityacrossdiversearchitectures(including
+1) Experimental Settings: Beyond standard reconstruction, fine-tuned models) and layers, with high efficiency via
+we introduce two specific scenarios to evaluate attack robust- probability pruning.
+ness under restricted adversarial knowledge: (1) Fine-tuning
+Mismatch: We attack the fine-tuned LLaMA-3.1-8B-Distilled 4) Collision Attack Enhanced with Prior Knowledge (Col-
+assuming the adversary only possesses weights from its base lision+): We further evaluate the potency of integrating
+model (LLaMA-3.1-8B). This validates effectiveness when adversarial prior knowledge (i.e., adaptive thresholding based
+exact model weights are unavailable. (2) Cross-Architecture on assumed token rank r).
+Mismatch:WeemployLLaMA-7BparameterstoattackLLaMA-
+EfficacyonFine-tunedModels.AsdetailedinTableI,assum-
+2-7B to assess generalizability across disjoint architectures.
+ing a rank r =8 yields near-perfect reconstruction (≈100%)
+Regarding data scope, the Inversion and Collision attacks
+across all open-source models. For the fine-tuned LLaMA-3.1-
+operate on single-layer KV-caches. To characterize layer-wise
+8B-Distilled, we analyze the impact of rank assumptions in
+vulnerability, we evaluate these attacks on the first, middle,
+Figure 5. In the first layer, where the actual average target
+and last layers respectively. In contrast, the Injection Attack
+rank is ≈ 4, using the optimal threshold boosts accuracy to
+utilizes the complete, multi-layer KV-cache to leverage the
+138.6% of the baseline. Conversely, the middle layer shows no
+model’s full semantic processing capabilities.
+improvement, implying an actual rank >128. In the last layer,
+2) Results of KV-cache Inversion Attack: As detailed in optimal rank alignment (64≤r ≤128) increases accuracy to
+Table I, the efficacy of the Inversion Attack generally hinges 139.0% relative to the baseline.
+on two conditions: (1) access to the first-layer KV-cache, and
+(2)analgebraicallyinvertibleprojectionmatrix,typicalofMHA. Statistical Justification. To further illustrate this, we analyze
+distance distributions using “The Bitter Lesson” excerpt (Fig-
+Under these constraints, we achieve near-perfect reconstruction
+fidelity (≈100%), whereas deeper layers yield unintelligible ure3).Fortheopen-sourcemodel,theheuristic3σ other threshold
+noise (< 10%) due to semantic fusion. Notably, the GQA- yields a 0.13% false-positive rate, capping per-token success
+at 91.84% (assuming r =64). By switching to a statistically
+basedLLaMA-3.2-1Balsoexhibitshighfirst-layervulnerability
+(≈100%).Weattributethistothemodel’shighprojectionrank derivedthreshold,weeliminatefalsepositives,achieving100%
+success. Similarly, for the fine-tuned model, the enhanced
+relative to its hidden state dimension. This distinct property
+allows the least squares method to effectively recover inputs threshold improves per-token success from 91.79% to 97.82%,
+dramatically increasing full-sequence reconstruction fidelity.
+despite the non-square nature of the projection matrix.
+Takeaway 3: Augmenting the Collision Attack with model-
+Takeaway 1: The Inversion Attack is effective against the
+specific prior knowledge achieves near-perfect (≈ 100%)
+first-layer KV-cache of MHA models, with exceptions for
+user-input recovery accuracy.
+architectures possessing high-rank projection matrices.
+3) Results of KV-cache Collision Attack: Unlike the In- 5) Results of KV-cache Injection Attack: We evaluate
+semantic exfiltration using the optimal directive identified in
+version Attack, the Collision Attack relies on forward-pass
+Appendix C2: “Repeat the previous content”. As detailed in
+matching using the Frobenius norm. As shown in Figure 3, we
+observe that distances for incorrect tokens (d ) approximate TableI,thisvectorachievesanaverageBERTScoreof0.58and
+other
+a Gaussian distribution, whereas the target token (d ) ROUGE-L of 0.42. While these metrics are lower than those
+target
+of the exact-match Collision Attack, they confirm significant
+manifests as a distinct statistical outlier. By setting an outlier
+threshold of 3σ below the batch mean (batch size=256, see leakage of the input’s core meaning.
+Appendix C1), we achieve high reconstruction accuracy across Notably,theattackexhibitspeakperformanceonLLaMA-7B.
+all layers of all tested models (Table I). Crucially, this method This supports the hypothesis that the MHA mechanism retains
+overcomes the architectural constraints of MHA; it is effective higher contextual fidelity within the KV-cache compared to
+even against the fine-tuned LLaMA-3.1-8B-Distilled using only compressed variants like GQA. Consequently, MHA caches
+public base model weights, demonstrating robustness against are more semantically intelligible to the model, increasing
+parameter divergence. vulnerability to instruction-based extraction. This imposes a
+6
+
+=== PAGE 7 ===
+TABLE I: Reconstruction fidelity (BERTScore and ROUGE-L) of attacks against unprotected KV-cache across different models
+and layers. “Collision+” denotes the attack enhanced with prior knowledge.
+Inversion Collision Collision+ Injection
+Type Model Metric
+First Mid Last First Mid Last First Mid Last All
+BERTScore(↑) 1.000 0.065 0.092 0.449 0.769 0.611 1.000 1.000 1.000 0.765
+LLaMA-7B
+ROUGE-L(↑) 1.000 0.036 0.062 0.500 0.562 0.436 1.000 1.000 1.000 0.687
+BERTScore(↑) 1.000 0.084 0.057 0.877 0.791 0.894 1.000 1.000 1.000 0.544
+LLaMA-3.2-1B
+ROUGE-L(↑) 0.994 0.038 0.000 0.709 0.617 0.680 0.994 0.994 0.994 0.315
+BERTScore(↑) 0.055 0.095 0.083 0.782 0.668 0.820 1.000 1.000 1.000 0.540
+Identical LLaMA-3.2-3B-Instruct
+ROUGE-L(↑) 0.000 0.000 0.000 0.732 0.456 0.621 0.994 0.994 0.994 0.324
+BERTScore(↑) 0.071 0.061 0.062 0.873 0.652 0.764 1.000 1.000 1.000 0.616
+LLaMA-3.1-8B
+ROUGE-L(↑) 0.000 0.000 0.001 0.825 0.443 0.564 0.994 0.994 0.994 0.447
+BERTScore(↑) 0.229 0.105 0.105 0.918 0.552 0.783 1.000 0.983 0.996 0.422
+Qwen2.5-Math-7B
+ROUGE-L(↑) 0.186 0.000 0.000 0.842 0.355 0.580 1.000 0.977 0.996 0.286
+LLaMA-3.1-8B-Distilled BERTScore(↑) 0.083 0.062 0.081 0.642 0.492 0.635 0.894 0.258 0.762 0.610
+Finetune
+(LLaMA-3.1-8B) ROUGE-L(↑) 0.000 0.000 0.001 0.633 0.227 0.413 0.868 0.122 0.479 0.421
+LLaMA-2-7B BERTScore(↑) 0.067 0.086 0.084 0.058 0.070 0.069 0.075 0.062 0.060 0.087
+Cross-Arch
+(LLaMA-7B) ROUGE-L(↑) 0.038 0.057 0.031 0.013 0.000 0.002 0.052 0.017 0.024 0.019
+8
+6
+4
+2
+0
+0 10 20 30 40 50 60
+Distance
+)secnatsiD
+tegraT(
+ytisneD
+Target: 0.08
+: 0.00
+: 0.00
+Other: 0.06
+: 42.37
+: 5.37
+0.04
+0.02
+0.00
+)secnatsiD
+rehtO(
+ytisneD
+1.52 0.25
+26.26
+0.20
+0.15
+0.10
+0.05
+0.00
+20 30 40 50
+Distance
+(a)ThedistributionsofLLaMA-3.1-8Bmodel.
+)secnatsiD
+tegraT(
+ytisneD
+Target: 0.10
+: 20.90
+: 2.31
+0.08 Other:
+: 40.28
+: 3.94 0.06
+0.04
+0.02
+0.00
+)secnatsiD
+rehtO(
+ytisneD
+26.28
+28.45
+(b)ThedistributionsofLLaMA-3.1-8B-Distilledmodel.
+Fig. 3: Distance distributions of target tokens d (orange) versus incorrect tokens d (blue) in the Collision Attack. The
+target other
+input is an excerpt from “The Bitter Lesson”(see Appendix B). The attack targets the last-layer KV-cache of LLaMA-3.1-8B
+(left) and LLaMA-3.1-8B-Distilled (right) using weights from the base model. Vertical lines indicate the heuristic threshold
+(3σ , green dotted) and the prior-knowledge enhanced threshold (r =64, red dashed).
+other
+100
+95
+90
+85
+80
+75
+70
+65
+1/161/8 1/4 1/2 1
+Truncation Ratio
+)%(
+etaR
+sseccuS
+kcattA
+99.5% 100.0% 98.4% 96.1% 5
+4
+90.9%
+3
+2
+Attack Success Rate
+1
+Average Time
+0
+)s(
+emiT
+egarevA
+Takeaway 4: Even without verbatim recovery, Injection
+Attacks successfully exfiltrate core user intent, necessitating 5.06s defenses that neutralize semantic intelligibility.
+C. Attack Robustness under Partial Knowledge Scenarios
+3.54s
+2.76s To assess practical applicability, we evaluate the robustness
+2.17s ofourattacksunderarelaxedthreatmodelcharacterizedbytwo
+1.62s realistic constraints: incomplete data interception and model
+parameter mismatch.
+Incomplete KV-cache Data. Our analysis reveals distinct
+data requirements across attack vectors. The Injection Attack
+necessitates the full, cross-layer context and fails when data is
+Fig.4:Theeffectoftruncatingtheprobability-sortedvocabulary
+fragmented. Conversely, the Collision Attack exhibits superior
+on reconstruction fidelity and attack time. Experiments were
+robustness; possessing the KV-cache from any single layer is
+runwith abatch sizeof 256and an outlierthreshold of3σ .
+other sufficient to perform high-fidelity input reconstruction.
+Model Mismatch. We further evaluate the scenario where the
+criticalrequirementfordefenses:aprotectedKV-cachemustbe adversary’s local model differs from the target service model.
+rendered semantically unparsable to the LLM itself, preventing Experiments confirm that attack effectiveness hinges on the
+the model from being weaponized to interpret stolen contexts. correlation of weight parameters.
+7
+
+=== PAGE 8 ===
+140
+120
+100
+80
+60
+40
+21 22 23 24 25 26 27 28
+Assumed Token Position in Vocabulary
+)%(
+oitaR
+etaR
+sseccuS
+kcattA
+• Differential Privacy (Utility Trade-off): Applying Differ-
+138.2% 138.6% 136.7% 136.9% 135.9% 139.2% 138.8% 138.4% ential Privacy involves injecting calibrated noise into the
+Key-Value vectors to mask individual data points [1], [20],
+126.7% 132.1% 135.8% 135.2% 133.2% 129.9% [42]. However, the sparse and sensitive nature of attention
+118.0%
+mechanisms creates a severe utility-privacy trade-off. To
+106.7%
+Baseline (100%) achieve a meaningful level of privacy, the required amount
+of noise would significantly degrade the LLM’s inference
+56.5% accuracy to an unacceptable degree. 52.9% 49.4% 50.0% 43.9% 46.3% 44.6% 47.2% • KV-Shield (Security and Compatibility Flaws): KV-
+Shield [41] is the only existing lightweight obfuscation
+scheme for KV-cache. It synchronously permutes atten-
+tion weight rows (W ,W ,W ) to shuffle cache elements,
+First Layer Attack Early Positions (2-64) q k v
+Middle Layer Attack Late Positions (128-256) obfuscating them before an attention score is calculated.
+Last Layer Attack The obfuscated attention output is then de-obfuscated for
+subsequent steps. We identify two critical failures in this
+Fig. 5: Collision Attack experiments on LLaMA-3.1-8B-
+design: (1) Security Flaws. First, the simple shuffling
+Distilledusingoptimalthresholdsderivedfordifferentassumed
+preserves the inherent statistical distribution of the data,
+token ranks (r).
+leavingithighlyvulnerabletoourproposedCollisionAttacks.
+Second,therelianceonafixedobfuscationkeylacksdynamic
+• Fine-tuning Mismatch (Gray-box): We targeted a fine-
+randomness, rendering the scheme defenseless against CPA.
+tuned model (LLaMA-3.1-8B-Distilled) assuming the adver-
+(2) Architectural Incompatibility. The shuffling disrupts
+sary only possesses the open-source base model (LLaMA-
+relative positioning, making it incompatible with RoPE used
+3.1-8B). Results in Table I show that the attack remains
+in SOTA models (e.g., LLaMA, Qwen).
+highly effective, suggesting that fine-tuning preserves the
+fundamentalweightcorrelationsexploitedbyourmechanism. Design Objectives. The deficiencies of prior works necessitate
+aspecializeddefenseforKV-cache.Wedefinethreemandatory
+• Architectural Mismatch (Black-box): In contrast, cross-
+design goals for a practical solution:
+architectureattacks(e.g.,usingLLaMA-7BtoattackLLaMA-
+2-7B) fail completely. Reconstruction similarity drops to • Robust Security:Themechanismmustresisttargetedrecon-
+levels statistically indistinguishable from random guessing struction attacks by effectively masking both the algebraic
+(< 0.1). This confirms that the Collision Attack relies on and statistical properties of the cache.
+the algebraic correspondence of weight parameters, which • Lossless Model Fidelity: It must preserve the exact math-
+is absent across disjoint architectures. ematical equivalence of the attention mechanism, ensuring
+zero degradation in generation quality.
+V. KV-CLOAK:ALIGHTWEIGHTKV-CACHEDEFENSE
+• Negligible Overhead: The defense must operate with
+minimal latency, ideally shifting computational costs offline
+A. Motivation for KV-Cloak
+to maintain high inference throughput.
+Limitations of Existing Privacy-Preserving Techniques. To meet these objectives, we propose KV-Cloak, a novel
+Current privacy-preserving techniques fundamentally struggle defense mechanism that synergizes reversible matrix obfusca-
+to balance security, efficiency, and utility when applied to the tion with operator fusion to deliver robust security, lossless
+massive, latency-sensitive KV-cache. We analyze their specific model fidelity, and negligible inference overhead.
+limitations below:
+B. Naive Defense: Reversible Linear Obfuscation
+• Cryptographic Methods (Overhead Bottleneck): Standard
+cryptographic techniques [4], [34], such as symmetric AES To mitigate privacy risks with minimal overhead, we first
+encryption, provide confidentiality by ensuring data remains consider a naive defense that employs reversible linear trans-
+in ciphertext during storage and transmission, requiring de- formationstoobscurethestatisticalpropertiesoftheKV-cache.
+cryption only for legitimate use. A more advanced approach, In the context of modern inference frameworks (e.g., vLLM),
+Homomorphic Encryption (HE) [2], [26], allows for direct we denote the key vectors for a single attention head within a
+computationonencrypteddata,theoreticallyenablingpartsof PagedAttention block as a matrix K ∈Rb×d, where b is the
+the attention mechanism to operate on the KV-cache without block size and d is the head dimension. Since the protection
+ever decrypting it. However, despite their strong security mechanism applies analogously to value vectors, we focus our
+guarantees,theimmensecomputationaloverheadandlatency analysis on K. The obfuscation transformation is defined as:
+introduced by these methods are prohibitive. Given that the
+K′ =SKM, (7)
+KV-cache can be tens or hundreds of gigabytes, applying
+full encryption or HE is unsuitable for the high-throughput, where S ∈ Rb×b and M ∈ Rd×d are secret, randomly
+low-latency requirements of LLM inference. generated invertible matrices. This transformation aims to
+8
+
+=== PAGE 9 ===
+101
+× × =
+𝑞 𝑎 𝑎 𝑜
+102
+𝐾 𝑉 𝑉
+𝐾⊤
+103
+𝑜=𝑎𝑉 Permute 104
+105
+× × = 20 10 0 10 20
+𝑞 𝑎𝑃෠⊤ 𝑎𝑃෠⊤ 𝑜′ Element Value of K-cache
+𝑃෠𝐾 𝑃෠𝑉 𝑃෠𝑉
+(𝑃෠𝐾)⊤
+𝑜′=𝑎𝑃෠⊤𝑃෠𝑉=𝑎𝑉=𝑜
+Fig. 6: Illustration of the KV-Cloak block-wise shuffling
+mechanism. By permuting K and V vectors within a block,
+the mechanism eliminates positional side channels while
+maintaining mathematical equivalence in the attention output.
+conceal the raw content of K while preserving the matrix
+dimensions necessary for storage allocation.
+Security Analysis. Despite its operational simplicity, this
+scheme is fundamentally insecure under a CPA model due to
+its fixed linear structure. While a real-world adversary cannot
+generate arbitrary matrix K directly (as K is constrained
+by the model’s embedding projection of valid tokens), we
+demonstrate that this constraint does not preclude a full
+compromise. An adversary can circumvent this restriction
+by mounting a differential attack through carefully crafted
+prompts.Specifically,theadversarychoosestwoinputsyielding
+plaintexts K and K , thereby controlling the difference
+1 2
+∆K = K − K . Due to the linearity of the scheme, the
+1 2
+observed ciphertext difference is ∆K′ = S(∆K)M. By
+systematicallycraftinginputssuchthat∆K approachesaseries
+ofstandardbasismatrices(i.e.,matriceswithasinglenon-zero
+entry), the adversary can isolate and solve for the columns
+of S and the rows of M. This algebraic attack enables full
+recovery of the secret matrices (up to a scalar ambiguity) with
+a computational complexity of only O(b2d+bd2), rendering
+the naive defense ineffective against determined adversaries.
+C. One-Time Pad Block-wise Shuffling
+1) Eliminating Redundant Positional Information in KV-
+cache: To enhance the security of the obfuscation scheme, we
+introduce additional randomness by eliminating the architec-
+turalredundancyoftheKV-cache.Weobservethatthephysical
+memoryorderingofk,v vectorsiscomputationallysuperfluous
+during inference, as positional semantics are intrinsic to the
+vectors via RoPE.
+Mechanism. We implement a dynamic, block-wise random
+permutation. By reordering k,v pairs within each block while
+maintaining their internal correspondence, we decorrelate the
+physical storage index from the logical token sequence. As
+illustratedinFigure6,thisoperationpreservesthemathematical
+invariance of the attention mechanism while imposing a
+combinatorial complexity barrier of b! on the adversary. Given
+typical block sizes b ∈ {16,32,64} [17], this renders brute-
+force matching computationally infeasible.
+Formalization. The enhanced obfuscation employs a locally
+generated, one-time pad permutation matrix Pˆ before applying
+)gol(
+ytisneD
+ytilibaborP
+= 0.030 100
+= 2.452
+101
+102
+103
+104
+4 2 0 2 4
+Element Value of V-cache
+)gol(
+ytisneD
+ytilibaborP
+= -0.000
+= 0.313
+Fig. 7: Value distribution of KV-cache elements (K and V)
+for LLaMA-3.2-1B. The data is collected during inference on
+“The Bitter Lesson”.
+the linear transformations:
+K′ =SPˆKM. (8)
+Crucially, for efficiency, Pˆ is ephemeral and does not require
+storage. The inference engine performs subsequent compu-
+tations directly on the de-obfuscated permuted state PˆK
+without reconstructing the original order, thereby incurring
+zero additional storage overhead for the permutation key.
+2) Rank Preservation and Implicit Key Recovery: A critical
+challenge arises when the original matrix K exhibits low rank
+(e.g., rank 1 in cases of identical repeated tokens). In such
+scenarios, the permutation entropy collapses, as row shuffling
+becomes statistically invisible. To guarantee obfuscation ro-
+bustness, we introduce a secret additive mask matrix A before
+permutation. Thereby, we can ensure the transformed matrix
+(K +A) maintains sufficient rank to preserve cryptographic
+strength of Pˆ. However, explicitly storing the unique one-time
+pad Pˆ for every block would reintroduce significant storage
+overhead. We resolve this by designing A to enable implicit
+key recovery without Pˆ.
+Magnitude-based Positional Embedding. We exploit the
+numerical characteristics of attention activations. As shown in
+Figure 7, elements of k,v vectors are statistically bounded by
+a threshold θ (e.g., typically < 100). Leveraging this, we
+K
+construct A to function as a “positional beacon” by embedding
+values significantly larger than θ into specific coordinates. K
+This ensures that the matrix (K+A) maintains enough rank.
+Zero-Storage Recovery. Since the “beacons” in A dominate
+the magnitude of K, the permuted mask term PˆA remains
+statisticallyseparablefromPˆK withintheciphertextPˆ(K+A).
+During de-obfuscation, the system dynamically identifies the
+row permutation indices by detecting these high-magnitude
+outliers, allowing it to reconstruct PˆA on-the-fly. Subtracting
+this reconstructed mask yields the permuted state PˆK required
+for inference. This mechanism effectively offloads the storage
+of Pˆ into the data itself.
+Formalization. The complete obfuscation logic integrates this
+additive masking with the linear and permutation layers:
+K′ =SPˆ(K+A)M, (9)
+where Pˆ ∈ {0,1}b×b is the ephemeral one-time pad, and
+A is the structured mask. This composite transformation
+simultaneously secures cache statistics and enables efficient,
+9
+
+=== PAGE 10 ===
+stateless recovery without compromising model accuracy. Fusion under RoPE. Implementing this fusion requires
+3) SecurityAnalysis: ThesecurityofKV-Cloakreliesfunda- incorporatingtheinputprojectionxandtheposition-dependent
+mentally on the confidentiality of its secret matrices (S,M,A). RoPE matrix R Θ d ,i . The transformed vectors are expressed as:
+Under a standard CPA model, an adversary attempting to  qm =xW⊤Rd (M−1)⊤
+recover these keys faces a prohibitive computational barrier. 
+km =xW
+q
+⊤R
+Θ
+d
+,i
+M
+1
+Our analysis indicates that the time complexity to solve for k Θ,i 1 . (13)
+vm =xW⊤M
+the keys is O((b2d+bd2)·b!). Crucially, the factorial term b!, 
+Wm =W
+v
+(M
+2
+−1)⊤
+introduced by the dynamic block-wise permutation, renders o o 2
+brute-force key recovery computationally infeasible. From Eq. 13, fusing M into the value and output weights
+2
+This computational hardness is complemented by layered is straightforward: we pre-compute (W v m)⊤ = W v ⊤M 2 and
+security mechanisms designed to mitigate specific attack W o m = W o (M 2 −1)⊤. However, fusing M 1 into W k and W q
+vectors: (1) The one-time pad permutation severs the explicit presents a challenge due to the intermediate application of
+token-to-vector positional correspondence at an information- RoPE. The fusion is algebraically feasible if and only if the
+theoretic level, invalidating the premise of Collision Attacks. secret matrix M 1 and the RoPE matrix R Θ d ,i commute, i.e.,
+(2) A reversible algebraic transformation via secret matrices Rd M =M Rd . In this case, Eq. 13 simplifies to:
+Θ,i 1 1 Θ,i
+(S,M) completely disrupts the cache’s statistical distribution
+km =xW⊤(M Rd )=x(W⊤M )Rd . (14)
+properties (e.g., mean, variance), neutralizing profiling and k 1 Θ,i k 1 Θ,i
+data mining attacks. (3) The combined obfuscation renders the This reordering allows us to absorb M into the weight matrix
+1
+cache semantically unintelligible and unparsable by pristine as (Wm)⊤ =W⊤M . A symmetric logic applies to W .
+k k 1 q
+(unmodified) models, thereby thwarting Injection Attacks that To satisfy this commutativity constraint, we structurally
+attempt to leverage the model’s own capabilities. design M as a invertible block-diagonal matrix composed of
+1
+2×2rotation-scalingsub-matrices,analogoustothestructureof
+RoPE(detailedinAppendixA).Additionally,weconstrainM
+D. Implicit Obfuscation via Operator Fusion 2
+to be a random invertible rotation-scaling matrix and calibrate
+To minimize the runtime latency overhead introduced by the scaling factors of both matrices. This ensures that after
+the obfuscation and de-obfuscation processes, we propose the transformation with mask A, the padding tokens remain
+an operator fusion strategy. This approach integrates the statisticallydistinguishableasoutliersforimplicitkeyrecovery.
+obfuscation operators directly into the model’s weight matrices
+Offline Computation and Online Efficiency. Consequently,
+offline, thereby rendering the online computational impact
+theobfuscationoperatorsarefullyfusedintotheattentionlayer
+negligible while maintaining strict mathematical equivalence.
+parameters offline. The new pre-computed weights are:
+Transformed Vectors and Invariance. We introduce two  Wm =M−1W
+s
+q
+e
+u
+c
+e
+r
+r
+e
+y
+t
+,
+,
+k
+i
+e
+n
+y
+v
+,
+e
+a
+rt
+n
+i
+d
+bl
+v
+e
+a
+m
+lu
+a
+e
+tr
+v
+i
+e
+c
+c
+e
+t
+s
+o
+,
+rs
+M
+(q
+1
+,
+,
+M
+k,
+2
+v)
+∈
+an
+R
+d
+d×
+th
+d
+e
+,
+o
+to
+ut
+t
+p
+r
+u
+a
+t
+n
+p
+sf
+r
+o
+o
+r
+je
+m
+cti
+t
+o
+h
+n
+e W
+k
+q
+m =M
+1
+1
+⊤W
+k
+q
+. (15)
+W
+ou
+o
+tp
+.
+u
+T
+t
+h
+w
+e
+e
+t
+i
+r
+g
+a
+h
+n
+t
+sf
+W
+or
+o m
+me
+a
+d
+re
+ve
+d
+c
+e
+t
+fi
+o
+n
+rs
+ed
+(q
+a
+m
+s:
+,km,vm) and the modified W W v
+m
+m
+=
+=
+W
+M 2 ⊤
+(
+W
+M
+v
+−1)⊤
+o o 2
+ qm =q(M−1)⊤,
+
+km =kM
+1
+,
+During online inference, the KV-Cloak obfuscation is applied
+1 (10) to the cache generated by these fused weights:
+vm =vM ,
+
+Wm =W
+2
+(M−1)⊤. K′ =SPˆ(Km+A), (16)
+o o 2
+This design ensures that the core attention mechanism remains By eliminating explicit online matrix multiplications with M,
+invariant. Specifically, the attention scores (scaled dot-product the cost for protecting one KV-cache block is reduced to the
+of query and key) are preserved: multiplications with S, Pˆ, and S−1. This totals approximately
+b3 +2b2d floating-point operations. For an LLaMA-3.1-8B
+qm(km)⊤ = (cid:0) q (M−1)⊤(cid:1) (k M )⊤ =q (M−1)⊤M⊤k⊤
+i j i 1 j 1 i 1 1 j instance(b=16,d=128,D =4096),thisoverheadrepresents
+=q i (M 1 M 1 −1)⊤k j ⊤ =q i k j ⊤. merely0.83%oftheKV-cachere-computationcost(detailedin
+(11) Appendix F), verifying that KV-Cloak achieves robust security
+Similarly, the output of the attention head is mathematically with minimal performance impact.
+identical to the unprotected, guaranteeing lossless accuracy:
+VI. EVALUATIONOFKV-CLOAK
+vm(Wm)⊤ =(v M ) (cid:0) W (M−1)⊤(cid:1)⊤
+j o j 2 o 2 (12) A. Experimental Settings
+=v M (M−1)W⊤ =v W⊤.
+j 2 2 o j o We perform a systematic evaluation across three dimensions:
+This invariance guarantees that the model’s output is mathe- Security, Model Accuracy, and Performance Overhead. To
+matically identical to that of the original, unprotected model, benchmark the efficacy of KV-Cloak, we compare it against
+ensuring lossless accuracy. three distinct baselines: (1) a standard, unprotected system
+10
+
+=== PAGE 11 ===
+TABLE II: Comparison of defense mechanisms (KV-Cloak vs. DP) against input reconstruction attacks on LLaMA-7B, LLaMA-
+3.2-1B, and LLaMA-3.1-8B-Distilled.
+Inversion Collision Collision+ Injection
+Model ProtectType Metric
+First First Mid Last First Mid Last All
+BERTScore(↓) 1.000 0.449 0.769 0.611 1.000 1.000 1.000 0.765
+Original
+ROUGE-L(↓) 1.000 0.500 0.562 0.436 1.000 1.000 1.000 0.687
+BERTScore(↓) 0.091 0.070 0.069 0.071 0.036 0.036 0.036 0.082
+LLaMA-7B KV-Cloak
+ROUGE-L(↓) 0.068 0.000 0.000 0.000 0.044 0.044 0.044 0.000
+BERTScore(↓) 0.085 0.082 0.672 0.344 0.109 0.937 0.991 0.085
+(108,10−5)-DP
+ROUGE-L(↓) 0.065 0.041 0.433 0.197 0.097 0.901 0.979 0.009
+BERTScore(↓) 1.000 0.877 0.791 0.894 1.000 1.000 1.000 0.544
+Original
+ROUGE-L(↓) 0.994 0.709 0.617 0.680 0.994 0.994 0.994 0.315
+BERTScore(↓) 0.085 0.072 0.074 0.069 0.051 0.051 0.051 0.079
+LLaMA-3.2-1B KV-Cloak
+ROUGE-L(↓) 0.009 0.000 0.000 0.000 0.002 0.002 0.002 0.000
+BERTScore(↓) 0.633 0.849 0.763 0.849 0.973 0.995 1.000 0.393
+(108,10−5)-DP
+ROUGE-L(↓) 0.622 0.604 0.587 0.604 0.966 0.989 0.994 0.248
+BERTScore(↓) 0.083 0.642 0.492 0.635 0.885 0.251 0.829 0.610
+Original
+ROUGE-L(↓) 0.000 0.633 0.227 0.413 0.858 0.112 0.552 0.421
+BERTScore(↓) 0.093 0.070 0.070 0.069 0.041 0.041 0.041 0.088
+LLaMA-3.1-8B-Distilled KV-Cloak
+ROUGE-L(↓) 0.002 0.000 0.000 0.000 0.003 0.003 0.003 0.000
+BERTScore(↓) 0.079 0.320 0.440 0.566 0.526 0.267 0.824 0.118
+(108,10−5)-DP
+ROUGE-L(↓) 0.003 0.291 0.185 0.351 0.530 0.122 0.543 0.049
+(Plaintext), (2) a defense based on differential privacy with the Plaintext baseline and Differential Privacy mechanisms,
+Gaussian noise (DP), and (3) a defense via standard crypto- applying the attacks to the protected KV-cache.
+graphic encryption (AES). Defense Efficacy Comparison. As summarized in Table II
+KV-CloakConfiguration.Ourimplementationinvolvesmatrix (evaluation on the remaining models can be found in Appendix
+multiplications with invertible secret matrices S and M, and E), the Plaintext baseline is highly vulnerable, yielding high
+an additive mask A. We configure these parameters to balance attack success rates on all three attacks. In stark contrast,
+security and numerical stability: applying KV-Cloak drastically degrades reconstruction quality.
+• Block Size b: To maintain compatibility with the Page- TheBERTScoreofallattackoutputsdropstoalevelconsistent
+with random chance, and the ROUGE-L score falls to nearly 0.
+dAttention mechanism (e.g., vLLM), we experimented with
+standard block sizes of b∈{16,32,64}. These results are statistically indistinguishable from comparing
+the original input with a random string, demonstrating that
+• Secret Matrices S,M: To minimize precision loss during semantic reconstruction is entirely disrupted. This proves
+the matrix inversion required for de-obfuscation, we sample
+that KV-Cloak effectively protects the private information
+S and M strictly from the orthogonal group.
+within the KV-cache. For the DP baseline, security is heavily
+• Additive Mask A and Padding: To preserve numerical dependent on the privacy budget ϵ. With a weak budget of
+precision, the additive mask A and padding values are ϵ=108, while Inversion and Injection attacks are mitigated,
+magnitude-constrained. We sample elements of A uniformly the Collision Attack remains effective, recovering substantial
+from[3θ K ,4θ K ]andsetpaddingto1.5θ K .Here,θ K denotes private information.
+the maximum absolute value observed in the K-cache during
+Statistical Indistinguishability Analysis. To understand the
+calibration on an excerpt from “The Bitter Lesson”. This
+root cause of defense failure or success, we analyze the
+methodology is symmetrically applied to the V-cache.
+distance distributions of target tokens (d ) versus other
+target
+DP Baseline Configuration.ToestablishastrongDPbaseline, tokens (d other ) for the Collision Attack on LLaMA-3.2-1B
+we conducted an ablation study (detailed in Appendix D) to (Fig. 8). Under DP protection, the two distributions remain sta-
+optimize the trade-off between privacy and utility. We set tistically distinguishable. Consequently, utilizing an enhanced
+the clipping threshold to the 50th percentile of the L2 norm threshold with prior knowledge yields a per-token success
+distribution observed across the dataset. Based on this, we rate of 94.84% for (107,10−5)-DP, rising to nearly 100%
+apply Gaussian noise calibrated for (ϵ=108,δ =10−5)-DP (equivalent to Plaintext) for (108,10−5)-DP. Conversely, KV-
+independently to the K/V caches. We explicitly select ϵ=108 Cloak achieves distribution collapse: the distributions of d target
+because stricter privacy budgets (e.g., ϵ = 107) resulted in andd other becomecompletelyindistinguishable.Thiseliminates
+near-zero inference accuracy (see Table VIII). the statistical separability required for the attack, resulting in
+a 0% success rate.
+B. Evaluation of Security
+Robustness against Enhanced Attacks. To assess the robust-
+ThissectionevaluatesthecapabilityofKV-Cloakagainstthe ness of our defense, We further evaluate by subjecting KV-
+three proposed reconstruction attacks. We benchmark against Cloak to the enhanced Collision Attack (utilizing adversarial
+11
+
+=== PAGE 12 ===
+150
+100
+50
+0
+0 10 20 30 40
+Distance
+)secnatsiD
+tegraT(
+ytisneD
+Target: 0.10 : 0.00
+: 0.00
+0.08
+Other:
+: 30.99 : 4.01 0.06
+0.04
+0.02
+0.00
+)secnatsiD
+rehtO(
+ytisneD
+1.81
+0.0015 18.96
+0.0010
+0.0005
+0.0000
+0 2500 5000 7500 10000
+Distance
+(a)ThedistributionsofLLaMA-3.2-1Bmodelwithoutprotection.
+)secnatsiD
+tegraT(
+ytisneD
+Target: : 3429.40 0.0015
+: 1215.19
+Other:
+: 3429.51 : 1214.97 0.0010
+0.0005
+0.0000
+)secnatsiD
+rehtO(
+ytisneD
+3429.40
+-215.39
+(b)ThedistributionsofLLaMA-3.2-1BmodelwithKV-Cloak.
+0.4
+0.3
+0.2
+0.1
+0.0
+35 40 45 50 55
+Distance
+)secnatsiD
+tegraT(
+ytisneD
+0.15
+Target:
+: 37.09
+: 1.05
+Other:
+: 48.41 0.10
+: 2.79
+0.05
+0.00
+)secnatsiD
+rehtO(
+ytisneD
+39.93
+1.0
+40.03
+0.8
+0.6
+0.4
+0.2
+0.0
+10 20 30 40
+Distance
+(c)ThedistributionsofLLaMA-3.2-1Bmodelwith(107,10−5)-DP.
+)secnatsiD
+tegraT(
+ytisneD
+Target:
+: 11.71 0.10
+: 0.38
+Other: 0.08
+: 33.20
+: 3.78
+0.06
+0.04
+0.02
+0.00
+)secnatsiD
+rehtO(
+ytisneD
+13.69
+21.86
+(d)ThedistributionsofLLaMA-3.2-1Bmodelwith(108,10−5)-DP.
+Fig. 8: Distance distributions of target tokens d (orange) versus incorrect tokens d (blue) in the Collision Attack. The
+target other
+experiment targets the last-layer KV-cache of LLaMA-3.2-1B using an excerpt from “The Bitter Lesson”. Subplots display
+distributionsunderfourconditions:(a)Plaintext,(b)KV-Cloakprotection,(c)(107,10−5)-DPprotection,and(d)(108,10−5)-DP
+protection. Vertical lines indicate the heuristic threshold (3σ , green dotted) and the prior-knowledge enhanced threshold
+other
+(r =64, red dashed).
+TABLE III: Impact of KV-Cloak on inference accuracy (higher
+prior knowledge) across multiple LLMs. As shown in Table II,
+is better) across various models, using a block size of 16.
+KV-Cloak demonstrates consistent resilience. Even against this
+advanced vector, reconstruction accuracy remains near-zero,
+Plaintext KV-Cloak (108,10−5)-DP
+and outputs are qualitatively equivalent to random noise. This Model
+MMLUSQuADMMLUSQuADMMLUSQuAD
+confirms that KV-Cloak effectively neutralizes both algebraic
+and statistical attack vectors. LLaMA-7B 0.304 0.646 0.304 0.652 0.016 0.000
+LLaMA-3.2-1B 0.335 0.457 0.335 0.458 0.262 0.258
+Takeaway 5: KV-Cloak completely thwarts all proposed LLaMA-3.2-3B-Instruct 0.619 0.652 0.619 0.652 0.379 0.012
+attacks, reducing the quality of reconstructed text to a level
+LLaMA-3.1-8B 0.668 0.708 0.668 0.709 0.283 0.026
+statistically indistinguishable from random noise.
+LLaMA-3.1-8B-Distilled 0.584 0.568 0.584 0.570 0.108 0.001
+Qwen2.5-Math-7B 0.620 0.630 0.620 0.632 0.042 0.000
+C. Inference Accuracy
+To rigorously assess model fidelity, we simulate a disaggre-
+gated inference service employing a prefill-decode architecture. (results detailed in Table III). The empirical data corroborates
+In this pipeline, the KV-cache generated during the prefill our theoretical design: KV-Cloak exhibits zero degradation in
+phase is secured using either DP or KV-Cloak, transferred, model performance. Unlike Differential Privacy, which forces
+and subsequently utilized by the decode node for token a trade-off between utility and privacy via noise injection, KV-
+generation. We employ two standard benchmarks to measure Cloak leverages reversible linear transformations. This ensures
+utility: MMLU [15], [16] for massive multitask knowledge and that the de-obfuscated attention states are mathematically
+SQuAD [29] for reading comprehension. identical to the plaintext baseline. Consequently, the impact
+We evaluated KV-Cloak across all experimental models on inference accuracy is negligible across both benchmarks,
+12
+
+=== PAGE 13 ===
+40000
+30000
+20000
+10000
+0
+)sm(
+ycnetaL
+Prefill
+AES y = 3438.5x - 251.1
+y = 3020.9x - 864.1
+600
+400
+200
+0
+2 4 6 8 10 12
+KV-cache Size (GB)
+)sm(
+ycnetaL
+VII. DISCUSSIONANDFUTUREWORK
+While KV-Cloak provides a solid foundation for protecting
+the KV-cache, we identify several limitations, which in turn
+open up exciting avenues for future research.
+Key Management and Hardware Security Integration. The
+securityofKV-Cloakfundamentallyreliesontheconfidentiality
+of its (megabyte-scale) key matrices. Currently, we assume
+thesesecretsareprotectedviaTEEs.Futureworkshoulddeeply
+integrate KV-Cloak with hardware-level security mechanisms,
+y = 52.73x + 23.11
+KV-Cloak such as TEEs or confidential GPUs, to construct a more robust
+KV-Cloak (fused) defense-in-depth architecture. Furthermore, to counter long-
+DP
+term cryptanalysis in persistent services, developing efficient,
+low-latency key rotation protocols is essential.
+y = 15.41x + 20.77 Performance Optimization via Co-Design. Although our
+y = 4.88x + 2.64 evaluation shows minimal overhead, hyper-scale deployment
+demands further optimization. At the software level, latency
+can be masked through the asynchronous generation of One-
+Time Pad (OTP) matrices, decoupling security operations from
+the critical inference path. At the hardware level, an algorithm-
+Fig. 9: Micro-benchmark of latency overhead (ms/GB) versus
+hardware co-design approach—implementing dedicated GPU
+KV-cache size on LLaMA-3.1-8B.
+intrinsics for block-wise permutation and matrix multiplica-
+tion—could render the obfuscation cost virtually transparent.
+confirming that KV-Cloak is a practically lossless solution.
+Adaptation to Quantized Models. Our current prototype
+targets floating-point models. As the industry shifts to integer
+Takeaway 6: KV-Cloak is virtually lossless, preserving the
+quantization (e.g., INT8 or INT4) for efficiency, extending KV-
+model’s fidelity and core utility without any degradation.
+Cloak becomes a priority. This requires designing new lossless
+reversible transformations for discrete data types, potentially
+D. Evaluation of Performance Overhead
+based on structures like modular arithmetic.
+Computational Overhead. To accurately assess the upper
+VIII. CONCLUSION
+bound of performance impact, we employ a conservative,
+This research exposes a critical security flaw at the heart of
+worst-case micro-benchmark simulating a prefill-decode split.
+modernLLMinferencesystems:theprivacyriskofdataleakage
+Measurements are conducted on a serial PyTorch implementa-
+from the KV-cache. We have demonstrated the feasibility of
+tion without custom CUDA kernels, isolating the algorithmic
+reconstructing sensitive user inputs through three novel attack
+overhead. As illustrated in Figure 9, latency scales linearly.
+strategies, with our Collision Attack proving particularly effec-
+Standard AES encryption incurs a prohibitive cost of 3020.9
+tive across various models. This underscores the urgent need
+ms/GB,nearlyrivalingtheprefilllatency(3438.5ms/GB)itself.
+for dedicated protection mechanisms that do not compromise
+In stark contrast, KV-Cloak with operator fusion introduces
+the efficiency gains the KV-cache provides.
+a negligible overhead of just 15.41 ms/GB. This constitutes
+In response, we designed KV-Cloak. By employing a
+merely 0.45% of theprefill latency, ranking second onlyto the
+lightweight, reversible obfuscation technique, KV-Cloak neu-
+insecure DP scheme (4.88 ms/GB). In practical deployments,
+tralizestheidentifiedthreatswithoutdegradingmodelaccuracy
+unavoidable network latency would further mask this minimal
+or imposing significant latency. It is designed for seamless in-
+computation cost, confirming the efficiency of our design.
+tegration into existing high-performance inference frameworks
+Storage Overhead. The storage Overhead for KV-Cloak’s se-
+like vLLM. Our work provides a vital contribution to building
+cret matrices (S,M,A) is negligible. The total size, 2n l(b2+
+kv secure and trustworthy AI, offering a blueprint for balancing
+3d+1),isordersofmagnitudesmallerthantheprotectedcache.
+2 the competing demands of performance and user privacy in
+Quantitatively, for LLaMA-3.1-8B (using block size b=16),
+the next generation of LLM services. It establishes that strong
+theoverheadismerely898KB;evenfora1T-parametermodel
+privacyprotectioncanbeachievedwithoutsacrificingtheutility
+like Ling-1T [18] (scaling to b = 64), it remains only 20.9
+and efficiency that have made these models so powerful.
+MB. This MB-scale footprint allows all cryptographic keys
+to securely reside within the limited memory of TEEs with ACKNOWLEDGMENT
+negligible management overhead. This research is supported in part by the “Pioneer” and
+“Leading Goose” R&D Program of Zhejiang (2024C01169),
+Takeaway 7: KV-Cloak introduces negligible computational and the National Natural Science Foundation of China under
+and storage overhead to the inference pipeline. Grants (62441238, U2441240).
+13
+
+=== PAGE 14 ===
+ETHICCONSIDERATIONS [16] D.Hendrycks,C.Burns,S.Basart,A.Zou,M.Mazeika,D.Song,and
+J.Steinhardt,“Measuringmassivemultitasklanguageunderstanding,”in
+Thisresearchaimstoenhancetheprivacyandtrustworthiness
+InternationalConferenceonLearningRepresentations,2021.
+of LLM inference, but we acknowledge the dual-use nature of [17] W. Kwon, Z. Li, S. Zhuang, Y. Sheng, L. Zheng, C. H. Yu, J. E.
+the vulnerabilities and attack methods we have uncovered. To Gonzalez, H. Zhang, and I. Stoica, “Efficient memory management
+forlargelanguagemodelservingwithpagedattention,”inSymposium
+fulfill our ethical responsibilities and mitigate any potential for
+onOperatingSystemsPrinciples,2023.
+misuse,wehavecommittedtoapolicyofresponsibledisclosure. [18] A.Li,B.Liu,B.Hu,B.Li,B.Zeng,B.Ye,C.Tang,C.Tian,C.Huang,
+Prior to the public dissemination of this paper, we will share C.Zhangetal.,“Everyactivationboosted:Scalinggeneralreasonerto
+1trillionopenlanguagefoundation,”arXivpreprintarXiv:2510.22115,
+our findings, including the details of the vulnerabilities and
+2025.
+our proposed defense, with the developers of major affected
+[19] H.Li,M.Xu,andY.Song,“Sentenceembeddingleaksmoreinformation
+inference frameworks, such as vLLM. Furthermore, all of our than you expect: Generative embedding inversion attack to recover
+attack validation experiments were conducted exclusively on thewholesentence,”inFindingsoftheAssociationforComputational
+Linguistics:ACL2023,2023,pp.14022–14040.
+public and non-sensitive academic datasets. No real user data
+[20] X. Li, Z. Qin, K. Ren, C. Gong, S. Feng, Y. Hong, and T. Wang,
+wasinvolvedatanystageofourresearch.Wefirmlybelievethat “Delay-allowed differentially private data stream release.” in Network
+bytakingtheseresponsiblemeasures,thepositivecontributions andDistributedSystemSecuritySymposium,2025.
+[21] Y.Li,S.Shao,Y.He,J.Guo,T.Zhang,Z.Qin,P.-Y.Chen,M.Backes,
+of our defensive work, KV-Cloak, will far outweigh the risks
+P.Torr,D.Tao,andK.Ren,“Rethinkingdataprotectioninthe(generative)
+associatedwiththedisclosureoftheseattacks.Weareconfident artificialintelligenceera,”arXivpreprintarXiv:2507.03034,2025.
+that this work will encourage the community to build more [22] B. Lin, C. Zhang, T. Peng, H. Zhao, W. Xiao, M. Sun, A. Liu,
+Z. Zhang, L. Li, X. Qiu et al., “Infinite-llm: Efficient llm service for
+trustworthy AI services that are secure by default.
+longcontextwithdistattentionanddistributedkvcache,”arXivpreprint
+REFERENCES arXiv:2401.02669,2024.
+[23] C.-Y.Lin,“ROUGE:Apackageforautomaticevaluationofsummaries,”
+[1] M.Abadi,A.Chu,I.Goodfellow,H.B.McMahan,I.Mironov,K.Talwar, inTextSummarizationBranchesOut,2004,pp.74–81.
+andL.Zhang,“Deeplearningwithdifferentialprivacy,”inACMSIGSAC [24] A.Liu,B.Feng,B.Xue,B.Wang,B.Wu,C.Lu,C.Zhao,C.Deng,
+ConferenceonComputerandCommunicationsSecurity,2016. C.Zhang,C.Ruanetal.,“Deepseek-v3technicalreport,”arXivpreprint
+[2] A. Acar, H. Aksu, A. S. Uluagac, and M. Conti, “A survey on arXiv:2412.19437,2024.
+homomorphicencryptionschemes:Theoryandimplementation,”ACM [25] J.Morris,V.Kuleshov,V.Shmatikov,andA.M.Rush,“Textembeddings
+ComputingSurveys,vol.51,no.4,pp.1–35,2018. reveal(almost)asmuchastext,”inConferenceonEmpiricalMethods
+[3] J.Ainslie,J.Lee-Thorp,M.deJong,Y.Zemlyanskiy,F.Lebro´n,and inNaturalLanguageProcessing,2023,pp.12448–12460.
+S.Sanghai,“Gqa:Traininggeneralizedmulti-querytransformermodels [26] P. Paillier, “Public-key cryptosystems based on composite degree
+frommulti-headcheckpoints,”arXivpreprintarXiv:2305.13245,2023. residuosity classes,” in International Conference on the Theory and
+[4] M.N.Alenezi,H.Alabdulrazzaq,andN.Q.Mohammad,“Symmetric Applications of Cryptographic Techniques. Springer, 1999, pp. 223–
+encryption algorithms: Review and evaluation study,” International 238.
+JournalofCommunicationNetworksandInformationSecurity,vol.12,
+[27] D.Pasquini,E.M.Kornaropoulos,andG.Ateniese,“Llmmap:Finger-
+no.2,pp.256–272,2020.
+printing for large language models,” in USENIX Security Symposium,
+[5] APPLE. (2024) Private cloud compute: A new frontier for ai
+2025.
+privacyinthecloud.[Online].Available:https://security.apple.com/blog/
+[28] R. Pope, S. Douglas, A. Chowdhery, J. Devlin, J. Bradbury, J. Heek,
+private-cloud-compute/
+K. Xiao, S. Agrawal, and J. Dean, “Efficiently scaling transformer
+[6] Y.Bengio,R.Ducharme,P.Vincent,andC.Jauvin,“Aneuralprobabilistic
+inference,”ProceedingsofMachineLearningandSystems,vol.5,pp.
+language model,” Journal of Machine Learning Research, vol. 3, no.
+606–624,2023.
+Feb,pp.1137–1155,2003.
+[29] P.Rajpurkar,J.Zhang,K.Lopyrev,andP.Liang,“SQuAD:100,000+
+[7] N.Carlini,F.Tramer,E.Wallace,M.Jagielski,A.Herbert-Voss,K.Lee,
+questions for machine comprehension of text,” in Conference on
+A.Roberts,T.Brown,D.Song,U.Erlingssonetal.,“Extractingtraining
+EmpiricalMethodsinNaturalLanguageProcessing,2016.
+datafromlargelanguagemodels,”inUSENIXSecuritySymposium,2021,
+[30] Z. Shao, D. Dai, D. Guo, B. L. B. Liu), Z. Wang, and H. Xin,
+pp.2633–2650.
+“Deepseek-v2: A strong, economical, and efficient mixture-of-experts
+[8] Y.Chen,C.Shen,C.Wang,andY.Zhang,“Teachermodelfingerprinting
+languagemodel,”ArXiv,vol.abs/2405.04434,2024.[Online].Available:
+attacksagainsttransferlearning,”inUSENIXSecuritySymposium,2022.
+https://api.semanticscholar.org/CorpusID:269613809
+[9] K. Cobbe, V. Kosaraju, M. Bavarian, M. Chen, H. Jun, L. Kaiser,
+[31] N. Shazeer, A. Mirhoseini, K. Maziarz, A. Davis, Q. Le, G. Hinton,
+M.Plappert,J.Tworek,J.Hilton,R.Nakano,C.Hesse,andJ.Schul-
+andJ.Dean,“Outrageouslylargeneuralnetworks:Thesparsely-gated
+man,“Trainingverifierstosolvemathwordproblems,”arXivpreprint
+mixture-of-experts layer,” in International Conference on Learning
+arXiv:2110.14168,2021.
+Representations,2017.
+[10] G. Dhanuskodi, S. Guha, V. Krishnan, A. Manjunatha, R. Nertney,
+M. O’Connor, and P. Rogers, “Creating the first confidential gpus,” [32] J.Su,M.Ahmed,Y.Lu,S.Pan,W.Bo,andY.Liu,“Roformer:Enhanced
+CommunicationsoftheACM,vol.67,no.1,pp.60–67,2023. transformerwithrotarypositionembedding,”Neurocomputing,vol.568,
+[11] C.Dwork,F.McSherry,K.Nissim,andA.Smith,“Calibratingnoise p.127063,2024.
+to sensitivity in private data analysis,” in Theory of Cryptography [33] R.Taori,I.Gulrajani,T.Zhang,Y.Dubois,X.Li,C.Guestrin,P.Liang,
+Conference. SpringerBerlinHeidelberg,2006,pp.265–284. andT.B.Hashimoto,“Stanfordalpaca:Aninstruction-followingllama
+[12] A.Grattafiori,A.Dubey,A.Jauhri,A.Pandey,A.Kadian,A.Al-Dahle, model,”2023.
+A.Letman,A.Mathur,A.Schelten,A.Vaughanetal.,“Thellama3 [34] E.Thambiraja,G.Ramesh,andD.R.Umarani,“Asurveyonvarious
+herdofmodels,”arXivpreprintarXiv:2407.21783,2024. mostcommonencryptiontechniques,”InternationalJournalofAdvanced
+[13] D.Guo,D.Yang,H.Zhang,J.Song,R.Zhang,R.Xu,Q.Zhu,S.Ma, ResearchinComputerScienceandSoftwareEngineering,2012.
+P.Wangetal.,“Deepseek-r1:Incentivizingreasoningcapabilityinllms [35] H.Touvron,T.Lavril,G.Izacard,X.Martinet,M.-A.Lachaux,T.Lacroix,
+viareinforcementlearning,”arXivpreprintarXiv:2501.12948,2025. B. Rozie`re, N. Goyal, E. Hambro et al., “Llama: Open and efficient
+[14] Y.He,H.She,X.Qian,X.Zheng,Z.Chen,Z.Qin,andL.Cavallaro, foundationlanguagemodels,”arXivpreprintarXiv:2302.13971,2023.
+“On benchmarking code llms for android malware analysis,” in ACM [36] A.Vaswani,N.Shazeer,N.Parmar,J.Uszkoreit,L.Jones,A.N.Gomez,
+SIGSOFT International Symposium on Software Testing and Analysis Ł. Kaiser, and I. Polosukhin, “Attention is all you need,” in Annual
+Workshop,2025. ConferenceonNeuralInformationProcessingSystems,vol.30,2017.
+[15] D. Hendrycks, C. Burns, S. Basart, A. Critch, J. Li, D. Song, and [37] Z.Wan,A.Cheng,Y.Wang,andL.Wang,“Informationleakagefrom
+J. Steinhardt, “Aligning ai with shared human values,” International embeddinginlargelanguagemodels,”arXivpreprintarXiv:2405.11916,
+ConferenceonLearningRepresentations,2021. 2024.
+14
+
+=== PAGE 15 ===
+[38] Z. Wan, X. Wang, C. Liu, S. Alam, Y. Zheng, J. Liu, Z. Qu, S. Yan, With j and k as subscripts of matrix elements, Eq. (20) is
+Y. Zhu, Q. Zhang et al., “Efficient large language models: A survey,” equivalent to the following system of linear equations:
+TransactionsonMachineLearningResearch,2024.
+
+[39] G. Wu, Z. Zhang, Y. Zhang, W. Wang, J. Niu, Y. Wu, and Y. Zhang, t cosiθ −u siniθ =t cosiθ +y siniθ
+“I know what you asked: Prompt leakage via kv-cache sharing in
+
+t
+jk
+siniθ
+j
++u
+jk
+cosiθ
+j
+=u
+jk
+cosiθ
+k
++z
+jk
+siniθ
+k
+multi-tenantllmserving,”inNetworkandDistributedSystemSecurity jk j jk j jk k jk k
+[40]
+S
+A
+y
+.
+m
+Y
+p
+a
+o
+n
+s
+g
+i
+,
+um
+B.
+,
+Z
+20
+h
+2
+an
+5
+g
+.
+,B.Hui,B.Gao,B.Yu,C.Li,D.Liu,J.Tu,J.Zhou,
+
+y
+y jk
+s
+c
+i
+o
+n
+s
+i
+i
+θ
+θ j
++
+−
+z
+z jk
+c
+s
+o
+in
+s
+i
+i
+θ
+θ
+j =
+=
+−
+−
+t
+u
+jk s
+s
+i
+i
+n
+n
+i
+i
+θ
+θ
+k +
++
+y
+z
+jk c
+c
+o
+o
+s
+s
+i
+i
+θ
+θ
+k
+jk j jk j jk k jk k
+J. Lin et al., “Qwen2.5-math technical report: Toward mathematical (20)
+expertmodelviaself-improvement,”arXivpreprintarXiv:2409.12122,
+Calculating the equation, the T,U,Y,Z need to satisfy the
+2024.
+[41] H.Yang,D.Zhang,Y.Zhao,Y.Li,andY.Liu,“Afirstlookatefficient following relationship:
+andsecureon-devicellminferenceagainstkvleakage,”inWorkshopon 
+MobilityintheEvolvingInternetArchitecture,2024,pp.13–18.  y jj =−u jj ,
+[42] L.Yu,L.Liu,C.Pu,M.E.Gursoy,andS.Truex,“Differentiallyprivate z =t , . (21)
+jj jj
+modelpublishingfordeeplearning,”inIEEESymposiumonSecurity  t =u =y =z =0,(j ̸=k)
+andPrivacy. IEEE,2019,pp.332–349. jk jk jk jk
+[43] M.Yuan,L.Zhang,L.Zeng,S.Jiang,B.Yang,D.Duan,andG.Xing,
+Specifically, the structure of M is defined as follows in
+“Scx:Statelesskv-cacheencodingforcloud-scaleconfidentialtransformer 1
+serving,”inProceedingsoftheACMSIGCOMM2025Conference,2025, Eq. (22),
+pp.39–54.
+ t 0 ··· 0 −u 0 ··· 0 
+[44] S.Zhang,S.Roller,N.Goyal,M.Artetxe,M.Chen,S.Chen,C.Dewan, 0 0
+M. Diab, X. Li, X. V. Lin et al., “Opt: Open pre-trained transformer 0 t ··· 0 0 −u ··· 0
+ 1 1 
+[45] l T a . n Z g h u a a n g g e , m V. o K de is l h s, o ” re a , r F X . i W vp u r , e K p . ri Q n . t W ar e X in iv b : e 2 r 2 g 0 er 5 , . a 0 n 1 d 06 Y 8 . , A 2 r 0 tz 2 i 2 , . “BERTScore:    . . . . . . ... . . . . . . . . . ... . . .   
+EvaluatingtextgenerationwithBERT,”inInternationalConferenceon  0 0 ··· t 0 0 ··· −u 
+[46] L Z e . a Z r h n a i n n g g , R Y e . p S r h e e s n en g, ta T t . io Z n h s o , u 2 , 0 T 2 . 0 C . hen,L.Zheng,R.Cai,Z.Song,Y.Tian, M 1 =    u 0 0 ··· d 2 0 −1 t 0 0 ··· 0 d 2 −1    .
+C.Re´,C.Barrett,Z.Wang,andB.Chen,“H2o:Heavy-hitteroraclefor   0 u 1 ··· 0 0 t 1 ··· 0  
+efficient generative inference of large language models,” Advances in  
+neuralinformationprocessingsystems,vol.36,pp.34661–34710,2023.   . . . . . . ... . . . . . . . . . ... . . .  
+[47] W.X.Zhao,K.Zhou,J.Li,T.Tang,X.Wang,Y.Hou,Y.Min,B.Zhang,
+0 0 ··· u 0 0 ··· t
+J.Zhang,Z.Dongetal.,“Asurveyoflargelanguagemodels,”arXiv d−1 d−1
+preprintarXiv:2303.18223,vol.1,no.2,2023. 2 2 (22)
+[48] L.Zheng,W.-L.Chiang,Y.Sheng,T.Li,S.Zhuang,Z.Wu,Y.Zhuang,
+Z. Li, Z. Lin, E. P. Xing, J. E. Gonzalez, I. Stoica, and H. Zhang, B. Input Text for Parameter Calibration
+“Lmsys-chat-1m:Alarge-scalereal-worldllmconversationdataset,”in
+InternationalConferenceonLearningRepresentations,2024. The following text, an excerpt from “The Bitter Lesson” by
+[49] Z. Zhou, X. Ning, K. Hong, T. Fu, J. Xu, S. Li, Y. Lou, L. Wang, Rich Sutton, was used as model input in our experiments to
+Z.Yuan,X.Lietal.,“Asurveyonefficientinferenceforlargelanguage
+analyze the numerical characteristics of the KV-cache (e.g., for
+models,”arXivpreprintarXiv:2404.14294,2024.
+parameter calibration as described in Section IV-B4).
+APPENDIX
+Input Text for Parameter Calibration
+A. Proof of Commutativity with Rotary Position Embedding
+Denoting both Rd and the random invertible matrix M One thing that should be learned from the bitter lesson
+Θ,i 1
+as a 2×2 block matrix, we obtain: is the great power of general-purpose methods, of
+(cid:20) (cid:21) (cid:20) (cid:21) methods that continue to scale with increased compu-
+C −S T Y
+Rd = ,M = , (17) tation even as the available computation becomes very
+Θ,i S C 1 U Z
+great.Thetwomethodsthatseemtoscalearbitrarilyin
+where C,S ∈ Rd 2 ×d 2 are shown in Eq. (18), assuming that this way are search and learning. The second general
+T,U,Y,Z ∈Rd 2 ×d 2 are all random matrices. point to be learned from the bitter lesson is that the
+actualcontentsofmindsaretremendously,irredeemably
+ cosiθ 0 ··· 0 
+0 complex; we should stop trying to find simple ways
+C =     0 . . . cos . . . iθ 1 · . · .. · 0 . . .     , w to ay th s in to k t a h b in o k ut a t b h o e ut co sp n a te c n e, ts o o b f je m cts in , d m s u , l s t u ip c l h e a ag s e s n i t m s, p o le r
+0 0 ··· cosiθ symmetries.
+d−1
+2 (18)
+ siniθ 0 ··· 0 
+0
+ 0 siniθ 1 ··· 0  C. Additional Experiments about Attacks
+S =   . . . . . . ... . . .    . 1) Ablation Study of Collision Attack: Outlier Detection
+0 0 ··· siniθ Threshold. We experimented with different outlier detection
+d−1
+2 thresholdsontheLLaMA-3.2-1Bmodel.Theresultsareshown
+If the secret matrix M 1 and the RoPE matrix R Θ d ,i commute, in Table IV. We observed that setting the threshold to 3σ other
+then: (i.e., treating a value as an outlier if it is more than three
+(cid:20) T Y (cid:21)(cid:20) C −S (cid:21) (cid:20) C −S (cid:21)(cid:20) T Y (cid:21) standard deviations below the mean of the d other distribution,
+= . (19)
+U Z S C S C U Z which corresponds to approximately 0.13% of a standard
+15
+
+=== PAGE 16 ===
+TABLE IV: Impact of different outlier detection thresholds on TABLE VI: Impact of different adversarial instructions on
+reconstruction accuracy, with a fixed batch size of 256. Injection Attack success rates.
+Gap InjectInstruction
+Model Layer Metric Model Metric
+2σ 2.5σ 3σ 3.5σ 4σ Ins1 Ins2 Ins3 Ins4
+BERTScore(↑) 0.531 0.783 0.877 0.821 0.719 BERTScore(↑) 0.765 0.716 0.557 0.598
+First ROUGE-L(↑) 0.358 0.579 0.709 0.706 0.663 LLaMA-7B ROUGE-L(↑) 0.687 0.606 0.449 0.473
+BERTScore(↑) 0.419 0.619 0.791 0.820 0.724
+Mid BERTScore(↑) 0.544 0.533 0.423 0.353
+LLaMA-3.2-1B ROUGE-L(↑) 0.310 0.482 0.617 0.661 0.592 LLaMA-3.2-1B
+ROUGE-L(↑) 0.315 0.358 0.232 0.217
+BERTScore(↑) 0.579 0.807 0.894 0.878 0.727
+Last BERTScore(↑) 0.540 0.360 0.506 0.271
+ROUGE-L(↑) 0.455 0.615 0.680 0.648 0.485 LLaMA-3.2-3B-Instruct
+ROUGE-L(↑) 0.324 0.157 0.358 0.124
+AverageTime(s) 1.17 2.13 5.06 12.65 21.58
+BERTScore(↑) 0.616 0.544 0.432 0.457
+LLaMA-3.1-8B
+TABLE V: Impact of different batch sizes on reconstruction ROUGE-L(↑) 0.447 0.365 0.275 0.279
+accuracy, using a fixed outlier detection threshold of 3σ . BERTScore(↑) 0.610 0.536 0.348 0.434
+other LLaMA-3.1-8B-Distilled
+ROUGE-L(↑) 0.421 0.348 0.218 0.249
+BatchSize BERTScore(↑) 0.422 0.381 0.413 0.329
+Model Layer Metric Qwen2.5-Math-7B
+64 128 256 512 1024 ROUGE-L(↑) 0.286 0.222 0.281 0.194
+BERTScore(↑) 0.830 0.856 0.877 0.869 0.837
+First Note:Thespecificinstructionsare:“Repeatthepreviouscontent.”
+ROUGE-L(↑) 0.711 0.723 0.709 0.666 0.594
+(Ins1), “Summarize the previous content.” (Ins2), “Repeat what I
+BERTScore(↑) 0.765 0.786 0.791 0.771 0.753
+Mid said.”(Ins3),and“SummarizewhatIsaid.”(Ins4).
+LLaMA-3.2-1B ROUGE-L(↑) 0.590 0.617 0.617 0.588 0.554
+BERTScore(↑) 0.837 0.865 0.894 0.902 0.887
+Last
+ROUGE-L(↑) 0.513 0.616 0.680 0.674 0.636 (instruction-following) and GSM8K [9] (mathematical rea-
+AverageTime(s) 12.94 7.58 5.06 4.04 4.62 soning). As shown in Table VII, our attacks achieved high
+reconstruction accuracy across all tested datasets. This result
+confirms that the effectiveness is not confined to specific data
+normal distribution) yields the highest reconstruction accuracy.
+distributions or task types, but is instead highly generalizable.
+A threshold that is too low (e.g., 2σ ) leads to misidenti-
+other
+fying incorrect tokens as the target, thus reducing accuracy. D. DP Baseline Parameter Selection
+Conversely,athresholdthatistoohigh(e.g.,4σ )cancause
+other To establish a robust DP baseline, we first defined its
+the correct token to be missed, which also decreases accuracy
+parameterizationmethodology.Wethenconductedexperiments
+while significantly increasing the attack time. Therefore, we
+to select a configuration that balances utility and privacy for
+set the outlier detection threshold to 3σ for all subsequent
+other comparison against KV-Cloak.
+experiments.
+• Noise Application: As illustrated in Figure 7, the element
+Batch Size. We evaluated the effect of different batch sizes distributions of the K and V caches differ significantly.
+on the LLaMA-3.2-1B model. As shown in Table V, with the Consequently, we apply (ϵ,δ)-DP Gaussian noise to the
+outlier threshold fixed at 3σ other , a batch size of 256 achieves K and V tensors independently.
+the highest reconstruction accuracy. Theoretically, a larger
+• Clipping Threshold C: The noise magnitude in DP is
+batch size may provide a more robust statistical sample of
+determined by the function’s sensitivity, which we control
+the d distances, leading to higher accuracy. However, our
+other by clipping the Frobenius norm of the K and V tensors. To
+experiments show that as the batch size increases beyond
+find an appropriate clipping threshold, we generated 1,000
+256, the reconstruction accuracy paradoxically decreases. We
+long sequences (approximately 2,000 tokens each) from the
+attribute this to a mismatch between the batch size and the
+MMLUdataset,recordedthedistributionoftheresultingKV-
+fixed threshold; a larger batch would likely require a higher,
+cache Frobenius norms, and experimented with thresholds
+more stringent threshold to maintain accuracy. However, larger
+corresponding to different percentiles of this distribution.
+batches increase GPU memory consumption, and a higher
+threshold would multiplicatively increase attack time. To • Privacy Budget ϵ: This parameter governs the fundamental
+balance accuracy, memory usage, and attack speed, we chose trade-off between privacy and utility. We evaluated a wide
+a batch size of 256 for our experiments. range of ϵ values to map out their impact on model accuracy.
+2) Ablation Study of Injection Attack: We tested various • Failure Probability δ: This represents the probability of
+instructions against each model’s KV-cache, with the results the privacy guarantee being violated. We adopt the common
+shown in Table VI. The instruction “Repeat the previous standard value of δ =10−5 for all DP experiments.
+content.” achieved the highest overall reconstruction accuracy Our experimental results, presented in Table VIII, reveal a
+across all models, with an average BERTScore of 0.58 and stark trade-off between privacy and model accuracy for the DP
+ROUGE-L of 0.42. baseline. Under conventionally strong privacy settings (e.g.,
+3) Attack Generalization Across Datasets: To validate the ϵ=1orϵ=10),modelaccuracyonbothMMLUandSQuAD
+generalizationcapabilityofproposedattack,wealsoconducted collapses to the level of random guessing, regardless of the
+evaluationsontwodatasetsfromdifferentdomains:Alpaca[33] chosen clipping threshold. Accuracy only begins to recover
+16
+
+=== PAGE 17 ===
+TABLE VII: Attack generalization across datasets on LLaMA-3.2-1B.
+Inversion Collision Collision+ Injection
+Model Datasets Metric
+First First Mid Last First Mid Last All
+BERTScore(↑) 1.000 0.942 0.910 0.936 1.000 1.000 1.000 0.570
+Alpaca
+ROUGE-L(↑) 1.000 0.897 0.700 0.923 1.000 1.000 1.000 0.374
+BERTScore(↑) 1.000 0.890 0.716 0.911 1.000 1.000 1.000 0.632
+LLaMA-3.2-1B GSM8K
+ROUGE-L(↑) 1.000 0.784 0.493 0.800 1.000 0.999 1.000 0.496
+BERTScore(↑) 1.000 0.877 0.791 0.894 1.000 1.000 1.000 0.544
+LMSYS-Chat-1M
+ROUGE-L(↑) 0.994 0.709 0.617 0.680 0.994 0.994 0.994 0.315
+TABLE VIII: Privacy-utility trade-off: LLaMA-3.2-1B infer-
+E. Evaluation of Security on the Remaining Models
+ence accuracy under DP with varying noise (ϵ) and clipping
+As shown in Table X, KV-Cloak completely thwarts all our
+thresholds. The 50th percentile norm is highlighted as the
+proposedattacks,reducingthequalityofanyreconstructedtext
+baseline for subsequent comparisons.
+to a level statistically indistinguishable from random noise.
+ϵ
+Model NormRatio Metric 1 10 107 108 109 F. Performance Analysis and the Impact of Operator Fusion
+50% MMLU(↑) 0.051 0.052 0.052 0.262 0.299 A critical aspect of any practical defense mechanism is
+SQuAD(↑) 0.000 0.000 0.000 0.258 0.443
+its performance overhead. In this section, we analyze the
+MMLU(↑) 0.053 0.053 0.045 0.259 0.309
+LLaMA-3.2-1B 90% computationalcostofKV-Cloakanddemonstratethesignificant
+SQuAD(↑) 0.000 0.000 0.000 0.171 0.435
+MMLU(↑) 0.052 0.053 0.045 0.252 0.309 efficiencygainsachievedthroughouroperatorfusiontechnique.
+95%
+SQuAD(↑) 0.000 0.000 0.000 0.136 0.437 Overhead of a Naive Implementation. Without operator
+fusion, a naive implementation would apply the obfuscation
+TABLE IX: Effectiveness of the Inversion, Collision, and
+transform K′ = SPˆ(K +A)M and its inverse as explicit.
+Injection attacks against different layers of the KV-cache from
+Neglecting the computationally inexpensive matrix additions
+the LLaMA-3.2-1B model, under various DP mechanisms.
+involving A, the primary overhead stems from matrix multipli-
+Inversion Collision Injection cations. For a single KV-cache block of size b×d:
+Model ProtectType Metric
+First First Mid Last All
+BERTScore(↓) 1.000 0.877 0.791 0.894 0.544 • The obfuscation operation requires approximately b3 (for
+Plaintext ROUGE-L(↓) 0.994 0.709 0.617 0.680 0.315 SPˆ), b2d (for (SPˆ)K), and bd2 (for (SPˆK)M) floating-
+(107,10−5)-DP BERTScore(↓) 0.096 0.469 0.651 0.672 0.131 point multiplications.
+ROUGE-L(↓) 0.073 0.353 0.402 0.336 0.067
+LLaMA-3.2-1B
+(108,10−5)-DP BERTScore(↓) 0.633 0.849 0.763 0.849 0.393 • The de-obfuscation requires an additional b2d (for S−1K′)
+ROUGE-L(↓) 0.622 0.604 0.587 0.604 0.248 and bd2 (for (K′)M−1) multiplications.
+BERTScore(↓) 0.994 0.808 0.786 0.886 0.524
+(109,10−5)-DP
+ROUGE-L(↓) 0.980 0.635 0.610 0.667 0.304 This results in a total of approximately b3 + 2b2d + 2bd2
+multiplications per block per decoding step. To put this into
+perspective, the cost of re-computing the same KV-cache block
+when the privacy budget is substantially relaxed: at ϵ=108,
+from the LLM’s hidden states (dimension D) is b·D·d. For a
+it reaches 59.13% of the unprotected baseline’s accuracy; and
+model like LLaMA-3.1-8B (with b=16,d=128,D =4096),
+at ϵ=109, it improves to 93.61%. This extreme sensitivity is
+the naive obfuscation overhead constitutes a substantial 7.1%
+due to the highly sparse nature of the KV-cache, where most
+of the re-computation cost.
+elementsarenearzero.Directlyaddingnoisedisproportionately
+perturbs the cache’s delicate structure, severely degrading Efficiency Gains from Operator Fusion. By fusing the
+model performance unless the noise is made negligible by matrix M and its inverse into the model’s weights offline, as
+an extremely large ϵ. And its defensive efficacy, presented in describedinSectionV-D,weeliminatethetwomostexpensive
+TableIX,isstronglycorrelatedwiththeprivacybudgetϵ.With online multiplications (bd2 terms). The online obfuscation
+a weak budget of ϵ=108, the accuracy of the Inversion and and de-obfuscation, governed by Eq. (16), now only require
+Injection attacks is reduced, but the Collision Attack can still approximately b3+2b2d multiplications.
+recover some useful information. As ϵ is strengthened to 107, Revisiting the LLaMA-3.1-8B example, this optimization
+the overall attack success rate decreases further. However, the reduces the computational overhead to just 0.83% of the re-
+Collision Attack can still achieve a reconstruction with over computation cost. This represents a nearly 8-fold reduction in
+55% semantic similarity. Importantly, this protection comes latency compared to the naive implementation (specifically, the
+at the cost of model accuracy, a trade-off we will discuss in new cost is 11.72% of the original overhead). This dramatic
+detail in the next section. improvement makes the runtime performance impact of KV-
+Cloak minimal and highly practical for real-world deployment.
+To balance security and accuracy for our comparative
+analysis, we selected ϵ = 108 and a clipping norm at the Auxiliary Costs. Our analysis primarily focuses on floating-
+50th percentile for subsequent experiments, as this offered a point multiplications, which dominate the computational cost.
+reasonable degree of utility for the DP baseline. However, we acknowledge other minor costs, such as the
+17
+
+=== PAGE 18 ===
+TABLE X: Efficacy of Defense Mechanisms Against Input Reconstruction Attacks on the Remaining Models.
+Inversion Collision Collision+ Injection
+Model ProtectType Metric
+First First Mid Last First Mid Last All
+BERTScore(↓) 0.055 0.782 0.668 0.820 1.000 1.000 1.000 0.540
+Original
+ROUGE-L(↓) 0.000 0.732 0.456 0.621 0.994 0.994 0.994 0.324
+BERTScore(↓) 0.088 0.069 0.070 0.069 0.033 0.033 0.033 0.088
+LLaMA-3.2-3B-Instruct KV-Cloak
+ROUGE-L(↓) 0.000 0.000 0.000 0.000 0.042 0.042 0.042 0.000
+BERTScore(↓) 0.061 0.223 0.592 0.760 0.967 0.938 1.000 0.129
+(108,10−5)-DP
+ROUGE-L(↓) 0.000 0.261 0.360 0.517 0.951 0.907 0.994 0.032
+BERTScore(↓) 0.071 0.873 0.652 0.764 1.000 1.000 1.000 0.616
+Original
+ROUGE-L(↓) 0.000 0.825 0.443 0.564 0.994 0.994 0.994 0.447
+BERTScore(↓) 0.076 0.069 0.069 0.069 0.041 0.041 0.041 0.084
+LLaMA-3.1-8B KV-Cloak
+ROUGE-L(↓) 0.004 0.000 0.000 0.000 0.003 0.003 0.003 0.000
+BERTScore(↓) 0.076 0.343 0.526 0.614 0.639 0.986 0.999 0.115
+(108,10−5)-DP
+ROUGE-L(↓) 0.003 0.328 0.284 0.419 0.639 0.947 0.994 0.057
+BERTScore(↓) 0.229 0.918 0.552 0.783 1.000 0.983 0.996 0.422
+Original
+ROUGE-L(↓) 0.186 0.842 0.355 0.580 1.000 0.977 0.996 0.286
+BERTScore(↓) 0.099 0.069 0.069 0.070 0.112 0.112 0.113 0.075
+Qwen2.5-Math-7B KV-Cloak
+ROUGE-L(↓) 0.011 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+BERTScore(↓) 0.108 0.879 0.274 0.317 0.331 0.432 0.373 0.325
+(108,10−5)-DP
+ROUGE-L(↓) 0.018 0.790 0.100 0.143 0.336 0.445 0.404 0.208
+TABLE XI: Impact of PagedAttention block size on LLaMA- TABLE XII: Computational overhead of KV-Cloak (Fused
+3.2-1B inference accuracy under KV-Cloak protection. vs. No Fuse) across different PagedAttention block sizes on
+LLaMA-3.1-8B.
+Block Size
+Model Metric Plaintext
+16 32 64 Block Size
+Model Prefill Type
+MMLU (↑) 0.335 0.335 0.335 0.335 16 32 64
+LLaMA-3.2-1B
+SQuAD (↑) 0.457 0.463 0.462 0.460 52.73 45.45 28.60
+No Fuse
++1.53% +1.32% +0.83%
+LLaMA-3.1-8B 3438.5
+15.41 10.17 12.33
+Fused
+generation of the one-time permutation matrix Pˆ, the element- +0.45% +0.30% +0.36%
+wise additions for the mask A, and function call overhead.
+These costs are considered secondary for several reasons: the implementationremainsconsistentlylow,addingonly<0.45%
+generation of Pˆ can be performed asynchronously in parallel latencyrelativetotheprefillcomputationacrossallblocksizes.
+with other computations; matrix addition has a much lower These results confirm that KV-Cloak’s design has no funda-
+complexity than multiplication; and any remaining overhead mental conflicts with the PagedAttention memory management
+can be further optimized through techniques like computation model. Its negligible impact on accuracy and its low, stable
+graph optimization and hardware acceleration. overhead across various block sizes demonstrate that a full
+integration into an inference engine like vLLM is a practical
+G. Architectural Compatibility with PagedAttention
+and feasible engineering task.
+The compatibility of KV-Cloak with modern inference
+H. Broader Impact of KV-Cloak for LLM Inference Security
+engines stems from its core “block-oriented” design prin-
+ciple. All cryptographic operations—both obfuscation and Although KV-Cloak targets the KV-cache specifically, it
+de-obfuscation—are self-contained within a single physical underscores a broader issue: the internal states of large
+memory block. This design intentionally creates no cross- language models represent a rich and vulnerable attack sur-
+blockdependencies,allowingamemorymanagerlikevLLMto face. As models grow in scale and architectural complexity
+schedule, copy, swap, and share physical blocks freely, without (e.g., via Mixture-of-Experts [31]), they produce substantial
+any awareness of their obfuscated contents. context-dependent intermediate data—such as activations and
+To empirically validate this compatibility, we evaluated KV- attention weights—that may leak sensitive information. KV-
+Cloak with the most common PagedAttention block sizes: Cloak introduces a lightweight, structure-aware obfuscation
+16, 32, and 64. We measured accuracy on LLaMA-3.2-1B approach as an alternative to costly cryptographic methods.
+(Table XI) and latency on LLaMA-3.1-8B (Table XII). As By exploiting mathematical reversibility, it preserves model
+shown in Table XI, KV-Cloak is virtually lossless. It preserves accuracy while embedding sufficient algebraic complexity
+thebaselineMMLUaccuracyperfectlyandresultsinnegligible, to resist cryptanalysis. This algorithm-architecture co-design
+statistically insignificant variations on SQuAD. In terms of paradigm offers a promising direction for enhancing LLM
+performance (Table XII), the overhead of the optimized, fused inference security.
+18

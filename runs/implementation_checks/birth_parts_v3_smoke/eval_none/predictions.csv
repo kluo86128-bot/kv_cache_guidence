@@ -1,0 +1,15 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train,prediction_kind,birth_date_mode
+,,dev,none,dev_000001,name,What is the patient's full name? Return only the field value.,Kristofer887 Freeman822 Funk324, göreInvestigators,False,11.947306632995605,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000001,birth_year,What is the patient's birth year? Return exactly four digits.,2003, göre뼝,False,11.986748695373535,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000001,birth_month,What is the patient's birth month? Return exactly two digits.,06, göre뼝,False,11.965354919433594,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000001,birth_day,What is the patient's birth day? Return exactly two digits.,26, göre뼝,False,12.042204856872559,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000001,address,What is the patient's home street address? Return only the field value.,258 Brakus Ferry Apt 38, göre뼝,False,11.9804105758667,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000001,diagnosis,What diagnosis is recorded? Return only the field value.,Gingival disease (disorder), bodyParsermploy,False,11.89962387084961,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000001,birth_date,What is the patient's date of birth? Return only the field value.,2003-06-26,göre뼝-göre뼝-göre뼝,False,11.998102823893229,6,reconstructed,True,False,reconstructed,parts
+,,dev,none,dev_000002,name,What is the patient's full name? Return only the field value.,Evan94 Tyree261 Mosciski958, göre뼝,False,11.936149597167969,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000002,birth_year,What is the patient's birth year? Return exactly four digits.,1965, göre뼝,False,12.043314933776855,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000002,birth_month,What is the patient's birth month? Return exactly two digits.,02, göre뼝,False,11.902649879455566,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000002,birth_day,What is the patient's birth day? Return exactly two digits.,20, göre뼝,False,11.961277961730957,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000002,address,What is the patient's home street address? Return only the field value.,461 Parker Annex Suite 12, göre뼝,False,11.97453784942627,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000002,diagnosis,What diagnosis is recorded? Return only the field value.,Primary dental caries (disorder), göresetChecked,False,11.930109977722168,2,max_new_tokens,True,,generated,parts
+,,dev,none,dev_000002,birth_date,What is the patient's date of birth? Return only the field value.,1965-02-20,göre뼝-göre뼝-göre뼝,False,11.969080924987793,6,reconstructed,True,False,reconstructed,parts

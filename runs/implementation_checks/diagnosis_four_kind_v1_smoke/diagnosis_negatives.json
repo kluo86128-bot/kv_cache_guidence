@@ -1,0 +1,653 @@
+{
+  "metadata": {
+    "generator_version": "diagnosis_four_kind_v4",
+    "records": 2,
+    "positive_labels": 2,
+    "pool_seed": 17,
+    "sampling_seed": 17,
+    "shared_pool": {
+      "directory": "data/negative_pools/four_kind_v1",
+      "file": "13c5e8168e501fc8941300127201df7380b43c0048691a419d5d8dbbf7faedd9.json",
+      "fingerprint": "87aa7b65748732e2d92c98d63e84e846f7f41ead1b0c32db9ba9b4bab79483cf"
+    },
+    "kinds": [
+      "detail_omission",
+      "detail_substitution",
+      "label_confusion",
+      "spelling_error"
+    ],
+    "max_negatives_per_record": 4,
+    "candidates_per_kind": 5,
+    "negative_answers": 5,
+    "negative_count_histogram": {
+      "2": 1,
+      "3": 1
+    },
+    "selected_kinds_by_record": {
+      "detail_omission": 1,
+      "detail_substitution": 0,
+      "label_confusion": 2,
+      "spelling_error": 2
+    },
+    "coverage_fraction": {
+      "detail_omission": 0.5,
+      "detail_substitution": 0.0,
+      "label_confusion": 1.0,
+      "spelling_error": 1.0
+    },
+    "all_four_kinds_covered": false,
+    "records_with_all_four_kinds": 0,
+    "missing_kinds_by_positive": {
+      "Gingival disease (disorder)": [
+        "detail_omission",
+        "detail_substitution"
+      ],
+      "Primary dental caries (disorder)": [
+        "detail_substitution"
+      ]
+    },
+    "pool_sizes_by_positive": {
+      "Gingival disease (disorder)": {
+        "detail_omission": 0,
+        "detail_substitution": 0,
+        "label_confusion": 5,
+        "spelling_error": 5
+      },
+      "Primary dental caries (disorder)": {
+        "detail_omission": 1,
+        "detail_substitution": 0,
+        "label_confusion": 5,
+        "spelling_error": 5
+      }
+    },
+    "available_before_cap": {
+      "Gingival disease (disorder)": {
+        "detail_omission": 0,
+        "detail_substitution": 0,
+        "label_confusion": 15,
+        "spelling_error": 128
+      },
+      "Primary dental caries (disorder)": {
+        "detail_omission": 1,
+        "detail_substitution": 0,
+        "label_confusion": 23,
+        "spelling_error": 114
+      }
+    },
+    "shared_body_pool_sizes": {
+      "sprain": 9,
+      "fracture": 38,
+      "infection": 5,
+      "otitis": 2,
+      "concussion": 1
+    },
+    "test_overlap_policy": "allowed; no test answers or predictions loaded",
+    "selection": "training seed + record_id + kind + epoch cycle; shuffled round robin; zero-based epoch",
+    "preview_epoch": 1,
+    "limits": "Heuristic terminology and component checks; lexical closeness does not establish empirical model hardness. Explicit aliases/codes are excluded; source terminology is not an exhaustive synonym oracle."
+  },
+  "entries": [
+    {
+      "record_id": "dev_000001",
+      "gold": "Gingival disease (disorder)",
+      "seed": 17,
+      "pools": {
+        "detail_omission": [],
+        "detail_substitution": [],
+        "label_confusion": [
+          {
+            "answer": "Genital herpes (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.625,
+            "focus": "gingival",
+            "negative_focus": "genital",
+            "source": {
+              "id": "NLM:10852",
+              "name": "Genital herpes",
+              "aliases": [
+                "genital Herpes"
+              ],
+              "source": "nlm",
+              "codes": [
+                [
+                  "ICD-10-CM",
+                  "A60.9"
+                ]
+              ]
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          },
+          {
+            "answer": "Hernia - inguinal (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.625,
+            "focus": "gingival",
+            "negative_focus": "inguinal",
+            "source": {
+              "id": "NLM:10038",
+              "name": "Hernia - inguinal",
+              "aliases": [
+                "inguinal hernia",
+                "unilat inguinal hernia"
+              ],
+              "source": "nlm",
+              "codes": [
+                [
+                  "ICD-10-CM",
+                  "K40.90"
+                ]
+              ]
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          },
+          {
+            "answer": "Gingivitis (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.6,
+            "focus": "gingival",
+            "negative_focus": "gingivitis",
+            "source": {
+              "id": "SNOMED-CT:66383009",
+              "name": "Gingivitis (disorder)",
+              "aliases": [],
+              "codes": [
+                [
+                  "SNOMED-CT",
+                  "66383009"
+                ]
+              ],
+              "source": "synthea"
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          },
+          {
+            "answer": "Gingivosis (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.6,
+            "focus": "gingival",
+            "negative_focus": "gingivosis",
+            "source": {
+              "id": "NLM:9743",
+              "name": "Gingivosis",
+              "aliases": [],
+              "source": "nlm",
+              "codes": [
+                [
+                  "ICD-10-CM",
+                  "K05.10"
+                ]
+              ]
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          },
+          {
+            "answer": "Animal bite (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.5,
+            "focus": "gingival",
+            "negative_focus": "animal",
+            "source": {
+              "id": "NLM:7162",
+              "name": "Animal bite",
+              "aliases": [
+                "bite (animal)"
+              ],
+              "source": "nlm",
+              "codes": [
+                [
+                  "ICD-10-CM",
+                  "W55.81XA"
+                ],
+                [
+                  "ICD-10-CM",
+                  "W55.81XD"
+                ],
+                [
+                  "ICD-10-CM",
+                  "W55.81XS"
+                ]
+              ]
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          }
+        ],
+        "spelling_error": [
+          {
+            "answer": "Gingiavl disease (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 1,
+            "changes": [
+              {
+                "operation": "transpose",
+                "word_index": 0,
+                "position": 5,
+                "before": "Gingival",
+                "after": "Gingiavl"
+              }
+            ]
+          },
+          {
+            "answer": "Gingpival disease (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 1,
+            "changes": [
+              {
+                "operation": "insert",
+                "word_index": 0,
+                "position": 4,
+                "before": "Gingival",
+                "after": "Gingpival"
+              }
+            ]
+          },
+          {
+            "answer": "Gingivl disease (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 1,
+            "changes": [
+              {
+                "operation": "delete",
+                "word_index": 0,
+                "position": 6,
+                "before": "Gingival",
+                "after": "Gingivl"
+              }
+            ]
+          },
+          {
+            "answer": "Gingival disees (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 2,
+            "changes": [
+              {
+                "operation": "delete",
+                "word_index": 1,
+                "position": 4,
+                "before": "disease",
+                "after": "disese"
+              },
+              {
+                "operation": "transpose",
+                "word_index": 1,
+                "position": 4,
+                "before": "disese",
+                "after": "disees"
+              }
+            ]
+          },
+          {
+            "answer": "Ginugiival drisease (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 3,
+            "changes": [
+              {
+                "operation": "insert",
+                "word_index": 0,
+                "position": 3,
+                "before": "Gingival",
+                "after": "Ginugival"
+              },
+              {
+                "operation": "insert",
+                "word_index": 1,
+                "position": 1,
+                "before": "disease",
+                "after": "drisease"
+              },
+              {
+                "operation": "duplicate",
+                "word_index": 0,
+                "position": 5,
+                "before": "Ginugival",
+                "after": "Ginugiival"
+              }
+            ]
+          }
+        ]
+      },
+      "negatives": [
+        {
+          "answer": "Genital herpes (disorder)",
+          "kind": "label_confusion",
+          "rule": "lexical_neighbour_different_attested_term",
+          "similarity": 0.625,
+          "focus": "gingival",
+          "negative_focus": "genital",
+          "source": {
+            "id": "NLM:10852",
+            "name": "Genital herpes",
+            "aliases": [
+              "genital Herpes"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "A60.9"
+              ]
+            ]
+          },
+          "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+        },
+        {
+          "answer": "Gingivl disease (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "delete",
+              "word_index": 0,
+              "position": 6,
+              "before": "Gingival",
+              "after": "Gingivl"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "dev_000002",
+      "gold": "Primary dental caries (disorder)",
+      "seed": 17,
+      "pools": {
+        "detail_omission": [
+          {
+            "answer": "Dental caries (disorder)",
+            "kind": "detail_omission",
+            "rule": "delete_complete_components",
+            "component_count": 1,
+            "changes": [
+              {
+                "start": 0,
+                "end": 7,
+                "before": "Primary",
+                "after": "",
+                "axis": "qualifier"
+              }
+            ]
+          }
+        ],
+        "detail_substitution": [],
+        "label_confusion": [
+          {
+            "answer": "Scabies (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.7142857142857143,
+            "focus": "caries",
+            "negative_focus": "scabies",
+            "source": {
+              "id": "NLM:6709",
+              "name": "Scabies",
+              "aliases": [
+                "mites"
+              ],
+              "source": "nlm",
+              "codes": [
+                [
+                  "ICD-10-CM",
+                  "B86"
+                ]
+              ]
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          },
+          {
+            "answer": "Varices (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.7142857142857143,
+            "focus": "caries",
+            "negative_focus": "varices",
+            "source": {
+              "id": "NLM:2222",
+              "name": "Varices",
+              "aliases": [],
+              "source": "nlm",
+              "codes": [
+                [
+                  "ICD-10-CM",
+                  "I83.90"
+                ]
+              ]
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          },
+          {
+            "answer": "Rabies (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.6666666666666667,
+            "focus": "caries",
+            "negative_focus": "rabies",
+            "source": {
+              "id": "NLM:8119",
+              "name": "Rabies",
+              "aliases": [],
+              "source": "nlm",
+              "codes": [
+                [
+                  "ICD-10-CM",
+                  "A82.9"
+                ]
+              ]
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          },
+          {
+            "answer": "Darier-White disease (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.6666666666666667,
+            "focus": "caries",
+            "negative_focus": "darier",
+            "source": {
+              "id": "NLM:10082",
+              "name": "Darier-White disease",
+              "aliases": [
+                "keratosis follicularis"
+              ],
+              "source": "nlm",
+              "codes": [
+                [
+                  "ICD-10-CM",
+                  "Q82.8"
+                ]
+              ]
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          },
+          {
+            "answer": "Scarlet fever (disorder)",
+            "kind": "label_confusion",
+            "rule": "lexical_neighbour_different_attested_term",
+            "similarity": 0.5714285714285714,
+            "focus": "caries",
+            "negative_focus": "scarlet",
+            "source": {
+              "id": "NLM:6680",
+              "name": "Scarlet fever",
+              "aliases": [
+                "canker rash",
+                "febris rubra"
+              ],
+              "source": "nlm",
+              "codes": [
+                [
+                  "ICD-10-CM",
+                  "A38.9"
+                ]
+              ]
+            },
+            "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+          }
+        ],
+        "spelling_error": [
+          {
+            "answer": "Primary dnetal caries (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 1,
+            "changes": [
+              {
+                "operation": "transpose",
+                "word_index": 1,
+                "position": 1,
+                "before": "dental",
+                "after": "dnetal"
+              }
+            ]
+          },
+          {
+            "answer": "Primary dentas caries (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 1,
+            "changes": [
+              {
+                "operation": "substitute",
+                "word_index": 1,
+                "position": 5,
+                "before": "dental",
+                "after": "dentas"
+              }
+            ]
+          },
+          {
+            "answer": "Primary dental caies (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 1,
+            "changes": [
+              {
+                "operation": "delete",
+                "word_index": 2,
+                "position": 2,
+                "before": "caries",
+                "after": "caies"
+              }
+            ]
+          },
+          {
+            "answer": "Primary dental craiess (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 2,
+            "changes": [
+              {
+                "operation": "duplicate",
+                "word_index": 2,
+                "position": 5,
+                "before": "caries",
+                "after": "cariess"
+              },
+              {
+                "operation": "reverse_segment",
+                "word_index": 2,
+                "position": 1,
+                "before": "cariess",
+                "after": "craiess"
+              }
+            ]
+          },
+          {
+            "answer": "Primary denytal cares (disorder)",
+            "kind": "spelling_error",
+            "rule": "random_multiedit",
+            "edit_count": 3,
+            "changes": [
+              {
+                "operation": "delete",
+                "word_index": 2,
+                "position": 3,
+                "before": "caries",
+                "after": "cares"
+              },
+              {
+                "operation": "duplicate",
+                "word_index": 1,
+                "position": 3,
+                "before": "dental",
+                "after": "denttal"
+              },
+              {
+                "operation": "substitute",
+                "word_index": 1,
+                "position": 3,
+                "before": "denttal",
+                "after": "denytal"
+              }
+            ]
+          }
+        ]
+      },
+      "negatives": [
+        {
+          "answer": "Dental caries (disorder)",
+          "kind": "detail_omission",
+          "rule": "delete_complete_components",
+          "component_count": 1,
+          "changes": [
+            {
+              "start": 0,
+              "end": 7,
+              "before": "Primary",
+              "after": "",
+              "axis": "qualifier"
+            }
+          ]
+        },
+        {
+          "answer": "Darier-White disease (disorder)",
+          "kind": "label_confusion",
+          "rule": "lexical_neighbour_different_attested_term",
+          "similarity": 0.6666666666666667,
+          "focus": "caries",
+          "negative_focus": "darier",
+          "source": {
+            "id": "NLM:10082",
+            "name": "Darier-White disease",
+            "aliases": [
+              "keratosis follicularis"
+            ],
+            "source": "nlm",
+            "codes": [
+              [
+                "ICD-10-CM",
+                "Q82.8"
+              ]
+            ]
+          },
+          "meaning_check": "different source concept; explicit aliases/codes excluded; not clinician-reviewed"
+        },
+        {
+          "answer": "Primary dentas caries (disorder)",
+          "kind": "spelling_error",
+          "rule": "random_multiedit",
+          "edit_count": 1,
+          "changes": [
+            {
+              "operation": "substitute",
+              "word_index": 1,
+              "position": 5,
+              "before": "dental",
+              "after": "dentas"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "fingerprint": "d28003a62c26f631c1e8c2a62d6449be11a37c43bde5bbff3d8f44fcf058f9e0"
+}

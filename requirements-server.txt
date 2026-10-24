@@ -1,0 +1,7 @@
+# Reuse the existing CUDA PyTorch from the kv_priv server environment.
+# Do not replace it with the CPU implementation-check environment.
+transformers==4.57.1
+tokenizers==0.22.1
+numpy>=1.24
+matplotlib>=3.7,<4
+pytest==8.4.2

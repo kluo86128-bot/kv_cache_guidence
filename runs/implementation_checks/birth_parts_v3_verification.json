@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "implementation_only": true,
+  "unit_tests": {
+    "transformers_4.57.1": {
+      "passed": 27,
+      "discrete_deselected": 3
+    },
+    "transformers_4.57.6": {
+      "passed": 27,
+      "discrete_deselected": 3
+    }
+  },
+  "cli_smoke": "birth_parts_v3_smoke/verification.json",
+  "old_four_question_checkpoint_evaluation": "birth_parts_v3_old_checkpoint/summary.json",
+  "verified": [
+    "derived targets and frozen source hashes",
+    "birthday group weight 25 percent",
+    "six-question batched/serial losses, gradients and generation",
+    "raw components, strict reconstruction and four-field metrics",
+    "real epoch-20 boundary and earlier window-best selection",
+    "interruption/resume preserves first-20 snapshots byte-for-byte",
+    "global best and final can differ from first-20 snapshots",
+    "per-epoch and standalone CSV, six control conditions, local model loading"
+  ],
+  "formal_4b_training_run": false,
+  "new_multi_gpu_nccl_run": false,
+  "dataset": {
+    "dataset_id": "synthea_medical_privacy_v1",
+    "manifest_sha256": "062a3ecef4405b84cdb1e056a41b462844b0c615ff55b9b1d1a482ea4e72f019",
+    "split_sha256": {
+      "dev": "a9460c7e92344352325b396eb4df6cfecbf1c7703e58aaafbad0f32c62ff014c",
+      "train": "a572d54b3e941581bcec85232ed27d7f7819b89279307677236109b9995f330f",
+      "validation": "a7640aee64ca7279f4190b6c1096c6ad3fab2e51ddce98b9f212effaf4fa9042",
+      "test": "cecee8dc7dcc2b192f01b45462e9e061d22ab142236a2fd443895b0e60422e71"
+    },
+    "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "schema": "source_preserving_v3"
+  },
+  "code_sha256": {
+    "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+    "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "backend.py": "e90681b3181bb3435acd47ea37a8623777844dadb3e8d228214eb931364d497d",
+    "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+    "cli.py": "c175d81c44b0f8485657f6fc6f2fcaa5b9591bf1aab6b337edb73a319c93143a",
+    "config.py": "5cec9490d30ada77d9da331660e1e2203f401c59b02109906ecc043a51dbf609",
+    "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+    "discrete.py": "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4",
+    "distributed.py": "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+    "evaluation.py": "de0b1d4d0d144d314dac83ede61358e2236c40eac92c7bf4690ccbf7ace9c017",
+    "io.py": "20ef9a702711b260eb5478d33708608c0d65c07e28bfdf7c03f77fa1b057210e",
+    "launch.py": "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+    "plotting.py": "1651d7f47e93b3b99316a02d4e8855cc0e241e58d2e33bc862d9f5068f67b739",
+    "tasks.py": "ff5ec687ece242ce9fcc326072d2d67e00f807d2d933baf1dfaa1364321052ac",
+    "training.py": "a75b559c2a0956eb5d3babf4a6a3c144a1aef54f70f8f3fb7b6231335789a40c"
+  }
+}

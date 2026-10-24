@@ -1,0 +1,43 @@
+{
+  "definition": "condition A minus condition B; resample patients, keeping four fields together",
+  "records": 2,
+  "bootstrap_samples": 2000,
+  "seed": 17,
+  "field_em_difference": {
+    "name": {
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "birth_date": {
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "address": {
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "diagnosis": {
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "macro_em_difference": {
+    "difference": 0.0,
+    "ci95": [
+      0.0,
+      0.0
+    ]
+  }
+}

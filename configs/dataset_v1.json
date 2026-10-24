@@ -1,0 +1,36 @@
+{
+  "schema_version": "source_preserving_v3",
+  "dataset_id": "synthea_medical_privacy_natural_names_v1",
+  "source_csv_directory": "data/source/candidates_5000/csv",
+  "output_directory": "data/dataset_v1",
+  "seed": 2026101603,
+  "diagnosis_categories": 20,
+  "split_sizes": {
+    "dev": 128,
+    "train": 1000,
+    "validation": 200,
+    "test": 1000
+  },
+  "target_fields": [
+    "name",
+    "birth_date",
+    "address",
+    "diagnosis"
+  ],
+  "tokenizer_file": "tools/tokenizer/Qwen3-4B/tokenizer.json",
+  "tokenizer_label": "Qwen3-4B (copied local tokenizer snapshot)",
+  "generation": {
+    "population": 5000,
+    "seed": 2026101601,
+    "clinician_seed": 2026101602,
+    "reference_date": "20261016",
+    "end_date": "20261016",
+    "state": "Massachusetts",
+    "thread_pool_size": 4,
+    "overflow_population": false,
+    "generator_build": "d9d07a6",
+    "jar_sha256": "018ad7f04f7aacb995804d7d4781c76d5fc714f7f23257ba50daa9eefae224ac"
+  },
+  "name_format": "natural_no_numeric_suffix_v1",
+  "name_transformation": "Remove terminal ASCII digits from FIRST/MIDDLE/LAST/MAIDEN; join nonempty FIRST/MIDDLE/LAST with one space. Preserve letters, accents, internal spaces, dates, addresses and diagnoses; no translation."
+}

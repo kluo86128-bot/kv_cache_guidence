@@ -1,0 +1,8 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train,prediction_kind,birth_date_mode
+0,0,dev,soft,dev_000001,name,What is the patient's full name? Return only the field value.,Kristofer Freeman Funk, göre뼝,False,11.87773609161377,2,max_new_tokens,True,,generated,parts
+0,0,dev,soft,dev_000001,birth_year,What is the patient's birth year? Return exactly four digits.,2003, göre뼝,False,11.993589401245117,2,max_new_tokens,True,,generated,parts
+0,0,dev,soft,dev_000001,birth_month,What is the patient's birth month? Return exactly two digits.,06, göre뼝,False,11.971850395202637,2,max_new_tokens,True,,generated,parts
+0,0,dev,soft,dev_000001,birth_day,What is the patient's birth day? Return exactly two digits.,26, göre뼝,False,12.048008918762207,2,max_new_tokens,True,,generated,parts
+0,0,dev,soft,dev_000001,address,What is the patient's home street address? Return only the field value.,258 Brakus Ferry Apt 38,ᶰ Spiel,False,11.982165336608887,2,max_new_tokens,True,,generated,parts
+0,0,dev,soft,dev_000001,diagnosis,What diagnosis is recorded? Return only the field value.,Gingival disease (disorder),ᶰ Spiel,False,11.90356731414795,2,max_new_tokens,True,,generated,parts
+0,0,dev,soft,dev_000001,birth_date,What is the patient's date of birth? Return only the field value.,2003-06-26,göre뼝-göre뼝-göre뼝,False,12.004482905069986,6,reconstructed,True,False,reconstructed,parts

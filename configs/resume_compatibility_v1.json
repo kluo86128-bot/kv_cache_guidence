@@ -1,0 +1,614 @@
+{
+  "schema_version": 1,
+  "description": "Reviewed input-token cache wiring, snapshot-backed evaluation continuation and execution controls; existing data/config/model checks retained. Cleaned-input scene runs require fresh training.",
+  "legacy_sources": [
+    {
+      "__init__.py": [
+        "6faafae67ce289aeb5d65dd766c2ba39a06fcbff0a063f18bd0ef4ce9309f44e",
+        "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be"
+      ],
+      "__main__.py": [
+        "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+        "c13eb66970ae37b8b044f428b309e67868814b90a8bb408806f3316ce4dfbc5b"
+      ],
+      "backend.py": [
+        "34dd4f8f56a596fba213558fd5c5fd5c4376f6eeb3e2796ee29b3764968a6d46",
+        "6c4cd509236066cfcbae146a7a317cf3b6afd55e0068dcb1be6e46169012b910"
+      ],
+      "cache.py": [
+        "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+        "a6f00062314de398509cb5deb93ad07c1b0eb9b44ac0fea776b185fa204dc4f4"
+      ],
+      "cli.py": [
+        "6fef72bdc7a497349e1b75a19edb9972655ae015e48ab2a162605656d5ac0f54",
+        "85542cbbf54571856887e84a472cb143dc6adcf0aebe114854a96fcffa20c724"
+      ],
+      "config.py": [
+        "7713598fb06c5464b259cf10d243d5622e4027102943b775ec675d0d8f0184a7",
+        "d3c64c9cf7e51587f662e00608aa85108406ae36d25d01ad3f89281560b5e930"
+      ],
+      "data.py": [
+        "b97fae88a98a6a4ef663891057044c86aa4536272a214343d477d46cb2ae2a6a",
+        "d672240cb00a4de1e9af88a399536958c5bcf314eb7a137a463b91cf505bcb96"
+      ],
+      "diagnosis_contrastive.py": [
+        "26dbf369f7dd0dd11162a40c2893c175f0c8e7449d93496b63c1d01f97b2becd",
+        "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94"
+      ],
+      "diagnosis_noise.py": [
+        "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+        "bc4933c06c87d58229c97c5ebe4dbf5c1eaf2f7a370ae0b047914b936097a7ef"
+      ],
+      "discrete.py": [
+        "0a69beeb55a3a016f8f16b380793bf1507b5eb876d1b33002d2cb31d99700cd4",
+        "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4"
+      ],
+      "distributed.py": [
+        "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+        "8d45ef007fbc03e9d55085b33f8f4e2ba776b07fda399fc6403c9fb20e7531c1"
+      ],
+      "evaluation.py": [
+        "404879e1c7c291d174b366d25581a12362baab219864a3607d875f1b816ca255",
+        "ef1c679bc03e65fc6b6d8735306aa47cba2cdcab2a3a66d2923bfbca0a778fbf"
+      ],
+      "io.py": [
+        "240bd15b17b9849e706baaa6ff163a37342944f4470bbf75b36d05117b6f8fc7",
+        "c323835e1128699774143889fa9f4773480275e702f72829c213cb26ed9b6e46"
+      ],
+      "launch.py": [
+        "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+        "87701890982ae553c6dff31d1dc9cb297f999e6919950e09cf86335b642405f0"
+      ],
+      "name_policy.py": [
+        "b9762af1474d2e0cc66670d12507392a82dd16360c288ce54e408b65947e4241",
+        "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a"
+      ],
+      "negative_resources.py": [
+        "76cf8b084a29c93de55d761dd0df926a6a223d01e52422b76cfa959a3f274e5a",
+        "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d"
+      ],
+      "plotting.py": [
+        "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+        "c4f2200cbaf2ad1dfb92995c1117ca57c5f6c2bcbc11473eacf061d469764ce2"
+      ],
+      "tasks.py": [
+        "5c17d49afca35b4e3145a789653270f4933c76aa3a206be184dbadc521167d14",
+        "6c4189f2c24d527a0659403b8d51022a4702afade3bcab722ee89a029f21e2bf"
+      ],
+      "training.py": [
+        "28c31e210569872a20bb47453ed1440acbd08185ffffb1b76813cbe04e216416",
+        "76c83d9a0f58c7cd52915b5a8178b017f1d5e73b874aec6e628d1596a13c2055"
+      ]
+    }
+  ],
+  "target_code": {
+    "__init__.py": [
+      "6faafae67ce289aeb5d65dd766c2ba39a06fcbff0a063f18bd0ef4ce9309f44e",
+      "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be"
+    ],
+    "__main__.py": [
+      "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "c13eb66970ae37b8b044f428b309e67868814b90a8bb408806f3316ce4dfbc5b"
+    ],
+    "backend.py": [
+      "c6f7abcafd1db88efc9e312fadf9ac4f858cfb0222fe92f8776d365ba12893fe",
+      "d78bfeb8859913a3b586f266432a83de61f6efa3ff5d53c52c53064634e2fd2f"
+    ],
+    "cache.py": [
+      "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+      "a6f00062314de398509cb5deb93ad07c1b0eb9b44ac0fea776b185fa204dc4f4"
+    ],
+    "cli.py": [
+      "95b47d829541532ef04e9b2d15917f088b392b348938fdda52b1d934fc6a7b38",
+      "e8137d425f71ffde6e24b2e13001e9bf93e5eb764f3c7285075d14b481865ca1"
+    ],
+    "config.py": [
+      "7713598fb06c5464b259cf10d243d5622e4027102943b775ec675d0d8f0184a7",
+      "d3c64c9cf7e51587f662e00608aa85108406ae36d25d01ad3f89281560b5e930"
+    ],
+    "control.py": [
+      "71a831cb92e99cfcd6688e89d55b959192522d6895e5cc9f5fe762bd949ab8d6",
+      "b1d157793e87206cae5af8a1ecffcb4c22a27ea24d7545542da3c656648092ac"
+    ],
+    "data.py": [
+      "6982c8cc1a4d8a5b2e858fc67af440f7bf2db4879547658fc761063d2ee153c4",
+      "d901a8f4925ca942f36a6c049d6d624f6537383530f2f9bbb1e6eea64df99cc6"
+    ],
+    "diagnosis_contrastive.py": [
+      "26dbf369f7dd0dd11162a40c2893c175f0c8e7449d93496b63c1d01f97b2becd",
+      "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94"
+    ],
+    "diagnosis_noise.py": [
+      "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+      "bc4933c06c87d58229c97c5ebe4dbf5c1eaf2f7a370ae0b047914b936097a7ef"
+    ],
+    "discrete.py": [
+      "0a69beeb55a3a016f8f16b380793bf1507b5eb876d1b33002d2cb31d99700cd4",
+      "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4"
+    ],
+    "distributed.py": [
+      "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+      "8d45ef007fbc03e9d55085b33f8f4e2ba776b07fda399fc6403c9fb20e7531c1"
+    ],
+    "evaluation.py": [
+      "78e2522d749207717ec09ad820140f5a49d6bd2dccb93de90b3d050e676e0699",
+      "d3d6b8957c161c415bf9be614a9216250fa4e01091f2e002db7a1d87f93c59ca"
+    ],
+    "evaluation_resume.py": [
+      "06a3baf7d8c651d8011970c2b82eab883e40528420d8deb54f1852f28bee6d8b",
+      "121125414e416e5687dcc7907ff4830ebddb4099e44d92b49206a81844b1619d"
+    ],
+    "input_cache.py": [
+      "0caf235ab69981c35e72767a09956d441b2b236f9be5e6d1d32351276c1b3d44",
+      "3ca13c230fd99e6dd28f2ae1411ba36b24e330ac65081621f53298895eefbffc"
+    ],
+    "io.py": [
+      "240bd15b17b9849e706baaa6ff163a37342944f4470bbf75b36d05117b6f8fc7",
+      "c323835e1128699774143889fa9f4773480275e702f72829c213cb26ed9b6e46"
+    ],
+    "launch.py": [
+      "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+      "87701890982ae553c6dff31d1dc9cb297f999e6919950e09cf86335b642405f0"
+    ],
+    "name_policy.py": [
+      "b9762af1474d2e0cc66670d12507392a82dd16360c288ce54e408b65947e4241",
+      "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a"
+    ],
+    "negative_resources.py": [
+      "76cf8b084a29c93de55d761dd0df926a6a223d01e52422b76cfa959a3f274e5a",
+      "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d"
+    ],
+    "plotting.py": [
+      "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+      "c4f2200cbaf2ad1dfb92995c1117ca57c5f6c2bcbc11473eacf061d469764ce2"
+    ],
+    "resume.py": [
+      "56a060514f12f72e433f11950b11e9ff9e6d5064480d340d228f414c6f7ec786",
+      "ec044868ae0d6ce851bbc428f8b5a8356a72862d85e584d2738f3b02ee48ca33"
+    ],
+    "tasks.py": [
+      "5c17d49afca35b4e3145a789653270f4933c76aa3a206be184dbadc521167d14",
+      "6c4189f2c24d527a0659403b8d51022a4702afade3bcab722ee89a029f21e2bf"
+    ],
+    "training.py": [
+      "67c693710da6cd09849c0d9ee19f181e89e090f74188d2a275eee86632e8c4d0",
+      "88f59951407b89fe25cbd55c8606377c4a16991c817e7ab72aad3ac4acf0ad42"
+    ]
+  },
+  "reviewed_v2_sources": [
+    {
+      "__init__.py": [
+        "6faafae67ce289aeb5d65dd766c2ba39a06fcbff0a063f18bd0ef4ce9309f44e",
+        "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be"
+      ],
+      "__main__.py": [
+        "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+        "c13eb66970ae37b8b044f428b309e67868814b90a8bb408806f3316ce4dfbc5b"
+      ],
+      "backend.py": [
+        "34dd4f8f56a596fba213558fd5c5fd5c4376f6eeb3e2796ee29b3764968a6d46",
+        "6c4cd509236066cfcbae146a7a317cf3b6afd55e0068dcb1be6e46169012b910"
+      ],
+      "cache.py": [
+        "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+        "a6f00062314de398509cb5deb93ad07c1b0eb9b44ac0fea776b185fa204dc4f4"
+      ],
+      "cli.py": [
+        "6fef72bdc7a497349e1b75a19edb9972655ae015e48ab2a162605656d5ac0f54",
+        "85542cbbf54571856887e84a472cb143dc6adcf0aebe114854a96fcffa20c724"
+      ],
+      "config.py": [
+        "7713598fb06c5464b259cf10d243d5622e4027102943b775ec675d0d8f0184a7",
+        "d3c64c9cf7e51587f662e00608aa85108406ae36d25d01ad3f89281560b5e930"
+      ],
+      "control.py": [
+        "71a831cb92e99cfcd6688e89d55b959192522d6895e5cc9f5fe762bd949ab8d6",
+        "b1d157793e87206cae5af8a1ecffcb4c22a27ea24d7545542da3c656648092ac"
+      ],
+      "data.py": [
+        "b97fae88a98a6a4ef663891057044c86aa4536272a214343d477d46cb2ae2a6a",
+        "d672240cb00a4de1e9af88a399536958c5bcf314eb7a137a463b91cf505bcb96"
+      ],
+      "diagnosis_contrastive.py": [
+        "26dbf369f7dd0dd11162a40c2893c175f0c8e7449d93496b63c1d01f97b2becd",
+        "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94"
+      ],
+      "diagnosis_noise.py": [
+        "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+        "bc4933c06c87d58229c97c5ebe4dbf5c1eaf2f7a370ae0b047914b936097a7ef"
+      ],
+      "discrete.py": [
+        "0a69beeb55a3a016f8f16b380793bf1507b5eb876d1b33002d2cb31d99700cd4",
+        "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4"
+      ],
+      "distributed.py": [
+        "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+        "8d45ef007fbc03e9d55085b33f8f4e2ba776b07fda399fc6403c9fb20e7531c1"
+      ],
+      "evaluation.py": [
+        "404879e1c7c291d174b366d25581a12362baab219864a3607d875f1b816ca255",
+        "ef1c679bc03e65fc6b6d8735306aa47cba2cdcab2a3a66d2923bfbca0a778fbf"
+      ],
+      "io.py": [
+        "240bd15b17b9849e706baaa6ff163a37342944f4470bbf75b36d05117b6f8fc7",
+        "c323835e1128699774143889fa9f4773480275e702f72829c213cb26ed9b6e46"
+      ],
+      "launch.py": [
+        "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+        "87701890982ae553c6dff31d1dc9cb297f999e6919950e09cf86335b642405f0"
+      ],
+      "name_policy.py": [
+        "b9762af1474d2e0cc66670d12507392a82dd16360c288ce54e408b65947e4241",
+        "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a"
+      ],
+      "negative_resources.py": [
+        "76cf8b084a29c93de55d761dd0df926a6a223d01e52422b76cfa959a3f274e5a",
+        "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d"
+      ],
+      "plotting.py": [
+        "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+        "c4f2200cbaf2ad1dfb92995c1117ca57c5f6c2bcbc11473eacf061d469764ce2"
+      ],
+      "resume.py": [
+        "1ac65834d97c0cf6e0ba2e99610f2968d61bfb77d420536e9a928e23a3b58ec7",
+        "ef639a6a3f6c4a7ae2bb8ca49866c0cf0912f1b00c6fee1f1a44c91bc4927dc8"
+      ],
+      "tasks.py": [
+        "5c17d49afca35b4e3145a789653270f4933c76aa3a206be184dbadc521167d14",
+        "6c4189f2c24d527a0659403b8d51022a4702afade3bcab722ee89a029f21e2bf"
+      ],
+      "training.py": [
+        "db1d2888533314ed95c9e2c664bae2199df1e134861001aeb21cc4f1aad4e30a",
+        "ff9dae982e7f52308db84b71f048244bfa9fce815bb98c5622ad7e0cce385f10"
+      ]
+    },
+    {
+      "__init__.py": [
+        "6faafae67ce289aeb5d65dd766c2ba39a06fcbff0a063f18bd0ef4ce9309f44e",
+        "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be"
+      ],
+      "__main__.py": [
+        "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+        "c13eb66970ae37b8b044f428b309e67868814b90a8bb408806f3316ce4dfbc5b"
+      ],
+      "backend.py": [
+        "34dd4f8f56a596fba213558fd5c5fd5c4376f6eeb3e2796ee29b3764968a6d46",
+        "6c4cd509236066cfcbae146a7a317cf3b6afd55e0068dcb1be6e46169012b910"
+      ],
+      "cache.py": [
+        "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+        "a6f00062314de398509cb5deb93ad07c1b0eb9b44ac0fea776b185fa204dc4f4"
+      ],
+      "cli.py": [
+        "3117e17c7c37da7a106581e74dc4cdf3d71b1916f07b348bb83edaaf0f6e1b72",
+        "9624f3028e11fa7789e3187eafdd7b9d0c9ffcc6552356622828b1159f4fd127"
+      ],
+      "config.py": [
+        "7713598fb06c5464b259cf10d243d5622e4027102943b775ec675d0d8f0184a7",
+        "d3c64c9cf7e51587f662e00608aa85108406ae36d25d01ad3f89281560b5e930"
+      ],
+      "control.py": [
+        "71a831cb92e99cfcd6688e89d55b959192522d6895e5cc9f5fe762bd949ab8d6",
+        "b1d157793e87206cae5af8a1ecffcb4c22a27ea24d7545542da3c656648092ac"
+      ],
+      "data.py": [
+        "b97fae88a98a6a4ef663891057044c86aa4536272a214343d477d46cb2ae2a6a",
+        "d672240cb00a4de1e9af88a399536958c5bcf314eb7a137a463b91cf505bcb96"
+      ],
+      "diagnosis_contrastive.py": [
+        "26dbf369f7dd0dd11162a40c2893c175f0c8e7449d93496b63c1d01f97b2becd",
+        "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94"
+      ],
+      "diagnosis_noise.py": [
+        "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+        "bc4933c06c87d58229c97c5ebe4dbf5c1eaf2f7a370ae0b047914b936097a7ef"
+      ],
+      "discrete.py": [
+        "0a69beeb55a3a016f8f16b380793bf1507b5eb876d1b33002d2cb31d99700cd4",
+        "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4"
+      ],
+      "distributed.py": [
+        "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+        "8d45ef007fbc03e9d55085b33f8f4e2ba776b07fda399fc6403c9fb20e7531c1"
+      ],
+      "evaluation.py": [
+        "619e7e679040feb43cf3b8e0aa4352d05c06426e2cb15fbf3309d9750f663bd4",
+        "8a53edeeffa3518c2d8df0d6bb923ff079420d8e8500737346a40afa6f8b6f90"
+      ],
+      "io.py": [
+        "240bd15b17b9849e706baaa6ff163a37342944f4470bbf75b36d05117b6f8fc7",
+        "c323835e1128699774143889fa9f4773480275e702f72829c213cb26ed9b6e46"
+      ],
+      "launch.py": [
+        "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+        "87701890982ae553c6dff31d1dc9cb297f999e6919950e09cf86335b642405f0"
+      ],
+      "name_policy.py": [
+        "b9762af1474d2e0cc66670d12507392a82dd16360c288ce54e408b65947e4241",
+        "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a"
+      ],
+      "negative_resources.py": [
+        "76cf8b084a29c93de55d761dd0df926a6a223d01e52422b76cfa959a3f274e5a",
+        "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d"
+      ],
+      "plotting.py": [
+        "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+        "c4f2200cbaf2ad1dfb92995c1117ca57c5f6c2bcbc11473eacf061d469764ce2"
+      ],
+      "resume.py": [
+        "56a060514f12f72e433f11950b11e9ff9e6d5064480d340d228f414c6f7ec786",
+        "ec044868ae0d6ce851bbc428f8b5a8356a72862d85e584d2738f3b02ee48ca33"
+      ],
+      "tasks.py": [
+        "5c17d49afca35b4e3145a789653270f4933c76aa3a206be184dbadc521167d14",
+        "6c4189f2c24d527a0659403b8d51022a4702afade3bcab722ee89a029f21e2bf"
+      ],
+      "training.py": [
+        "db1d2888533314ed95c9e2c664bae2199df1e134861001aeb21cc4f1aad4e30a",
+        "ff9dae982e7f52308db84b71f048244bfa9fce815bb98c5622ad7e0cce385f10"
+      ]
+    },
+    {
+      "__init__.py": [
+        "6faafae67ce289aeb5d65dd766c2ba39a06fcbff0a063f18bd0ef4ce9309f44e",
+        "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be"
+      ],
+      "__main__.py": [
+        "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+        "c13eb66970ae37b8b044f428b309e67868814b90a8bb408806f3316ce4dfbc5b"
+      ],
+      "backend.py": [
+        "34dd4f8f56a596fba213558fd5c5fd5c4376f6eeb3e2796ee29b3764968a6d46",
+        "6c4cd509236066cfcbae146a7a317cf3b6afd55e0068dcb1be6e46169012b910"
+      ],
+      "cache.py": [
+        "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+        "a6f00062314de398509cb5deb93ad07c1b0eb9b44ac0fea776b185fa204dc4f4"
+      ],
+      "cli.py": [
+        "5f3040d8efd06ca3dd41ca00f90a32837664d0ba48d8b18bef73f8afa55128b9",
+        "70ad0435a57167b0af247f4e2f40e7cd5d9d2fb5fc94fe52482bd522e39dd959"
+      ],
+      "config.py": [
+        "7713598fb06c5464b259cf10d243d5622e4027102943b775ec675d0d8f0184a7",
+        "d3c64c9cf7e51587f662e00608aa85108406ae36d25d01ad3f89281560b5e930"
+      ],
+      "control.py": [
+        "71a831cb92e99cfcd6688e89d55b959192522d6895e5cc9f5fe762bd949ab8d6",
+        "b1d157793e87206cae5af8a1ecffcb4c22a27ea24d7545542da3c656648092ac"
+      ],
+      "data.py": [
+        "b97fae88a98a6a4ef663891057044c86aa4536272a214343d477d46cb2ae2a6a",
+        "d672240cb00a4de1e9af88a399536958c5bcf314eb7a137a463b91cf505bcb96"
+      ],
+      "diagnosis_contrastive.py": [
+        "26dbf369f7dd0dd11162a40c2893c175f0c8e7449d93496b63c1d01f97b2becd",
+        "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94"
+      ],
+      "diagnosis_noise.py": [
+        "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+        "bc4933c06c87d58229c97c5ebe4dbf5c1eaf2f7a370ae0b047914b936097a7ef"
+      ],
+      "discrete.py": [
+        "0a69beeb55a3a016f8f16b380793bf1507b5eb876d1b33002d2cb31d99700cd4",
+        "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4"
+      ],
+      "distributed.py": [
+        "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+        "8d45ef007fbc03e9d55085b33f8f4e2ba776b07fda399fc6403c9fb20e7531c1"
+      ],
+      "evaluation.py": [
+        "619e7e679040feb43cf3b8e0aa4352d05c06426e2cb15fbf3309d9750f663bd4",
+        "8a53edeeffa3518c2d8df0d6bb923ff079420d8e8500737346a40afa6f8b6f90"
+      ],
+      "io.py": [
+        "240bd15b17b9849e706baaa6ff163a37342944f4470bbf75b36d05117b6f8fc7",
+        "c323835e1128699774143889fa9f4773480275e702f72829c213cb26ed9b6e46"
+      ],
+      "launch.py": [
+        "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+        "87701890982ae553c6dff31d1dc9cb297f999e6919950e09cf86335b642405f0"
+      ],
+      "name_policy.py": [
+        "b9762af1474d2e0cc66670d12507392a82dd16360c288ce54e408b65947e4241",
+        "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a"
+      ],
+      "negative_resources.py": [
+        "76cf8b084a29c93de55d761dd0df926a6a223d01e52422b76cfa959a3f274e5a",
+        "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d"
+      ],
+      "plotting.py": [
+        "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+        "c4f2200cbaf2ad1dfb92995c1117ca57c5f6c2bcbc11473eacf061d469764ce2"
+      ],
+      "resume.py": [
+        "56a060514f12f72e433f11950b11e9ff9e6d5064480d340d228f414c6f7ec786",
+        "ec044868ae0d6ce851bbc428f8b5a8356a72862d85e584d2738f3b02ee48ca33"
+      ],
+      "tasks.py": [
+        "5c17d49afca35b4e3145a789653270f4933c76aa3a206be184dbadc521167d14",
+        "6c4189f2c24d527a0659403b8d51022a4702afade3bcab722ee89a029f21e2bf"
+      ],
+      "training.py": [
+        "67c693710da6cd09849c0d9ee19f181e89e090f74188d2a275eee86632e8c4d0",
+        "88f59951407b89fe25cbd55c8606377c4a16991c817e7ab72aad3ac4acf0ad42"
+      ]
+    },
+    {
+      "__init__.py": [
+        "6faafae67ce289aeb5d65dd766c2ba39a06fcbff0a063f18bd0ef4ce9309f44e",
+        "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be"
+      ],
+      "__main__.py": [
+        "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+        "c13eb66970ae37b8b044f428b309e67868814b90a8bb408806f3316ce4dfbc5b"
+      ],
+      "backend.py": [
+        "34dd4f8f56a596fba213558fd5c5fd5c4376f6eeb3e2796ee29b3764968a6d46",
+        "6c4cd509236066cfcbae146a7a317cf3b6afd55e0068dcb1be6e46169012b910"
+      ],
+      "cache.py": [
+        "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+        "a6f00062314de398509cb5deb93ad07c1b0eb9b44ac0fea776b185fa204dc4f4"
+      ],
+      "cli.py": [
+        "7c49e2b99a1cb6aaa3bb497c61d7373e5696f3208f171779ed983041b61fab51",
+        "81817b110dc56872fa1da43c67b705bf7fde09b9633c63b132631788235f4c52"
+      ],
+      "config.py": [
+        "7713598fb06c5464b259cf10d243d5622e4027102943b775ec675d0d8f0184a7",
+        "d3c64c9cf7e51587f662e00608aa85108406ae36d25d01ad3f89281560b5e930"
+      ],
+      "control.py": [
+        "71a831cb92e99cfcd6688e89d55b959192522d6895e5cc9f5fe762bd949ab8d6",
+        "b1d157793e87206cae5af8a1ecffcb4c22a27ea24d7545542da3c656648092ac"
+      ],
+      "data.py": [
+        "b97fae88a98a6a4ef663891057044c86aa4536272a214343d477d46cb2ae2a6a",
+        "d672240cb00a4de1e9af88a399536958c5bcf314eb7a137a463b91cf505bcb96"
+      ],
+      "diagnosis_contrastive.py": [
+        "26dbf369f7dd0dd11162a40c2893c175f0c8e7449d93496b63c1d01f97b2becd",
+        "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94"
+      ],
+      "diagnosis_noise.py": [
+        "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+        "bc4933c06c87d58229c97c5ebe4dbf5c1eaf2f7a370ae0b047914b936097a7ef"
+      ],
+      "discrete.py": [
+        "0a69beeb55a3a016f8f16b380793bf1507b5eb876d1b33002d2cb31d99700cd4",
+        "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4"
+      ],
+      "distributed.py": [
+        "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+        "8d45ef007fbc03e9d55085b33f8f4e2ba776b07fda399fc6403c9fb20e7531c1"
+      ],
+      "evaluation.py": [
+        "619e7e679040feb43cf3b8e0aa4352d05c06426e2cb15fbf3309d9750f663bd4",
+        "8a53edeeffa3518c2d8df0d6bb923ff079420d8e8500737346a40afa6f8b6f90"
+      ],
+      "io.py": [
+        "240bd15b17b9849e706baaa6ff163a37342944f4470bbf75b36d05117b6f8fc7",
+        "c323835e1128699774143889fa9f4773480275e702f72829c213cb26ed9b6e46"
+      ],
+      "launch.py": [
+        "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+        "87701890982ae553c6dff31d1dc9cb297f999e6919950e09cf86335b642405f0"
+      ],
+      "name_policy.py": [
+        "b9762af1474d2e0cc66670d12507392a82dd16360c288ce54e408b65947e4241",
+        "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a"
+      ],
+      "negative_resources.py": [
+        "76cf8b084a29c93de55d761dd0df926a6a223d01e52422b76cfa959a3f274e5a",
+        "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d"
+      ],
+      "plotting.py": [
+        "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+        "c4f2200cbaf2ad1dfb92995c1117ca57c5f6c2bcbc11473eacf061d469764ce2"
+      ],
+      "resume.py": [
+        "56a060514f12f72e433f11950b11e9ff9e6d5064480d340d228f414c6f7ec786",
+        "ec044868ae0d6ce851bbc428f8b5a8356a72862d85e584d2738f3b02ee48ca33"
+      ],
+      "tasks.py": [
+        "5c17d49afca35b4e3145a789653270f4933c76aa3a206be184dbadc521167d14",
+        "6c4189f2c24d527a0659403b8d51022a4702afade3bcab722ee89a029f21e2bf"
+      ],
+      "training.py": [
+        "67c693710da6cd09849c0d9ee19f181e89e090f74188d2a275eee86632e8c4d0",
+        "88f59951407b89fe25cbd55c8606377c4a16991c817e7ab72aad3ac4acf0ad42"
+      ]
+    },
+    {
+      "__init__.py": [
+        "6faafae67ce289aeb5d65dd766c2ba39a06fcbff0a063f18bd0ef4ce9309f44e",
+        "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be"
+      ],
+      "__main__.py": [
+        "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+        "c13eb66970ae37b8b044f428b309e67868814b90a8bb408806f3316ce4dfbc5b"
+      ],
+      "backend.py": [
+        "34dd4f8f56a596fba213558fd5c5fd5c4376f6eeb3e2796ee29b3764968a6d46",
+        "6c4cd509236066cfcbae146a7a317cf3b6afd55e0068dcb1be6e46169012b910"
+      ],
+      "cache.py": [
+        "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+        "a6f00062314de398509cb5deb93ad07c1b0eb9b44ac0fea776b185fa204dc4f4"
+      ],
+      "cli.py": [
+        "69e2156000c29c912ce6e78aaacbd0659013b3b35841cbd38d723d86e27a3d06",
+        "ad6e1b487bfb22aa36b79f7417c4eadc6644b64dbb28bf8a3c55e4461f671f9a"
+      ],
+      "config.py": [
+        "7713598fb06c5464b259cf10d243d5622e4027102943b775ec675d0d8f0184a7",
+        "d3c64c9cf7e51587f662e00608aa85108406ae36d25d01ad3f89281560b5e930"
+      ],
+      "control.py": [
+        "71a831cb92e99cfcd6688e89d55b959192522d6895e5cc9f5fe762bd949ab8d6",
+        "b1d157793e87206cae5af8a1ecffcb4c22a27ea24d7545542da3c656648092ac"
+      ],
+      "data.py": [
+        "b97fae88a98a6a4ef663891057044c86aa4536272a214343d477d46cb2ae2a6a",
+        "d672240cb00a4de1e9af88a399536958c5bcf314eb7a137a463b91cf505bcb96"
+      ],
+      "diagnosis_contrastive.py": [
+        "26dbf369f7dd0dd11162a40c2893c175f0c8e7449d93496b63c1d01f97b2becd",
+        "e4a97a50b49c55781d61d2025dfc50025440000c3bc44f25c84ca00774b5ca94"
+      ],
+      "diagnosis_noise.py": [
+        "a3b9a5667ad17a0e9bffa6e07cfc444f74829688cc3ad08f156189836e7585d7",
+        "bc4933c06c87d58229c97c5ebe4dbf5c1eaf2f7a370ae0b047914b936097a7ef"
+      ],
+      "discrete.py": [
+        "0a69beeb55a3a016f8f16b380793bf1507b5eb876d1b33002d2cb31d99700cd4",
+        "bb3a854a53cf63731c3b1f4cb2fcff29939f23002ee589305fbf0e1d616615a4"
+      ],
+      "distributed.py": [
+        "06087cea21e31368fbd24df7b1b6ec7ad0c6c2bc6a662bec77bd28225c6d2108",
+        "8d45ef007fbc03e9d55085b33f8f4e2ba776b07fda399fc6403c9fb20e7531c1"
+      ],
+      "evaluation.py": [
+        "78e2522d749207717ec09ad820140f5a49d6bd2dccb93de90b3d050e676e0699",
+        "d3d6b8957c161c415bf9be614a9216250fa4e01091f2e002db7a1d87f93c59ca"
+      ],
+      "evaluation_resume.py": [
+        "06a3baf7d8c651d8011970c2b82eab883e40528420d8deb54f1852f28bee6d8b",
+        "121125414e416e5687dcc7907ff4830ebddb4099e44d92b49206a81844b1619d"
+      ],
+      "io.py": [
+        "240bd15b17b9849e706baaa6ff163a37342944f4470bbf75b36d05117b6f8fc7",
+        "c323835e1128699774143889fa9f4773480275e702f72829c213cb26ed9b6e46"
+      ],
+      "launch.py": [
+        "11a8d6f484e2348f4ba4741a2b7d0b6f6e14436c6b10fb5de4853dae4e0692e6",
+        "87701890982ae553c6dff31d1dc9cb297f999e6919950e09cf86335b642405f0"
+      ],
+      "name_policy.py": [
+        "b9762af1474d2e0cc66670d12507392a82dd16360c288ce54e408b65947e4241",
+        "f40ca4abee45cd5919455106bcfe4d8aa3e3b93902f96a7dda0eeb379b427e6a"
+      ],
+      "negative_resources.py": [
+        "76cf8b084a29c93de55d761dd0df926a6a223d01e52422b76cfa959a3f274e5a",
+        "b4f96d61058299a78f262a6ede108c42a53af857ca3cf55f75808cd6ac4a973d"
+      ],
+      "plotting.py": [
+        "0a0e3ecac7749e985454454c717e0e1ffe3b60630b339ca770d4c42500846276",
+        "c4f2200cbaf2ad1dfb92995c1117ca57c5f6c2bcbc11473eacf061d469764ce2"
+      ],
+      "resume.py": [
+        "56a060514f12f72e433f11950b11e9ff9e6d5064480d340d228f414c6f7ec786",
+        "ec044868ae0d6ce851bbc428f8b5a8356a72862d85e584d2738f3b02ee48ca33"
+      ],
+      "tasks.py": [
+        "5c17d49afca35b4e3145a789653270f4933c76aa3a206be184dbadc521167d14",
+        "6c4189f2c24d527a0659403b8d51022a4702afade3bcab722ee89a029f21e2bf"
+      ],
+      "training.py": [
+        "67c693710da6cd09849c0d9ee19f181e89e090f74188d2a275eee86632e8c4d0",
+        "88f59951407b89fe25cbd55c8606377c4a16991c817e7ab72aad3ac4acf0ad42"
+      ]
+    }
+  ]
+}

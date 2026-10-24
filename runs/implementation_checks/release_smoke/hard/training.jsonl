@@ -1,0 +1,1 @@
+{"step": 1, "gradient_loss": 11.956406593322754, "candidate_loss_before": 11.94997787475586, "candidate_loss_after": 11.949563980102539, "accepted_replacement": true, "evaluated_candidates": 3, "gradient_candidate_patient_overlap": 0, "elapsed_seconds": 0.2423569000002317, "cuda_peak_allocated_bytes": 0}

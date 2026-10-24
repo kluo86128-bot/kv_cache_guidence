@@ -1,0 +1,70 @@
+{
+  "dataset": {
+    "dataset_id": "multiscene_privacy_v1",
+    "manifest_sha256": "63273fa02825f27fe2ce9ba618142635d329d3d80817b5586cabafdb04cece76",
+    "split_sha256": {
+      "train": "eb86319ef031a19c0c0b5acd9b37f1b38c91a888beeb3bec2ddb98a35d3f64c0",
+      "validation": "f311f5f4b5a5567481bcd4b7d2be3cd9d22194bdd55dd78427805f0c98049664",
+      "test": "9a6a2a8901b8584aa6f042b375092bd9973141dc920a7cdf0b8d2a91398425c9"
+    },
+    "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "schema": "multiscene_privacy_v1",
+    "selection": {
+      "scene": null,
+      "record_form": null
+    },
+    "manual_review_complete": false
+  },
+  "splits": {
+    "train": 9565,
+    "validation": 1913,
+    "test": 9565
+  },
+  "public_tokens": 56,
+  "manual_prompt_tokens": 32,
+  "question_fields": [
+    "account_balance",
+    "sender_account",
+    "recipient_account",
+    "amount_paid",
+    "amount_received",
+    "timestamp",
+    "payment_format",
+    "name_first",
+    "name_middle",
+    "name_last",
+    "identity_number",
+    "phone",
+    "address"
+  ],
+  "birth_date_mode": "parts",
+  "epochs": 100,
+  "early_stopping": false,
+  "name_mode": "parts",
+  "question_protocol": "multiscene_privacy_v1",
+  "question_batch_size": 4,
+  "evaluation_question_fields": [
+    "account_balance",
+    "sender_account",
+    "recipient_account",
+    "amount_paid",
+    "amount_received",
+    "timestamp",
+    "payment_format",
+    "name_first",
+    "name_middle",
+    "name_last",
+    "identity_number",
+    "phone",
+    "address",
+    "name_full_direct"
+  ],
+  "development_source": "training records only",
+  "comparison_epochs": 20,
+  "name_format": "natural_no_numeric_suffix_v1",
+  "diagnosis_contrastive": {
+    "enabled": false
+  },
+  "model_weights_loaded": false,
+  "configured_model": "/home/kevin/models/Qwen3-4B"
+}

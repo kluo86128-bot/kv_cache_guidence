@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "pytest": {
+    "passed": 72,
+    "deselected_discrete_search": 3
+  },
+  "unchanged_other_three_negative_pools": true,
+  "dataset_identity": {
+    "dataset_id": "synthea_medical_privacy_natural_names_v1",
+    "manifest_sha256": "6233ef37c89f830d3363ae6172517ae5e9ab4d438c756e84883fd2b6ddaff102",
+    "split_sha256": {
+      "dev": "2416bd829160b5899d6f915a5e6eba340ec59c60c85cf4ceaf5832d6793fec58",
+      "train": "19ed4edcc99f5ded311b502593cce35eb09367838a3d5de25632932c81d31a79",
+      "validation": "14aa21e15f21fcb47b636db20a78006e44307fa9f52ec38a4045710d95a4064b",
+      "test": "c78829832affb00d9893012b8de09ffc4916c41aa2dbf07e9ead78ba225e47ff"
+    },
+    "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "schema": "source_preserving_v3"
+  },
+  "negative_pairs_per_epoch": 2300,
+  "coverage": {
+    "detail_omission": 700,
+    "detail_substitution": 200,
+    "label_confusion": 400,
+    "spelling_error": 1000
+  },
+  "shared_pool": {
+    "directory": "data/negative_pools/four_kind_v2_same_initial",
+    "file": "80297265e184f74d20d61afbcaae9d8325cd66a21b61034677723a586ac3abe7.json",
+    "fingerprint": "0d37fe4632bf7a52ce90dfa2a35a136457418f46811fde773dde8044864bf3e2"
+  },
+  "formal_training_started": false,
+  "real_4b_cuda_nccl_tested": false
+}

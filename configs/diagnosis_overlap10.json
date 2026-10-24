@@ -1,0 +1,11 @@
+{
+  "base_dataset_directory": "data/dataset_v1",
+  "output_directory": "data/dataset_diagnosis_overlap10",
+  "source_csv_directory": "data/source/candidates_5000/csv",
+  "reference_experiment_config": "configs/experiment_v2_birth_parts.json",
+  "evaluation_config": "configs/evaluation_diagnosis_overlap10.json",
+  "test_seen_diagnosis_percent": 10,
+  "seed": 2026101701,
+  "selection": "Keep unavoidable seen diagnoses, then seeded patient-ID hash order to exactly 10 percent; for other patients choose their latest eligible unseen disorder encounter, with deterministic ties.",
+  "reference": "Full diagnosis DESCRIPTION and SYSTEM+CODE values in the unchanged training split; no predictions or model scores are read."
+}

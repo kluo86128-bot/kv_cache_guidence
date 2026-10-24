@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "date": "2026-10-18",
+  "pytest": {
+    "transformers_4_57_6": {
+      "passed": 71,
+      "deselected_discrete_search": 3
+    },
+    "transformers_4_57_1": {
+      "passed": 71,
+      "deselected_discrete_search": 3
+    }
+  },
+  "cpu_tiny_training": {
+    "epochs": 2,
+    "steps": 2,
+    "status": "complete",
+    "path": "runs\\implementation_checks\\diagnosis_four_kind_v1_smoke"
+  },
+  "formal_training_started": false,
+  "real_4b_cuda_nccl_tested": false,
+  "dataset_identity": {
+    "dataset_id": "synthea_medical_privacy_natural_names_v1",
+    "manifest_sha256": "6233ef37c89f830d3363ae6172517ae5e9ab4d438c756e84883fd2b6ddaff102",
+    "split_sha256": {
+      "dev": "2416bd829160b5899d6f915a5e6eba340ec59c60c85cf4ceaf5832d6793fec58",
+      "train": "19ed4edcc99f5ded311b502593cce35eb09367838a3d5de25632932c81d31a79",
+      "validation": "14aa21e15f21fcb47b636db20a78006e44307fa9f52ec38a4045710d95a4064b",
+      "test": "c78829832affb00d9893012b8de09ffc4916c41aa2dbf07e9ead78ba225e47ff"
+    },
+    "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "schema": "source_preserving_v3"
+  },
+  "shared_pool": {
+    "directory": "data/negative_pools/four_kind_v1",
+    "file": "377f033c9f78bccb2b0c7281dc6d299b19a3dce9b781303987024cefab405420.json",
+    "fingerprint": "0019c4d3a84037ed87761279c6aa5050727d76b31c742ec6321f0fae98f00220"
+  },
+  "coverage": {
+    "detail_omission": 700,
+    "detail_substitution": 200,
+    "label_confusion": 1000,
+    "spelling_error": 1000
+  },
+  "negative_pairs_per_epoch": 2900
+}

@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "implementation_only": true,
+  "model": "random tiny Qwen3; CPU",
+  "source_records": "dev only; training subset dev[:2], selection dev[64:65], eval dev[:2]",
+  "soft_training": "PASS",
+  "hard_training": "PASS",
+  "preflight": "PASS",
+  "local_AutoModel_AutoTokenizer_loading": "PASS",
+  "paired_comparison": "PASS",
+  "conditions": {
+    "soft": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "random": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "blocked": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "full": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "manual": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "none": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    },
+    "hard": {
+      "status": "PASS",
+      "records": 2,
+      "answers": 8
+    }
+  },
+  "code_sha256": {
+    "__init__.py": "f32101377701aecb2dba571edb4df2cec990698d2cb7985c20a93cad1bac67be",
+    "__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "backend.py": "47e0a98b7ca66af789636a7cc7ba215f0811f148cb7097fa95e38c4cd60c40ea",
+    "cache.py": "2ed66618cf9b8a0248cf6f0726bdfcff05c8bad353253dac7e258ef150459452",
+    "cli.py": "45de537d5184228f2a8d2bb6c6048f6a86d637b971f0014bea38dbc0ac14b1d9",
+    "config.py": "6a96f21ad722e815d11b6b5e7c8797782379308fe10d57f43a4e02f704ca51dd",
+    "data.py": "c4c3a4046ad6d46548d88b740d79a6379e52f5e5d7950a787f2fdf781d997a49",
+    "discrete.py": "39e9973da77a1dc4877d6bc25ffd24b9a8fc367e9c5f9daac2436911685a555b",
+    "evaluation.py": "2b071900be7dfd7b932cab59f79f9bc7ac009484bbd641d25f869dfa0345f79c",
+    "io.py": "84b2871925b2a89b1db3578e8090b0b9cea127a556f000c4985e7912fb9ad125",
+    "training.py": "2c4251d525f2cc1665adbff243ae2714a2ae96f3a20e7d0ecd9f419c1db2e0f4"
+  },
+  "formal_4b_run": false
+}

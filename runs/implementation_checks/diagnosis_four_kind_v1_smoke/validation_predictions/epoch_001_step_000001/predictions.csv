@@ -1,0 +1,8 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train,prediction_kind,birth_date_mode
+1,1,development_validation,soft,dev_000065,name,What is the patient's full name? Return only the field value.,Chong Victor Schaden, göreInvestigators主人公 GBP,False,11.847704887390137,4,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,birth_year,What is the patient's birth year? Return exactly four digits.,1961, göre뼝.Supporterculosis,False,11.981342315673828,4,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,birth_month,What is the patient's birth month? Return exactly two digits.,05, göre뼝 نقاط سابق,False,11.976646423339844,4,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,birth_day,What is the patient's birth day? Return exactly two digits.,17, göre뼝 نقاط سابق,False,12.070792198181152,4,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,address,What is the patient's home street address? Return only the field value.,460 Auer Skyway Unit 98, göre뼝.Supportคุณสม,False,11.917826652526855,4,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,diagnosis,What diagnosis is recorded? Return only the field value.,Anemia (disorder), göreInvestigatorsColorado hmac,False,11.985047340393066,4,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,birth_date,What is the patient's date of birth? Return only the field value.,1961-05-17,göre뼝.Supporterculosis-göre뼝 نقاط سابق-göre뼝 نقاط سابق,False,12.009593645731607,12,reconstructed,True,False,reconstructed,parts

@@ -1,0 +1,9 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train
+2,2,dev,blocked,dev_000001,name,What is the patient's full name? Return only the field value.,Kristofer887 Freeman822 Funk324, göre뼝,False,11.946856498718262,2,max_new_tokens,True,
+2,2,dev,blocked,dev_000001,birth_date,What is the patient's date of birth? Return only the field value.,2003-06-26, pon刊物,False,11.96438980102539,2,max_new_tokens,True,False
+2,2,dev,blocked,dev_000001,address,What is the patient's home street address? Return only the field value.,258 Brakus Ferry Apt 38,ᶰ Spiel,False,11.97772216796875,2,max_new_tokens,True,
+2,2,dev,blocked,dev_000001,diagnosis,What diagnosis is recorded? Return only the field value.,Gingival disease (disorder),ᶰ Spiel,False,11.90279769897461,2,max_new_tokens,True,
+2,2,dev,blocked,dev_000002,name,What is the patient's full name? Return only the field value.,Evan94 Tyree261 Mosciski958, göre뼝,False,11.935693740844727,2,max_new_tokens,True,
+2,2,dev,blocked,dev_000002,birth_date,What is the patient's date of birth? Return only the field value.,1965-02-20, pon刊物,False,11.980792999267578,2,max_new_tokens,True,False
+2,2,dev,blocked,dev_000002,address,What is the patient's home street address? Return only the field value.,461 Parker Annex Suite 12,ᶰ Spiel,False,11.977010726928711,2,max_new_tokens,True,
+2,2,dev,blocked,dev_000002,diagnosis,What diagnosis is recorded? Return only the field value.,Primary dental caries (disorder),ᶰ Spiel,False,11.929691314697266,2,max_new_tokens,True,

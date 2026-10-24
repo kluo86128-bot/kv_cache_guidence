@@ -1,0 +1,1004 @@
+
+=== PAGE 1 ===
+ETHICIST: Targeted Training Data Extraction Through Loss Smoothed
+Soft Prompting and Calibrated Confidence Estimation
+ZhexinZhang,JiaxinWen,MinlieHuang
+∗
+TheCoAIgroup,DCST;InstituteforArtificialIntelligence;StateKeyLabofIntelligentTechnologyandSystems;
+BeijingNationalResearchCenterforInformationScienceandTechnology;TsinghuaUniversity,Beijing100084,China.
+zx-zhang22@mails.tsinghua.edu.cn,aihuang@tsinghua.edu.cn
+Abstract
+Prefix
+Largepre-trainedlanguagemodelsachieveim-
+-----Original Message-----
+pressiveresults acrossmanytasks. However,
+From: Heard, Marie…
+recent works point out that pre-trained lan-
+guage models may memorize a considerable Extracted Suffix
+fraction of their training data, leading to the …
+Carol
+privacyriskofinformationleakage. Inthispa-
+EB 45
+per, we propose a method named ETHICIST
+-3989 (phone)
+fortargetedtrainingdataExtractionTHrough
+-8537 (fax)
+losssmoothedsoftpromptingandcalIbrated -1943 (cell-phone)
+ConfIdenceeSTimation,investigatinghowto 506 (pager)
+recover the suffix in the training data when -8862 (home fax)
+given a prefix. To elicit memorization in the carol. . @ .com
+attacked model, we tune soft prompt embed-
+dingswhilekeepingthemodelfixed. Wefur-
+therproposeasmoothinglossthatsmoothsthe
+loss distribution of the suffix tokens to make
+it easier to sample the correct suffix. In or-
+der to select the most probable suffix from Figure1: Givenaprefix,ETHICISTextractstheverba-
+acollectionofsampledsuffixesandestimate timsuffixinthetrainingdatafromtheGPT-Neo1.3B
+the prediction confidence, we propose a cali- model. Theextractedsuffixinthisexampleleakspri-
+brated confidence estimation method, which vateinformationaboutindividuals(whichismaskedfor
+normalizes the confidence of the generated privacyconcerns),includingname,phonenumber,fax,
+suffixes with a local estimation. We show pager,homefax,andemail.
+that ETHICIST significantly improves the ex-
+traction performance on a recently proposed
+public benchmark. We also investigate sev-
+successoflarge-scalepre-trainedlanguagemodels,
+eralfactorsinfluencingthedataextractionper-
+recent works point out that they may memorize
+formance,includingdecodingstrategy,model
+scale, prefix length, and suffix length. Our a considerable fraction of training data, leading
+code is available at https://github.com/ totheprivacyriskofinformationleakage(Carlini
+thu-coai/Targeted-Data-Extraction. etal.,2022a;Tirumalaetal.,2022a;Mireshghallah
+etal.,2022;Carlinietal.,2021). Furthermore,re-
+1 Introduction
+searchersfindthatmemorizationscaleswithmodel
+Largepre-trainedlanguagemodelshaveachieved sizes (Carlini et al., 2022a). Therefore, this pri-
+impressiveresultsonvariousnaturallanguagepro- vacy risk becomes more and more critical in the
+cessing tasks (Devlin et al., 2019; Radford et al., eraoflarge-scalepre-training. Andattackinglan-
+2019a;Raffeletal.,2020). Modelsizesrapidlyin- guagemodelstoextracttheirtrainingdataattracts
+creasefrommillionstotrillionsofparametersand increasingattention.
+keep growing to achieve better performance and
+Therearecurrentlytwomainsettingstoextract
+evenobtainsomeemergentabilities(Brownetal.,
+trainingdata. Oneismembershipinferenceattack,
+2020; Chowdhery et al., 2022; Wei et al., 2022;
+whichinferswhetheragivenexampleiscontained
+Fedusetal.,2022;Zhangetal.,2022). Despitethe
+inthemodel’strainingdata(Hisamotoetal.,2020;
+∗Correspondingauthor. Shokrietal.,2017). Theotherisuntargetedtrain-
+12674
+Proceedingsofthe61stAnnualMeetingoftheAssociationforComputationalLinguistics
+Volume1:LongPapers,pages12674–12687
+July9-14,2023©2023AssociationforComputationalLinguistics
+
+=== PAGE 2 ===
+ing data extraction (Carlini et al., 2021), which prompttokensonanextractedtrainingsetwhich
+aimstoextracttrainingdatafromscratch(i.e.,with- containspairsofprefixesandgroundtruthsuffixes.
+out the given prefix). However, both settings are The existence of a training set is reasonable be-
+not suitable for extracting targeted training data. cause large-scale pre-trained data generally con-
+Forexample,attackersmayfeedthemodelwitha tainpublicdata(e.g.,CommonCrawl)1. Forthe
+prefixindicatingthebeginningofanemailandtry second challenge, we propose a calibrated confi-
+toextractthefollowingprivateemailcontentinthe denceestimationmethod. Wefindthatthemodel’s
+trainingdatasetasshowninFigure1. Insuchcases, perplexity cannot accurately represent the proba-
+wedonothavecompleteexamplestodomember- bility that the generated suffix is correct because
+shipinference,andwehavespecificgoalsinstead thepredictionprobabilitiesfordiversifiedprefixes
+ofperforminguntargetedextraction. Therefore,we areinherentlydifferentandincomparable. Wethus
+focusontargetedtrainingdataextractioninthis normalizetheconfidenceofthegeneratedsuffixes
+paper, which requires recovering the suffix when with a local estimation, which can mitigate the
+givenaprefixaccordingtothetrainingdata. Com- problemscausedbyintrinsicdifferencesinthediffi-
+paredwithuntargetedtrainingdataextraction,the cultiesofdistinctsamples. WeverifyETHICISTon
+task matters more because attackers can recover arecentlyproposedpublicbenchmarkcontaining
+specific types of training data instead of any pos- 15,000pairsofprefixesandsuffixesderivedfrom
+sibletrainingdatathatmightbeharmless. What’s The Pile dataset (Gao et al., 2020). Experiments
+more,itiseasiertoevaluatetargetedtrainingdata showthatETHICISTcansignificantlyimprovethe
+extraction because we just need to compare the extractionperformance,whichsuggeststhatexist-
+predictionwiththegroundtruthsuffix. However, ing large language models are at significant risk
+foruntargetedtrainingdataextraction,weneedto ofleakingtrainingdata. Wealsodiscussandana-
+searchoverthewholemassivepre-trainingdataset lyzeseveralfactorsinfluencingthedataextraction
+(e.g.,ThePiledataset(Gaoetal.,2020),whichhas performance,includingdecodingstrategy,model
+800GBtextdata)tocheckwhetheritcontainsthe scale,prefixlength,andsuffixlength.
+generatedsample,whichisveryslowandcostly. Ourcontributionscanbesummarizedasfollows:
+• Weproposelosssmoothedsoftpromptingto
+The general process for targeted training data
+reducethedifficultiesofsamplingtheground
+extractioncanbedividedintotwosteps: (1)gen-
+truthsuffixes.
+erating one or more possible suffixes based on
+the given prefix, and (2) choosing a most likely
+• Weproposeacalibratedconfidenceestimation
+suffix as the prediction result based on a confi-
+method that enables the confidence score to
+denceestimationmethod. Wesummarizetwochal-
+bemeaningfullyinterpretedastheprobability
+lenges of this task: (1) how to increase the gen-
+thattheoutputsuffixiscorrect.
+eration likelihood of the ground truth suffix, and
+(2) how to estimate the confidence accurately so • Experiments on a recently proposed bench-
+thattheconfidencescorecanbemeaningfullyin- mark demonstrate that ETHICIST can con-
+terpretedastheprobabilitythattheoutputsuffixis sistently and significantly improve the data
+correct. Totacklethesechallenges,weproposea extractionperformanceacrossvariousmodel
+methodnamedETHICISTfortargetedtrainingdata sizes. We further investigate several factors
+Extraction THrough loss smoothed soft prompt- influencingthedataextractionperformance.
+ing and calIbrated ConfIdence eSTimation. For
+2 RelatedWork
+thefirstchallenge,weproposelosssmoothedsoft
+prompting. Itusessoftprompttoelicitmemoriza-
+2.1 TrainingDataExtraction
+tionintheattackedmodel,andaddsanadditional
+Existingworksontrainingdataextractionmainly
+loss besides the maximum likelihood estimation
+focus on membership inference attack or untar-
+(MLE) loss to smooth the loss distribution of the
+geted training data extraction. For membership
+suffixtokens. Throughthelosssmoothing,wehope
+inferenceattack,adversariesneedtojudgewhether
+to ensure that the probability of the ground truth
+a given example is contained in the training data
+tokenateachtimestepisnotlow,whichmakesit
+oftheattackedmodel. Shokrietal.(2017);Song
+morelikelytosamplethegroundtruthsuffix. With
+thetwolossfunctions,wetunetheprependedsoft 1SimilarsettingisadoptedinHisamotoetal.(2020).
+12675
+
+=== PAGE 3 ===
+andShmatikov(2019)trainseveralshadowmodels memorizeatleast40%ofthedatathatappearonly
+thatmimictheattackedmodels’behaviorstohelp once, even being trained on other data for many
+train an auditing model that can predict whether epochsafterward). Thesefindingsfurtherempha-
+an example is contained in the training dataset. sizesthedifficultiesofavoidingmemorizationand
+Hisamotoetal.(2020)performmembershipinfer- thepotentialthreatsofunintendedmemorizationin
+enceattacksonmachinetranslationsystems. They large-scalepre-trainedlanguagemodels. Another
+finditishardertoattacksequencegenerationmod- lineofworkusesdifferentialprivacytoavoidthe
+els than classification models. Song and Raghu- memorizationproblem(Abadietal.,2016;McMa-
+nathan(2020)showthattheencodeddenserepre- hanetal.,2018;ShokriandShmatikov,2015),but
+sentationscanleakinformationundermembership themechanismcouldreducetheaccuracy(Jayara-
+inference attack. Mireshghallah et al. (2022) fo- manandEvans,2019;FeldmanandZhang,2020;
+cuses on attacking masked language models that Feldman,2020;SongandShmatikov,2019). Dif-
+arepre-trainedonpossiblysensitivedata(e.g.,clin- ferential privacy also increases the training time,
+ical notes). They introduce an additional refer- whichcanfurtherinfluencetheaccuracywithinthe
+encemaskedlanguagemodelbesidestheoriginal same budget. Therefore there is still no effective
+attackedmodelandcomputetheratioofthelike- andpracticalwaytoavoidunintendedmemoriza-
+lihood measured by the attacked model and the tion. Our work further verifies the existence of
+referencemodel,whichisbetterthansolelyrelying unintendedmemorizationandmakesitmorenec-
+ontheattackedmodel. essarytodeveloppracticaldefensemethods.
+For untargeted training data extraction, adver-
+saries first generate various samples using the at- 3 Methodology
+tackedmodelandthenpredictwhethertheyarecon-
+We formulate the targeted training data extrac-
+tainedinitstrainingset. Carlinietal.(2021)extract
+tion task as follows: given a source prefix
+hundredsofverbatimsequencesfromthepopular
+S = (s ,s , ,s ) with S tokens, the at-
+pre-trainedlanguagemodelGPT-2(Radfordetal., 1 2 ··· | S | | |
+tacker should predict the target suffix T =
+2019b). Andthereisprivacyinformationsuchas
+(t ,t , ,t )with T tokensanditsconfidence.
+names,phonenumbers,andemailaddressesinthe 1 2 ··· | T | | |
+Thepairofthegivenprefixandthepredictedsuf-
+extracted sequences. Lehman et al. (2021) try to
+fix(S,T)shouldbecontainedinthepre-training
+extractsensitiveinformationfromBERT(Devlin
+dataset D = (S ,T ) , which the attacked
+pretrain i i
+et al., 2019) pre-trained on clinical notes. How- { }
+modelM istrainedon. Thepredictionoftheconfi-
+ever, they are mostly unable to meaningfully ex-
+dencescoreisnecessaryforpickingoutthemost
+posePersonalHealthInformationbysimplyusing
+probable suffix when we don’t know the ground
+templates. Differentfromtheexistingworks, we
+truth suffix in realistic attack scenarios (i.e., we
+focusontargetedtrainingdataextractionthataims
+needtopickoutmostprobablepairsofprefixesand
+torecoverthesuffixwhengivenaprefix,whichis
+extractedsuffixesbasedontheirconfidencescores
+moresecurity-criticalandeasiertoevaluate.
+among all predictions). We assume the attacker
+canobtainsomepairsofgroundtruthprefixesand
+2.2 Memorization
+suffixesD = (S ,T ) (S ,T ) D ,1
+train i i i i pretrain
+{ | ∈ ≤
+i D beforeattacking,whichisreasonable
+Wegenerallyexpectmodelscangainthegeneral- train
+≤ | |}
+becauselarge-scalepre-traineddatagenerallycon-
+izationabilityfromthetrainingprocess. However,
+tainpublicdata(e.g.,CommonCrawl). Theattack-
+recentworkspointoutthatmodelsmayunintention-
+erscanutilizeD totraintheirattackingmodels
+allymemorizethetrainingdataevenwithoutover- train
+andtheirgoalistopredictsuffixesfortheprefixes
+fitting(Tirumalaetal.,2022a;Carlinietal.,2022a,
+in the test set D = S 1 i D . Note
+2019;Béguelinetal.,2020). Onepossiblemethod test i test
+{ | ≤ ≤ | |}
+thattheprefixS inD isincludedinD but
+tomitigatethisproblemistodeduplicatetraining i test pretrain
+isnotapartofD .
+data(Kandpaletal.,2022). However,Carlinietal. train
+(2019)alsoshowthatitispossibletorecoversam-
+3.1 MethodOverview
+ples appearing only once in the training dataset.
+Surprisingly,Tirumalaetal.(2022a)findthatthere AnoverviewofETHICISTisshowninFigure2. We
+is a forgetting baseline during the pre-training of firsttunethesoftpromptembeddingsduringtrain-
+the casual language model (e.g., the model can ingtoelicitmemorizationintheattackedmodelM
+12676
+
+=== PAGE 4 ===
+Training Extraction
+Suffix Count Loss
+𝐿 = 𝐿 + 𝛼𝐿
+!"#$% &’( )*""#+ 𝑡 ! ,…,𝑡 |&| Repeat 𝑇 1 𝑟 1 𝐿1 MLE
+Sampled Suffix 𝑇 𝑇 2 𝑟 2 𝐿2 MLE
+𝐾times
+𝑡 ! ... 𝑡 ’(!) ... 𝑡 ’(3) ... 𝑡 |&| ... ... ...
+𝑇
+𝑀
+𝑟
+𝑀
+𝐿𝑀
+MLE
+Attacked Model 𝑀(Fixed) Attacked Model 𝑀 Calibrated Confidence
+Estimation
+𝑥 ! ,…,𝑥 |$| 𝑠 ! ,…,𝑠 |%| 𝑡 ! ,𝑡 " ,…,𝑡 |&| 𝑥 ! ,…,𝑥 |$| 𝑠 ! ,…,𝑠 |%| ( 𝑡 ! ,𝑡 " …,𝑡 |&%&’(| , C(𝑇 ?@AB) )
+Soft Prompt 𝑋 Prefix 𝑆 Suffix 𝑇 Soft Prompt 𝑋 Prefix 𝑆 Predicted Suffix 𝑇 ?@AB Confidence
+Figure2: Methodoverview. Duringtraining,wefixtheparametersoftheattackedmodelM andonlytunethe
+parametersofthesoftpromptembeddings. BesidestheMLEloss,weadditionallydesignasmoothinglosstomake
+thelossdistributionofthesuffix 𝑡 ’( s ") equenc 𝑡 ’e(!)moresmooth. Aftertuningthesoftpromptembeddings, weextract
+trainingdatabyrepeatedlysamplingKsuffixesconditionedononegivenprefixandusingcalibratedconfidence
+estimationtoselectthefinalpredictedsuffixT andprovideitsconfidenceC(T ).
+best best
+with the MLE loss and the additional smoothing whenusingpopularsamplingmethodssuchastop-
+loss. Thesmoothinglossaimstoincreasetheprob- ksampling(Fanetal.,2018)andtop-p(nucleus)
+ability of sampling the ground truth suffix. After sampling(Holtzmanetal.,2020)togeneratemulti-
+prompt tuning, we repeatedly sample K suffixes plecandidatesuffixes,wewanttoensuretheproba-
+using the attacked model M conditioned on one bilityofthegroundtruthsuffixtokenateachtime
+givenprefixandreorderthemwithourcalibrated step is not low. Suppose the total probability of
+confidenceestimation. Ourcalibratedconfidence the ground truth suffix is high while there is one
+estimation can not only select the most possible tokeninthesequencewithalowgenerationprob-
+suffix,butalsoprovideamoreaccurateconfidence ability. Inthiscase,itisstillhardtogeneratethe
+scorethatrepresentshowlikelythepredictedsuf- correctsuffixusingauto-regressivesamplingmeth-
+fix is correct. Finally, the suffix with the highest ods. Therefore, we propose a smoothing loss to
+confidenceisselectedasthefinalprediction. make the loss distribution of the suffix sequence
+more smooth. More specifically, we pick out the
+3.2 PromptTuningwithSmoothingLoss top-N tokens with the highest loss values in the
+We adopt prompt tuning to train the soft prompt wholesequenceT. Thenweadditionallyoptimize
+tokens on D, which prepends X soft tokens thegenerationprobabilitiesfortheseN tokensas
+| |
+X = (x ,x , ,x ) before the original input follows:
+1 2 X
+··· | |
+sequence. Thenwefeedtheinputtotheattacked N
+1
+modelM tocomputetheMLEloss: = logP (t X,S,t ),
+Smooth M σ(i) <σ(i)
+L −N |
+i=1
+X
+T (2)
+| | 1
+= logP (t X,S,t ). (1)
+MLE M i <i
+L − T | wheret representsthetokenwiththei-thhigh-
+i=1 | | σ(i)
+X est loss in T. Note that t is dynamically com-
+σ(i)
+Notethatweonlytunetheparametersofthesoft putedduringtraining. Thesmoothinglosscanalso
+prompttokensandtheparametersoftheattacked beseenasassigninghigherweightstothetokens
+modelM arefixed. Weuseprompttuningfortwo withhigherlossvalues. Finally,wederivetheover-
+reasons: (1)wedonotwanttochangetheoriginal alllossfunctionasfollows:
+parameters of the attacked model M because the
+= +α , (3)
+maingoalistoelicitmemorizationinM,and(2) L Total L MLE L Smooth
+prompt tuning is helpful to improve the training wherethecoefficientαisahyperparametertocon-
+efficiencywhenM isverylarge,makingETHICIST trolthestrengthofthesmoothingloss.
+abletoefficientlyadapttolargerlanguagemodels
+3.3 CalibratedConfidenceEstimation
+thatgenerallymemorizemoretrainingdata.
+TheMLElossaimstoincreasethetotalgener- Afterpredictingthesuffix,wealsoneedtogivea
+ation probability of the target suffix T. However, confidencescorefortheprediction,whichcanbe
+12677
+
+=== PAGE 5 ===
+meaningfullyinterpretedastheprobabilitythatthe C(T ) among C(T ),C(T ), ,C(T ) as
+best 1 2 M
+{ ··· }
+outputsuffixiscorrect. Anaivemethodistousethe thepredictedsuffixandC(T )asitsconfidence
+best
+generationlikelihoodP = exp( T )asthe estimation.
+T MLE
+−| |L
+confidencescore. Thisnaivemethodisreasonable
+for picking out the most probable suffix T from 4 Experiments
+i
+acollectionofsampledsuffixes T ,T , ,T
+1 2 M
+{ ··· } 4.1 Benchmark
+foronegivenprefix. However,itisunsuitablefor
+comparing the confidence of different predicted We evaluate ETHICIST on the LM-Extraction
+suffixescorrespondingtodifferentprefixes. Asthe
+benchmark2,whichisdesignedforbenchmarking
+language model is essentially a statistical model, targetedtrainingdataextractionattacks. Itconsists
+frequenciesoftokensandn-gramsintheprefixes ofasubsetcontainedinThePiledataset(Gaoetal.,
+cangreatlyinfluencetheabsolutegenerationlike- 2020). Boththeprefixandthesuffixare50tokens
+lihoodofthesuffixes. Forexample,considertwo long. All examples are well-specified, meaning
+predictedsuffixesT andT conditionedontwo that there is only one 50-token suffix in The Pile
+A B
+different prefixes S and S , where S and T dataset given the 50-token prefix. What’s more,
+A B A A
+containtokensandn-gramswithmuchhigherfre- these examples are all chosen to meet the prop-
+quencies. TheabsolutegenerationlikelihoodofT ertythatthereexistsaprefixlength(maybelonger
+A
+maybesignificantlyhigherthanT ,evenifthey than50)thatcausesthemodeltogeneratethesuffix
+B
+arebothgroundtruthsuffixes. Therefore,toelimi- stringexactly,whichimpliesthattheextractionper-
+natetheintrinsicdifferencesinscalesofgeneration formanceonthisbenchmarkmaybehigherthan
+likelihoodacrossdifferentsuffixes,weproposea thatonrandomlyselectedprefixes. Werandomly
+novelcalibratedconfidenceestimationmethod. To split the dataset into training, validation and test
+calibrate the confidence estimation, we have two sets. ThedetailedstatisticsoftheLM-Extraction
+considerations: (1)differentgeneratedsuffixescon- benchmarkareshowninTable1.
+ditioned on one given prefix should have compa-
+rable scales of generation likelihood, and (2) the Split #Examples #PrefixLen #SuffixLen
+memorized ground truth suffix is expected to be Train 12,600 50 50
+Validation 1,400 50 50
+generatedmorefrequentlyduringmultiplegenera-
+Test 1,000 50 50
+tions,whichisalsovalidatedinSection5.
+Suppose the sampled distinct suffixes are Table1: StatisticsoftheLM-Extractionbenchmark.
+T ,T , ,T for one given prefix, the re-
+1 2 M
+{ ··· }
+peated generation times for these suffixes are
+r 1 ,r 2 , ,r M (i.e.,r i denoteshowmanytimes 4.2 Baselines
+{ ··· }
+T is generated among K repeated sampling out-
+i We compare ETHICIST with the following base-
+puts), and the MLE loss values for these suffixes
+lines. AllthecomparedbaselinesfirstsampleKsuf-
+are 1 , 2 , , M . Thenweassignthe
+{LMLE LMLE ··· LMLE} fixes T 1 ,T 2 , ,T K conditionedononegiven
+calibratedconfidencescoretoT as: { ··· }
+i prefixS andthenpickoutonesuffixasthepredic-
+r exp( T i ) tion.
+C(T ) = i × −| i |LMLE . (4)
+i M j=1 r j × exp( −| T j |L j MLE ) Perplexity Itleveragestheperplexity(PPL)mea-
+sured by the attacked language model M as the
+P
+Through the proposed confidence estimation
+metric to sort the candidate suffixes and finally
+method, we obtain the confidence score of T by
+i chooses the one with the lowest PPL as the pre-
+comparingitwithothersampledsuffixeswithcom-
+dictedsuffixT:
+parablescalesofgenerationlikelihood. Inthisway,
+1
+we avoid the scale problem brought by different
+T = argmaxC(T ) = argmax
+i
+prefixesandmakeitpracticaltocomparethepre- Ti Ti PPL M (T i S)
+|
+dicted suffixes conditioned on different prefixes.
+Comparing (LM) It takes another language
+Moreover, weleveragetherepetitiontimer asa
+i
+modelM andleveragestheratiooftheperplexity
+valuablesignalsincememorizedsuffixisexpected ′
+tobegeneratedmorefrequently. Finally,weselect
+2https://github.com/google-research/
+the suffix T with the highest confidence score lm-extraction-benchmark/
+best
+12678
+
+=== PAGE 6 ===
+measured by theses two language models as the 4.4 MainResults
+metric(Carlinietal.,2021):
+Table 2 shows the automatic evaluation results
+with GPT-Neo 1.3B as the backbone. ETHICIST
+PPL (T S)
+M i
+T = argmaxC(T i ) = argmax ′ | achieves an impressive Recall score of 62.8%
+Ti Ti PPL M (T i
+|
+S)
+and outperforms all the baselines by a large mar-
+gin,indicatingitsbetterabilitytoextracttraining
+ThelanguagemodelM couldbeamuchsmaller
+′
+datafromlanguagemodels. Moreover, ETHICIST
+model trained on the same dataset with M or
+has better confidence estimation performance af-
+trainedonadifferentdataset.
+ter calibration as shown by a significantly higher
+Comparing (zlib) Different from Comparing Recall Earlystop score. Tofurtherinvestigatethein-
+(LM),itusesthezlib(GaillyandAdler,2004)en- fluence of each component, we run an ablation
+tropyofthetext(i.e.,thenumberofbitsaftercom- study. From the results shown in Table 2, it can
+pression with zlib) for comparison (Carlini et al., beseenthatboththesmoothinglossandthecali-
+2021): bratedconfidenceestimation areimportanttoen-
+hancetheabilitytoextracttrainingdata,andcom-
+len(zlib(T )) biningbothofthemachievesthebestperformance.
+i
+T = argmaxC(T ) = argmax
+Ti i Ti PPL M (T i S) Furthermore,wedrawthefollowingconclusions:
+|
+(1)Withprompttuningandextratrainingdata,we
+Comparing(lowercase) Itcomparestheperplex- can better induce large-scale language models to
+ity of the original text and the lower-cased text generatetheirmemorizedtrainingdataandsuccess-
+measuredbythesamelanguagemodelM (Carlini fully achieves a 9.5% performance improvement
+etal.,2021): onRecallanda12.4%performanceimprovement
+on Recall . (2) The proposed smoothing
+Earlystop
+T = argmaxC(T ) losscanfurtherenhancetheabilitytoextracttrain-
+i
+Ti
+ingdata,boostingtheRecallscorefrom60.8%to
+PPL (lowercased(T ) S)
+= argmax M i | 62.3%. (3) The calibrated confidence provides a
+Ti PPL M (T i S) 6.3%improvementonRecall asexpected,
+| Earlystop
+demonstratingtheimportanceofcalibratingconfi-
+Furthermore,weconductablationtestsbyremov-
+denceestimationforthistask. (4)Thesmoothing
+ingtheproposedcomponentsrespectivelytoinves-
+loss is more effective in predicting exact suffixes
+tigatetheinfluenceofeachcomponent.
+whilethecalibratedconfidenceismorebeneficial
+foridentifyinghighlyconfidentpredictions,accord-
+4.3 Metrics
+ingtothesignificantdropinRecallwithoutsmooth-
+Weadoptthefollowingautomaticmetricsforeval- ing and the substantial decrease in Recall
+Earlystop
+uation. withoutcalibration. (5)Thecalibratedconfidence
+estimationiseffectiveregardlessofwhetherusing
+Recall Themetriccomputesthepercentageofthe
+prompttuning. Anditdemonstratesgreateradvan-
+suffixesthatarepredictedverbatimoverthewhole
+tages compared to the comparing (LM) baseline
+testset. Ahigherrecallscoreindicatesbetterdata
+inrecognizingpredictionswithhigherconfidence
+extractionability,whichcanalsobeunderstoodas
+whenusingprompttuning,indicatedbyincreasing
+ahigherattackingsuccessrate.
+Recall (from48.7to52.4).
+Earlystop
+Recall Themetricfirstsortsthepredic-
+Earlystop
+4.5 Analysis: DecodingStrategy
+tionsaccordingtotheirconfidencescoresandthen
+evaluates the correctness of each prediction one Inourexperiments,weusetop-psamplingtosam-
+byone. ItfinallycomputestheRecallscorewhile plemultiplecandidatesuffixesconditionedonone
+making x incorrect predictions. We set x to 100 givenprefix. However,therearealsootherpopular
+in our experiments following the LM-Extraction decodingmethods,includinggreedysearch,beam
+benchmark. Abetterconfidenceestimationmethod search,andtop-ksampling. Wethuscomparethese
+cangivethecorrectpredictionshigherconfidence populardecodingmethodsinthissection. Table3
+scores and thus lead to a higher Recall showstheresults. Notsurprisingly,greedysearch
+Earlystop
+score. performsworstonbothRecallandRecall ,
+Earlystop
+12679
+
+=== PAGE 7 ===
+Method Recall Recall
+Earlystop
+Perplexity 51.3 .0 32.2 .0
+± ±
+Comparing(LM) 51.9 .0 37.4 .0
+± ±
+Comparing(zlib) 49.7 .2 25.6 .0
+± ±
+Comparing(lowercase) 51.5 .0 32.5 .0
+± ±
+ETHICIST 62.8 .5 53.8 .5
+± ±
+w/osmooth 61.2 .3 52.4 .5
+± ±
+w/ocalibrated 62.3 .6 47.5 1.3
+± ±
+w/osmooth&calibrated 60.8 .6 44.6 .8
+± ±
+w/osmooth&calibrated,comparing(LM) 62.4 .7 48.7 1.2
+± ±
+w/oprompttuning 50.9 .0 38.0 .0
+± ±
+Table2: Automaticevaluationresultsonthetestset. TheexperimentsareconductedontheGPT-Neo1.3Bmodel.
+Wereportthemeanandthestandarddeviationover3randomseeds. Thebestperformancearehighlightedinbold.
+w/osmoothmeansablatingthesmoothedlossfunctioninthetrainingstage. w/ocalibratedmeansablatingthe
+calibratedconfidenceintheextractionstage. w/osmooth&calibratedmeansprompttuningonlywiththeMLE
+lossandusingtheperplexityforconfidenceestimation. w/osmooth&calibrated, comparing(LM)means
+prompttuningonlywiththeMLElossandusingthecomparing(LM)methodforconfidenceestimation. And w/o
+prompttuningdirectlyemployscalibratedconfidenceestimationontheoriginalmodelwithoutprompttuning.
+which suggests some tokens in the ground truth
+Strategy Recall Recall
+Earlystop
+suffix do not have the highest probability at the
+correspondingpositions. Beamsearchoutperforms Greedy 58.7 .6 47.1 1.1
+± ±
+top-psamplingonRecall,indicatingthatsearching BeamSearch 64.5 .9 47.9 1.0
+± ±
+for the suffix with the lowest loss works well to Top-k 62.7 .6 50.8 .6
+± ±
+findthegroundtruthsuffix. However,beamsearch Top-p 62.8 .5 53.8 .5
+± ±
+performssignificantlyworsethantop-psampling
+Table3: EffectofthedecodingstrategyonETHICIST.
+on Recall , because it cannot use our cali-
+Earlystop Notethatourproposedcalibratedconfidenceisunused
+brated confidence. Compared with beam search,
+whendecodingwithdeterministicmethods,including
+top-p sampling can generate multiple candidates, greedy search and beam search. We show the mean
+whichcouldsubstantiallyincreasetheaccuracyof andthestandarddeviationover3randomseedsforall
+confidenceestimationwithourproposedcalibrated decodingstrategies.
+confidence. Moreover,thetop-ksamplingperforms
+worsethantop-psamplingonRecall ,which
+Earlystop
+significantlyoutperformsbaselinesacrossdifferent
+maybebecausetop-ksamplingiseasiertosample
+modelscales. Thankstoprompttuning,ETHICIST
+low-probability tokens and thus reduce the confi-
+isefficientintermsofcomputationtimeandpartic-
+denceofthegroundtruthsuffixes. Wefinallyselect
+ularlymemoryconsumption. Therefore,ETHICIST
+top-psamplingasourdecodingmethodduetoits
+canalsobeadaptedtolargerlanguagemodelsfor
+balanceonRecallandRecall .
+Earlystop
+efficienttargetedtrainingdataextraction.
+4.6 Analysis: ModelScale
+4.7 Analysis: PrefixLengthandSuffixLength
+Previousworksonscalinglawsfindthatlargerlan-
+guage models can memorize more training data All prefixes and suffixes in the LM-Extraction
+(Carlini et al., 2022b; Tirumala et al., 2022b). benchmark are 50 tokens long, making it an in-
+Therefore, we are interested in how targeted teresting question how the length of prefixes and
+data extraction performance varies across differ- suffixeswouldaffecttheextractionperformance.
+entmodelscales. Figure3showstheresults. We We show the effect of the given prefix length
+can see that the targeted training data extraction in Figure 4. We can observe that the extraction
+performancecontinuouslyincreasesasthemodel performance grows approximately linearly with
+scaleincreasesfrom125millionto6billion. ETHI- the prefix length for all evaluated methods, and
+CISTshowsimpressiveresultsasitconsistentlyand ETHICIST performsbestforallprefixlengths. Al-
+12680
+
+=== PAGE 8 ===
+Feature Correct Wrong
+Recall@1 0.63 0.37
+Recall@3 0.68 0.32
+Recall@100 0.69 0.31
+AverageRepeatTime 85.38 29.66
+AverageConfidence 0.95 0.67
+Table4: Statisticalfeaturesofcorrectpredictionsand
+wrongpredictions.Recall@Kmeasureswhetherthetop-
+Ksuffixessortedbyestimatedconfidencecontainthe
+groundtruthsuffix. Averagerepeattimerepresentsthe
+numberoftimesthatthepredictionresultisgenerated
+repeatedlyoutof100generations.
+Figure3: Effectofthemodelscale. Weshowthemean
+andthestandarddeviationover3randomseedsforall
+Prefix
+methods.
+buyer selected/paid carriers in California.\nIfthere is any
+dispute about or involving Evike.com'sservices or products
+provided, you agree that the dispute shall be governed by the
+laws of the State of California, USA, without regard to conflict
+Suffix#1 Suffix#2
+of law provisions and you agree to exclusive of law provisions and you agree to exclusive
+personal jurisdiction and venue in the state personal jurisdiction and venue in the state
+and federal courts of the United States and federal courts of the United States
+located in the state of California, City of located in the state of California, USA. You
+Alhambra.\nBuyerassumes full agree to exclusive personal jurisdiction and
+responsibility of all liabilities, damages, venue in the state and federal courts of the
+injuries, modifications United States located
+Loss: 0.1412 Loss: 0.1399
+Repeat time: 74 Repeat time: 8
+Confidence: 0.8919 Confidence: 0.1030
+Figure6: Giventheprefix,weshowthetop-2predicted
+suffixesbyETHICIST. Althoughthefirstpredictionhas
+higherloss,itisrepeatedfor74timesandwecorrectly
+selectitasthefinalpredictedsuffixusingourcalibrated
+confidence estimation. We highlight the wrong pre-
+Figure4: Effectofthegivenprefixlength. Weshowthe dictedtextinred.
+RecallandtheRecall metricsforthreemethods
+Earlystop
+whenthegivenprefixlengthincreasesfrom10to50.
+prefixesthatarelongenough.
+Weshowtheeffectofthepredictedsuffixlength
+inFigure5. Forallthreemethods, theextraction
+performance decreases when the suffix length in-
+creases. Different from the approximately linear
+relationshipbetweentheprefixlengthandtheex-
+tractionperformance,theperformancedegradation
+tends to become progressively slower as the suf-
+fixlengthincreases. Thissuggeststhatthemodel
+canstillmemorizeaconsiderableproportionofsuf-
+fixes(ratherthanquicklydecreasingtozero)even
+ifthepredictedsuffixlengthcontinuestoincrease.
+What’smore,weobservethat ETHICIST hasasig-
+Figure 5: Effect of the predicted suffix length. We
+nificantlyslowerspeedofperformancedegradation
+showtheRecallandtheRecall metricswhen
+Earlystop comparedwiththetwobaselines,whichsuggests
+thepredictedsuffixlengthincreasesfrom1to50.
+ETHICIST is effective for eliciting deeper memo-
+rizationoflongersuffixesoftheattackedmodel.
+thoughallmethodshavesimilargrowthspeedon
+4.8 Analysis: SamplingTime
+Recall,ETHICISThasthehighestgrowthspeedon
+Recall . It is also interesting that Compar- Due to space limitations, we put the analysis of
+Earlystop
+ing(LM)onlyoutperformsPerplexitywhengiven samplingtimeinAppendixC.
+12681
+
+=== PAGE 9 ===
+Therefore it is easier to generate the correct suf-
+fix,whichleadstoahigherconfidencescore. This
+is also in line with our motivation for designing
+the extra smoothing loss, which can increase the
+probabilityofsamplingthecorrectsuffix.
+6 Conclusion
+In this work, we propose ETHICIST, an effective
+methodfortargetedtrainingdataextractionattack.
+ETHICISTusessoftprompttoelicitmemorization
+intheattackedmodel. Toensuretheprobabilityof
+Figure7: Weshowthegenerationprobabilityofeach the ground truth suffix token at each time step is
+tokenduringthesamplingprocessforbothcorrectand
+notlow,weproposeasmoothinglossbesidesthe
+wrongsuffixes.
+standardMLEloss. Wealsoproposeacalibrated
+confidenceestimationmethodtocalibratethescale
+of confidence across different samples. Experi-
+5 Discussion
+ments on the LM-Extraction benchmark demon-
+WefurthershowsomestatisticalfeaturesinTable
+stratethat ETHICISTsignificantlyimprovestheex-
+tractionperformance. Wefurtherconductextensive
+4. We can see that the memorized suffixes can
+experiments to investigate several critical factors
+be sampled significantly more frequently with a
+influencingtheextractionperformance,including
+highaveragerepeattimeof85.38,validatingthat
+decodingstrategy,modelscale,prefixlength,and
+therepeattimeisavaluablesignalforconfidence
+suffixlength. Wehopeourworkcanpromotefuture
+estimation. What’smore,thememorizedsuffixes
+researchesonbetterattackmethodsandpractical
+havesignificantlyhigherconfidence. Oneinterest-
+defense methods for the training data extraction
+ingphenomenonweobserveisthatiftheground
+problem.
+truthsuffixcanbegenerated,itmostlyhasthetop
+3 highest confidence (Recall@3 Recall@100).
+≈ Acknowledgement
+We also find that for more than 30% of the pre-
+fixes,themodelcannotgeneratethecorrectprefix This work was supported by the NSFC projects
+evengiven100chances. Therefore,animportant (KeyprojectwithNo. 61936010). Thisworkwas
+futuredirectionistodesignbettermethodstoelicit also supported by the Guoqiang Institute of Ts-
+memorizationintheattackedmodel. Considering inghuaUniversity,withGrantNo. 2020GQG0005.
+thenon-negligiblegapbetweenRecall@1andRe-
+call@100(0.63vs. 0.69),anotherimportantfuture Limitations
+directionistodesignbetterconfidenceestimation
+Althoughweconductexperimentsacrossvarious
+methods(maybetrainable),whichcanpickoutthe
+modelscalesrangingfrom125Mto6B,thereare
+groundtruthsuffixamongthecollectionofcandi-
+still larger language models we don’t test either
+datesuffixesforoneprefix.
+becausetheirtrainingdataisnotpubliclyreleased
+WeshowacaseinFigure6. Althoughthefirst
+orbecausewehavelimitedresources.
+predictedsuffixhashigherlossthanthesecondpre-
+Moreover, the examples in the LM-Extraction
+dictedsuffix,itissampledfarmoretimesthanthe
+benchmarkareallchosentomeetthepropertythat
+latter. Therefore, we assign higher confidence to
+thereexistsaprefixlength(maybelongerthan50)
+thefirstsuffixusingourcalibratedconfidenceesti-
+thatcausesthemodeltogeneratethesuffixstring
+mationmethod. Wefurthershowtheprobabilityof
+exactly,whichmakestheextractionperformance
+generatingeachtokenduringthesamplingprocess
+on this benchmark higher than that on randomly
+inFigure7. Wecanobservethatalthoughthecor-
+selectedprefixes.
+rectpredictionhashigherlossasawhole,itkeeps
+ahighsamplingprobabilityacrossthegeneration
+EthicsStatement
+process. The minimum probability of generating
+onetokeninthecorrectsuffixisabout0.45,which ETHICIST is a powerful method to elicit memo-
+issignificantlyhigherthan0.1forthewrongsuffix. rizationinthelargepre-trainedlanguagemodels,
+12682
+
+=== PAGE 10 ===
+whichmakesitausefultooltoexposetheprivacy USENIXSecurity2019,SantaClara,CA,USA,Au-
+riskoflargelanguagemodels. However,italsohas gust14-16,2019,pages267–284.USENIXAssocia-
+tion.
+arisktobeabusedbyattackerstoextractprivacyin-
+formationfrompre-trainedlanguagemodels. Thus
+Nicholas Carlini, Florian Tramer, Eric Wallace,
+large language models should be carefully exam- Matthew Jagielski, Ariel Herbert-Voss, Katherine
+inedbeforebeingmadepubliclyavailable. What’s Lee,AdamRoberts,TomBrown,DawnSong,Ulfar
+more,itisnecessarytodevelopdefensemethods Erlingsson,etal.2021. Extractingtrainingdatafrom
+large language models. In 30th USENIX Security
+againstthetrainingdataextractionattackswithout
+Symposium(USENIXSecurity21),pages2633–2650.
+sacrificingthelanguagemodelingability.
+TheLM-Extractionbenchmarkisderivedfrom AakankshaChowdhery,SharanNarang,JacobDevlin,
+the Pile dataset, and thus covers many domains Maarten Bosma, Gaurav Mishra, Adam Roberts,
+Paul Barham, Hyung Won Chung, Charles Sutton,
+includingbooks,code,emails,etc. Thissuggests
+Sebastian Gehrmann, et al. 2022. Palm: Scaling
+theeffectivenessoftargetedtrainingdataextraction
+language modeling with pathways. arXiv preprint
+acrossdifferentdomains. arXiv:2204.02311.
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
+References Kristina Toutanova. 2019. BERT: Pre-training of
+deepbidirectionaltransformersforlanguageunder-
+MartínAbadi,AndyChu,IanJ.Goodfellow,H.Bren- standing. InProceedingsofthe2019Conferenceof
+dan McMahan, Ilya Mironov, Kunal Talwar, and theNorthAmericanChapteroftheAssociationfor
+LiZhang.2016. Deeplearningwithdifferentialpri- ComputationalLinguistics: HumanLanguageTech-
+vacy. In Proceedings of the 2016 ACM SIGSAC nologies,Volume1(LongandShortPapers),pages
+ConferenceonComputerandCommunicationsSe-
+4171–4186,Minneapolis,Minnesota.Associationfor
+curity,Vienna,Austria,October24-28,2016,pages
+ComputationalLinguistics.
+308–318.ACM.
+Angela Fan, Mike Lewis, and Yann Dauphin. 2018.
+Santiago Zanella Béguelin, Lukas Wutschitz, Shruti
+Hierarchicalneuralstorygeneration. InProceedings
+Tople, Victor Rühle, Andrew Paverd, Olga Ohri-
+of the 56th Annual Meeting of the Association for
+menko,BorisKöpf,andMarcBrockschmidt.2020.
+ComputationalLinguistics(Volume1: LongPapers),
+Analyzinginformationleakageofupdatestonatural
+pages889–898.
+languagemodels. InCCS’20: 2020ACMSIGSAC
+ConferenceonComputerandCommunicationsSecu-
+WilliamFedus,BarretZoph,andNoamShazeer.2022.
+rity,VirtualEvent,USA,November9-13,2020,pages
+Switch transformers: Scaling to trillion parameter
+363–375.ACM.
+modelswithsimpleandefficientsparsity. Journalof
+Sid Black, Leo Gao, Phil Wang, Connor Leahy, MachineLearningResearch,23(120):1–39.
+and Stella Biderman. 2021. GPT-Neo: Large
+ScaleAutoregressiveLanguageModelingwithMesh- VitalyFeldman.2020. Doeslearningrequirememoriza-
+Tensorflow. If youuse this software, pleasecite it tion? ashorttaleaboutalongtail. InProceedings
+usingthesemetadata. of the 52nd Annual ACM SIGACT Symposium on
+TheoryofComputing,pages954–959.
+Tom Brown, Benjamin Mann, Nick Ryder, Melanie
+Subbiah,JaredDKaplan,PrafullaDhariwal,Arvind VitalyFeldmanandChiyuanZhang.2020. Whatneural
+Neelakantan,PranavShyam,GirishSastry,Amanda networksmemorizeandwhy: Discoveringthelong
+Askell,etal.2020. Languagemodelsarefew-shot tail via influence estimation. Advances in Neural
+learners. Advancesinneuralinformationprocessing InformationProcessingSystems,33:2881–2891.
+systems,33:1877–1901.
+Jean-loupGaillyandMarkAdler.2004. Zlibcompres-
+NicholasCarlini,DaphneIppolito,MatthewJagielski,
+sionlibrary.
+KatherineLee,FlorianTramèr,andChiyuanZhang.
+2022a. Quantifyingmemorizationacrossneurallan-
+LeoGao,StellaBiderman,SidBlack,LaurenceGold-
+guagemodels. CoRR,abs/2202.07646.
+ing,TravisHoppe,CharlesFoster,JasonPhang,Ho-
+NicholasCarlini,DaphneIppolito,MatthewJagielski, raceHe, AnishThite, NoaNabeshima, etal.2020.
+KatherineLee,FlorianTramer,andChiyuanZhang. The pile: An 800gb dataset of diverse text for lan-
+2022b. Quantifyingmemorizationacrossneurallan- guagemodeling. arXivpreprintarXiv:2101.00027.
+guagemodels. arXivpreprintarXiv:2202.07646.
+Sorami Hisamoto, Matt Post, and Kevin Duh. 2020.
+NicholasCarlini,ChangLiu,ÚlfarErlingsson,Jernej Membership inference attacks on sequence-to-
+Kos,andDawnSong.2019. Thesecretsharer: Eval- sequencemodels: Ismydatainyourmachinetrans-
+uatingandtestingunintendedmemorizationinneu- lation system? Trans. Assoc. Comput. Linguistics,
+ralnetworks. In28thUSENIXSecuritySymposium, 8:49–63.
+12683
+
+=== PAGE 11 ===
+AriHoltzman,JanBuys,LiDu,MaxwellForbes,and againstmachinelearningmodels. In2017IEEESym-
+YejinChoi.2020. Thecuriouscaseofneuraltextde- posiumonSecurityandPrivacy,SP2017,SanJose,
+generation. InInternationalConferenceonLearning CA,USA,May22-26,2017,pages3–18.IEEECom-
+Representations. puterSociety.
+BargavJayaramanandDavidEvans.2019. Evaluating CongzhengSongandAnanthRaghunathan.2020. In-
+differentiallyprivatemachinelearninginpractice. In formation leakage in embedding models. In CCS
+28thUSENIXSecuritySymposium,USENIXSecurity ’20: 2020 ACM SIGSAC Conference on Computer
+2019, Santa Clara, CA, USA, August 14-16, 2019, andCommunicationsSecurity, VirtualEvent, USA,
+pages1895–1912.USENIXAssociation. November9-13,2020,pages377–390.ACM.
+NikhilKandpal,EricWallace,andColinRaffel.2022. CongzhengSongandVitalyShmatikov.2019. Audit-
+Deduplicatingtrainingdata mitigatesprivacy risks ing data provenance in text-generation models. In
+inlanguagemodels. InInternationalConferenceon Proceedingsofthe25thACMSIGKDDInternational
+MachineLearning,ICML2022,17-23July2022,Bal- ConferenceonKnowledgeDiscovery&DataMining,
+timore,Maryland,USA,volume162ofProceedings KDD2019,Anchorage,AK,USA,August4-8,2019,
+ofMachineLearningResearch,pages10697–10707. pages196–206.ACM.
+PMLR.
+Kushal Tirumala, Aram H. Markosyan, Luke Zettle-
+EricLehman,SarthakJain,KarlPichotta,YoavGold- moyer, and Armen Aghajanyan. 2022a. Memo-
+berg,andByronC.Wallace.2021. DoesBERTpre- rization without overfitting: Analyzing the train-
+trained on clinical notes reveal sensitive data? In ing dynamics of large language models. CoRR,
+Proceedings of the 2021 Conference of the North abs/2205.10770.
+AmericanChapteroftheAssociationforComputa-
+Kushal Tirumala, Aram H Markosyan, Luke Zettle-
+tionalLinguistics: HumanLanguageTechnologies,
+moyer,andArmenAghajanyan.2022b. Memoriza-
+NAACL-HLT2021,Online,June6-11,2021,pages
+tionwithoutoverfitting: Analyzingthetrainingdy-
+946–959.AssociationforComputationalLinguistics.
+namics of large language models. arXiv preprint
+arXiv:2205.10770.
+H.BrendanMcMahan,DanielRamage,KunalTalwar,
+andLiZhang.2018. Learningdifferentiallyprivate
+Ben Wang and Aran Komatsuzaki. 2021. GPT-J-
+recurrentlanguagemodels. In6thInternationalCon-
+6B: A 6 Billion Parameter Autoregressive Lan-
+ference on Learning Representations, ICLR 2018,
+guageModel. https://github.com/kingoflolz/
+Vancouver, BC, Canada, April 30 - May 3, 2018,
+mesh-transformer-jax.
+ConferenceTrackProceedings.OpenReview.net.
+Jason Wei, Yi Tay, Rishi Bommasani, Colin Raffel,
+Fatemehsadat Mireshghallah, Kartik Goyal, Archit
+Barret Zoph, Sebastian Borgeaud, Dani Yogatama,
+Uniyal, Taylor Berg-Kirkpatrick, and Reza Shokri.
+MaartenBosma,DennyZhou,DonaldMetzler,etal.
+2022. Quantifyingprivacyrisksofmaskedlanguage
+2022. Emergentabilitiesoflargelanguagemodels.
+modelsusingmembershipinferenceattacks. CoRR,
+arXivpreprintarXiv:2206.07682.
+abs/2203.03929.
+Thomas Wolf, Lysandre Debut, Victor Sanh, Julien
+Alec Radford, Jeff Wu, Rewon Child, David Luan, Chaumond,ClementDelangue,AnthonyMoi,Pier-
+DarioAmodei,andIlyaSutskever.2019a. Language ricCistac,TimRault,RemiLouf,MorganFuntow-
+modelsareunsupervisedmultitasklearners. icz,JoeDavison,SamShleifer,PatrickvonPlaten,
+Clara Ma, Yacine Jernite, Julien Plu, Canwen Xu,
+AlecRadford,JeffreyWu,RewonChild,DavidLuan,
+Teven Le Scao, Sylvain Gugger, Mariama Drame,
+Dario Amodei, Ilya Sutskever, et al. 2019b. Lan-
+QuentinLhoest,andAlexanderRush.2020. Trans-
+guage models are unsupervised multitask learners.
+formers:State-of-the-artnaturallanguageprocessing.
+OpenAIblog,1(8):9.
+InProceedingsofthe2020ConferenceonEmpirical
+Methods in Natural Language Processing: System
+Colin Raffel, Noam Shazeer, Adam Roberts, Kather-
+Demonstrations,pages38–45,Online.Association
+ine Lee, Sharan Narang, Michael Matena, Yanqi
+forComputationalLinguistics.
+Zhou,WeiLi,andPeterJ.Liu.2020. Exploringthe
+limitsoftransferlearningwithaunifiedtext-to-text
+Susan Zhang, Stephen Roller, Naman Goyal, Mikel
+transformer. JournalofMachineLearningResearch,
+Artetxe,MoyaChen,ShuohuiChen,ChristopherDe-
+21(140):1–67.
+wan,MonaDiab,XianLi,XiVictoriaLin,etal.2022.
+Opt: Openpre-trainedtransformerlanguagemodels.
+Reza Shokri and Vitaly Shmatikov. 2015. Privacy-
+arXivpreprintarXiv:2205.01068.
+preservingdeeplearning. InProceedingsofthe22nd
+ACMSIGSACConferenceonComputerandCommu-
+A ImplementationDetails
+nicationsSecurity,Denver,CO,USA,October12-16,
+2015,pages1310–1321.ACM.
+As the benchmark is derived from The Pile (Gao
+etal.,2020)dataset,weconductexperimentsonly
+RezaShokri,MarcoStronati,CongzhengSong,andVi-
+talyShmatikov.2017. Membershipinferenceattacks on the models that are pre-trained on The Pile
+12684
+
+=== PAGE 12 ===
+dataset. TheyareGPT-Neo125M,GPT-Neo1.3B, suggeststheefficiencyof ETHICIST.
+GPT-Neo2.7B,andGPT-J6B(Blacketal.,2021;
+WangandKomatsuzaki,2021). Wesettheprompt
+length to 100, the batch size to 32, the learning
+rateofAdamWoptimizerto1e-3,thewarmupstep
+to 500, the learning rate decay strategy to linear,
+N inEquation2to5,αinEquation3to0.7,and
+the maximum training epoch to 20 with an early
+stoppingmechanism. Inourmainexperiments,we
+generatethesuffixusingtop-psampling(Holtzman
+etal.,2020)withp = 0.7andtemperature = 0.8.
+Forotherdecodingmethods,wesetbeamsizeto
+10forbeamsearch,andkto10fortop-ksampling
+(temperature = 0.8). Our code is based on Hug-
+gingfaceTransformers(Wolfetal.,2020).
+B ComputingInfrastructure
+All experiments are carried out on a single Tesla
+V100GPUwith32GBmemory. Eachexperiment
+canbecompletedinlessthan20hours.
+Figure 8: Effect of the sampling time. We show the
+RecallandtheRecall metricsforthreemethods
+Earlystop
+whenthesamplingtimeincreasesfrom1to100.
+C EffectofSamplingTime
+Inourmainexperiments,wesample100candidate
+suffixes for one given prefix. We show the effect
+of sampling time in Figure 8. We can see that
+allmethods’performancesincreasequicklywhen
+the sampling time increases from 1 to 10. How-
+ever, ETHICIST’s performance can still improve
+slowlywhenthesamplingtimeincreasesfrom10
+to100,whichweattributetotheconsiderationof
+repeat time in our calibrated confidence estima-
+tion. What’s more, although we report the result
+for sampling 100 times in our main experiments,
+we can see that ETHICIST can achieve satisfying
+performancewhensamplingonly10times,which
+12685
+
+=== PAGE 13 ===
+ACL2023ResponsibleNLPChecklist
+A Foreverysubmission:
+3
+(cid:3) A1. Didyoudescribethelimitationsofyourwork?
+SectionLimitations
+3
+(cid:3) A2. Didyoudiscussanypotentialrisksofyourwork?
+SectionEthicsStatement
+3
+(cid:3) A3. Dotheabstractandintroductionsummarizethepaper’smainclaims?
+SectionAbstractandSectionIntroduction
+(cid:3) 7 A4. HaveyouusedAIwritingassistantswhenworkingonthispaper?
+Leftblank.
+3
+B (cid:3) Didyouuseorcreatescientificartifacts?
+SectionMethodology
+3
+(cid:3) B1. Didyoucitethecreatorsofartifactsyouused?
+SectionReferences
+(cid:3) 7 B2. Didyoudiscussthelicenseortermsforuseand/ordistributionofanyartifacts?
+Theyarediscussedinourgithubrepo.
+3
+(cid:3) B3. Didyoudiscussifyouruseofexistingartifact(s)wasconsistentwiththeirintendeduse,provided
+thatitwasspecified? Fortheartifactsyoucreate,doyouspecifyintendeduseandwhetherthatis
+compatiblewiththeoriginalaccessconditions(inparticular,derivativesofdataaccessedforresearch
+purposesshouldnotbeusedoutsideofresearchcontexts)?
+SectionExperiments
+(cid:3) 7 B4. Didyoudiscussthestepstakentocheckwhetherthedatathatwascollected/usedcontainsany
+informationthatnamesoruniquelyidentifiesindividualpeopleoroffensivecontent,andthesteps
+takentoprotect/anonymizeit?
+Thepublisherofthedatadidthework.
+(cid:3) 7 B5. Did you provide documentation of the artifacts, e.g., coverage of domains, languages, and
+linguisticphenomena,demographicgroupsrepresented,etc.?
+Wedon’tcreatenewdata.
+3
+(cid:3) B6. Didyoureportrelevantstatisticslikethenumberofexamples,detailsoftrain/test/devsplits,
+etc. forthedatathatyouused/created? Evenforcommonly-usedbenchmarkdatasets,includethe
+numberofexamplesintrain/validation/testsplits,astheseprovidenecessarycontextforareader
+tounderstandexperimentalresults. Forexample,smalldifferencesinaccuracyonlargetestsetsmay
+besignificant,whileonsmalltestsetstheymaynotbe.
+SectionExperiments
+3
+C (cid:3) Didyouruncomputationalexperiments?
+SectionExperiments
+3
+(cid:3) C1. Didyoureportthenumberofparametersinthemodelsused, thetotalcomputationalbudget
+(e.g.,GPUhours),andcomputinginfrastructureused?
+SectionImplementationDetailsandSectionComputingInfrastructureintheAppendix
+TheResponsibleNLPChecklistusedatACL2023isadoptedfromNAACL2022,withtheadditionofaquestiononAIwriting
+assistance.
+12686
+
+=== PAGE 14 ===
+3
+(cid:3) C2. Did you discuss the experimental setup, including hyperparameter search and best-found
+hyperparametervalues?
+SectionImplementationDetailsintheAppendix
+3
+(cid:3) C3. Didyoureportdescriptivestatisticsaboutyourresults(e.g.,errorbarsaroundresults,summary
+statisticsfromsetsofexperiments),andisittransparentwhetheryouarereportingthemax,mean,
+etc. orjustasinglerun?
+SectionExperiments
+3
+(cid:3) C4. Ifyouusedexistingpackages(e.g.,forpreprocessing,fornormalization,orforevaluation),did
+youreporttheimplementation,model,andparametersettingsused(e.g.,NLTK,Spacy,ROUGE,
+etc.)?
+SectionImplementationDetails
+7
+D (cid:3) Didyouusehumanannotators(e.g.,crowdworkers)orresearchwithhumanparticipants?
+Leftblank.
+(cid:3) D1. Did you report the full text of instructions given to participants, including e.g., screenshots,
+disclaimersofanyriskstoparticipantsorannotators,etc.?
+Noresponse.
+(cid:3) D2. Didyoureportinformationabouthowyourecruited(e.g.,crowdsourcingplatform,students)
+andpaidparticipants,anddiscussifsuchpaymentisadequategiventheparticipants’demographic
+(e.g.,countryofresidence)?
+Noresponse.
+(cid:3) D3. Did you discuss whether and how consent was obtained from people whose data you’re
+using/curating? For example, if you collected data via crowdsourcing, did your instructions to
+crowdworkersexplainhowthedatawouldbeused?
+Noresponse.
+(cid:3) D4. Wasthedatacollectionprotocolapproved(ordeterminedexempt)byanethicsreviewboard?
+Noresponse.
+(cid:3) D5. Didyoureportthebasicdemographicandgeographiccharacteristicsoftheannotatorpopulation
+thatisthesourceofthedata?
+Noresponse.
+12687

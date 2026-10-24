@@ -1,0 +1,601 @@
+﻿record_id,field,gold,prediction,em,digitless_exact,numeric_groups_exact,error_category,gold_number_groups,predicted_number_groups,truncated
+validation_000001,name,Sofia418 Terry864,Sofia444 Terry486 Terry86,False,False,False,numeric_and_text_error,"[""418"", ""864""]","[""444"", ""486"", ""86""]",False
+validation_000002,name,Johnson679 Andrew29 Waelchi213,Johnson672 Andrew288 Walter283ichten283,False,False,False,numeric_and_text_error,"[""679"", ""29"", ""213""]","[""672"", ""288"", ""283"", ""283""]",False
+validation_000003,name,Katherine209 Orn563,Katherine234 Orr255,False,False,False,numeric_and_text_error,"[""209"", ""563""]","[""234"", ""255""]",False
+validation_000004,name,Teresa94 Luz785 Alarcón922,Teresa97 Althea72 Althea98,False,False,False,numeric_and_text_error,"[""94"", ""785"", ""922""]","[""97"", ""72"", ""98""]",False
+validation_000005,name,Nicky270 Ritchie586,Nicky236 Ritchie568 Ritchie666,False,False,False,numeric_and_text_error,"[""270"", ""586""]","[""236"", ""568"", ""666""]",False
+validation_000006,name,Denis399 Dickinson688,Denis376 Dickinson688,False,True,False,only_numeric_error,"[""399"", ""688""]","[""376"", ""688""]",False
+validation_000007,name,Margret280 Tabatha105 Mayert710,Margaret217 Thaddeus187 Mayert117,False,False,False,numeric_and_text_error,"[""280"", ""105"", ""710""]","[""217"", ""187"", ""117""]",False
+validation_000008,name,Jarred626 Russ979 Prosacco716,Jarred617 Russel976 Holloway677,False,False,False,numeric_and_text_error,"[""626"", ""979"", ""716""]","[""617"", ""976"", ""677""]",False
+validation_000009,name,Adan632 Kris249,Adan674 Kris249 Krisped249,False,False,False,numeric_and_text_error,"[""632"", ""249""]","[""674"", ""249"", ""249""]",False
+validation_000010,name,Renato359 Adrian111 Kuhic920,Renato379 Adalio199 Kuhicic999,False,False,False,numeric_and_text_error,"[""359"", ""111"", ""920""]","[""379"", ""199"", ""999""]",False
+validation_000011,name,Fredia307 Murray856,Friedrich385 Murray865,False,False,False,numeric_and_text_error,"[""307"", ""856""]","[""385"", ""865""]",False
+validation_000012,name,Raymundo71 Nicolas769 Thiel172,Raymond767 Thaddeus766 Nicholas126,False,False,False,numeric_and_text_error,"[""71"", ""769"", ""172""]","[""767"", ""766"", ""126""]",False
+validation_000013,name,Ma484 Rubi442 Zemlak964,Ma432 Rubi429 Zemlak429,False,True,False,only_numeric_error,"[""484"", ""442"", ""964""]","[""432"", ""429"", ""429""]",False
+validation_000014,name,Luke971 Dorsey40 Lang846,Luke974 Doris411 Dorsey844,False,False,False,numeric_and_text_error,"[""971"", ""40"", ""846""]","[""974"", ""411"", ""844""]",False
+validation_000015,name,Eleanore671 Erma609 Balistreri607,Eleanora688 Erna688 Erna688699899969999999999999999999999999999999999999999,False,False,False,numeric_and_text_error,"[""671"", ""609"", ""607""]","[""688"", ""688"", ""688699899969999999999999999999999999999999999999999""]",True
+validation_000016,name,Jame231 Homenick806,Jame238 Hom388 Hackett833,False,False,False,numeric_and_text_error,"[""231"", ""806""]","[""238"", ""388"", ""833""]",False
+validation_000017,name,Dacia646 Marion502 Wehner319,Dacia635 Marion699 Wayne199,False,False,False,numeric_and_text_error,"[""646"", ""502"", ""319""]","[""635"", ""699"", ""199""]",False
+validation_000018,name,Ike571 Ambrose149 Daugherty69,Ike577 Ambrose599 Brook169,False,False,False,numeric_and_text_error,"[""571"", ""149"", ""69""]","[""577"", ""599"", ""169""]",False
+validation_000019,name,Adolph80 Leon728 Cassin499,Adolph844 Cassin844 Cassin488,False,False,False,numeric_and_text_error,"[""80"", ""728"", ""499""]","[""844"", ""844"", ""488""]",False
+validation_000020,name,Dominque770 Fatimah228 Armstrong51,Dominique782 Fatima218 Forte511,False,False,False,numeric_and_text_error,"[""770"", ""228"", ""51""]","[""782"", ""218"", ""511""]",False
+validation_000021,name,Candra395 Marine542 Powlowski563,Candra345 Pate544,False,False,False,numeric_and_text_error,"[""395"", ""542"", ""563""]","[""345"", ""544""]",False
+validation_000022,name,Iesha760 Rosalba160 Pollich983,Iesha755 Rosita13 Polychrome963,False,False,False,numeric_and_text_error,"[""760"", ""160"", ""983""]","[""755"", ""13"", ""963""]",False
+validation_000023,name,Mozelle144 Jeanette800 Ritchie586,Mozelle840 Jeanice568 Ritchie800,False,False,False,numeric_and_text_error,"[""144"", ""800"", ""586""]","[""840"", ""568"", ""800""]",False
+validation_000024,name,Trudi580 Leon728 Rempel203,Trudi577 Leonel288 Lemmers722,False,False,False,numeric_and_text_error,"[""580"", ""728"", ""203""]","[""577"", ""288"", ""722""]",False
+validation_000025,name,Doug189 Gail741 Dickens475,Doug 145 Gail445 Gael455,False,False,False,numeric_and_text_error,"[""189"", ""741"", ""475""]","[""145"", ""445"", ""455""]",False
+validation_000026,name,Rafael239 Jerónimo599 Monroy712,Rafael57 Jerónimo Monroy759,False,True,False,only_numeric_error,"[""239"", ""599"", ""712""]","[""57"", ""759""]",False
+validation_000027,name,Greta919 Xenia801 Nader710,Greta977 N877 N1000000 N1000000 N1000000 N1000000 N1000000 N1000000 N100000,False,False,False,numeric_and_text_error,"[""919"", ""801"", ""710""]","[""977"", ""877"", ""1000000"", ""1000000"", ""1000000"", ""1000000"", ""1000000"", ""1000000"", ""100000""]",True
+validation_000028,name,Sanora914 Mae105 Rodriguez71,Sanora Mae111 Rodriguez177 Glen111,False,False,False,numeric_and_text_error,"[""914"", ""105"", ""71""]","[""111"", ""177"", ""111""]",False
+validation_000029,name,Erik495 Leland44 Farrell962,Erik48 Leland92 Farrell499,False,True,False,only_numeric_error,"[""495"", ""44"", ""962""]","[""48"", ""92"", ""499""]",False
+validation_000030,name,Christia477 Shandra823 Runolfsson901,Christina488 Sandrun869 Runolfsson983,False,False,False,numeric_and_text_error,"[""477"", ""823"", ""901""]","[""488"", ""869"", ""983""]",False
+validation_000031,name,Reva678 Brittney657 Fay398,Reva637 Brittney337 Feltman63,False,False,False,numeric_and_text_error,"[""678"", ""657"", ""398""]","[""637"", ""337"", ""63""]",False
+validation_000032,name,Shakita329 Monika509 White193,Shakira319 Monica195 White953,False,False,False,numeric_and_text_error,"[""329"", ""509"", ""193""]","[""319"", ""195"", ""953""]",False
+validation_000033,name,Marta91 Manuela585 Rosario163,Marta195 Rosario566 Rosario,False,False,False,numeric_and_text_error,"[""91"", ""585"", ""163""]","[""195"", ""566""]",False
+validation_000034,name,Tomás404 Tomás404 Calderón210,Tomas211 Calderon422,False,False,False,numeric_and_text_error,"[""404"", ""404"", ""210""]","[""211"", ""422""]",False
+validation_000035,name,Jana258 Sanjuana985 Vandervort697,Jana256 Vandrea965 Vandera69,False,False,False,numeric_and_text_error,"[""258"", ""985"", ""697""]","[""256"", ""965"", ""69""]",False
+validation_000036,name,Angela104 Collier206,Angela162 Collier266,False,True,False,only_numeric_error,"[""104"", ""206""]","[""162"", ""266""]",False
+validation_000037,name,Chung121 Fritz267 King743,Chung127 Franz137 Fritz73,False,False,False,numeric_and_text_error,"[""121"", ""267"", ""743""]","[""127"", ""137"", ""73""]",False
+validation_000038,name,Marylyn194 Treutel973,Marilyn169 Trudy934 Schmieder139,False,False,False,numeric_and_text_error,"[""194"", ""973""]","[""169"", ""934"", ""139""]",False
+validation_000039,name,Quyen270 Staci390 Ritchie586,Quyen283 Stich306,False,False,False,numeric_and_text_error,"[""270"", ""390"", ""586""]","[""283"", ""306""]",False
+validation_000040,name,Virgilio529 Troy560 Fritsch593,Virgil593 Troy593 Fritch633 Fritsch966,False,False,False,numeric_and_text_error,"[""529"", ""560"", ""593""]","[""593"", ""593"", ""633"", ""966""]",False
+validation_000041,name,Fredia307 Little434,Freddy384 Auguste474 Little34,False,False,False,numeric_and_text_error,"[""307"", ""434""]","[""384"", ""474"", ""34""]",False
+validation_000042,name,Obdulia648 Theo630 Kling921,Obdulia616 Theo699 Kling99999999999999999999999999999999999999999999999999999,False,True,False,only_numeric_error,"[""648"", ""630"", ""921""]","[""616"", ""699"", ""99999999999999999999999999999999999999999999999999999""]",True
+validation_000043,name,Reda120 Leatha675 Flatley871,Reada126 Lea677 Lea177,False,False,False,numeric_and_text_error,"[""120"", ""675"", ""871""]","[""126"", ""677"", ""177""]",False
+validation_000044,name,Georgianna701 Karlyn611 Weissnat378,Georgianna723 Karth763 NATO6,False,False,False,numeric_and_text_error,"[""701"", ""611"", ""378""]","[""723"", ""763"", ""6""]",False
+validation_000045,name,Ethelene252 Griselda377 Schaefer657,Ethelene21 Gracie356 Schmeler67,False,False,False,numeric_and_text_error,"[""252"", ""377"", ""657""]","[""21"", ""356"", ""67""]",False
+validation_000046,name,Shaquana156 Wintheiser220,Shaquana125 Wintheiser222,False,True,False,only_numeric_error,"[""156"", ""220""]","[""125"", ""222""]",False
+validation_000047,name,Merrill415 Irvin970 Satterfield305,Merrill488 Irving900,False,False,False,numeric_and_text_error,"[""415"", ""970"", ""305""]","[""488"", ""900""]",False
+validation_000048,name,Elvin140 Blair400 Koelpin146,Elvin144 Blair130 Koepke433,False,False,False,numeric_and_text_error,"[""140"", ""400"", ""146""]","[""144"", ""130"", ""433""]",False
+validation_000049,name,Apolonia139 Boyer713,Apolonia731 Boyce133,False,False,False,numeric_and_text_error,"[""139"", ""713""]","[""731"", ""133""]",False
+validation_000050,name,Clementine778 Roberto515 Harber290,Clementine705 Harbert500,False,False,False,numeric_and_text_error,"[""778"", ""515"", ""290""]","[""705"", ""500""]",False
+validation_000051,name,Luis923 Solorzano931,Luis93 Sánchez139,False,False,False,numeric_and_text_error,"[""923"", ""931""]","[""93"", ""139""]",False
+validation_000052,name,Bo157 Littel644,Bo1284 Littel644,False,True,False,only_numeric_error,"[""157"", ""644""]","[""1284"", ""644""]",False
+validation_000053,name,Kim439 Wallace647 Rodriguez71,Kim455 Wallace747 Rodriguez414,False,True,False,only_numeric_error,"[""439"", ""647"", ""71""]","[""455"", ""747"", ""414""]",False
+validation_000054,name,Nan75 Francina926 King743,Nan737 Francine739 Francisco733,False,False,False,numeric_and_text_error,"[""75"", ""926"", ""743""]","[""737"", ""739"", ""733""]",False
+validation_000055,name,Dave764 Kirk871 Johns824,Dave74 Kirk84 Johns48,False,True,False,only_numeric_error,"[""764"", ""871"", ""824""]","[""74"", ""84"", ""48""]",False
+validation_000056,name,Tennie915 Mitzi535 Sawayn19,Tennie155 Mitzi935 Smitson135,False,False,False,numeric_and_text_error,"[""915"", ""535"", ""19""]","[""155"", ""935"", ""135""]",False
+validation_000057,name,Reginald96 Harley673 DuBuque211,Regd347 Harlan623 Duarte126,False,False,False,numeric_and_text_error,"[""96"", ""673"", ""211""]","[""347"", ""623"", ""126""]",False
+validation_000058,name,Martin117 Anthony633 Becker968,Martin183 Anthony638 Becker963,False,True,False,only_numeric_error,"[""117"", ""633"", ""968""]","[""183"", ""638"", ""963""]",False
+validation_000059,name,Cheyenne169 Simonne139 Predovic534,Cheyenne124 Simon134 Esch143,False,False,False,numeric_and_text_error,"[""169"", ""139"", ""534""]","[""124"", ""134"", ""143""]",False
+validation_000060,name,Beatriz277 Carlota980 Gracia333,Beatriz23 Graciela30 Carino93,False,False,False,numeric_and_text_error,"[""277"", ""980"", ""333""]","[""23"", ""30"", ""93""]",False
+validation_000061,name,Magdalene960 Tama137 Daugherty69,Magdalena97 Daugherty96697966766666666666666666666666666666666666666666666666,False,False,False,numeric_and_text_error,"[""960"", ""137"", ""69""]","[""97"", ""96697966766666666666666666666666666666666666666666666666""]",True
+validation_000062,name,Lester513 Trenton748 Schmeler639,Lester511 Trenton734 Trenton,False,False,False,numeric_and_text_error,"[""513"", ""748"", ""639""]","[""511"", ""734""]",False
+validation_000063,name,Lan153 Emerald468 Price929,Lan144 Em199 Price999,False,False,False,numeric_and_text_error,"[""153"", ""468"", ""929""]","[""144"", ""199"", ""999""]",False
+validation_000064,name,Jude172 Xuan162 Nienow652,Jude17 N15 N125 N125 N125 N125 N125 N125 N125 N125 N125 N125 N125 N125 N125 N125 N,False,False,False,numeric_and_text_error,"[""172"", ""162"", ""652""]","[""17"", ""15"", ""125"", ""125"", ""125"", ""125"", ""125"", ""125"", ""125"", ""125"", ""125"", ""125"", ""125"", ""125"", ""125"", ""125""]",True
+validation_000065,name,Alec433 Ahmad985 Thompson596,Alec489 Ahmad599 Thompson956,False,True,False,only_numeric_error,"[""433"", ""985"", ""596""]","[""489"", ""599"", ""956""]",False
+validation_000066,name,Lyndon118 Darron84 Schultz619,Lyndon811 Darrick164 Schultz899,False,False,False,numeric_and_text_error,"[""118"", ""84"", ""619""]","[""811"", ""164"", ""899""]",False
+validation_000067,name,Miguel815 Lindsay928 Harber290,Miguel866 Lindsay900 Harbert200,False,False,False,numeric_and_text_error,"[""815"", ""928"", ""290""]","[""866"", ""900"", ""200""]",False
+validation_000068,name,Jerrell6 Dirk334 Price929,Jerrell617 Dirk399 Paul399,False,False,False,numeric_and_text_error,"[""6"", ""334"", ""929""]","[""617"", ""399"", ""399""]",False
+validation_000069,name,Lorretta561 Dorthea49 Stark857,Loretta577 Dorie457 Stark577,False,False,False,numeric_and_text_error,"[""561"", ""49"", ""857""]","[""577"", ""457"", ""577""]",False
+validation_000070,name,Elina789 Kertzmann286,Elina72 Kaelin722222222222222222222222222222222222222222222222222222222,False,False,False,numeric_and_text_error,"[""789"", ""286""]","[""72"", ""722222222222222222222222222222222222222222222222222222222""]",True
+validation_000071,name,Diego848 Heidenreich818,Diego841 Heidel881 Reilly881,False,False,False,numeric_and_text_error,"[""848"", ""818""]","[""841"", ""881"", ""881""]",False
+validation_000072,name,Lia388 Daniella68 Goyette777,Lia377 Daniela677 Goyette777,False,False,False,numeric_and_text_error,"[""388"", ""68"", ""777""]","[""377"", ""677"", ""777""]",False
+validation_000073,name,Jodee687 Cody889 Pouros728,Jodee607 Cody877 Cody877,False,False,False,numeric_and_text_error,"[""687"", ""889"", ""728""]","[""607"", ""877"", ""877""]",False
+validation_000074,name,Willy639 Torp761,Willy631 Tori161111111111111111111111111111111111111111111111111111111,False,False,False,numeric_and_text_error,"[""639"", ""761""]","[""631"", ""161111111111111111111111111111111111111111111111111111111""]",True
+validation_000075,name,Freddie621 Rudy520 Yost751,Freddie577 Rudy755 Littel755,False,False,False,numeric_and_text_error,"[""621"", ""520"", ""751""]","[""577"", ""755"", ""755""]",False
+validation_000076,name,Ralph813 Rogelio17 Walker122,Ralph812 Rogelio12 Walker112,False,True,False,only_numeric_error,"[""813"", ""17"", ""122""]","[""812"", ""12"", ""112""]",False
+validation_000077,name,Antonina346 Wiza601,Antonina346 Wiegand61,False,False,False,numeric_and_text_error,"[""346"", ""601""]","[""346"", ""61""]",False
+validation_000078,name,Lauri399 Devona405 Rutherford999,Laurie369 Devonia929 Rasmussen999,False,False,False,numeric_and_text_error,"[""399"", ""405"", ""999""]","[""369"", ""929"", ""999""]",False
+validation_000079,name,Young120 Rolland302 Nicolas769,Young177 Rolla367 Nickols766,False,False,False,numeric_and_text_error,"[""120"", ""302"", ""769""]","[""177"", ""367"", ""766""]",False
+validation_000080,name,Rufus33 Jospeh459 Schiller186,Rufus345 Joseph16 Schmiedt986,False,False,False,numeric_and_text_error,"[""33"", ""459"", ""186""]","[""345"", ""16"", ""986""]",False
+validation_000081,name,Alana17 Santana368 Armstrong51,Alana158 Santana188 Burg133,False,False,False,numeric_and_text_error,"[""17"", ""368"", ""51""]","[""158"", ""188"", ""133""]",False
+validation_000082,name,Linn541 Ellan282 Carter549,Linn542 Eller244 Carter245,False,False,False,numeric_and_text_error,"[""541"", ""282"", ""549""]","[""542"", ""244"", ""245""]",False
+validation_000083,name,Estela596 Elvira561 Villagómez416,Estela51 Villar54644 Villar466666666666666666666666666666666666666666666666666,False,False,False,numeric_and_text_error,"[""596"", ""561"", ""416""]","[""51"", ""54644"", ""466666666666666666666666666666666666666666666666666""]",True
+validation_000084,name,Roland928 Reed154 Goldner995,Roland942 Reed145 Reilly945,False,False,False,numeric_and_text_error,"[""928"", ""154"", ""995""]","[""942"", ""145"", ""945""]",False
+validation_000085,name,Matthew562 Frankie174 Wintheiser220,Matthew581 Frankie122 Wintheiser224,False,True,False,only_numeric_error,"[""562"", ""174"", ""220""]","[""581"", ""122"", ""224""]",False
+validation_000086,name,Wendi133 Marks830,Wendi183 Mark838 Mark330,False,False,False,numeric_and_text_error,"[""133"", ""830""]","[""183"", ""838"", ""330""]",False
+validation_000087,name,Valencia279 Zboncak558,Valencia23 Zbon545,False,False,False,numeric_and_text_error,"[""279"", ""558""]","[""23"", ""545""]",False
+validation_000088,name,Terrence276 Truman805 Beahan375,Terrence238 Truman875 Bechtel275,False,False,False,numeric_and_text_error,"[""276"", ""805"", ""375""]","[""238"", ""875"", ""275""]",False
+validation_000089,name,Sonia106 Elisa944 Saldaña5,Sonia154 Elisa54 Salinas99,False,False,False,numeric_and_text_error,"[""106"", ""944"", ""5""]","[""154"", ""54"", ""99""]",False
+validation_000090,name,Adrian111 Miles206 Pfannerstill264,Adrian144 Miles264,False,False,False,numeric_and_text_error,"[""111"", ""206"", ""264""]","[""144"", ""264""]",False
+validation_000091,name,Tonie631 Berenice603 Morar593,Tonie635 Bertha533 Bernice613,False,False,False,numeric_and_text_error,"[""631"", ""603"", ""593""]","[""635"", ""533"", ""613""]",False
+validation_000092,name,Sherita708 Omega729 Ernser583,Sherita789 Omega789 Erich57866666766666766666766666766666766666766666766666766,False,False,False,numeric_and_text_error,"[""708"", ""729"", ""583""]","[""789"", ""789"", ""57866666766666766666766666766666766666766666766666766""]",True
+validation_000093,name,Oscar384 Grimes165,Oscar35 Grimes105,False,True,False,only_numeric_error,"[""384"", ""165""]","[""35"", ""105""]",False
+validation_000094,name,Joline447 Piper612 Rodriguez71,Joline411 Piper477 Pathy617,False,False,False,numeric_and_text_error,"[""447"", ""612"", ""71""]","[""411"", ""477"", ""617""]",False
+validation_000095,name,Marketta481 Louis204 Funk324,Martha422 Funk422 Funk222222222222222222222222222222222222222222222222222222,False,False,False,numeric_and_text_error,"[""481"", ""204"", ""324""]","[""422"", ""422"", ""222222222222222222222222222222222222222222222222222222""]",True
+validation_000096,name,Alvaro283 Forest317 Deckow585,Alvaro288 Deck355,False,False,False,numeric_and_text_error,"[""283"", ""317"", ""585""]","[""288"", ""355""]",False
+validation_000097,name,Kary197 Katia630 Halvorson124,Kary144 Katina644 Halvorson104,False,False,False,numeric_and_text_error,"[""197"", ""630"", ""124""]","[""144"", ""644"", ""104""]",False
+validation_000098,name,Amparo58 Millicent213 Reynolds644,Amparo586 Mila644 Reynolds466,False,False,False,numeric_and_text_error,"[""58"", ""213"", ""644""]","[""586"", ""644"", ""466""]",False
+validation_000099,name,Christopher407 Adams676,Christopher466 Adams67,False,True,False,only_numeric_error,"[""407"", ""676""]","[""466"", ""67""]",False
+validation_000100,name,Lorie307 Allyn942 Reynolds644,Lorie374 Althea64 Reynolds47,False,False,False,numeric_and_text_error,"[""307"", ""942"", ""644""]","[""374"", ""64"", ""47""]",False
+validation_000101,name,Natosha194 Crooks415,Natosha133 Croshwell45,False,False,False,numeric_and_text_error,"[""194"", ""415""]","[""133"", ""45""]",False
+validation_000102,name,Ashlea10 Sophia44 Sipes176,Ashlea104 Sophia114 Sipes447,False,True,False,only_numeric_error,"[""10"", ""44"", ""176""]","[""104"", ""114"", ""447""]",False
+validation_000103,name,Nathaniel596 Omer483 Satterfield305,Nathaniel583 O'Conner353 Satterfield553,False,False,False,numeric_and_text_error,"[""596"", ""483"", ""305""]","[""583"", ""353"", ""553""]",False
+validation_000104,name,Jamal145 Ulysses632 Anderson154,Jamal105 Ullman644 Anderson164,False,False,False,numeric_and_text_error,"[""145"", ""632"", ""154""]","[""105"", ""644"", ""164""]",False
+validation_000105,name,Sharmaine326 Jolie499 Bechtelar572,Sharmaine377 Jillie477 Bechtelar777,False,False,False,numeric_and_text_error,"[""326"", ""499"", ""572""]","[""377"", ""477"", ""777""]",False
+validation_000106,name,Amberly552 Cathey606 Walker122,Amberly511 Cathy12 Walker662,False,False,False,numeric_and_text_error,"[""552"", ""606"", ""122""]","[""511"", ""12"", ""662""]",False
+validation_000107,name,Mario764 Fritz267 D'Amore443,Mario764 Fritz422 D'Amico233,False,False,False,numeric_and_text_error,"[""764"", ""267"", ""443""]","[""764"", ""422"", ""233""]",False
+validation_000108,name,Sang383 Gusikowski974,Sang344 Gus344 Schroder934,False,False,False,numeric_and_text_error,"[""383"", ""974""]","[""344"", ""344"", ""934""]",False
+validation_000109,name,Tari300 Ellena683 Abshire638,Tari326 Ellington683 Abrahm686,False,False,False,numeric_and_text_error,"[""300"", ""683"", ""638""]","[""326"", ""683"", ""686""]",False
+validation_000110,name,Wyatt967 Barry322 Rempel203,Wyatt944 Barry322 Rasmussen233,False,False,False,numeric_and_text_error,"[""967"", ""322"", ""203""]","[""944"", ""322"", ""233""]",False
+validation_000111,name,María José279 Verónica383 Rincón417,María Josefin4 Rangel377 Verona477,False,False,False,numeric_and_text_error,"[""279"", ""383"", ""417""]","[""4"", ""377"", ""477""]",False
+validation_000112,name,Rochell365 Torphy630,Rochelle307 Torre633 Pathy333,False,False,False,numeric_and_text_error,"[""365"", ""630""]","[""307"", ""633"", ""333""]",False
+validation_000113,name,Landon622 Denny560 Roob72,Landon635 Denny227 Roach622,False,False,False,numeric_and_text_error,"[""622"", ""560"", ""72""]","[""635"", ""227"", ""622""]",False
+validation_000114,name,Angella518 Gary33 Bahringer146,Angela588 Gary131 Barth113,False,False,False,numeric_and_text_error,"[""518"", ""33"", ""146""]","[""588"", ""131"", ""113""]",False
+validation_000115,name,Sancho742 Sergio619 Fierro365,Sancho621 Sergio316 Fuentes613,False,False,False,numeric_and_text_error,"[""742"", ""619"", ""365""]","[""621"", ""316"", ""613""]",False
+validation_000116,name,Troy560 Roberts511,Troy551 Roberts511,False,True,False,only_numeric_error,"[""560"", ""511""]","[""551"", ""511""]",False
+validation_000117,name,Patricia625 Leandra549 Bauch723,Patricia657 Lea500 Bauch573,False,False,False,numeric_and_text_error,"[""625"", ""549"", ""723""]","[""657"", ""500"", ""573""]",False
+validation_000118,name,Diane211 Zulauf375,Diane213 Zulma355 Ziegler588,False,False,False,numeric_and_text_error,"[""211"", ""375""]","[""213"", ""355"", ""588""]",False
+validation_000119,name,Allena79 Lanie389 Nikolaus26,Allena759 Luka326 Littel266,False,False,False,numeric_and_text_error,"[""79"", ""389"", ""26""]","[""759"", ""326"", ""266""]",False
+validation_000120,name,Britt177 Toy286,Britt163 Toy268 Toy666,False,False,False,numeric_and_text_error,"[""177"", ""286""]","[""163"", ""268"", ""666""]",False
+validation_000121,name,Laura391 Lourdes258 Villa94,Laura352 Lourdes244 Villa244,False,True,False,only_numeric_error,"[""391"", ""258"", ""94""]","[""352"", ""244"", ""244""]",False
+validation_000122,name,Kellie778 Verlie371 Bernhard322,Kellie783 Verona327 Bernhard733,False,False,False,numeric_and_text_error,"[""778"", ""371"", ""322""]","[""783"", ""327"", ""733""]",False
+validation_000123,name,Carin553 Botsford977,Carin597 Botsford977,False,True,False,only_numeric_error,"[""553"", ""977""]","[""597"", ""977""]",False
+validation_000124,name,Jorge Luis88 Ramón841 Gaona896,Jorge844 Ramón866 Guerra164,False,False,False,numeric_and_text_error,"[""88"", ""841"", ""896""]","[""844"", ""866"", ""164""]",False
+validation_000125,name,Eddie505 Micheal721 Wisozk929,Eddie599 Michael922 Wisozik799,False,False,False,numeric_and_text_error,"[""505"", ""721"", ""929""]","[""599"", ""922"", ""799""]",False
+validation_000126,name,Benny518 Mertz280,Benny572 Mertz288,False,True,False,only_numeric_error,"[""518"", ""280""]","[""572"", ""288""]",False
+validation_000127,name,Magdalene960 Shawn523 Okuneva707,Magdalena900 Shawn750000000000000000000000000000000000000000000000000000000,False,False,False,numeric_and_text_error,"[""960"", ""523"", ""707""]","[""900"", ""750000000000000000000000000000000000000000000000000000000""]",True
+validation_000128,name,Bo157 Xavier983 Rempel203,Bo169 Xavier93 Ritz230,False,False,False,numeric_and_text_error,"[""157"", ""983"", ""203""]","[""169"", ""93"", ""230""]",False
+validation_000129,name,Audrea654 Rosalie939 Lehner980,Audrey688 Rosaline900 Knut999,False,False,False,numeric_and_text_error,"[""654"", ""939"", ""980""]","[""688"", ""900"", ""999""]",False
+validation_000130,name,Margarita164 Teodora360 Grimes165,Margarita100 Graciela300 Graciela100 Skaggs113,False,False,False,numeric_and_text_error,"[""164"", ""360"", ""165""]","[""100"", ""300"", ""100"", ""113""]",False
+validation_000131,name,Drema139 Bradtke547,Drema516 Braden166 Wynden566,False,False,False,numeric_and_text_error,"[""139"", ""547""]","[""516"", ""166"", ""566""]",False
+validation_000132,name,Shari363 Mamie949 Schumm995,Shari345 Mamie994 Schmieder999,False,False,False,numeric_and_text_error,"[""363"", ""949"", ""995""]","[""345"", ""994"", ""999""]",False
+validation_000133,name,Elba502 Kendal125 Sanford861,Elba588 Kendra186 Sanderson566,False,False,False,numeric_and_text_error,"[""502"", ""125"", ""861""]","[""588"", ""186"", ""566""]",False
+validation_000134,name,Felecia131 Tobie99 Cassin499,Felecia174 Cassie944,False,False,False,numeric_and_text_error,"[""131"", ""99"", ""499""]","[""174"", ""944""]",False
+validation_000135,name,Lakendra356 Jeanie708 Wolff180,Lak02 Jean700 Jean700 Rue700,False,False,False,numeric_and_text_error,"[""356"", ""708"", ""180""]","[""02"", ""700"", ""700"", ""700""]",False
+validation_000136,name,Felipe97 Kulas532,Felipe955 Kael955 Kessler523,False,False,False,numeric_and_text_error,"[""97"", ""532""]","[""955"", ""955"", ""523""]",False
+validation_000137,name,Dillon740 Tyrone215 Rohan584,Dillon254 Rohan755 Tyler244,False,False,False,numeric_and_text_error,"[""740"", ""215"", ""584""]","[""254"", ""755"", ""244""]",False
+validation_000138,name,Geneva168 Alissa315 Dicki44,Geneva366 Alisa144 Dicki455,False,False,False,numeric_and_text_error,"[""168"", ""315"", ""44""]","[""366"", ""144"", ""455""]",False
+validation_000139,name,Roberto515 Darius626 Ritchie586,Roberto568 Darius655 Ritchie866,False,True,False,only_numeric_error,"[""515"", ""626"", ""586""]","[""568"", ""655"", ""866""]",False
+validation_000140,name,Ivonne773 Rose199 Mueller846,Ivon761 Rose896 Mueller188,False,False,False,numeric_and_text_error,"[""773"", ""199"", ""846""]","[""761"", ""896"", ""188""]",False
+validation_000141,name,Alva958 Alfonso758 Halvorson124,Alvino944 Alfonso18854 Alvaro845,False,False,False,numeric_and_text_error,"[""958"", ""758"", ""124""]","[""944"", ""18854"", ""845""]",False
+validation_000142,name,Marta91 Silvia880 Gollum504,Marta96 Gulland54,False,False,False,numeric_and_text_error,"[""91"", ""880"", ""504""]","[""96"", ""54""]",False
+validation_000143,name,Denver542 Kemmer137,Denver537 Kemmer177,False,True,False,only_numeric_error,"[""542"", ""137""]","[""537"", ""177""]",False
+validation_000144,name,Malinda718 Emelia239 Gutmann970,Malinda727 Emilia92 Holloway790,False,False,False,numeric_and_text_error,"[""718"", ""239"", ""970""]","[""727"", ""92"", ""790""]",False
+validation_000145,name,Weldon459 Schaden604,Weldon439 Schmieder64,False,False,False,numeric_and_text_error,"[""459"", ""604""]","[""439"", ""64""]",False
+validation_000146,name,Mora209 Sheryll569 Satterfield305,Mora283 Shelly533 Shadwell355,False,False,False,numeric_and_text_error,"[""209"", ""569"", ""305""]","[""283"", ""533"", ""355""]",False
+validation_000147,name,Albert312 Beatty507,Albert357 Beatty577,False,True,False,only_numeric_error,"[""312"", ""507""]","[""357"", ""577""]",False
+validation_000148,name,Carri827 Francisca486 Denesik803,Carri804 Francis804 Denesic463,False,False,False,numeric_and_text_error,"[""827"", ""486"", ""803""]","[""804"", ""804"", ""463""]",False
+validation_000149,name,Blaine377 Marcus77 Parker433,Blaine374 Marcus734 Parker473,False,True,False,only_numeric_error,"[""377"", ""77"", ""433""]","[""374"", ""734"", ""473""]",False
+validation_000150,name,Malik994 Rogahn59,Malik955 Rogan599,False,False,False,numeric_and_text_error,"[""994"", ""59""]","[""955"", ""599""]",False
+validation_000151,name,Jolanda321 Tenesha164 Bailey598,Jolanda366 Tenissa584 Tyler155,False,False,False,numeric_and_text_error,"[""321"", ""164"", ""598""]","[""366"", ""584"", ""155""]",False
+validation_000152,name,Valeria950 Spinka232,Valeria923 Spurlock22,False,False,False,numeric_and_text_error,"[""950"", ""232""]","[""923"", ""22""]",False
+validation_000153,name,Earnest658 Hilario934 Corwin846,Ernesto64 Hildegard63 Hilmar684,False,False,False,numeric_and_text_error,"[""658"", ""934"", ""846""]","[""64"", ""63"", ""684""]",False
+validation_000154,name,Jefferey580 Lakin515,Jeffrey537 Larkin515,False,False,False,numeric_and_text_error,"[""580"", ""515""]","[""537"", ""515""]",False
+validation_000155,name,Alexis664 Micah422 Morar593,Alexis624 Micah459 Michaud594,False,False,False,numeric_and_text_error,"[""664"", ""422"", ""593""]","[""624"", ""459"", ""594""]",False
+validation_000156,name,Theressa101 Austin578 Zieme486,Theressa148 Austin184 Zimmermann488,False,False,False,numeric_and_text_error,"[""101"", ""578"", ""486""]","[""148"", ""184"", ""488""]",False
+validation_000157,name,Warner493 Matt836 Beier427,Warner49 Matta878 Flatbeard487,False,False,False,numeric_and_text_error,"[""493"", ""836"", ""427""]","[""49"", ""878"", ""487""]",False
+validation_000158,name,Tom274 Roob72,Tom277 Roach277,False,False,False,numeric_and_text_error,"[""274"", ""72""]","[""277"", ""277""]",False
+validation_000159,name,Mittie376 Hayes766,Mittie36 Hayes76,False,True,False,only_numeric_error,"[""376"", ""766""]","[""36"", ""76""]",False
+validation_000160,name,Reina25 Waelchi213,Reina23 Waelchi213,False,True,False,only_numeric_error,"[""25"", ""213""]","[""23"", ""213""]",False
+validation_000161,name,Markus389 Demetrius568 Bayer639,Markus358 Bayer369,False,False,False,numeric_and_text_error,"[""389"", ""568"", ""639""]","[""358"", ""369""]",False
+validation_000162,name,Tran115 Ziemann98,Tran118 Zemmer198,False,False,False,numeric_and_text_error,"[""115"", ""98""]","[""118"", ""198""]",False
+validation_000163,name,Loriann967 Joslyn677 Bednar518,Loriann625 Josie578 Bednar655,False,False,False,numeric_and_text_error,"[""967"", ""677"", ""518""]","[""625"", ""578"", ""655""]",False
+validation_000164,name,Tynisha348 Lorrine765 Hackett68,Tynisha366 Lottie386 Hackett688,False,False,False,numeric_and_text_error,"[""348"", ""765"", ""68""]","[""366"", ""386"", ""688""]",False
+validation_000165,name,Rosario163 Joline447 Hills818,Rosario188 Jolyn848 Joliver118,False,False,False,numeric_and_text_error,"[""163"", ""447"", ""818""]","[""188"", ""848"", ""118""]",False
+validation_000166,name,Linda558 Nancy265 Fay398,Linda522 Nancy233 Fay2883 Farnsworth388,False,False,False,numeric_and_text_error,"[""558"", ""265"", ""398""]","[""522"", ""233"", ""2883"", ""388""]",False
+validation_000167,name,Wally311 Hung902 Marquardt819,Wally389 Marjorie812 Hunto999,False,False,False,numeric_and_text_error,"[""311"", ""902"", ""819""]","[""389"", ""812"", ""999""]",False
+validation_000168,name,Carmel816 Collette420 Eichmann909,Carmel873 Elenita462 Collet899,False,False,False,numeric_and_text_error,"[""816"", ""420"", ""909""]","[""873"", ""462"", ""899""]",False
+validation_000169,name,Santos184 Koepp521,Santos145 Kael124 Kassman42,False,False,False,numeric_and_text_error,"[""184"", ""521""]","[""145"", ""124"", ""42""]",False
+validation_000170,name,Emil691 Jimmy858 Blick895,Emil688 Jimmy855 Billy855,False,False,False,numeric_and_text_error,"[""691"", ""858"", ""895""]","[""688"", ""855"", ""855""]",False
+validation_000171,name,Norma469 Magdalena964 Urías338,Norma499 Magdalena933 Urias433,False,False,False,numeric_and_text_error,"[""469"", ""964"", ""338""]","[""499"", ""933"", ""433""]",False
+validation_000172,name,Armando772 Goodwin327,Armando733 Goodwin377,False,True,False,only_numeric_error,"[""772"", ""327""]","[""733"", ""377""]",False
+validation_000173,name,Michel472 Jast432,Michel488 Jastrow488,False,False,False,numeric_and_text_error,"[""472"", ""432""]","[""488"", ""488""]",False
+validation_000174,name,Jayna69 Easter642 Luettgen772,Jayna627 Easter766 Glenn627,False,False,False,numeric_and_text_error,"[""69"", ""642"", ""772""]","[""627"", ""766"", ""627""]",False
+validation_000175,name,Caryn49 Marisela850 Rau926,Caryn816 Marisa660 Rasmussen966,False,False,False,numeric_and_text_error,"[""49"", ""850"", ""926""]","[""816"", ""660"", ""966""]",False
+validation_000176,name,Dionna991 Lori426 Runolfsson901,Dion466 Runa946 Lori966 Runa,False,False,False,numeric_and_text_error,"[""991"", ""426"", ""901""]","[""466"", ""946"", ""966""]",False
+validation_000177,name,Victoria535 Adriana394 Rosario163,Victoria533 Adriana133 Rosario333 Walk533,False,False,False,numeric_and_text_error,"[""535"", ""394"", ""163""]","[""533"", ""133"", ""333"", ""533""]",False
+validation_000178,name,Neva514 Margo702 Thiel172,Neva567 Margo122 M. Thaddeus722,False,False,False,numeric_and_text_error,"[""514"", ""702"", ""172""]","[""567"", ""122"", ""722""]",False
+validation_000179,name,Bryan958 Crooks415,Bryan945 Crooks455,False,True,False,only_numeric_error,"[""958"", ""415""]","[""945"", ""455""]",False
+validation_000180,name,Ward668 Amado512 Krajcik437,Wardam587 Kade477,False,False,False,numeric_and_text_error,"[""668"", ""512"", ""437""]","[""587"", ""477""]",False
+validation_000181,name,Shanika235 Rowe323,Shanice233 Rowe322,False,False,False,numeric_and_text_error,"[""235"", ""323""]","[""233"", ""322""]",False
+validation_000182,name,Vicente970 Octavio643 Salinas3,Vicente93 Salva63,False,False,False,numeric_and_text_error,"[""970"", ""643"", ""3""]","[""93"", ""63""]",False
+validation_000183,name,Domenic627 Dillon740 Goldner995,Domenic655 Dillon977 Dillon790,False,False,False,numeric_and_text_error,"[""627"", ""740"", ""995""]","[""655"", ""977"", ""790""]",False
+validation_000184,name,Suzie388 Kate239 Walker122,Suzanne211 Walker226,False,False,False,numeric_and_text_error,"[""388"", ""239"", ""122""]","[""211"", ""226""]",False
+validation_000185,name,Cecilia788 Stehr398,Cecilia738 Steffens38,False,False,False,numeric_and_text_error,"[""788"", ""398""]","[""738"", ""38""]",False
+validation_000186,name,Fritz267 Reggie481 Mayer370,Fritz240 Reginald477 Meyer477,False,False,False,numeric_and_text_error,"[""267"", ""481"", ""370""]","[""240"", ""477"", ""477""]",False
+validation_000187,name,Jenine75 Debrah72 Considine820,Jenine700 Debra722 Debra2000 Winters722,False,False,False,numeric_and_text_error,"[""75"", ""72"", ""820""]","[""700"", ""722"", ""2000"", ""722""]",False
+validation_000188,name,Rico947 Sawayn19,Rico94 Swayne179,False,False,False,numeric_and_text_error,"[""947"", ""19""]","[""94"", ""179""]",False
+validation_000189,name,Chassidy418 Krajcik437,Chassidy41 Krasinski73,False,False,False,numeric_and_text_error,"[""418"", ""437""]","[""41"", ""73""]",False
+validation_000190,name,Hsiu839 Nereida276 Effertz744,Huish888 Nereid877 Nadeau77,False,False,False,numeric_and_text_error,"[""839"", ""276"", ""744""]","[""888"", ""877"", ""77""]",False
+validation_000191,name,Eleni953 Rosita520 Anderson154,Eleni548 Rosita100 Anderson100,False,True,False,only_numeric_error,"[""953"", ""520"", ""154""]","[""548"", ""100"", ""100""]",False
+validation_000192,name,Trish512 Kunde533,Trish565 Kade533 Kuhns355,False,False,False,numeric_and_text_error,"[""512"", ""533""]","[""565"", ""533"", ""355""]",False
+validation_000193,name,Shane235 Kertzmann286,Shane26 Kael25 Kuhmann26,False,False,False,numeric_and_text_error,"[""235"", ""286""]","[""26"", ""25"", ""26""]",False
+validation_000194,name,Walter473 Jakubowski832,Walter477 Jakubowski833,False,True,False,only_numeric_error,"[""473"", ""832""]","[""477"", ""833""]",False
+validation_000195,name,Michale231 Elmer371 Mann644,Michael287 Elmer311 Mann211,False,False,False,numeric_and_text_error,"[""231"", ""371"", ""644""]","[""287"", ""311"", ""211""]",False
+validation_000196,name,Simona661 Gudrun69 Yost751,Simona677 Gudrun677 Gudrun677 Yost677,False,False,False,numeric_and_text_error,"[""661"", ""69"", ""751""]","[""677"", ""677"", ""677"", ""677""]",False
+validation_000197,name,Kristofer887 Jonah176 Shanahan202,Kristofer800 Jonah122 Shanahan200,False,True,False,only_numeric_error,"[""887"", ""176"", ""202""]","[""800"", ""122"", ""200""]",False
+validation_000198,name,Edythe31 Noreen211 Carroll471,Edythe324 Noreen412 Carney117,False,False,False,numeric_and_text_error,"[""31"", ""211"", ""471""]","[""324"", ""412"", ""117""]",False
+validation_000199,name,Pat3 Alexander630 Gorczany269,Pat345 Goran366 Alexandro699,False,False,False,numeric_and_text_error,"[""3"", ""630"", ""269""]","[""345"", ""366"", ""699""]",False
+validation_000200,name,Darius626 Brice635 Funk324,Darius623 Braxton654 Funk655,False,False,False,numeric_and_text_error,"[""626"", ""635"", ""324""]","[""623"", ""654"", ""655""]",False
+validation_000001,birth_date,1999-06-06,1994-04-14,False,True,False,only_numeric_error,"[""1999"", ""06"", ""06""]","[""1994"", ""04"", ""14""]",False
+validation_000002,birth_date,1990-10-09,1993-06-12,False,True,False,only_numeric_error,"[""1990"", ""10"", ""09""]","[""1993"", ""06"", ""12""]",False
+validation_000003,birth_date,1983-01-29,1973-05-15,False,True,False,only_numeric_error,"[""1983"", ""01"", ""29""]","[""1973"", ""05"", ""15""]",False
+validation_000004,birth_date,1959-07-11,1975-05-12,False,True,False,only_numeric_error,"[""1959"", ""07"", ""11""]","[""1975"", ""05"", ""12""]",False
+validation_000005,birth_date,1970-06-13,1976-06-15,False,True,False,only_numeric_error,"[""1970"", ""06"", ""13""]","[""1976"", ""06"", ""15""]",False
+validation_000006,birth_date,1981-04-25,1973-06-16,False,True,False,only_numeric_error,"[""1981"", ""04"", ""25""]","[""1973"", ""06"", ""16""]",False
+validation_000007,birth_date,1990-12-26,1990-05-15,False,True,False,only_numeric_error,"[""1990"", ""12"", ""26""]","[""1990"", ""05"", ""15""]",False
+validation_000008,birth_date,1998-03-03,1997-06-17,False,True,False,only_numeric_error,"[""1998"", ""03"", ""03""]","[""1997"", ""06"", ""17""]",False
+validation_000009,birth_date,1982-12-31,1982-04-22,False,True,False,only_numeric_error,"[""1982"", ""12"", ""31""]","[""1982"", ""04"", ""22""]",False
+validation_000010,birth_date,1999-05-01,1990-09-19,False,True,False,only_numeric_error,"[""1999"", ""05"", ""01""]","[""1990"", ""09"", ""19""]",False
+validation_000011,birth_date,1987-01-19,1993-06-15,False,True,False,only_numeric_error,"[""1987"", ""01"", ""19""]","[""1993"", ""06"", ""15""]",False
+validation_000012,birth_date,1977-02-05,1967-06-17,False,True,False,only_numeric_error,"[""1977"", ""02"", ""05""]","[""1967"", ""06"", ""17""]",False
+validation_000013,birth_date,2012-01-27,2019-04-24,False,True,False,only_numeric_error,"[""2012"", ""01"", ""27""]","[""2019"", ""04"", ""24""]",False
+validation_000014,birth_date,1976-09-11,1974-04-14,False,True,False,only_numeric_error,"[""1976"", ""09"", ""11""]","[""1974"", ""04"", ""14""]",False
+validation_000015,birth_date,1952-08-11,1976-06-16,False,True,False,only_numeric_error,"[""1952"", ""08"", ""11""]","[""1976"", ""06"", ""16""]",False
+validation_000016,birth_date,1945-01-21,1973-06-13,False,True,False,only_numeric_error,"[""1945"", ""01"", ""21""]","[""1973"", ""06"", ""13""]",False
+validation_000017,birth_date,1997-01-16,1990-06-20,False,True,False,only_numeric_error,"[""1997"", ""01"", ""16""]","[""1990"", ""06"", ""20""]",False
+validation_000018,birth_date,2003-12-27,2007-06-16,False,True,False,only_numeric_error,"[""2003"", ""12"", ""27""]","[""2007"", ""06"", ""16""]",False
+validation_000019,birth_date,1972-10-15,1984-04-24,False,True,False,only_numeric_error,"[""1972"", ""10"", ""15""]","[""1984"", ""04"", ""24""]",False
+validation_000020,birth_date,2002-07-31,2001-08-15,False,True,False,only_numeric_error,"[""2002"", ""07"", ""31""]","[""2001"", ""08"", ""15""]",False
+validation_000021,birth_date,1965-01-13,1983-04-14,False,True,False,only_numeric_error,"[""1965"", ""01"", ""13""]","[""1983"", ""04"", ""14""]",False
+validation_000022,birth_date,1986-01-29,1990-06-13,False,True,False,only_numeric_error,"[""1986"", ""01"", ""29""]","[""1990"", ""06"", ""13""]",False
+validation_000023,birth_date,1952-07-10,1970-06-15,False,True,False,only_numeric_error,"[""1952"", ""07"", ""10""]","[""1970"", ""06"", ""15""]",False
+validation_000024,birth_date,1986-10-22,1978-08-22,False,True,False,only_numeric_error,"[""1986"", ""10"", ""22""]","[""1978"", ""08"", ""22""]",False
+validation_000025,birth_date,2008-07-10,2004-04-14,False,True,False,only_numeric_error,"[""2008"", ""07"", ""10""]","[""2004"", ""04"", ""14""]",False
+validation_000026,birth_date,1961-06-05,1965-05-25,False,True,False,only_numeric_error,"[""1961"", ""06"", ""05""]","[""1965"", ""05"", ""25""]",False
+validation_000027,birth_date,2004-02-18,2007-06-17,False,True,False,only_numeric_error,"[""2004"", ""02"", ""18""]","[""2007"", ""06"", ""17""]",False
+validation_000028,birth_date,1972-07-06,1971-04-17,False,True,False,only_numeric_error,"[""1972"", ""07"", ""06""]","[""1971"", ""04"", ""17""]",False
+validation_000029,birth_date,1978-06-08,1974-04-12,False,True,False,only_numeric_error,"[""1978"", ""06"", ""08""]","[""1974"", ""04"", ""12""]",False
+validation_000030,birth_date,1987-12-28,1983-04-12,False,True,False,only_numeric_error,"[""1987"", ""12"", ""28""]","[""1983"", ""04"", ""12""]",False
+validation_000031,birth_date,1934-09-04,1967-06-17,False,True,False,only_numeric_error,"[""1934"", ""09"", ""04""]","[""1967"", ""06"", ""17""]",False
+validation_000032,birth_date,2020-07-07,2019-05-23,False,True,False,only_numeric_error,"[""2020"", ""07"", ""07""]","[""2019"", ""05"", ""23""]",False
+validation_000033,birth_date,1996-11-02,1995-06-15,False,True,False,only_numeric_error,"[""1996"", ""11"", ""02""]","[""1995"", ""06"", ""15""]",False
+validation_000034,birth_date,1969-11-06,1964-04-12,False,True,False,only_numeric_error,"[""1969"", ""11"", ""06""]","[""1964"", ""04"", ""12""]",False
+validation_000035,birth_date,2012-10-06,2005-06-15,False,True,False,only_numeric_error,"[""2012"", ""10"", ""06""]","[""2005"", ""06"", ""15""]",False
+validation_000036,birth_date,1975-10-31,1976-06-16,False,True,False,only_numeric_error,"[""1975"", ""10"", ""31""]","[""1976"", ""06"", ""16""]",False
+validation_000037,birth_date,1979-10-16,1973-04-17,False,True,False,only_numeric_error,"[""1979"", ""10"", ""16""]","[""1973"", ""04"", ""17""]",False
+validation_000038,birth_date,1977-12-26,1963-04-13,False,True,False,only_numeric_error,"[""1977"", ""12"", ""26""]","[""1963"", ""04"", ""13""]",False
+validation_000039,birth_date,1994-04-21,1982-06-23,False,True,False,only_numeric_error,"[""1994"", ""04"", ""21""]","[""1982"", ""06"", ""23""]",False
+validation_000040,birth_date,1944-11-12,1963-06-10,False,True,False,only_numeric_error,"[""1944"", ""11"", ""12""]","[""1963"", ""06"", ""10""]",False
+validation_000041,birth_date,2008-02-17,2003-04-14,False,True,False,only_numeric_error,"[""2008"", ""02"", ""17""]","[""2003"", ""04"", ""14""]",False
+validation_000042,birth_date,1985-02-04,1986-06-16,False,True,False,only_numeric_error,"[""1985"", ""02"", ""04""]","[""1986"", ""06"", ""16""]",False
+validation_000043,birth_date,1953-05-08,1967-06-17,False,True,False,only_numeric_error,"[""1953"", ""05"", ""08""]","[""1967"", ""06"", ""17""]",False
+validation_000044,birth_date,1994-01-12,1993-06-13,False,True,False,only_numeric_error,"[""1994"", ""01"", ""12""]","[""1993"", ""06"", ""13""]",False
+validation_000045,birth_date,1994-12-07,1986-06-25,False,True,False,only_numeric_error,"[""1994"", ""12"", ""07""]","[""1986"", ""06"", ""25""]",False
+validation_000046,birth_date,1963-03-07,1976-06-22,False,True,False,only_numeric_error,"[""1963"", ""03"", ""07""]","[""1976"", ""06"", ""22""]",False
+validation_000047,birth_date,1979-03-10,1970-05-15,False,True,False,only_numeric_error,"[""1979"", ""03"", ""10""]","[""1970"", ""05"", ""15""]",False
+validation_000048,birth_date,1974-04-07,1973-04-13,False,True,False,only_numeric_error,"[""1974"", ""04"", ""07""]","[""1973"", ""04"", ""13""]",False
+validation_000049,birth_date,1978-03-20,1973-03-17,False,True,False,only_numeric_error,"[""1978"", ""03"", ""20""]","[""1973"", ""03"", ""17""]",False
+validation_000050,birth_date,2010-02-01,2010-07-25,False,True,False,only_numeric_error,"[""2010"", ""02"", ""01""]","[""2010"", ""07"", ""25""]",False
+validation_000051,birth_date,1980-05-17,1983-03-13,False,True,False,only_numeric_error,"[""1980"", ""05"", ""17""]","[""1983"", ""03"", ""13""]",False
+validation_000052,birth_date,2012-08-25,2004-06-16,False,True,False,only_numeric_error,"[""2012"", ""08"", ""25""]","[""2004"", ""06"", ""16""]",False
+validation_000053,birth_date,1989-01-18,1994-06-14,False,True,False,only_numeric_error,"[""1989"", ""01"", ""18""]","[""1994"", ""06"", ""14""]",False
+validation_000054,birth_date,2018-09-12,2017-06-13,False,True,False,only_numeric_error,"[""2018"", ""09"", ""12""]","[""2017"", ""06"", ""13""]",False
+validation_000055,birth_date,2012-03-24,2010-04-14,False,True,False,only_numeric_error,"[""2012"", ""03"", ""24""]","[""2010"", ""04"", ""14""]",False
+validation_000056,birth_date,2017-07-13,2019-05-15,False,True,False,only_numeric_error,"[""2017"", ""07"", ""13""]","[""2019"", ""05"", ""15""]",False
+validation_000057,birth_date,2014-05-04,2010-06-16,False,True,False,only_numeric_error,"[""2014"", ""05"", ""04""]","[""2010"", ""06"", ""16""]",False
+validation_000058,birth_date,1992-12-21,1986-06-16,False,True,False,only_numeric_error,"[""1992"", ""12"", ""21""]","[""1986"", ""06"", ""16""]",False
+validation_000059,birth_date,2002-03-22,2004-04-14,False,True,False,only_numeric_error,"[""2002"", ""03"", ""22""]","[""2004"", ""04"", ""14""]",False
+validation_000060,birth_date,1943-11-19,1963-03-13,False,True,False,only_numeric_error,"[""1943"", ""11"", ""19""]","[""1963"", ""03"", ""13""]",False
+validation_000061,birth_date,1971-12-25,1979-06-16,False,True,False,only_numeric_error,"[""1971"", ""12"", ""25""]","[""1979"", ""06"", ""16""]",False
+validation_000062,birth_date,2024-02-15,2019-06-15,False,True,False,only_numeric_error,"[""2024"", ""02"", ""15""]","[""2019"", ""06"", ""15""]",False
+validation_000063,birth_date,2013-04-13,2010-04-14,False,True,False,only_numeric_error,"[""2013"", ""04"", ""13""]","[""2010"", ""04"", ""14""]",False
+validation_000064,birth_date,1993-12-09,1995-06-15,False,True,False,only_numeric_error,"[""1993"", ""12"", ""09""]","[""1995"", ""06"", ""15""]",False
+validation_000065,birth_date,1998-09-17,1995-06-15,False,True,False,only_numeric_error,"[""1998"", ""09"", ""17""]","[""1995"", ""06"", ""15""]",False
+validation_000066,birth_date,1996-08-19,1996-06-16,False,True,False,only_numeric_error,"[""1996"", ""08"", ""19""]","[""1996"", ""06"", ""16""]",False
+validation_000067,birth_date,1942-10-21,1969-05-20,False,True,False,only_numeric_error,"[""1942"", ""10"", ""21""]","[""1969"", ""05"", ""20""]",False
+validation_000068,birth_date,1958-09-11,1973-09-13,False,True,False,only_numeric_error,"[""1958"", ""09"", ""11""]","[""1973"", ""09"", ""13""]",False
+validation_000069,birth_date,1968-11-21,1967-04-17,False,True,False,only_numeric_error,"[""1968"", ""11"", ""21""]","[""1967"", ""04"", ""17""]",False
+validation_000070,birth_date,1983-01-21,1982-06-16,False,True,False,only_numeric_error,"[""1983"", ""01"", ""21""]","[""1982"", ""06"", ""16""]",False
+validation_000071,birth_date,1988-03-17,1998-06-18,False,True,False,only_numeric_error,"[""1988"", ""03"", ""17""]","[""1998"", ""06"", ""18""]",False
+validation_000072,birth_date,1997-01-07,1997-07-17,False,True,False,only_numeric_error,"[""1997"", ""01"", ""07""]","[""1997"", ""07"", ""17""]",False
+validation_000073,birth_date,1954-12-20,1977-06-17,False,True,False,only_numeric_error,"[""1954"", ""12"", ""20""]","[""1977"", ""06"", ""17""]",False
+validation_000074,birth_date,1967-12-23,1963-06-16,False,True,False,only_numeric_error,"[""1967"", ""12"", ""23""]","[""1963"", ""06"", ""16""]",False
+validation_000075,birth_date,2001-06-07,2005-07-25,False,True,False,only_numeric_error,"[""2001"", ""06"", ""07""]","[""2005"", ""07"", ""25""]",False
+validation_000076,birth_date,1993-11-05,1991-06-12,False,True,False,only_numeric_error,"[""1993"", ""11"", ""05""]","[""1991"", ""06"", ""12""]",False
+validation_000077,birth_date,1991-11-24,1994-06-16,False,True,False,only_numeric_error,"[""1991"", ""11"", ""24""]","[""1994"", ""06"", ""16""]",False
+validation_000078,birth_date,1953-08-29,1969-04-12,False,True,False,only_numeric_error,"[""1953"", ""08"", ""29""]","[""1969"", ""04"", ""12""]",False
+validation_000079,birth_date,2002-11-12,2003-06-16,False,True,False,only_numeric_error,"[""2002"", ""11"", ""12""]","[""2003"", ""06"", ""16""]",False
+validation_000080,birth_date,1980-12-03,1986-06-16,False,True,False,only_numeric_error,"[""1980"", ""12"", ""03""]","[""1986"", ""06"", ""16""]",False
+validation_000081,birth_date,1996-03-23,1995-06-15,False,True,False,only_numeric_error,"[""1996"", ""03"", ""23""]","[""1995"", ""06"", ""15""]",False
+validation_000082,birth_date,1990-01-28,1994-04-12,False,True,False,only_numeric_error,"[""1990"", ""01"", ""28""]","[""1994"", ""04"", ""12""]",False
+validation_000083,birth_date,1979-07-27,1974-06-14,False,True,False,only_numeric_error,"[""1979"", ""07"", ""27""]","[""1974"", ""06"", ""14""]",False
+validation_000084,birth_date,1974-12-26,1964-04-15,False,True,False,only_numeric_error,"[""1974"", ""12"", ""26""]","[""1964"", ""04"", ""15""]",False
+validation_000085,birth_date,2013-05-15,2010-04-12,False,True,False,only_numeric_error,"[""2013"", ""05"", ""15""]","[""2010"", ""04"", ""12""]",False
+validation_000086,birth_date,1946-12-26,1983-04-13,False,True,False,only_numeric_error,"[""1946"", ""12"", ""26""]","[""1983"", ""04"", ""13""]",False
+validation_000087,birth_date,1973-11-15,1974-04-15,False,True,False,only_numeric_error,"[""1973"", ""11"", ""15""]","[""1974"", ""04"", ""15""]",False
+validation_000088,birth_date,1955-11-06,1973-05-17,False,True,False,only_numeric_error,"[""1955"", ""11"", ""06""]","[""1973"", ""05"", ""17""]",False
+validation_000089,birth_date,1949-12-21,1964-05-15,False,True,False,only_numeric_error,"[""1949"", ""12"", ""21""]","[""1964"", ""05"", ""15""]",False
+validation_000090,birth_date,2020-08-14,2017-06-24,False,True,False,only_numeric_error,"[""2020"", ""08"", ""14""]","[""2017"", ""06"", ""24""]",False
+validation_000091,birth_date,1958-01-16,1973-05-15,False,True,False,only_numeric_error,"[""1958"", ""01"", ""16""]","[""1973"", ""05"", ""15""]",False
+validation_000092,birth_date,2010-02-05,2017-06-15,False,True,False,only_numeric_error,"[""2010"", ""02"", ""05""]","[""2017"", ""06"", ""15""]",False
+validation_000093,birth_date,1965-07-22,1975-05-15,False,True,False,only_numeric_error,"[""1965"", ""07"", ""22""]","[""1975"", ""05"", ""15""]",False
+validation_000094,birth_date,2001-12-24,2004-04-17,False,True,False,only_numeric_error,"[""2001"", ""12"", ""24""]","[""2004"", ""04"", ""17""]",False
+validation_000095,birth_date,1999-05-24,2003-04-24,False,True,False,only_numeric_error,"[""1999"", ""05"", ""24""]","[""2003"", ""04"", ""24""]",False
+validation_000096,birth_date,2003-06-01,2003-08-15,False,True,False,only_numeric_error,"[""2003"", ""06"", ""01""]","[""2003"", ""08"", ""15""]",False
+validation_000097,birth_date,2014-04-28,2010-04-24,False,True,False,only_numeric_error,"[""2014"", ""04"", ""28""]","[""2010"", ""04"", ""24""]",False
+validation_000098,birth_date,1987-03-26,1984-06-16,False,True,False,only_numeric_error,"[""1987"", ""03"", ""26""]","[""1984"", ""06"", ""16""]",False
+validation_000099,birth_date,2007-10-03,2010-06-16,False,True,False,only_numeric_error,"[""2007"", ""10"", ""03""]","[""2010"", ""06"", ""16""]",False
+validation_000100,birth_date,1984-05-23,1974-06-14,False,True,False,only_numeric_error,"[""1984"", ""05"", ""23""]","[""1974"", ""06"", ""14""]",False
+validation_000101,birth_date,1964-09-15,1973-04-14,False,True,False,only_numeric_error,"[""1964"", ""09"", ""15""]","[""1973"", ""04"", ""14""]",False
+validation_000102,birth_date,1964-08-11,1974-04-14,False,True,False,only_numeric_error,"[""1964"", ""08"", ""11""]","[""1974"", ""04"", ""14""]",False
+validation_000103,birth_date,1958-10-20,1973-04-15,False,True,False,only_numeric_error,"[""1958"", ""10"", ""20""]","[""1973"", ""04"", ""15""]",False
+validation_000104,birth_date,1986-04-25,1984-06-14,False,True,False,only_numeric_error,"[""1986"", ""04"", ""25""]","[""1984"", ""06"", ""14""]",False
+validation_000105,birth_date,2008-12-05,2017-07-27,False,True,False,only_numeric_error,"[""2008"", ""12"", ""05""]","[""2017"", ""07"", ""27""]",False
+validation_000106,birth_date,1953-10-14,1963-06-16,False,True,False,only_numeric_error,"[""1953"", ""10"", ""14""]","[""1963"", ""06"", ""16""]",False
+validation_000107,birth_date,1963-02-16,1964-04-24,False,True,False,only_numeric_error,"[""1963"", ""02"", ""16""]","[""1964"", ""04"", ""24""]",False
+validation_000108,birth_date,1996-02-24,1983-04-13,False,True,False,only_numeric_error,"[""1996"", ""02"", ""24""]","[""1983"", ""04"", ""13""]",False
+validation_000109,birth_date,1954-11-02,1963-06-16,False,True,False,only_numeric_error,"[""1954"", ""11"", ""02""]","[""1963"", ""06"", ""16""]",False
+validation_000110,birth_date,1942-02-28,1973-04-23,False,True,False,only_numeric_error,"[""1942"", ""02"", ""28""]","[""1973"", ""04"", ""23""]",False
+validation_000111,birth_date,1967-02-19,1973-04-17,False,True,False,only_numeric_error,"[""1967"", ""02"", ""19""]","[""1973"", ""04"", ""17""]",False
+validation_000112,birth_date,1957-06-13,1950-06-13,False,True,False,only_numeric_error,"[""1957"", ""06"", ""13""]","[""1950"", ""06"", ""13""]",False
+validation_000113,birth_date,1968-07-17,1965-06-22,False,True,False,only_numeric_error,"[""1968"", ""07"", ""17""]","[""1965"", ""06"", ""22""]",False
+validation_000114,birth_date,1959-11-28,1973-06-13,False,True,False,only_numeric_error,"[""1959"", ""11"", ""28""]","[""1973"", ""06"", ""13""]",False
+validation_000115,birth_date,1975-10-11,1966-06-16,False,True,False,only_numeric_error,"[""1975"", ""10"", ""11""]","[""1966"", ""06"", ""16""]",False
+validation_000116,birth_date,1975-08-22,1965-05-15,False,True,False,only_numeric_error,"[""1975"", ""08"", ""22""]","[""1965"", ""05"", ""15""]",False
+validation_000117,birth_date,1983-08-07,1983-05-15,False,True,False,only_numeric_error,"[""1983"", ""08"", ""07""]","[""1983"", ""05"", ""15""]",False
+validation_000118,birth_date,2009-09-10,2003-05-15,False,True,False,only_numeric_error,"[""2009"", ""09"", ""10""]","[""2003"", ""05"", ""15""]",False
+validation_000119,birth_date,1982-02-16,1983-06-12,False,True,False,only_numeric_error,"[""1982"", ""02"", ""16""]","[""1983"", ""06"", ""12""]",False
+validation_000120,birth_date,2018-08-21,2019-06-16,False,True,False,only_numeric_error,"[""2018"", ""08"", ""21""]","[""2019"", ""06"", ""16""]",False
+validation_000121,birth_date,1992-07-22,1994-04-12,False,True,False,only_numeric_error,"[""1992"", ""07"", ""22""]","[""1994"", ""04"", ""12""]",False
+validation_000122,birth_date,1972-06-06,1973-04-13,False,True,False,only_numeric_error,"[""1972"", ""06"", ""06""]","[""1973"", ""04"", ""13""]",False
+validation_000123,birth_date,2002-10-01,2007-06-17,False,True,False,only_numeric_error,"[""2002"", ""10"", ""01""]","[""2007"", ""06"", ""17""]",False
+validation_000124,birth_date,1942-02-25,1964-04-16,False,True,False,only_numeric_error,"[""1942"", ""02"", ""25""]","[""1964"", ""04"", ""16""]",False
+validation_000125,birth_date,1976-11-10,1955-05-12,False,True,False,only_numeric_error,"[""1976"", ""11"", ""10""]","[""1955"", ""05"", ""12""]",False
+validation_000126,birth_date,2018-10-03,2020-08-20,False,True,False,only_numeric_error,"[""2018"", ""10"", ""03""]","[""2020"", ""08"", ""20""]",False
+validation_000127,birth_date,2017-09-06,2017-07-25,False,True,False,only_numeric_error,"[""2017"", ""09"", ""06""]","[""2017"", ""07"", ""25""]",False
+validation_000128,birth_date,2005-05-16,2003-09-12,False,True,False,only_numeric_error,"[""2005"", ""05"", ""16""]","[""2003"", ""09"", ""12""]",False
+validation_000129,birth_date,1969-07-06,1950-06-10,False,True,False,only_numeric_error,"[""1969"", ""07"", ""06""]","[""1950"", ""06"", ""10""]",False
+validation_000130,birth_date,1957-11-01,1963-06-15,False,True,False,only_numeric_error,"[""1957"", ""11"", ""01""]","[""1963"", ""06"", ""15""]",False
+validation_000131,birth_date,1969-07-14,1986-06-16,False,True,False,only_numeric_error,"[""1969"", ""07"", ""14""]","[""1986"", ""06"", ""16""]",False
+validation_000132,birth_date,2022-12-02,2023-04-13,False,True,False,only_numeric_error,"[""2022"", ""12"", ""02""]","[""2023"", ""04"", ""13""]",False
+validation_000133,birth_date,1988-01-13,1981-06-15,False,True,False,only_numeric_error,"[""1988"", ""01"", ""13""]","[""1981"", ""06"", ""15""]",False
+validation_000134,birth_date,2003-12-01,2004-04-14,False,True,False,only_numeric_error,"[""2003"", ""12"", ""01""]","[""2004"", ""04"", ""14""]",False
+validation_000135,birth_date,2011-11-03,2010-06-10,False,True,False,only_numeric_error,"[""2011"", ""11"", ""03""]","[""2010"", ""06"", ""10""]",False
+validation_000136,birth_date,1934-01-12,1975-05-25,False,True,False,only_numeric_error,"[""1934"", ""01"", ""12""]","[""1975"", ""05"", ""25""]",False
+validation_000137,birth_date,1965-02-03,1975-04-25,False,True,False,only_numeric_error,"[""1965"", ""02"", ""03""]","[""1975"", ""04"", ""25""]",False
+validation_000138,birth_date,2024-12-09,2023-04-15,False,True,False,only_numeric_error,"[""2024"", ""12"", ""09""]","[""2023"", ""04"", ""15""]",False
+validation_000139,birth_date,1968-10-05,1985-06-16,False,True,False,only_numeric_error,"[""1968"", ""10"", ""05""]","[""1985"", ""06"", ""16""]",False
+validation_000140,birth_date,2011-05-28,2006-06-14,False,True,False,only_numeric_error,"[""2011"", ""05"", ""28""]","[""2006"", ""06"", ""14""]",False
+validation_000141,birth_date,1969-06-23,1974-04-15,False,True,False,only_numeric_error,"[""1969"", ""06"", ""23""]","[""1974"", ""04"", ""15""]",False
+validation_000142,birth_date,2002-07-02,2004-05-15,False,True,False,only_numeric_error,"[""2002"", ""07"", ""02""]","[""2004"", ""05"", ""15""]",False
+validation_000143,birth_date,2010-01-10,2013-07-17,False,True,False,only_numeric_error,"[""2010"", ""01"", ""10""]","[""2013"", ""07"", ""17""]",False
+validation_000144,birth_date,1972-02-09,1970-04-12,False,True,False,only_numeric_error,"[""1972"", ""02"", ""09""]","[""1970"", ""04"", ""12""]",False
+validation_000145,birth_date,1991-12-03,1994-06-14,False,True,False,only_numeric_error,"[""1991"", ""12"", ""03""]","[""1994"", ""06"", ""14""]",False
+validation_000146,birth_date,2018-04-09,2018-06-25,False,True,False,only_numeric_error,"[""2018"", ""04"", ""09""]","[""2018"", ""06"", ""25""]",False
+validation_000147,birth_date,2002-02-03,2005-07-25,False,True,False,only_numeric_error,"[""2002"", ""02"", ""03""]","[""2005"", ""07"", ""25""]",False
+validation_000148,birth_date,1961-01-04,1970-06-13,False,True,False,only_numeric_error,"[""1961"", ""01"", ""04""]","[""1970"", ""06"", ""13""]",False
+validation_000149,birth_date,1976-08-16,1973-07-17,False,True,False,only_numeric_error,"[""1976"", ""08"", ""16""]","[""1973"", ""07"", ""17""]",False
+validation_000150,birth_date,1958-03-27,1975-05-15,False,True,False,only_numeric_error,"[""1958"", ""03"", ""27""]","[""1975"", ""05"", ""15""]",False
+validation_000151,birth_date,1964-06-13,1965-06-15,False,True,False,only_numeric_error,"[""1964"", ""06"", ""13""]","[""1965"", ""06"", ""15""]",False
+validation_000152,birth_date,2016-02-04,2019-06-20,False,True,False,only_numeric_error,"[""2016"", ""02"", ""04""]","[""2019"", ""06"", ""20""]",False
+validation_000153,birth_date,1976-10-02,1974-04-13,False,True,False,only_numeric_error,"[""1976"", ""10"", ""02""]","[""1974"", ""04"", ""13""]",False
+validation_000154,birth_date,2020-11-16,2018-05-15,False,True,False,only_numeric_error,"[""2020"", ""11"", ""16""]","[""2018"", ""05"", ""15""]",False
+validation_000155,birth_date,2016-11-16,2015-04-24,False,True,False,only_numeric_error,"[""2016"", ""11"", ""16""]","[""2015"", ""04"", ""24""]",False
+validation_000156,birth_date,2010-12-16,2003-06-14,False,True,False,only_numeric_error,"[""2010"", ""12"", ""16""]","[""2003"", ""06"", ""14""]",False
+validation_000157,birth_date,1982-08-17,1987-04-17,False,True,False,only_numeric_error,"[""1982"", ""08"", ""17""]","[""1987"", ""04"", ""17""]",False
+validation_000158,birth_date,1965-11-13,1974-04-27,False,True,False,only_numeric_error,"[""1965"", ""11"", ""13""]","[""1974"", ""04"", ""27""]",False
+validation_000159,birth_date,1997-11-04,1996-06-16,False,True,False,only_numeric_error,"[""1997"", ""11"", ""04""]","[""1996"", ""06"", ""16""]",False
+validation_000160,birth_date,1950-05-20,1973-01-22,False,True,False,only_numeric_error,"[""1950"", ""05"", ""20""]","[""1973"", ""01"", ""22""]",False
+validation_000161,birth_date,2001-01-29,2015-06-15,False,True,False,only_numeric_error,"[""2001"", ""01"", ""29""]","[""2015"", ""06"", ""15""]",False
+validation_000162,birth_date,1994-02-10,1980-05-18,False,True,False,only_numeric_error,"[""1994"", ""02"", ""10""]","[""1980"", ""05"", ""18""]",False
+validation_000163,birth_date,1970-11-15,1985-06-15,False,True,False,only_numeric_error,"[""1970"", ""11"", ""15""]","[""1985"", ""06"", ""15""]",False
+validation_000164,birth_date,2021-04-03,2020-06-15,False,True,False,only_numeric_error,"[""2021"", ""04"", ""03""]","[""2020"", ""06"", ""15""]",False
+validation_000165,birth_date,1969-09-20,1974-04-18,False,True,False,only_numeric_error,"[""1969"", ""09"", ""20""]","[""1974"", ""04"", ""18""]",False
+validation_000166,birth_date,2007-01-26,2003-05-22,False,True,False,only_numeric_error,"[""2007"", ""01"", ""26""]","[""2003"", ""05"", ""22""]",False
+validation_000167,birth_date,2009-05-14,2002-09-10,False,True,False,only_numeric_error,"[""2009"", ""05"", ""14""]","[""2002"", ""09"", ""10""]",False
+validation_000168,birth_date,1972-11-01,1974-04-12,False,True,False,only_numeric_error,"[""1972"", ""11"", ""01""]","[""1974"", ""04"", ""12""]",False
+validation_000169,birth_date,1986-07-05,1974-04-14,False,True,False,only_numeric_error,"[""1986"", ""07"", ""05""]","[""1974"", ""04"", ""14""]",False
+validation_000170,birth_date,2008-05-19,2010-06-15,False,True,False,only_numeric_error,"[""2008"", ""05"", ""19""]","[""2010"", ""06"", ""15""]",False
+validation_000171,birth_date,1992-06-27,1994-04-13,False,True,False,only_numeric_error,"[""1992"", ""06"", ""27""]","[""1994"", ""04"", ""13""]",False
+validation_000172,birth_date,1976-03-27,1973-07-17,False,True,False,only_numeric_error,"[""1976"", ""03"", ""27""]","[""1973"", ""07"", ""17""]",False
+validation_000173,birth_date,2012-08-06,2018-08-24,False,True,False,only_numeric_error,"[""2012"", ""08"", ""06""]","[""2018"", ""08"", ""24""]",False
+validation_000174,birth_date,2006-12-24,2004-06-24,False,True,False,only_numeric_error,"[""2006"", ""12"", ""24""]","[""2004"", ""06"", ""24""]",False
+validation_000175,birth_date,1970-02-10,1986-06-16,False,True,False,only_numeric_error,"[""1970"", ""02"", ""10""]","[""1986"", ""06"", ""16""]",False
+validation_000176,birth_date,1970-01-01,1976-06-16,False,True,False,only_numeric_error,"[""1970"", ""01"", ""01""]","[""1976"", ""06"", ""16""]",False
+validation_000177,birth_date,1981-11-29,1973-04-13,False,True,False,only_numeric_error,"[""1981"", ""11"", ""29""]","[""1973"", ""04"", ""13""]",False
+validation_000178,birth_date,1970-02-01,1967-07-12,False,True,False,only_numeric_error,"[""1970"", ""02"", ""01""]","[""1967"", ""07"", ""12""]",False
+validation_000179,birth_date,1992-10-09,1984-04-14,False,True,False,only_numeric_error,"[""1992"", ""10"", ""09""]","[""1984"", ""04"", ""14""]",False
+validation_000180,birth_date,2019-12-30,2021-07-27,False,True,False,only_numeric_error,"[""2019"", ""12"", ""30""]","[""2021"", ""07"", ""27""]",False
+validation_000181,birth_date,2003-03-29,2003-03-23,False,True,False,only_numeric_error,"[""2003"", ""03"", ""29""]","[""2003"", ""03"", ""23""]",False
+validation_000182,birth_date,1991-04-28,1990-06-16,False,True,False,only_numeric_error,"[""1991"", ""04"", ""28""]","[""1990"", ""06"", ""16""]",False
+validation_000183,birth_date,1962-09-21,1975-05-17,False,True,False,only_numeric_error,"[""1962"", ""09"", ""21""]","[""1975"", ""05"", ""17""]",False
+validation_000184,birth_date,1956-11-04,1962-04-22,False,True,False,only_numeric_error,"[""1956"", ""11"", ""04""]","[""1962"", ""04"", ""22""]",False
+validation_000185,birth_date,2023-06-13,2023-08-15,False,True,False,only_numeric_error,"[""2023"", ""06"", ""13""]","[""2023"", ""08"", ""15""]",False
+validation_000186,birth_date,1972-07-29,1983-04-17,False,True,False,only_numeric_error,"[""1972"", ""07"", ""29""]","[""1983"", ""04"", ""17""]",False
+validation_000187,birth_date,1935-02-24,1950-05-12,False,True,False,only_numeric_error,"[""1935"", ""02"", ""24""]","[""1950"", ""05"", ""12""]",False
+validation_000188,birth_date,2019-11-24,2019-04-12,False,True,False,only_numeric_error,"[""2019"", ""11"", ""24""]","[""2019"", ""04"", ""12""]",False
+validation_000189,birth_date,1982-03-15,1987-04-17,False,True,False,only_numeric_error,"[""1982"", ""03"", ""15""]","[""1987"", ""04"", ""17""]",False
+validation_000190,birth_date,1945-09-05,1974-06-17,False,True,False,only_numeric_error,"[""1945"", ""09"", ""05""]","[""1974"", ""06"", ""17""]",False
+validation_000191,birth_date,1978-01-09,1970-04-14,False,True,False,only_numeric_error,"[""1978"", ""01"", ""09""]","[""1970"", ""04"", ""14""]",False
+validation_000192,birth_date,1948-09-05,1975-05-25,False,True,False,only_numeric_error,"[""1948"", ""09"", ""05""]","[""1975"", ""05"", ""25""]",False
+validation_000193,birth_date,2004-01-19,2005-06-22,False,True,False,only_numeric_error,"[""2004"", ""01"", ""19""]","[""2005"", ""06"", ""22""]",False
+validation_000194,birth_date,1973-02-19,1963-04-23,False,True,False,only_numeric_error,"[""1973"", ""02"", ""19""]","[""1963"", ""04"", ""23""]",False
+validation_000195,birth_date,1944-03-22,1973-04-23,False,True,False,only_numeric_error,"[""1944"", ""03"", ""22""]","[""1973"", ""04"", ""23""]",False
+validation_000196,birth_date,1993-11-02,1997-06-15,False,True,False,only_numeric_error,"[""1993"", ""11"", ""02""]","[""1997"", ""06"", ""15""]",False
+validation_000197,birth_date,1998-10-19,1990-06-12,False,True,False,only_numeric_error,"[""1998"", ""10"", ""19""]","[""1990"", ""06"", ""12""]",False
+validation_000198,birth_date,1959-05-27,1973-04-12,False,True,False,only_numeric_error,"[""1959"", ""05"", ""27""]","[""1973"", ""04"", ""12""]",False
+validation_000199,birth_date,1956-08-16,1973-06-16,False,True,False,only_numeric_error,"[""1956"", ""08"", ""16""]","[""1973"", ""06"", ""16""]",False
+validation_000200,birth_date,1998-10-20,2003-06-25,False,True,False,only_numeric_error,"[""1998"", ""10"", ""20""]","[""2003"", ""06"", ""25""]",False
+validation_000001,address,492 Casper Skyway Unit 91,494 Caspary Skyway,False,False,False,numeric_and_text_error,"[""492"", ""91""]","[""494""]",False
+validation_000002,address,656 Legros Lane Apt 78,657 Legros Lane Apt 8,False,True,False,only_numeric_error,"[""656"", ""78""]","[""657"", ""8""]",False
+validation_000003,address,347 Fisher Boulevard,374 Fisher Boulevard,False,True,False,only_numeric_error,"[""347""]","[""374""]",False
+validation_000004,address,167 Lubowitz Flat Apt 63,176 Lubowitz Flat Apt 58,False,True,False,only_numeric_error,"[""167"", ""63""]","[""176"", ""58""]",False
+validation_000005,address,923 Marquardt Union,932 Marquardt Union,False,True,False,only_numeric_error,"[""923""]","[""932""]",False
+validation_000006,address,937 Bechtelar Approach Unit 18,937 Bechtel Approach Unit 66,False,False,False,numeric_and_text_error,"[""937"", ""18""]","[""937"", ""66""]",False
+validation_000007,address,135 Klocko Parade Suite 87,135 Klockerterrain Suite 75,False,False,False,numeric_and_text_error,"[""135"", ""87""]","[""135"", ""75""]",False
+validation_000008,address,958 Hansen Hollow,958 Hansen Hollow,True,True,True,correct,"[""958""]","[""958""]",False
+validation_000009,address,517 Mayert Ville Unit 34,517 Mayert Ville Unit 22,False,True,False,only_numeric_error,"[""517"", ""34""]","[""517"", ""22""]",False
+validation_000010,address,397 Mante Corner,379 Mantecki Corner,False,False,False,numeric_and_text_error,"[""397""]","[""379""]",False
+validation_000011,address,344 Herzog Divide,345 Herzberg Divide,False,False,False,numeric_and_text_error,"[""344""]","[""345""]",False
+validation_000012,address,764 Shields Byway,764 Shields Byway,True,True,True,correct,"[""764""]","[""764""]",False
+validation_000013,address,1039 Kuvalis Dale,1034 Kuvalis Mall,False,False,False,numeric_and_text_error,"[""1039""]","[""1034""]",False
+validation_000014,address,1010 McCullough Trail Suite 81,1001 McCullough Trail Suite 48,False,True,False,only_numeric_error,"[""1010"", ""81""]","[""1001"", ""48""]",False
+validation_000015,address,289 Jacobi Ranch Apt 18,298 Jacobi Ranch Apt 66,False,True,False,only_numeric_error,"[""289"", ""18""]","[""298"", ""66""]",False
+validation_000016,address,107 Collins Rest Suite 93,1074 Collins Rest Suite 83,False,True,False,only_numeric_error,"[""107"", ""93""]","[""1074"", ""83""]",False
+validation_000017,address,384 Yost Trail,384 Yost Trail,True,True,True,correct,"[""384""]","[""384""]",False
+validation_000018,address,972 Emmerich Brook Suite 90,972 Emmerich Brook Suite 16,False,True,False,only_numeric_error,"[""972"", ""90""]","[""972"", ""16""]",False
+validation_000019,address,849 Considine Parade Suite 84,849 Considine Parade Suite 48,False,True,False,only_numeric_error,"[""849"", ""84""]","[""849"", ""48""]",False
+validation_000020,address,899 Morar Fort Unit 19,989 Morar Fort Unit 17,False,True,False,only_numeric_error,"[""899"", ""19""]","[""989"", ""17""]",False
+validation_000021,address,1081 Eichmann Flat Unit 44,1018 Eimanowski Flat Unit 24,False,False,False,numeric_and_text_error,"[""1081"", ""44""]","[""1018"", ""24""]",False
+validation_000022,address,195 Torphy Track Unit 24,195 Torpe Track Unit 16,False,False,False,numeric_and_text_error,"[""195"", ""24""]","[""195"", ""16""]",False
+validation_000023,address,714 Fadel Way Suite 98,714 Fadel Way Suite 5,False,True,False,only_numeric_error,"[""714"", ""98""]","[""714"", ""5""]",False
+validation_000024,address,970 Rogahn Wall Unit 63,907 Rogan Wall Unit 28,False,False,False,numeric_and_text_error,"[""970"", ""63""]","[""907"", ""28""]",False
+validation_000025,address,338 Sporer Grove Suite 22,388 Sporer Grove Suite 14,False,True,False,only_numeric_error,"[""338"", ""22""]","[""388"", ""14""]",False
+validation_000026,address,215 Stracke Path Unit 49,251 Strack Pathway Unit 17,False,False,False,numeric_and_text_error,"[""215"", ""49""]","[""251"", ""17""]",False
+validation_000027,address,877 Ward Club Unit 36,877 Ward Club Unit 77,False,True,False,only_numeric_error,"[""877"", ""36""]","[""877"", ""77""]",False
+validation_000028,address,624 Robel Glen Apt 64,624 Robel Glen Apt 17,False,True,False,only_numeric_error,"[""624"", ""64""]","[""624"", ""17""]",False
+validation_000029,address,488 Hartmann Track,484 Hartmann Track,False,True,False,only_numeric_error,"[""488""]","[""484""]",False
+validation_000030,address,948 Kshlerin Knoll Unit 66,948 Kshler Knoll Unit 48,False,False,False,numeric_and_text_error,"[""948"", ""66""]","[""948"", ""48""]",False
+validation_000031,address,119 Eichmann Gateway,119 Eichmann Gateway,True,True,True,correct,"[""119""]","[""119""]",False
+validation_000032,address,921 Armstrong Trace,921 Armstrong Trace,True,True,True,correct,"[""921""]","[""921""]",False
+validation_000033,address,924 Langworth Overpass,924 Langworth Overpass,True,True,True,correct,"[""924""]","[""924""]",False
+validation_000034,address,176 Zemlak Esplanade,167 Zemlinsky Spacing,False,False,False,numeric_and_text_error,"[""176""]","[""167""]",False
+validation_000035,address,489 Heathcote Mill,498 Heath Mill,False,False,False,numeric_and_text_error,"[""489""]","[""498""]",False
+validation_000036,address,761 Tillman Bridge,671 Tillman Bridge,False,True,False,only_numeric_error,"[""761""]","[""671""]",False
+validation_000037,address,272 Huels Dam,277 Huels Dam,False,True,False,only_numeric_error,"[""272""]","[""277""]",False
+validation_000038,address,657 Schimmel Viaduct Suite 64,657 Schimmel Viaduct Suite 19,False,True,False,only_numeric_error,"[""657"", ""64""]","[""657"", ""19""]",False
+validation_000039,address,282 Batz Trailer,282 Batz Trailer Apt 36,False,False,False,numeric_and_text_error,"[""282""]","[""282"", ""36""]",False
+validation_000040,address,946 Champlin Key,946 Champlin Key,True,True,True,correct,"[""946""]","[""946""]",False
+validation_000041,address,688 Crooks Ferry Apt 65,868 Crooks Ferry Apt 44,False,True,False,only_numeric_error,"[""688"", ""65""]","[""868"", ""44""]",False
+validation_000042,address,656 Mueller Skyway Apt 41,650 Mueller Skyway Apt 66,False,True,False,only_numeric_error,"[""656"", ""41""]","[""650"", ""66""]",False
+validation_000043,address,623 Cummerata Bridge Unit 12,623 Cummerata Bridge Unit 17,False,True,False,only_numeric_error,"[""623"", ""12""]","[""623"", ""17""]",False
+validation_000044,address,922 Kessler Avenue,922 Kessler Avenue,True,True,True,correct,"[""922""]","[""922""]",False
+validation_000045,address,116 O'Conner Corner,116 O'Conner Corner,True,True,True,correct,"[""116""]","[""116""]",False
+validation_000046,address,675 Ebert Heights Apt 25,675 Ebert Heights Apt 26,False,True,False,only_numeric_error,"[""675"", ""25""]","[""675"", ""26""]",False
+validation_000047,address,812 Fay Gate,812 Fay Gate,True,True,True,correct,"[""812""]","[""812""]",False
+validation_000048,address,277 Murray Bay Apt 73,277 Murray Bay Apt 33,False,True,False,only_numeric_error,"[""277"", ""73""]","[""277"", ""33""]",False
+validation_000049,address,692 Emard Plaza Suite 59,692 Emard Plaza Suite 13,False,True,False,only_numeric_error,"[""692"", ""59""]","[""692"", ""13""]",False
+validation_000050,address,431 Pfeffer Port Unit 73,431 Pfeffer Port Unit 17,False,True,False,only_numeric_error,"[""431"", ""73""]","[""431"", ""17""]",False
+validation_000051,address,832 Ryan Ferry Suite 19,382 Ryan Ferry Suite 13,False,True,False,only_numeric_error,"[""832"", ""19""]","[""382"", ""13""]",False
+validation_000052,address,218 Fay Promenade,218 Fay Promenade,True,True,True,correct,"[""218""]","[""218""]",False
+validation_000053,address,522 Stamm Boulevard Suite 45,522 Stamm Boulevard Unit 17,False,False,False,numeric_and_text_error,"[""522"", ""45""]","[""522"", ""17""]",False
+validation_000054,address,673 Powlowski Pathway,673 Powlowski Path,False,False,True,only_text_error,"[""673""]","[""673""]",False
+validation_000055,address,184 Ledner Crossroad,184 Ledner Crossroads,False,False,True,only_text_error,"[""184""]","[""184""]",False
+validation_000056,address,804 Crist Manor,804 Cristman Manor,False,False,True,only_text_error,"[""804""]","[""804""]",False
+validation_000057,address,307 Cormier Tunnel,307 Cormier Tunnel,True,True,True,correct,"[""307""]","[""307""]",False
+validation_000058,address,388 Senger Arcade,388 Senger Arcade,True,True,True,correct,"[""388""]","[""388""]",False
+validation_000059,address,924 Denesik Esplanade Apt 64,942 Denesik Esplanade Apt 43,False,True,False,only_numeric_error,"[""924"", ""64""]","[""942"", ""43""]",False
+validation_000060,address,302 Koelpin Union,302 Koelpin Union,True,True,True,correct,"[""302""]","[""302""]",False
+validation_000061,address,994 Paucek Haven Suite 69,999 Paucek Haven Suite 66,False,True,False,only_numeric_error,"[""994"", ""69""]","[""999"", ""66""]",False
+validation_000062,address,1002 Nader Gate,1001 Nader Gate,False,True,False,only_numeric_error,"[""1002""]","[""1001""]",False
+validation_000063,address,408 Anderson Ville,400 Anderson Ville,False,True,False,only_numeric_error,"[""408""]","[""400""]",False
+validation_000064,address,117 Rowe Neck,117 Rowe Neck,True,True,True,correct,"[""117""]","[""117""]",False
+validation_000065,address,898 Zieme Drive,892 Ziemeier Drive,False,False,False,numeric_and_text_error,"[""898""]","[""892""]",False
+validation_000066,address,355 Koepp Frontage road,533 Koepp Road,False,False,False,numeric_and_text_error,"[""355""]","[""533""]",False
+validation_000067,address,669 Borer Viaduct,696 Borer Viaduct,False,True,False,only_numeric_error,"[""669""]","[""696""]",False
+validation_000068,address,773 McCullough Dam Suite 9,733 McCullough Dam Suite 93,False,True,False,only_numeric_error,"[""773"", ""9""]","[""733"", ""93""]",False
+validation_000069,address,557 Schumm Trace,557 Shumway Trace,False,False,True,only_text_error,"[""557""]","[""557""]",False
+validation_000070,address,1029 Ritchie Tunnel Suite 92,1025 Ritchie Tunnel Suite 16,False,True,False,only_numeric_error,"[""1029"", ""92""]","[""1025"", ""16""]",False
+validation_000071,address,486 Lueilwitz Avenue,468 Lueilweis Avenue,False,False,False,numeric_and_text_error,"[""486""]","[""468""]",False
+validation_000072,address,429 Doyle Esplanade,492 Doyle Especial,False,False,False,numeric_and_text_error,"[""429""]","[""492""]",False
+validation_000073,address,346 McClure Dam Apt 68,346 McClure Dam Apt 87,False,True,False,only_numeric_error,"[""346"", ""68""]","[""346"", ""87""]",False
+validation_000074,address,308 Pollich Lock Suite 43,380 Pollock Lock Suite 16,False,False,False,numeric_and_text_error,"[""308"", ""43""]","[""380"", ""16""]",False
+validation_000075,address,570 Lueilwitz Flat,570 Lueil7 Flat,False,False,False,numeric_and_text_error,"[""570""]","[""570"", ""7""]",False
+validation_000076,address,672 Greenfelder Bridge,672 Greenfeld Bridge,False,False,True,only_text_error,"[""672""]","[""672""]",False
+validation_000077,address,894 Kuhlman Branch,894 Kuhn Branch,False,False,True,only_text_error,"[""894""]","[""894""]",False
+validation_000078,address,698 Green Extension Apt 62,968 Greenberg Extension Apt 99,False,False,False,numeric_and_text_error,"[""698"", ""62""]","[""968"", ""99""]",False
+validation_000079,address,178 Daugherty Knoll Suite 14,187 Daugherty Knoll Suite 17,False,True,False,only_numeric_error,"[""178"", ""14""]","[""187"", ""17""]",False
+validation_000080,address,245 Heaney Bay,245 Heaney Bay,True,True,True,correct,"[""245""]","[""245""]",False
+validation_000081,address,655 Gottlieb Burg,567 Gottlieb Burg,False,True,False,only_numeric_error,"[""655""]","[""567""]",False
+validation_000082,address,336 Howe Vista Apt 84,363 Howe Vista Apt 28,False,True,False,only_numeric_error,"[""336"", ""84""]","[""363"", ""28""]",False
+validation_000083,address,1092 Olson Station,1091 Olson Station,False,True,False,only_numeric_error,"[""1092""]","[""1091""]",False
+validation_000084,address,261 Maggio Manor Suite 45,216 Maggio Manor Suite 15,False,True,False,only_numeric_error,"[""261"", ""45""]","[""216"", ""15""]",False
+validation_000085,address,813 Rohan Throughway,813 Rohan Throughway,True,True,True,correct,"[""813""]","[""813""]",False
+validation_000086,address,854 Little Highlands Apt 43,854 Littlehart Highlands Apt 33,False,False,False,numeric_and_text_error,"[""854"", ""43""]","[""854"", ""33""]",False
+validation_000087,address,437 Collins Gardens Apt 74,437 Collins Garden Apt 58,False,False,False,numeric_and_text_error,"[""437"", ""74""]","[""437"", ""58""]",False
+validation_000088,address,635 Russel Alley Apt 72,635 Russel Alley Apt 87,False,True,False,only_numeric_error,"[""635"", ""72""]","[""635"", ""87""]",False
+validation_000089,address,256 Larson Forge,256 Larson Forge,True,True,True,correct,"[""256""]","[""256""]",False
+validation_000090,address,476 Smith Village,467 Smith Village,False,True,False,only_numeric_error,"[""476""]","[""467""]",False
+validation_000091,address,553 Bauch Rue Suite 21,536 Bauchelt Suite 93,False,False,False,numeric_and_text_error,"[""553"", ""21""]","[""536"", ""93""]",False
+validation_000092,address,911 Towne View Suite 76,911 Towne View Suite 56,False,True,False,only_numeric_error,"[""911"", ""76""]","[""911"", ""56""]",False
+validation_000093,address,1025 Stoltenberg Common Suite 35,1025 Stoltenberg Common Suite 15,False,True,False,only_numeric_error,"[""1025"", ""35""]","[""1025"", ""15""]",False
+validation_000094,address,414 Gorczany Pathway Suite 34,414 Gorczyn Pathway Suite 17,False,False,False,numeric_and_text_error,"[""414"", ""34""]","[""414"", ""17""]",False
+validation_000095,address,427 Gutkowski Vista,427 Gutkowski Vista,True,True,True,correct,"[""427""]","[""427""]",False
+validation_000096,address,578 Friesen Ramp Suite 32,578 Friesen Suite 33,False,False,False,numeric_and_text_error,"[""578"", ""32""]","[""578"", ""33""]",False
+validation_000097,address,242 Dooley Street,244 Dooley Street,False,True,False,only_numeric_error,"[""242""]","[""244""]",False
+validation_000098,address,859 Botsford Bay Suite 76,859 Botsford Bay Suite 26,False,True,False,only_numeric_error,"[""859"", ""76""]","[""859"", ""26""]",False
+validation_000099,address,690 O'Connell Esplanade,609 O'Connell Esplanade,False,True,False,only_numeric_error,"[""690""]","[""609""]",False
+validation_000100,address,377 McCullough Throughway Apt 74,377 McCullough Throughway Apt 66,False,True,False,only_numeric_error,"[""377"", ""74""]","[""377"", ""66""]",False
+validation_000101,address,398 Morar Pathway Suite 83,398 Morar Path Suite 43,False,False,False,numeric_and_text_error,"[""398"", ""83""]","[""398"", ""43""]",False
+validation_000102,address,1002 Lindgren Promenade Suite 74,1001 Lindgren Promenade Suite 44,False,True,False,only_numeric_error,"[""1002"", ""74""]","[""1001"", ""44""]",False
+validation_000103,address,778 Prosacco Mission Unit 65,787 Prosoco Mission Unit 53,False,False,False,numeric_and_text_error,"[""778"", ""65""]","[""787"", ""53""]",False
+validation_000104,address,600 Gislason Crossing Apt 63,600 Gisela Crossing Apt 16,False,False,False,numeric_and_text_error,"[""600"", ""63""]","[""600"", ""16""]",False
+validation_000105,address,177 Lockman Knoll Unit 0,177 Lockman Knoll Unit 77,False,True,False,only_numeric_error,"[""177"", ""0""]","[""177"", ""77""]",False
+validation_000106,address,1063 McClure Well Unit 71,1036 McClure Walk Unit 66,False,False,False,numeric_and_text_error,"[""1063"", ""71""]","[""1036"", ""66""]",False
+validation_000107,address,658 Hegmann Promenade Apt 43,658 Hegmann Ammunition Apt 23,False,False,False,numeric_and_text_error,"[""658"", ""43""]","[""658"", ""23""]",False
+validation_000108,address,344 Schroeder Mall Unit 53,345 Schrader Mall Unit 93,False,False,False,numeric_and_text_error,"[""344"", ""53""]","[""345"", ""93""]",False
+validation_000109,address,1012 Pollich Crossing Suite 97,1021 Pollich Crossing Suite 66,False,True,False,only_numeric_error,"[""1012"", ""97""]","[""1021"", ""66""]",False
+validation_000110,address,414 Cummings Rest,414 Cummings Rest,True,True,True,correct,"[""414""]","[""414""]",False
+validation_000111,address,344 Dickinson Lock,344 Dickinson Lock,True,True,True,correct,"[""344""]","[""344""]",False
+validation_000112,address,729 Feeney Path Unit 19,729 Fein Path Unit 33,False,False,False,numeric_and_text_error,"[""729"", ""19""]","[""729"", ""33""]",False
+validation_000113,address,323 Stanton Rest,325 Stanton Rest,False,True,False,only_numeric_error,"[""323""]","[""325""]",False
+validation_000114,address,1086 Runolfsson Gate Apt 71,1086 Runolfstens Gate Apt 13,False,False,False,numeric_and_text_error,"[""1086"", ""71""]","[""1086"", ""13""]",False
+validation_000115,address,226 Larson Wall Suite 41,266 Larson Foothold Suite 16,False,False,False,numeric_and_text_error,"[""226"", ""41""]","[""266"", ""16""]",False
+validation_000116,address,956 Glover Approach Suite 85,596 Glover Approach Suite 55,False,True,False,only_numeric_error,"[""956"", ""85""]","[""596"", ""55""]",False
+validation_000117,address,253 Buckridge View Suite 34,523 Buckle View Suite 25,False,False,False,numeric_and_text_error,"[""253"", ""34""]","[""523"", ""25""]",False
+validation_000118,address,224 McCullough Ranch Apt 68,242 McCullough Ranch Apt 58,False,True,False,only_numeric_error,"[""224"", ""68""]","[""242"", ""58""]",False
+validation_000119,address,959 Feest Port Apt 37,959 Feest Port Apt 66,False,True,False,only_numeric_error,"[""959"", ""37""]","[""959"", ""66""]",False
+validation_000120,address,163 Schmeler Highlands Unit 83,163 Schmeler Highlands Unit 66,False,True,False,only_numeric_error,"[""163"", ""83""]","[""163"", ""66""]",False
+validation_000121,address,954 Price Glen,954 Price Glen,True,True,True,correct,"[""954""]","[""954""]",False
+validation_000122,address,489 Tremblay Path Apt 40,489 Tremblay Path Apt 33,False,True,False,only_numeric_error,"[""489"", ""40""]","[""489"", ""33""]",False
+validation_000123,address,614 Runolfsson Manor Apt 49,614 Runolfson Manor Apt 57,False,False,False,numeric_and_text_error,"[""614"", ""49""]","[""614"", ""57""]",False
+validation_000124,address,464 Kuvalis Esplanade,464 Kuvalis Promenade,False,False,True,only_text_error,"[""464""]","[""464""]",False
+validation_000125,address,599 Barrows Parade,599 Barrows Parade,True,True,True,correct,"[""599""]","[""599""]",False
+validation_000126,address,297 Aufderhar Port,972 Aufderhar Port,False,True,False,only_numeric_error,"[""297""]","[""972""]",False
+validation_000127,address,254 Schultz Extension,254 Schultz Extension,True,True,True,correct,"[""254""]","[""254""]",False
+validation_000128,address,196 Morissette Station Apt 15,196 Morissette Station Apt 29,False,True,False,only_numeric_error,"[""196"", ""15""]","[""196"", ""29""]",False
+validation_000129,address,887 Wyman Knoll,887 Wyman Knoll,True,True,True,correct,"[""887""]","[""887""]",False
+validation_000130,address,698 Sipes Skyway Apt 13,699 Sipes Skyway Apt 13,False,True,False,only_numeric_error,"[""698"", ""13""]","[""699"", ""13""]",False
+validation_000131,address,1066 Little Wynd Suite 76,1064 Littley Wynd Suite 66,False,False,False,numeric_and_text_error,"[""1066"", ""76""]","[""1064"", ""66""]",False
+validation_000132,address,543 Altenwerth Fort,534 Altenberg Fort,False,False,False,numeric_and_text_error,"[""543""]","[""534""]",False
+validation_000133,address,1083 Murray Harbor Suite 61,1085 Murray Harbor Suite 16,False,True,False,only_numeric_error,"[""1083"", ""61""]","[""1085"", ""16""]",False
+validation_000134,address,127 Koch Divide Apt 67,1077 Koch Divide Apt 14,False,True,False,only_numeric_error,"[""127"", ""67""]","[""1077"", ""14""]",False
+validation_000135,address,704 O'Conner Rue,704 O'Conner Rue,True,True,True,correct,"[""704""]","[""704""]",False
+validation_000136,address,578 Rempel Trailer,578 Rempel Trail,False,False,True,only_text_error,"[""578""]","[""578""]",False
+validation_000137,address,1056 Kshlerin Station Apt 31,1056 Krieshlan Apt. 24,False,False,False,numeric_and_text_error,"[""1056"", ""31""]","[""1056"", ""24""]",False
+validation_000138,address,326 Kuhlman Esplanade,362 Kuhler Espaces,False,False,False,numeric_and_text_error,"[""326""]","[""362""]",False
+validation_000139,address,658 Dach View,658 Dach View,True,True,True,correct,"[""658""]","[""658""]",False
+validation_000140,address,615 Beatty Park Unit 25,615 Beatty Park Unit 18,False,True,False,only_numeric_error,"[""615"", ""25""]","[""615"", ""18""]",False
+validation_000141,address,392 Gleichner Green,399 Gleichner Green,False,True,False,only_numeric_error,"[""392""]","[""399""]",False
+validation_000142,address,699 Bode Lane Apt 12,699 Bode Lane Apt 5,False,True,False,only_numeric_error,"[""699"", ""12""]","[""699"", ""5""]",False
+validation_000143,address,539 Stokes Skyway Apt 43,539 Stokes Skyway Apt 7,False,True,False,only_numeric_error,"[""539"", ""43""]","[""539"", ""7""]",False
+validation_000144,address,644 Jaskolski Hollow Suite 50,644 Jaskolowski Hollow Suite 77,False,False,False,numeric_and_text_error,"[""644"", ""50""]","[""644"", ""77""]",False
+validation_000145,address,693 Buckridge Ferry,693 Buckridge Ferry,True,True,True,correct,"[""693""]","[""693""]",False
+validation_000146,address,823 Labadie Mill,823 Labadie Mill,True,True,True,correct,"[""823""]","[""823""]",False
+validation_000147,address,795 Zemlak Gate,975 Zemlinsky Gate,False,False,False,numeric_and_text_error,"[""795""]","[""975""]",False
+validation_000148,address,590 Kerluke Wall Unit 67,590 Kerl Unit 86,False,False,False,numeric_and_text_error,"[""590"", ""67""]","[""590"", ""86""]",False
+validation_000149,address,370 Harvey Trafficway Unit 88,377 Harvey Traffic Way Unit 43,False,False,False,numeric_and_text_error,"[""370"", ""88""]","[""377"", ""43""]",False
+validation_000150,address,854 Hermiston Gateway Apt 29,859 Hermiston Gateway Apt 59,False,True,False,only_numeric_error,"[""854"", ""29""]","[""859"", ""59""]",False
+validation_000151,address,1062 Schultz Gateway Suite 85,1026 Schultz Gateway Suite 15,False,True,False,only_numeric_error,"[""1062"", ""85""]","[""1026"", ""15""]",False
+validation_000152,address,683 Yundt Ville,683 Yundt Spacing,False,False,True,only_text_error,"[""683""]","[""683""]",False
+validation_000153,address,740 Kuhlman Manor Suite 35,740 Kuhlman Manor Suite 63,False,True,False,only_numeric_error,"[""740"", ""35""]","[""740"", ""63""]",False
+validation_000154,address,373 O'Hara Trailer,377 O'Hara Trail,False,False,False,numeric_and_text_error,"[""373""]","[""377""]",False
+validation_000155,address,1029 Gottlieb Extension,1029 Gottlieb Extension,True,True,True,correct,"[""1029""]","[""1029""]",False
+validation_000156,address,160 Wilderman Ville Unit 45,160 Wilder Ville Unit 86,False,False,False,numeric_and_text_error,"[""160"", ""45""]","[""160"", ""86""]",False
+validation_000157,address,209 Flatley Park Suite 82,299 Flatley Park Suite 48,False,True,False,only_numeric_error,"[""209"", ""82""]","[""299"", ""48""]",False
+validation_000158,address,748 Daniel Avenue,748 Daniel Avenue,True,True,True,correct,"[""748""]","[""748""]",False
+validation_000159,address,591 Hansen Vista Unit 69,591 Hansen Vista Unit 6,False,True,False,only_numeric_error,"[""591"", ""69""]","[""591"", ""6""]",False
+validation_000160,address,338 Dietrich Village Unit 13,338 Dietrich Village Unit 23,False,True,False,only_numeric_error,"[""338"", ""13""]","[""338"", ""23""]",False
+validation_000161,address,415 Kub Wall,451 Kubler Wall,False,False,False,numeric_and_text_error,"[""415""]","[""451""]",False
+validation_000162,address,671 Schulist Forge,671 Schmiedt Forge,False,False,True,only_text_error,"[""671""]","[""671""]",False
+validation_000163,address,805 Leuschke Branch,805 Leuschig Branch,False,False,True,only_text_error,"[""805""]","[""805""]",False
+validation_000164,address,465 Murphy Club,465 Murphy Club,True,True,True,correct,"[""465""]","[""465""]",False
+validation_000165,address,842 Leannon Loaf,842 Leona Loaf,False,False,True,only_text_error,"[""842""]","[""842""]",False
+validation_000166,address,1004 Prohaska Rapid Apt 31,1024 Prohaska Rapid Apt 58,False,True,False,only_numeric_error,"[""1004"", ""31""]","[""1024"", ""58""]",False
+validation_000167,address,892 Thiel Landing Suite 40,892 Thiel Mark 99,False,False,False,numeric_and_text_error,"[""892"", ""40""]","[""892"", ""99""]",False
+validation_000168,address,738 Brekke Lock Apt 28,733 Brekke Lock Apt 48,False,True,False,only_numeric_error,"[""738"", ""28""]","[""733"", ""48""]",False
+validation_000169,address,772 Dickens Trafficway Suite 54,727 Dickens Trafficway Suite 24,False,True,False,only_numeric_error,"[""772"", ""54""]","[""727"", ""24""]",False
+validation_000170,address,283 Torp Union Apt 42,238 Torp Union Apt 88,False,True,False,only_numeric_error,"[""283"", ""42""]","[""238"", ""88""]",False
+validation_000171,address,949 Senger Fork,949 Senger Fork,True,True,True,correct,"[""949""]","[""949""]",False
+validation_000172,address,1073 Heller Bridge,107 Heller Bridge,False,True,False,only_numeric_error,"[""1073""]","[""107""]",False
+validation_000173,address,587 Hoppe Mews Suite 88,587 Hoppe Mews,False,False,False,numeric_and_text_error,"[""587"", ""88""]","[""587""]",False
+validation_000174,address,264 Keebler Glen Suite 4,264 Keeler Glen Suite 66,False,False,False,numeric_and_text_error,"[""264"", ""4""]","[""264"", ""66""]",False
+validation_000175,address,181 Howe Brook,181 Howe Brook,True,True,True,correct,"[""181""]","[""181""]",False
+validation_000176,address,166 Kessler Fort,161 Kessler Fort,False,True,False,only_numeric_error,"[""166""]","[""161""]",False
+validation_000177,address,259 Wuckert Walk Apt 67,295 Wuckert Walk Apt 13,False,True,False,only_numeric_error,"[""259"", ""67""]","[""295"", ""13""]",False
+validation_000178,address,256 Fahey Rue,265 Fahey Rue,False,True,False,only_numeric_error,"[""256""]","[""265""]",False
+validation_000179,address,751 Berge Estate,751 Berge Estate,True,True,True,correct,"[""751""]","[""751""]",False
+validation_000180,address,981 Simonis Mall,981 Simonis Mall,True,True,True,correct,"[""981""]","[""981""]",False
+validation_000181,address,184 Doyle Path Apt 72,184 Doyle Path Apt 23,False,True,False,only_numeric_error,"[""184"", ""72""]","[""184"", ""23""]",False
+validation_000182,address,215 Greenfelder Mall Suite 24,251 Greenfeld Mall Suite 63,False,False,False,numeric_and_text_error,"[""215"", ""24""]","[""251"", ""63""]",False
+validation_000183,address,559 Miller Station Suite 72,595 Miller Station Suite 57,False,True,False,only_numeric_error,"[""559"", ""72""]","[""595"", ""57""]",False
+validation_000184,address,204 Moore Center Unit 86,220 Moore Center Unit 9,False,True,False,only_numeric_error,"[""204"", ""86""]","[""220"", ""9""]",False
+validation_000185,address,877 Barton Forge Unit 86,877 Barton Forge Unit 83,False,True,False,only_numeric_error,"[""877"", ""86""]","[""877"", ""83""]",False
+validation_000186,address,894 Doyle Skyway Unit 6,894 Doyle Sky Unit 47,False,False,False,numeric_and_text_error,"[""894"", ""6""]","[""894"", ""47""]",False
+validation_000187,address,554 Hansen Wynd,554 Hansen Wynd,True,True,True,correct,"[""554""]","[""554""]",False
+validation_000188,address,463 Haag Extension,463 Haag Extension,True,True,True,correct,"[""463""]","[""463""]",False
+validation_000189,address,156 Harris Ramp,156 Harris Ramp,True,True,True,correct,"[""156""]","[""156""]",False
+validation_000190,address,581 Fadel Drive,581 Fadel Drive,True,True,True,correct,"[""581""]","[""581""]",False
+validation_000191,address,588 Mueller Haven,589 Mueller Haven,False,True,False,only_numeric_error,"[""588""]","[""589""]",False
+validation_000192,address,569 Crona Tunnel,569 Crona Tunnel,True,True,True,correct,"[""569""]","[""569""]",False
+validation_000193,address,786 Thiel Vale,867 Thielmann Vale,False,False,False,numeric_and_text_error,"[""786""]","[""867""]",False
+validation_000194,address,701 Armstrong Trace,701 Armstrong Trace,True,True,True,correct,"[""701""]","[""701""]",False
+validation_000195,address,872 Hyatt Drive,827 Hyatt Drive,False,True,False,only_numeric_error,"[""872""]","[""827""]",False
+validation_000196,address,217 Muller Path,217 Muller Path,True,True,True,correct,"[""217""]","[""217""]",False
+validation_000197,address,418 Kihn Mill,418 Kihn Mill,True,True,True,correct,"[""418""]","[""418""]",False
+validation_000198,address,472 Fay Village Apt 32,427 Fay Villas Apt 17,False,False,False,numeric_and_text_error,"[""472"", ""32""]","[""427"", ""17""]",False
+validation_000199,address,395 Braun Orchard Unit 2,359 Braun Orchid,False,False,False,numeric_and_text_error,"[""395"", ""2""]","[""359""]",False
+validation_000200,address,223 Lynch Trail,232 Lynch Trail,False,True,False,only_numeric_error,"[""223""]","[""232""]",False

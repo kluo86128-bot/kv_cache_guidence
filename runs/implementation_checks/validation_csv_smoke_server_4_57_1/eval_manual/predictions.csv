@@ -1,0 +1,9 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train
+,,dev,manual,dev_000001,name,What is the patient's full name? Return only the field value.,Kristofer887 Freeman822 Funk324, göre뼝,False,11.947846412658691,2,max_new_tokens,True,
+,,dev,manual,dev_000001,birth_date,What is the patient's date of birth? Return only the field value.,2003-06-26, göre뼝,False,11.961175918579102,2,max_new_tokens,True,False
+,,dev,manual,dev_000001,address,What is the patient's home street address? Return only the field value.,258 Brakus Ferry Apt 38, göre뼝,False,11.979723930358887,2,max_new_tokens,True,
+,,dev,manual,dev_000001,diagnosis,What diagnosis is recorded? Return only the field value.,Gingival disease (disorder), göre뼝,False,11.900066375732422,2,max_new_tokens,True,
+,,dev,manual,dev_000002,name,What is the patient's full name? Return only the field value.,Evan94 Tyree261 Mosciski958, göre뼝,False,11.936487197875977,2,max_new_tokens,True,
+,,dev,manual,dev_000002,birth_date,What is the patient's date of birth? Return only the field value.,1965-02-20, göre뼝,False,11.977408409118652,2,max_new_tokens,True,False
+,,dev,manual,dev_000002,address,What is the patient's home street address? Return only the field value.,461 Parker Annex Suite 12, göre뼝,False,11.97671127319336,2,max_new_tokens,True,
+,,dev,manual,dev_000002,diagnosis,What diagnosis is recorded? Return only the field value.,Primary dental caries (disorder), göre뼝,False,11.931013107299805,2,max_new_tokens,True,

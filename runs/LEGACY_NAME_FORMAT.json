@@ -1,0 +1,7 @@
+{
+  "status": "obsolete_for_current_dataset",
+  "reason": "Numeric name suffixes removed from all current datasets.",
+  "name_format_of_existing_outputs": "legacy_numbered_names",
+  "current_name_format": "natural_no_numeric_suffix_v1",
+  "action": "Keep historical scores unchanged. Retrain in a fresh run directory; do not resume/evaluate old numbered-name checkpoints."
+}

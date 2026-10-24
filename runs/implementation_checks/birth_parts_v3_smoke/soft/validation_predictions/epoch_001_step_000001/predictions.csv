@@ -1,0 +1,8 @@
+﻿epoch,step,split,condition,record_id,field,question,gold,prediction,em,nll,generated_tokens,stop_reason,truncated,birth_date_seen_in_train,prediction_kind,birth_date_mode
+1,1,development_validation,soft,dev_000065,name,What is the patient's full name? Return only the field value.,Chong355 Victor265 Schaden604, göreInvestigators,False,11.935975074768066,2,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,birth_year,What is the patient's birth year? Return exactly four digits.,1961, göre뼝,False,11.98094367980957,2,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,birth_month,What is the patient's birth month? Return exactly two digits.,05, göre뼝,False,11.975512504577637,2,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,birth_day,What is the patient's birth day? Return exactly two digits.,17, göre뼝,False,12.070551872253418,2,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,address,What is the patient's home street address? Return only the field value.,460 Auer Skyway Unit 98, göreInvestigators,False,11.918023109436035,2,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,diagnosis,What diagnosis is recorded? Return only the field value.,Anemia (disorder), göreInvestigators,False,11.9855375289917,2,max_new_tokens,True,,generated,parts
+1,1,development_validation,soft,dev_000065,birth_date,What is the patient's date of birth? Return only the field value.,1961-05-17,göre뼝-göre뼝-göre뼝,False,12.009002685546875,6,reconstructed,True,False,reconstructed,parts

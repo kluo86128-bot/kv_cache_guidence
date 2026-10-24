@@ -1,0 +1,6 @@
+{
+  "status": "obsolete",
+  "reason": "User removed continuation and replaced source rewriting with spelling errors; never use this fixed-six bank for current training.",
+  "replacement": "runs/diagnosis_contrastive_spelling_preparation_v2",
+  "generator_version": "diagnosis_corruptions_v2_spelling"
+}

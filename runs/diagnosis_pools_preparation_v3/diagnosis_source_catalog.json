@@ -1,0 +1,895 @@
+[
+  {
+    "diagnosis": "Acute deep venous thrombosis (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "132281000119108"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "90879b9f-e7f1-54fa-2376-21777c50b2b4",
+        "source_encounter_id": "90879b9f-e7f1-54fa-9b3b-24ed66d15d67",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "132281000119108",
+        "source_condition_start": "2020-07-15"
+      }
+    ],
+    "condition_rows": 3
+  },
+  {
+    "diagnosis": "Acute myeloid leukemia (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "91861009"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "2d8a057d-77e9-a9cd-ffa6-6a4b32509f99",
+        "source_encounter_id": "2d8a057d-77e9-a9cd-ca36-6d44bd481394",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "91861009",
+        "source_condition_start": "1991-10-20"
+      }
+    ],
+    "condition_rows": 3
+  },
+  {
+    "diagnosis": "Acute respiratory distress syndrome (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "67782005"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "54f11c02-2aab-81a7-6996-ca1cb03a3411",
+        "source_encounter_id": "54f11c02-2aab-81a7-1468-ddfe0e1b0cb2",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "67782005",
+        "source_condition_start": "2024-08-22"
+      }
+    ],
+    "condition_rows": 9
+  },
+  {
+    "diagnosis": "Alcoholism (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "7200002"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "1869c416-5bad-7bef-3cff-16fe66d83fdb",
+        "source_encounter_id": "1869c416-5bad-7bef-f529-e420d56ec162",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "7200002",
+        "source_condition_start": "2018-01-09"
+      }
+    ],
+    "condition_rows": 2
+  },
+  {
+    "diagnosis": "Aortic valve regurgitation (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "60234000"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "06758123-9039-a14c-ca18-9d7e2484b1b8",
+        "source_encounter_id": "06758123-9039-a14c-d320-b9586f08ca10",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "60234000",
+        "source_condition_start": "2026-01-16"
+      }
+    ],
+    "condition_rows": 3
+  },
+  {
+    "diagnosis": "Bleeding from anus (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "6072007"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "1869c416-5bad-7bef-3cff-16fe66d83fdb",
+        "source_encounter_id": "1869c416-5bad-7bef-e8a0-7fd112afc599",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "6072007",
+        "source_condition_start": "2023-01-14"
+      }
+    ],
+    "condition_rows": 3
+  },
+  {
+    "diagnosis": "Bullet wound (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "262574004"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "c9649c9c-86ff-e504-d694-ba5d279c8f43",
+        "source_encounter_id": "c9649c9c-86ff-e504-f28a-b29b34d325ed",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "262574004",
+        "source_condition_start": "2006-10-06"
+      }
+    ],
+    "condition_rows": 11
+  },
+  {
+    "diagnosis": "Carcinoma in situ of prostate (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "92691004"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "9a69d122-43a1-b4e2-2498-fd40a650d00b",
+        "source_encounter_id": "9a69d122-43a1-b4e2-2cea-3337d33f2cf5",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "92691004",
+        "source_condition_start": "2009-10-02"
+      }
+    ],
+    "condition_rows": 7
+  },
+  {
+    "diagnosis": "Cerebral palsy (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "128188000"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "e7fe1d50-ecf9-b069-949b-256e18bb26bb",
+        "source_encounter_id": "e7fe1d50-ecf9-b069-6f49-064227780147",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "128188000",
+        "source_condition_start": "1967-09-12"
+      }
+    ],
+    "condition_rows": 2
+  },
+  {
+    "diagnosis": "Chronic kidney disease stage 2 (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "431856006"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "c946da0e-6bd4-8815-e41c-145f19ed7db1",
+        "source_encounter_id": "c946da0e-6bd4-8815-9900-05f77e11198c",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "431856006",
+        "source_condition_start": "2017-07-07"
+      }
+    ],
+    "condition_rows": 70
+  },
+  {
+    "diagnosis": "Complete miscarriage (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "156073000"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "c946da0e-6bd4-8815-e41c-145f19ed7db1",
+        "source_encounter_id": "c946da0e-6bd4-8815-6d86-5278e80423e2",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "156073000",
+        "source_condition_start": "1994-04-01"
+      }
+    ],
+    "condition_rows": 145
+  },
+  {
+    "diagnosis": "Complication occurring during pregnancy (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "609496007"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "7516cd47-5615-27fe-7add-023f17652f20",
+        "source_encounter_id": "7516cd47-5615-27fe-30c9-ad22d5957b98",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "609496007",
+        "source_condition_start": "1995-07-01"
+      }
+    ],
+    "condition_rows": 10
+  },
+  {
+    "diagnosis": "Congenital uterine anomaly (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "37849005"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "258d6cf0-27f8-d98a-c6de-511ff4712d36",
+        "source_encounter_id": "258d6cf0-27f8-d98a-910a-f3e648ab4280",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "37849005",
+        "source_condition_start": "2012-07-03"
+      }
+    ],
+    "condition_rows": 13
+  },
+  {
+    "diagnosis": "Disorder of kidney due to diabetes mellitus (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "127013003"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "c946da0e-6bd4-8815-e41c-145f19ed7db1",
+        "source_encounter_id": "c946da0e-6bd4-8815-3938-726ad8bb13f8",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "127013003",
+        "source_condition_start": "2016-10-07"
+      }
+    ],
+    "condition_rows": 82
+  },
+  {
+    "diagnosis": "Drug-induced neutropenia (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "47318007"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "d46f0281-ec78-22b4-d39e-bb8f7a0c9fc4",
+        "source_encounter_id": "d46f0281-ec78-22b4-277d-05f9977e5e3e",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "47318007",
+        "source_condition_start": "1996-02-05"
+      }
+    ],
+    "condition_rows": 1
+  },
+  {
+    "diagnosis": "Excessive salivation (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "53827007"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "b071f16d-0fb9-313a-b94d-c2887ddb7d4f",
+        "source_encounter_id": "b071f16d-0fb9-313a-79e1-ff834e565dd0",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "53827007",
+        "source_condition_start": "1980-09-21"
+      }
+    ],
+    "condition_rows": 1
+  },
+  {
+    "diagnosis": "Fetus with chromosomal abnormality (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "267253006"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "3eb02924-d19f-7f10-1f01-3be1f8ba5710",
+        "source_encounter_id": "3eb02924-d19f-7f10-0166-23ea80e7eaf5",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "267253006",
+        "source_condition_start": "1985-11-24"
+      }
+    ],
+    "condition_rows": 36
+  },
+  {
+    "diagnosis": "Fracture of vertebral column without spinal cord injury (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "15724005"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "c946da0e-6bd4-8815-e41c-145f19ed7db1",
+        "source_encounter_id": "c946da0e-6bd4-8815-19a4-b6a8a9674056",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "15724005",
+        "source_condition_start": "2000-11-27"
+      }
+    ],
+    "condition_rows": 7
+  },
+  {
+    "diagnosis": "Full thickness burn (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "403192003"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "6719abea-ee3f-b92e-d2f6-33f5982b1e66",
+        "source_encounter_id": "6719abea-ee3f-b92e-a86f-c30e9ada4c41",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "403192003",
+        "source_condition_start": "2013-12-01"
+      }
+    ],
+    "condition_rows": 8
+  },
+  {
+    "diagnosis": "Gallbladder calculus (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "235919008"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "c946da0e-6bd4-8815-e41c-145f19ed7db1",
+        "source_encounter_id": "c946da0e-6bd4-8815-8143-b549fe9e0cca",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "235919008",
+        "source_condition_start": "2011-02-03"
+      }
+    ],
+    "condition_rows": 5
+  },
+  {
+    "diagnosis": "Gastroesophageal reflux disease (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "235595009"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "e7fe1d50-ecf9-b069-949b-256e18bb26bb",
+        "source_encounter_id": "e7fe1d50-ecf9-b069-6f49-064227780147",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "235595009",
+        "source_condition_start": "1967-09-12"
+      }
+    ],
+    "condition_rows": 2
+  },
+  {
+    "diagnosis": "Infectious mediastinitis (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "312157006"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "987331e2-fb05-33a9-5ca9-87cb0a356c33",
+        "source_encounter_id": "987331e2-fb05-33a9-f305-ebcf8358740d",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "312157006",
+        "source_condition_start": "2007-03-21"
+      }
+    ],
+    "condition_rows": 1
+  },
+  {
+    "diagnosis": "Injury of heart (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "86175003"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "eaa91201-24c0-8165-3399-43205427c9d9",
+        "source_encounter_id": "eaa91201-24c0-8165-1849-89f032cbcb2b",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "86175003",
+        "source_condition_start": "2020-12-10"
+      }
+    ],
+    "condition_rows": 1
+  },
+  {
+    "diagnosis": "Injury of kidney (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "40095003"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "eaa91201-24c0-8165-3399-43205427c9d9",
+        "source_encounter_id": "eaa91201-24c0-8165-1849-89f032cbcb2b",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "40095003",
+        "source_condition_start": "2020-12-10"
+      }
+    ],
+    "condition_rows": 1
+  },
+  {
+    "diagnosis": "Injury of knee (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "125601008"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "d7f45f09-f42b-375a-ba9d-55a2d6e3e026",
+        "source_encounter_id": "d7f45f09-f42b-375a-54db-a49b1d2a6507",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "125601008",
+        "source_condition_start": "1977-07-29"
+      }
+    ],
+    "condition_rows": 82
+  },
+  {
+    "diagnosis": "Kidney transplant failure and rejection (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "213150003"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "fd092d38-7430-c892-a03f-7caead4633fe",
+        "source_encounter_id": "fd092d38-7430-c892-6617-81844ba626cd",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "213150003",
+        "source_condition_start": "1992-01-19"
+      }
+    ],
+    "condition_rows": 4
+  },
+  {
+    "diagnosis": "Macular edema and retinopathy due to type 2 diabetes mellitus (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "97331000119101"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "1b0b8a8a-0d52-5244-59f6-df13097e64bc",
+        "source_encounter_id": "1b0b8a8a-0d52-5244-640c-d1eb3f89bba9",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "97331000119101",
+        "source_condition_start": "2022-07-25"
+      }
+    ],
+    "condition_rows": 2
+  },
+  {
+    "diagnosis": "Major depressive disorder (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "370143000"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "f16dd245-52ec-9052-45b4-42d674465bd4",
+        "source_encounter_id": "f16dd245-52ec-9052-f0b3-efce5bd74ef8",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "370143000",
+        "source_condition_start": "1984-12-14"
+      }
+    ],
+    "condition_rows": 6
+  },
+  {
+    "diagnosis": "Metastatic malignant neoplasm to colon (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "94260004"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "8d9a2ee9-54fe-775f-981a-4358a08fc059",
+        "source_encounter_id": "8d9a2ee9-54fe-775f-153b-ca3c74555d06",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "94260004",
+        "source_condition_start": "2002-02-15"
+      }
+    ],
+    "condition_rows": 2
+  },
+  {
+    "diagnosis": "Metastatic malignant neoplasm to prostate (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "94503003"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "17884b37-b47c-f726-cd15-7f0fe00b2deb",
+        "source_encounter_id": "17884b37-b47c-f726-788b-d4d080e6c552",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "94503003",
+        "source_condition_start": "2018-03-29"
+      }
+    ],
+    "condition_rows": 1
+  },
+  {
+    "diagnosis": "Mitral valve regurgitation (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "48724000"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "1a87e7d1-7a5b-fe1d-8998-8323e3fdad49",
+        "source_encounter_id": "1a87e7d1-7a5b-fe1d-9d69-77558e3d561f",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "48724000",
+        "source_condition_start": "1998-12-23"
+      }
+    ],
+    "condition_rows": 5
+  },
+  {
+    "diagnosis": "Multiple myeloma (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "109989006"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "b678bda4-1412-06cd-0ecc-f04e401a9e2d",
+        "source_encounter_id": "b678bda4-1412-06cd-12ff-e505b6a1a57b",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "109989006",
+        "source_condition_start": "2025-07-11"
+      }
+    ],
+    "condition_rows": 1
+  },
+  {
+    "diagnosis": "Myocardial infarction (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "22298006"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "54f11c02-2aab-81a7-6996-ca1cb03a3411",
+        "source_encounter_id": "54f11c02-2aab-81a7-3207-0e876062576d",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "22298006",
+        "source_condition_start": "2026-02-26"
+      }
+    ],
+    "condition_rows": 33
+  },
+  {
+    "diagnosis": "Neoplasm of prostate (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "126906006"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "9a69d122-43a1-b4e2-2498-fd40a650d00b",
+        "source_encounter_id": "9a69d122-43a1-b4e2-2cea-3337d33f2cf5",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "126906006",
+        "source_condition_start": "2009-10-02"
+      }
+    ],
+    "condition_rows": 8
+  },
+  {
+    "diagnosis": "Non-small cell lung cancer (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "254637007"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "ea86103b-6a0f-3acd-a5c6-d43e5f648fc2",
+        "source_encounter_id": "ea86103b-6a0f-3acd-3c34-76d8614b172c",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "254637007",
+        "source_condition_start": "2016-01-12"
+      }
+    ],
+    "condition_rows": 7
+  },
+  {
+    "diagnosis": "Posttraumatic stress disorder (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "47505003"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "f16dd245-52ec-9052-45b4-42d674465bd4",
+        "source_encounter_id": "f16dd245-52ec-9052-683f-158bcd5ac660",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "47505003",
+        "source_condition_start": "1999-11-08"
+      }
+    ],
+    "condition_rows": 6
+  },
+  {
+    "diagnosis": "Primary malignant neoplasm of colon (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "93761005"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "4ce70e19-39e8-c32f-d108-d3929b51b663",
+        "source_encounter_id": "4ce70e19-39e8-c32f-aa87-7acd8c903b5c",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "93761005",
+        "source_condition_start": "2018-04-09"
+      }
+    ],
+    "condition_rows": 2
+  },
+  {
+    "diagnosis": "Proteinuria due to type 2 diabetes mellitus (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "157141000119108"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "c946da0e-6bd4-8815-e41c-145f19ed7db1",
+        "source_encounter_id": "c946da0e-6bd4-8815-bec5-0948bf2ea7dc",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "157141000119108",
+        "source_condition_start": "2024-04-19"
+      }
+    ],
+    "condition_rows": 35
+  },
+  {
+    "diagnosis": "Resorption of alveolar process due to dental trauma (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "1255252008"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "3eb02924-d19f-7f10-1f01-3be1f8ba5710",
+        "source_encounter_id": "3eb02924-d19f-7f10-c16b-a4c11d4a20f3",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "1255252008",
+        "source_condition_start": "2011-09-11"
+      }
+    ],
+    "condition_rows": 37
+  },
+  {
+    "diagnosis": "Rheumatoid arthritis (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "69896004"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "3eb02924-d19f-7f10-1f01-3be1f8ba5710",
+        "source_encounter_id": "3eb02924-d19f-7f10-c15f-977af79f6143",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "69896004",
+        "source_condition_start": "1986-06-03"
+      }
+    ],
+    "condition_rows": 6
+  },
+  {
+    "diagnosis": "Rupture of appendix (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "47693006"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "f7f716f3-7495-93d8-e3e1-0d67e826325d",
+        "source_encounter_id": "f7f716f3-7495-93d8-e40e-cf780aac6c5d",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "47693006",
+        "source_condition_start": "2010-12-11"
+      }
+    ],
+    "condition_rows": 10
+  },
+  {
+    "diagnosis": "Septic shock (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "76571007"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "cfe0afb5-b7a3-ef39-1aa1-2dc701a853f7",
+        "source_encounter_id": "cfe0afb5-b7a3-ef39-97bd-e74293ae3c9b",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "76571007",
+        "source_condition_start": "2023-06-29"
+      }
+    ],
+    "condition_rows": 9
+  },
+  {
+    "diagnosis": "Shock (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "27942005"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "be82c462-9030-ed06-a906-b6be277e52af",
+        "source_encounter_id": "be82c462-9030-ed06-8264-2dc002587b63",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "27942005",
+        "source_condition_start": "2013-08-12"
+      }
+    ],
+    "condition_rows": 4
+  },
+  {
+    "diagnosis": "Sleep disorder (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "39898005"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "b4c4bd7b-e5db-d484-1520-c61e7847d3c8",
+        "source_encounter_id": "b4c4bd7b-e5db-d484-3a64-f03459613d52",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "39898005",
+        "source_condition_start": "2025-01-19"
+      }
+    ],
+    "condition_rows": 40
+  },
+  {
+    "diagnosis": "Tongue tie (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "67787004"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "d81baee1-a5ea-4d5d-bd38-f11052a873c0",
+        "source_encounter_id": "d81baee1-a5ea-4d5d-4881-4ae9a3b5c947",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "67787004",
+        "source_condition_start": "2011-08-21"
+      }
+    ],
+    "condition_rows": 4
+  },
+  {
+    "diagnosis": "Tricuspid valve regurgitation (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "111287006"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "0fc2f967-d32c-7aa4-de69-2ea08baaef1c",
+        "source_encounter_id": "0fc2f967-d32c-7aa4-b944-18581cd992f1",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "111287006",
+        "source_condition_start": "2018-10-25"
+      }
+    ],
+    "condition_rows": 1
+  },
+  {
+    "diagnosis": "Whiplash injury to neck (disorder)",
+    "codes": [
+      [
+        "SNOMED-CT",
+        "39848009"
+      ]
+    ],
+    "examples": [
+      {
+        "source_patient_id": "eeed3ce9-2dc7-169f-9029-dad447876e00",
+        "source_encounter_id": "eeed3ce9-2dc7-169f-27c4-7ea312574f0e",
+        "source_condition_system": "SNOMED-CT",
+        "source_condition_code": "39848009",
+        "source_condition_start": "1934-10-12"
+      }
+    ],
+    "condition_rows": 181
+  }
+]
