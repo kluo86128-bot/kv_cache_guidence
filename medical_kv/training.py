@@ -11,6 +11,9 @@ from .plotting import LossCurve
 from .distributed import Runtime
 from .control import PauseController
 from .resume import training_contract, validate_resume, restore_training_rng
+from .prompt_partition import (is_partitioned, routed_gradient,
+                               optimizer_parameters, assign_partition_gradients)
+from .pcgrad import is_pcgrad, global_pcgrad_backward
 from .io import (append_json, code_identity, elapsed, inference_identity, read_checkpoint,
                  restore_rng, rng_state, run_lock, save_checkpoint, seed_all, stop_at_boundary, write_json)
 
@@ -25,12 +28,25 @@ def signature(backend, cfg, dataset_identity, subsets, method):
 
 
 def local_batch_backward(backend, prompt, records, indices, rank, world_size, *, negative_bank=None, diagnostics=None, epoch=0):
+    if is_pcgrad(backend.cfg):
+        raise ValueError('PCGrad requires field-wise global reduction through global_pcgrad_backward')
     local_indices = indices[rank::world_size]
     losses = []
+    partitioned = is_partitioned(backend.cfg)
+    routed = torch.zeros_like(prompt) if partitioned else None
     for index in local_indices:
         record = records[index]
         if negative_bank is None:
-            loss = backend.record_loss(record, vectors=prompt)
+            if partitioned:
+                loss, components, objectives = backend.record_loss_components(record, vectors=prompt, return_partition=True)
+                if diagnostics is not None:
+                    diagnostics.append({key: float(value) for key, value in components.items()})
+            elif backend.cfg.get('loss', {}).get('type') in ('focal', 'ce_focal_birth', 'birth_focal'):
+                loss, components = backend.record_loss_components(record, vectors=prompt)
+                if diagnostics is not None:
+                    diagnostics.append({key: float(value) for key, value in components.items()})
+            else:
+                loss = backend.record_loss(record, vectors=prompt)
         else:
             row = negative_bank[record['record_id']]
             if row['gold'] != record['fields']['diagnosis']:
@@ -46,7 +62,13 @@ def local_batch_backward(backend, prompt, records, indices, rank, world_size, *,
         if not torch.isfinite(loss):
             raise FloatingPointError('Non-finite training loss')
         losses.append(float(loss.detach()))
-        (loss / len(indices)).backward()
+        if partitioned:
+            routed.add_(routed_gradient(*objectives, prompt,
+                                       backend.cfg['prompt_partition']['other_length'], len(indices)))
+        else:
+            (loss / len(indices)).backward()
+    if partitioned:
+        prompt.grad = routed
     if prompt.grad is None:
         if local_indices:
             raise FloatingPointError('Missing prompt gradient')
@@ -69,6 +91,7 @@ def validation_destination(out, epoch, step, runtime):
 
 def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, resume=None, epoch_validation=None):
     runtime = Runtime(backend.device)
+    task_fields = sorted({f for record in train for f in record['fields']}) if is_pcgrad(cfg) else None
     subsets = dict(subsets, parallel_world_size=runtime.world_size)
     training_values = {}
     for record in train:
@@ -112,8 +135,19 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
         for record in train + validation:
             backend.serialized_ids(record, initial_ids)
         initial = backend.embedding(backend.tensor(initial_ids))[0].detach().float()
-        prompt = torch.nn.Parameter(initial.clone())
-        optimizer = torch.optim.AdamW([prompt], lr=cfg['learning_rate'], weight_decay=0)
+        initialization = None
+        if is_partitioned(cfg):
+            initialization = {'mode': 'fresh_token_embeddings', 'seed': cfg['seed'],
+                              'other_length': cfg['prompt_partition']['other_length'],
+                              'birth_length': cfg['prompt_partition']['birth_length'],
+                              'policy': 'Initialize both segments from seed-selected frozen token embeddings; train all U from scratch.'}
+        elif is_pcgrad(cfg):
+            initialization = {'mode': 'fresh_token_embeddings', 'seed': cfg['seed'],
+                              'prompt_length': cfg['prompt_length'],
+                              'policy': 'Initialize one shared U from seed-selected frozen token embeddings; train from scratch.'}
+        parameters = optimizer_parameters(initial, cfg)
+        prompt = torch.cat(parameters) if is_partitioned(cfg) else parameters[0]
+        optimizer = torch.optim.AdamW(parameters, lr=cfg['learning_rate'], weight_decay=0)
         updates_per_epoch = math.ceil(len(train) / cfg['batch_records'])
         total = updates_per_epoch * cfg['epochs']
         warmup = max(1, math.ceil(total * cfg['warmup_fraction'])) if cfg['warmup_fraction'] else 0
@@ -134,7 +168,16 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
             checkpoint = read_checkpoint(resume)
             origin_identity, migrated = validate_resume(checkpoint, contract)
             run_signature = checkpoint['run_signature']
-            prompt.data.copy_(checkpoint['prompt'].to(prompt.device))
+            if is_partitioned(cfg):
+                split = cfg['prompt_partition']['other_length']
+                parameters[0].data.copy_(checkpoint['prompt'][:split].to(prompt.device))
+                parameters[1].data.copy_(checkpoint['prompt'][split:].to(prompt.device))
+                prompt = torch.cat(parameters)
+                initialization = checkpoint['run_info']['prompt_initialization']
+            else:
+                prompt.data.copy_(checkpoint['prompt'].to(prompt.device))
+                if is_pcgrad(cfg):
+                    initialization = checkpoint['run_info']['prompt_initialization']
             initial = checkpoint['initial_prompt'].to(prompt.device)
             initial_ids = checkpoint['initial_ids']
             optimizer.load_state_dict(checkpoint['optimizer'])
@@ -164,7 +207,17 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
                     'resume_history': resume_history,
                     'inference_signature': inference_identity(backend), 'initial_ids': initial_ids,
                     'parallelism': runtime.metadata(),
-                    'loss_definition': 'Mean answer-token CE including EOS; mean name/birthday parts within each group if split; mean available original fields per record; mean global records.' +
+                    'loss_definition': ('Birth-date Focal and other-field CE; global original-field gradients projected with PCGrad then summed before clipping/Adam; logged loss is the sum of unprojected objectives; EOS included; '
+                        if is_pcgrad(cfg) else
+                        'Other-field CE updates original U only; birth-date Focal updates appended U only; one shared C KV; logged loss is the sum of field-weighted objectives, not an unrestricted joint gradient; EOS included; '
+                        if is_partitioned(cfg) else
+                        'Birth-date Focal only and other-field CE only; EOS included; '
+                        if cfg.get('loss', {}).get('type') == 'birth_focal' else
+                        'All-field CE + weight * birth-date focal / available original field count; EOS included; '
+                        if cfg.get('loss', {}).get('type') == 'ce_focal_birth' else
+                        'Mean answer-token focal loss alpha*(1-p_gold)^gamma*(-log p_gold) including EOS; '
+                        if cfg.get('loss', {}).get('type') == 'focal' else 'Mean answer-token CE including EOS; ') +
+                        'mean name/birthday parts within each group if split; mean available original fields per record; mean global records. Evaluation NLL is always ordinary CE.' +
                         (' Add weight/4 * mean_over_available_kinds(relu(margin + diagnosis_positive_NLL - negative_NLL)); negatives include EOS; no category padding.'
                          if negative_bank is not None else ''),
                     'diagnosis_negatives': negative_info,
@@ -172,6 +225,19 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
                                                'warmup_updates': warmup},
                     'validation_predictions_directory': 'validation_predictions',
                     'partial_dataset': bool(cfg['train_limit'] or cfg['validation_limit'] or subsets['development_only'])}
+        if is_partitioned(cfg):
+            run_info.update(prompt_initialization=initialization, prompt_partition=cfg['prompt_partition'],
+                            gradient_routing={'other_fields': 'original_segment', 'birth_date': 'appended_segment'},
+                            shared_public_cache=True)
+        if is_pcgrad(cfg):
+            run_info.update(prompt_initialization=initialization, shared_public_cache=True,
+                            gradient_surgery={'type': 'pcgrad', 'task_level': 'original_field',
+                                'fields': task_fields, 'reduction': 'sum_global_field_gradients_before_projection',
+                                'aggregation': 'sum_projected_gradients_then_global_clip_then_AdamW',
+                                'projection_reference': 'immutable_original_field_gradients',
+                                'order_seed': cfg['seed'], 'order_policy': 'seed|pcgrad|completed_step|field',
+                                'missing_field_policy': 'zero contribution; skip zero-gradient tasks',
+                                'field_weight': '1 / global_batch_records / available_original_fields_in_record'})
         curve = None
         if runtime.primary:
             write_json(out / 'run.json', run_info)
@@ -232,19 +298,30 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
                         break
                     indices = order[state['cursor']:state['cursor'] + cfg['batch_records']]
                     optimizer.zero_grad(set_to_none=True)
+                    if is_partitioned(cfg):
+                        prompt = torch.cat(parameters)
                     diagnostics = []
-                    losses = local_batch_backward(backend, prompt, train, indices, runtime.rank, runtime.world_size,
-                                                  negative_bank=negative_bank, diagnostics=diagnostics, epoch=state['epoch'])
-                    # SUM of locally accumulated gradients, already divided by
-                    # the actual global batch size (including short last batches).
-                    runtime.sum_(prompt.grad)
+                    pcgrad_statistics = None
+                    if is_pcgrad(cfg):
+                        losses, pcgrad_statistics = global_pcgrad_backward(
+                            backend, prompt, train, indices, runtime, task_fields,
+                            seed=cfg['seed'], step=state['step'], diagnostics=diagnostics)
+                    else:
+                        losses = local_batch_backward(backend, prompt, train, indices, runtime.rank, runtime.world_size,
+                                                      negative_bank=negative_bank, diagnostics=diagnostics, epoch=state['epoch'])
+                        # Already divided by the actual global batch size.
+                        runtime.sum_(prompt.grad)
                     if prompt.grad is None or not torch.isfinite(prompt.grad).all():
                         raise FloatingPointError('Missing or non-finite prompt gradient')
                     norm = float(torch.nn.utils.clip_grad_norm_([prompt], cfg['grad_clip']))
+                    if is_partitioned(cfg):
+                        assign_partition_gradients(parameters, prompt.grad, train, indices)
                     if any(p.grad is not None for p in backend.model.parameters()):
                         raise AssertionError('Frozen model received parameter gradients')
                     optimizer.step()
                     scheduler.step()
+                    if is_partitioned(cfg):
+                        prompt = torch.cat(parameters)
                     state['step'] += 1
                     state['cursor'] += len(indices)
                     for index in indices:
@@ -260,6 +337,28 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
                            'learning_rate_next_step': scheduler.get_last_lr()[0],
                            'elapsed_seconds': previous_elapsed + elapsed(started),
                            'cuda_peak_allocated_bytes': peak_memory}
+                    if cfg.get('loss', {}).get('type') in ('focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+                        loss_type = cfg['loss']['type']
+                        keys = ('ce_loss', 'focal_loss') + (('birth_date_focal_loss', 'focal_weighted_loss')
+                                                          if loss_type == 'ce_focal_birth' else ())
+                        if loss_type in ('birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+                            keys += ('birth_date_focal_loss', 'ce_other_loss')
+                        sums = torch.tensor([sum(row[k] for row in diagnostics) for k in keys],
+                                            device=backend.device, dtype=torch.float64)
+                        log.update(dict(zip(keys, (runtime.sum_(sums) / len(indices)).tolist())))
+                        log.update(loss_type=loss_type, focal_gamma=cfg['loss']['gamma'], focal_alpha=cfg['loss']['alpha'])
+                        if loss_type == 'ce_focal_birth':
+                            log.update(focal_weight=cfg['loss']['weight'], focal_scope='birth_date')
+                        elif loss_type in ('birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+                            log.update(focal_scope='birth_date', ce_objective_scope='other_fields')
+                        if pcgrad_statistics is not None:
+                            log.update(pcgrad_statistics, gradient_surgery='pcgrad', pcgrad_task_level='original_field')
+                        if is_partitioned(cfg):
+                            split = cfg['prompt_partition']['other_length']
+                            log.update(other_prompt_length=split, birth_prompt_length=cfg['prompt_partition']['birth_length'],
+                                       gradient_routing='other_ce_to_original__birth_focal_to_appended',
+                                       other_gradient_norm=float(parameters[0].grad.norm()) if parameters[0].grad is not None else 0.,
+                                       birth_gradient_norm=float(parameters[1].grad.norm()) if parameters[1].grad is not None else 0.)
                     if negative_bank is not None:
                         keys = ('ce_loss', 'diagnosis_ce_loss', 'diagnosis_contrastive_loss',
                                 'diagnosis_negative_nll', 'diagnosis_ranking_accuracy', 'diagnosis_margin_accuracy',

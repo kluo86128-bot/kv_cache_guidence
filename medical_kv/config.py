@@ -76,6 +76,38 @@ def load_config(path, overrides=None):
     if type(cfg['batch_questions']) is not bool:
         raise ValueError('batch_questions must be a boolean')
     contrastive = cfg.setdefault('diagnosis_contrastive', {'enabled': False})
+    # Do not insert a new default key into legacy CE configs/checkpoint identities.
+    loss = cfg.get('loss', {'type': 'ce'})
+    if not isinstance(loss, dict) or loss.get('type') not in ('ce', 'focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+        raise ValueError('Unknown loss.type; expected ce, focal, ce_focal_birth, birth_focal, birth_focal_split or birth_focal_pcgrad')
+    allowed = {'type'} if loss['type'] == 'ce' else {'type', 'gamma', 'alpha'}
+    if loss['type'] == 'ce_focal_birth':
+        allowed = allowed | {'weight'}
+    if set(loss) != allowed:
+        raise ValueError('Invalid loss keys: CE needs type; focal/birth_focal need type/gamma/alpha; ce_focal_birth also needs weight')
+    if loss['type'] != 'ce':
+        for key in (('gamma', 'alpha', 'weight') if loss['type'] == 'ce_focal_birth' else ('gamma', 'alpha')):
+            value = loss[key]
+            if type(value) not in (int, float) or not math.isfinite(value) or value < 0 or (key == 'alpha' and value == 0):
+                raise ValueError('Focal gamma/weight must be finite and nonnegative; alpha must be finite and positive')
+        if contrastive.get('enabled') or cfg['hard'].get('enabled'):
+            raise ValueError('Focal supports soft training without contrastive negatives or discrete search')
+    partition = cfg.get('prompt_partition')
+    if loss['type'] == 'birth_focal_pcgrad':
+        if (cfg.get('prompt_initialization') != 'fresh_token_embeddings'
+                or cfg['question_protocol'] != 'multiscene_privacy_v1' or cfg['scene'] != 'medical'):
+            raise ValueError('birth_focal_pcgrad requires fresh_token_embeddings and the medical multiscene protocol')
+    if loss['type'] == 'birth_focal_split':
+        if cfg.get('prompt_initialization') != 'fresh_token_embeddings':
+            raise ValueError('birth_focal_split requires prompt_initialization=fresh_token_embeddings')
+        if (not isinstance(partition, dict) or set(partition) != {'other_length', 'birth_length'}
+                or any(type(partition[k]) is not int or partition[k] < 1 for k in partition)
+                or sum(partition.values()) != cfg['prompt_length']):
+            raise ValueError('prompt_partition needs positive other_length/birth_length summing to prompt_length')
+        if cfg['question_protocol'] != 'multiscene_privacy_v1' or cfg['scene'] != 'medical':
+            raise ValueError('birth_focal_split requires the medical multiscene protocol')
+    elif partition is not None:
+        raise ValueError('prompt_partition requires loss.type=birth_focal_split')
     if cfg['question_protocol'] == 'multiscene_privacy_v1':
         if cfg['name_mode'] != 'parts' or cfg['birth_date_mode'] != 'parts':
             raise ValueError('Multiscene name_mode and birth_date_mode must be parts')

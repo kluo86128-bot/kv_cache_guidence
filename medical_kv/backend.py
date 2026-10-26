@@ -207,17 +207,83 @@ class Backend:
             raise AssertionError('Cache slice includes non-public positions')
         return context
 
-    def answer_loss(self, context, qa):
+    def _mean_answer_losses(self, logits, labels, *, training=False):
+        """Return NLL, or [Focal/CE, NLL] for each answer during training.
+
+        Reduction is by valid token count (including EOS), never by focal weights.
+        Evaluation callers use the default NLL regardless of the training config.
+        Joint training retains both gradients and applies the field mask later.
+        """
+        ce = F.cross_entropy(logits.float().transpose(1, 2), labels,
+                             reduction='none', ignore_index=-100)
+        valid = labels.ne(-100)
+        lengths = valid.sum(dim=1)
+        nll = ce.sum(dim=1) / lengths
+        if not training:
+            return nll
+        options = self.cfg.get('loss', {'type': 'ce'})
+        if options['type'] in ('focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+            # -expm1(-CE) = 1 - p_gold, stable even when p_gold is near one.
+            # Keep this factor in the graph: detaching it is not focal loss.
+            gamma = options['gamma']
+            modulation = (torch.ones_like(ce) if gamma == 0 else
+                          (-torch.expm1(-ce)).clamp_min(torch.finfo(ce.dtype).tiny).pow(gamma))
+            token_loss = options['alpha'] * modulation * ce
+            objective = token_loss.masked_fill(~valid, 0).sum(dim=1) / lengths
+        else:
+            objective = nll
+        # Joint training needs the original CE gradient as well as the focal one.
+        return torch.stack((objective, nll if options['type'] in ('ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad') else nll.detach()), dim=1)
+
+    def answer_loss(self, context, qa, *, training=False):
         q, target = self.question_and_target(qa)
         inputs = q + target[:-1]
         logits, _ = self.forward(ids=inputs, layers=context.layers, position_start=context.next_position,
                                   logits_slice=slice(len(q) - 1, len(q) - 1 + len(target)))
-        return F.cross_entropy(logits.reshape(-1, logits.shape[-1]), self.tensor(target).reshape(-1), reduction='mean')
+        return self._mean_answer_losses(logits, self.tensor(target), training=training)[0]
 
     def record_loss(self, record, *, vectors=None, prompt_ids=None):
+        if self.cfg.get('loss', {}).get('type') in ('focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+            return self.record_loss_components(record, vectors=vectors, prompt_ids=prompt_ids)[0]
         context = self.context(record, vectors=vectors, prompt_ids=prompt_ids)
         questions = questions_for(record, self.cfg)
         return grouped_loss(self.answer_losses(context, questions), questions)
+
+    def record_loss_components(self, record, *, vectors=None, prompt_ids=None, return_partition=False, return_fields=False):
+        context = self.context(record, vectors=vectors, prompt_ids=prompt_ids)
+        questions = questions_for(record, self.cfg)
+        values = self.answer_losses(context, questions, training=True)
+        objective = grouped_loss(values[:, 0], questions)
+        ce = grouped_loss(values[:, 1], questions)
+        options = self.cfg.get('loss', {'type': 'ce'})
+        if options['type'] in ('ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+            selected = torch.tensor([q.get('group', q['field']) == 'birth_date'
+                                     or q['field'] in ('birth_year', 'birth_month', 'birth_day')
+                                     for q in questions], device=values.device)
+            # Keep the original field weight: extra = focal_birth / available_field_count.
+            extra = grouped_loss(values[:, 0].masked_fill(~selected, 0), questions)
+            birth = values[selected, 0].mean() if selected.any() else extra
+            if options['type'] in ('birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+                other = grouped_loss(values[:, 1].masked_fill(selected, 0), questions)
+                result = (other + extra, {'ce_loss': ce.detach(), 'ce_other_loss': other.detach(),
+                                         'focal_loss': extra.detach(), 'birth_date_focal_loss': birth.detach()})
+                if return_fields:
+                    groups = [q.get('group', q['field']) for q in questions]
+                    mixed = torch.where(selected, values[:, 0], values[:, 1])
+                    # Zero all other groups, but keep the original field-count
+                    # denominator: sum(fields.values()) is exactly other+extra.
+                    fields = {field: grouped_loss(mixed.masked_fill(
+                        torch.tensor([g != field for g in groups], device=values.device), 0), questions)
+                              for field in sorted(set(groups))}
+                    return *result, fields
+                # Both objectives share the same encoding/answer forward graph.
+                # Training extracts each objective's gradient for its assigned U segment.
+                return (*result, (other, extra)) if return_partition else result
+            weighted = options['weight'] * extra
+            return ce + weighted, {'ce_loss': ce.detach(), 'focal_loss': extra.detach(),
+                                   'birth_date_focal_loss': birth.detach(),
+                                   'focal_weighted_loss': weighted.detach()}
+        return objective, {'ce_loss': ce.detach(), 'focal_loss': objective.detach()}
 
     def record_contrastive_loss(self, record, negatives, *, vectors):
         from torch.utils.checkpoint import checkpoint
@@ -273,7 +339,7 @@ class Backend:
         mask.masked_fill_(~key_valid[:, None, None, :], torch.finfo(self.dtype).min)
         return ids, lengths, positions, layers, mask, key_valid
 
-    def answer_losses(self, context, questions):
+    def answer_losses(self, context, questions, *, training=False):
         size = self.cfg.get('question_batch_size') or len(questions)
         chunks = [questions[i:i + size] for i in range(0, len(questions), size)]
         if self.cfg.get('checkpoint_questions', False) and torch.is_grad_enabled():
@@ -281,15 +347,15 @@ class Backend:
             flat = tuple(t for pair in context.layers for t in pair)
             def calculate(*tensors, chunk):
                 ctx = replace(context, layers=tuple(zip(tensors[::2], tensors[1::2])))
-                return self._answer_losses(ctx, chunk)
+                return self._answer_losses(ctx, chunk, training=training)
             return torch.cat([checkpoint(lambda *ts, chunk=chunk: calculate(*ts, chunk=chunk),
                                          *flat, use_reentrant=False, preserve_rng_state=False)
                               for chunk in chunks])
-        return torch.cat([self._answer_losses(context, chunk) for chunk in chunks])
+        return torch.cat([self._answer_losses(context, chunk, training=training) for chunk in chunks])
 
-    def _answer_losses(self, context, questions):
+    def _answer_losses(self, context, questions, *, training=False):
         if not self.cfg.get('batch_questions', True):
-            return torch.stack([self.answer_loss(context, qa) for qa in questions])
+            return torch.stack([self.answer_loss(context, qa, training=training) for qa in questions])
         tokenized = [self.question_and_target(qa) for qa in questions]
         sequences = [q + target[:-1] for q, target in tokenized]
         ids, _, positions, layers, mask, _ = self._question_batch(context, sequences)
@@ -301,8 +367,7 @@ class Backend:
         lengths = torch.tensor([len(t) for t in targets], device=self.device)
         indices = (ids.shape[1] - lengths[:, None] + torch.arange(width, device=self.device)[None]).clamp_max(ids.shape[1] - 1)
         logits, _ = self.forward(ids=ids, layers=layers, position_ids=positions, mask=mask, logits_slice=indices)
-        losses = F.cross_entropy(logits.transpose(1, 2), labels, reduction='none', ignore_index=-100)
-        return losses.sum(dim=1) / lengths
+        return self._mean_answer_losses(logits, labels, training=training)
 
     @torch.no_grad()
     def generate_many(self, context, questions):

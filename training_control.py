@@ -34,7 +34,8 @@ def recover(root, gpus, *, epoch_validation=None):
         # The launcher chooses matching fixed configs/output names for each scene.
         sys.path.insert(0, str(ROOT / 'scripts'))
         from run_multiscene_experiment import experiment_paths
-        _, _, _, test_directory, test_log = experiment_paths(ROOT, scene)
+        loss = info['config'].get('loss', {}).get('type', 'ce')
+        _, _, _, test_directory, test_log = experiment_paths(ROOT, scene, loss)
         if test_directory.exists() or test_log.exists():
             raise FileExistsError('Test output already exists; refusing to overwrite it')
         # Refuse to start a second pipeline while an earlier recovery is loading.
@@ -50,6 +51,8 @@ def recover(root, gpus, *, epoch_validation=None):
                    '--gpus', ','.join(map(str, ids)), '--resume', '--run-root', str(root)]
         if scene is not None:
             command += ['--scene', scene]
+        if loss != 'ce':
+            command += ['--loss', loss]
         if epoch_validation is not None:
             command.append('--epoch-validation' if epoch_validation else '--no-epoch-validation')
         with log.open('x', encoding='utf-8') as stream:

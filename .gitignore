@@ -1,6 +1,9 @@
 # Dataset files and input caches
 /data/
 
+# Local project archive
+/medical_privacy.zip
+
 # Python bytecode caches (including the alternate spelling)
 __pycache__/
 _pycache_/
@@ -33,6 +36,7 @@ htmlcov/
 build/
 dist/
 *.egg-info/
+predictions.csv
 
 # Downloaded local runtimes and dependency bundles
 /tools/python/

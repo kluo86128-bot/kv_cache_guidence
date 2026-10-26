@@ -49,8 +49,60 @@ def require_completed_training(run_directory, epochs):
         raise RuntimeError('Training did not complete the full configured run; automatic test was not started')
 
 
-def experiment_paths(root, scene=None):
+def experiment_paths(root, scene=None, loss='ce'):
     root = Path(root)
+    if loss not in ('ce', 'focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+        raise ValueError('Unknown loss')
+    if loss == 'focal':
+        if scene != 'medical':
+            raise ValueError('The focal experiment currently requires scene=medical')
+        train_config = root / 'configs/experiment_v7_medical_focal.json'
+        test_config = root / 'configs/evaluation_v3_medical_focal.json'
+        run = root / (read_json(train_config)['output_directory'] if train_config.exists()
+                      else 'runs/soft_medical_v2_clean_focal_gamma2_seed17_100epochs')
+        test = root / (read_json(test_config)['output_directory'] if test_config.exists()
+                       else 'runs/test_medical_v2_clean_focal_gamma2_best')
+        return train_config, test_config, run, test, root / 'logs' / (test.name + '.log')
+    if loss == 'ce_focal_birth':
+        if scene != 'medical':
+            raise ValueError('The joint experiment currently requires scene=medical')
+        train_config = root / 'configs/experiment_v8_medical_ce_focal_birth.json'
+        test_config = root / 'configs/evaluation_v4_medical_ce_focal_birth.json'
+        run = root / (read_json(train_config)['output_directory'] if train_config.exists()
+                      else 'runs/soft_medical_v2_clean_ce_focal_birth_w05_seed17_100epochs')
+        test = root / (read_json(test_config)['output_directory'] if test_config.exists()
+                       else 'runs/test_medical_v2_clean_ce_focal_birth_w05_best')
+        return train_config, test_config, run, test, root / 'logs' / (test.name + '.log')
+    if loss == 'birth_focal_pcgrad':
+        if scene != 'medical':
+            raise ValueError('The PCGrad experiment requires scene=medical')
+        train_config = root / 'configs/experiment_v11_medical_pcgrad.json'
+        test_config = root / 'configs/evaluation_v7_medical_pcgrad.json'
+        run = root / (read_json(train_config)['output_directory'] if train_config.exists()
+                      else 'runs/soft_medical_v2_clean_pcgrad_u32_seed17_100epochs')
+        test = root / (read_json(test_config)['output_directory'] if test_config.exists()
+                       else 'runs/test_medical_v2_clean_pcgrad_u32_best')
+        return train_config, test_config, run, test, root / 'logs' / (test.name + '.log')
+    if loss == 'birth_focal_split':
+        if scene != 'medical':
+            raise ValueError('The partitioned-prompt experiment requires scene=medical')
+        train_config = root / 'configs/experiment_v10_medical_split_u.json'
+        test_config = root / 'configs/evaluation_v6_medical_split_u.json'
+        run = root / (read_json(train_config)['output_directory'] if train_config.exists()
+                      else 'runs/soft_medical_v2_clean_split_u32_16_fresh_seed17_100epochs')
+        test = root / (read_json(test_config)['output_directory'] if test_config.exists()
+                       else 'runs/test_medical_v2_clean_split_u32_16_fresh_best')
+        return train_config, test_config, run, test, root / 'logs' / (test.name + '.log')
+    if loss == 'birth_focal':
+        if scene != 'medical':
+            raise ValueError('The birth-only focal experiment currently requires scene=medical')
+        train_config = root / 'configs/experiment_v9_medical_birth_focal.json'
+        test_config = root / 'configs/evaluation_v5_medical_birth_focal.json'
+        run = root / (read_json(train_config)['output_directory'] if train_config.exists()
+                      else 'runs/soft_medical_v2_clean_birth_focal_seed17_100epochs')
+        test = root / (read_json(test_config)['output_directory'] if test_config.exists()
+                       else 'runs/test_medical_v2_clean_birth_focal_best')
+        return train_config, test_config, run, test, root / 'logs' / (test.name + '.log')
     if scene is not None:
         if scene not in ('medical', 'finance', 'hr'):
             raise ValueError('Unknown scene')
@@ -67,14 +119,16 @@ def experiment_paths(root, scene=None):
             root / 'runs/test_multiscene_v1_best', root / 'logs/test_multiscene_v1_best.log')
 
 
-def run_experiment(root, gpus, *, resume=False, run_directory=None, epoch_validation=None, scene=None):
+def run_experiment(root, gpus, *, resume=False, run_directory=None, epoch_validation=None, scene=None, loss='ce'):
     root = Path(root)
-    train_config, test_config, default_run, test_directory, test_log = experiment_paths(root, scene)
+    train_config, test_config, default_run, test_directory, test_log = experiment_paths(root, scene, loss)
     if not test_config.is_file():
         raise FileNotFoundError(f'Missing evaluation config: {test_config}')
     run_directory = Path(run_directory) if run_directory is not None else default_run
     if scene is not None:
         train_cfg, test_cfg = read_json(train_config), read_json(test_config)
+        if any(c.get('loss', {}).get('type', 'ce') != loss for c in (train_cfg, test_cfg)):
+            raise ValueError('Launcher loss differs from train/test configs')
         if any(c.get('scene') != scene or c.get('record_form') is not None for c in (train_cfg, test_cfg)):
             raise ValueError('Scene training and evaluation configs must select the same scene and all its forms')
         if train_cfg['dataset_directory'] != test_cfg['dataset_directory']:
@@ -122,11 +176,12 @@ def main():
     parser.add_argument('--resume', action='store_true', help='Resume latest.pt, then automatically test on completion')
     parser.add_argument('--run-root', type=Path)
     parser.add_argument('--scene', choices=['medical', 'finance', 'hr'])
+    parser.add_argument('--loss', choices=['ce', 'focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'], default='ce')
     parser.add_argument('--epoch-validation', action=argparse.BooleanOptionalAction, default=None)
     args = parser.parse_args()
     try:
         run_experiment(Path(__file__).resolve().parents[1], args.gpus, resume=args.resume,
-                       run_directory=args.run_root, epoch_validation=args.epoch_validation, scene=args.scene)
+                       run_directory=args.run_root, epoch_validation=args.epoch_validation, scene=args.scene, loss=args.loss)
     except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as exc:
         print(f'PIPELINE | failed or incomplete | {exc}', file=sys.stderr, flush=True)
         raise SystemExit(1) from exc
