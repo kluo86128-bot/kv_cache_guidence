@@ -1,0 +1,44 @@
+{
+  "model_name_or_path": null,
+  "output_directory": "runs/soft_u_cosine_mapping_latest_v1",
+  "checkpoint_filename": "latest.pt",
+  "mapping": {
+    "device": "cpu",
+    "gpus": [],
+    "exclude_special_tokens": true,
+    "allow_non_ascii": true,
+    "vocabulary_chunk_size": 8192,
+    "position_chunk_size": 8,
+    "cpu_threads": 4
+  },
+  "evaluation": {
+    "enabled": true,
+    "split": "test",
+    "gpus": [0, 1, 3],
+    "cpu_threads": 4,
+    "batch_records_per_gpu": 2
+  },
+  "soft_prefixes": [
+    {
+      "name": "medical",
+      "directory": "runs/soft_medical_v2_clean_split_u32_16_fresh_seed17_100epochs",
+      "checkpoint_filename": "latest.pt",
+      "checkpoint_policy": "paused_or_complete_latest",
+      "evaluation_config": "configs/evaluation_v6_medical_split_u.json"
+    },
+    {
+      "name": "finance",
+      "directory": "runs/soft_finance_v2_clean_split_u32_16_focal5_seed17_100epochs",
+      "checkpoint_filename": "latest.pt",
+      "checkpoint_policy": "paused_or_complete_latest",
+      "evaluation_config": "configs/evaluation_v8_finance_split_u.json"
+    },
+    {
+      "name": "hr",
+      "directory": "runs/soft_hr_v3_balanced_split_u32_16_focal6_seed17_100epochs",
+      "checkpoint_filename": "latest.pt",
+      "checkpoint_policy": "paused_or_complete_latest",
+      "evaluation_config": "configs/evaluation_v10_hr_split_u.json"
+    }
+  ]
+}

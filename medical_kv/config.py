@@ -6,6 +6,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FIELDS = ('name', 'birth_date', 'address', 'diagnosis')
+FINANCE_FIELDS = frozenset(('name', 'identity_number', 'address', 'amount_paid', 'amount_received',
+    'timestamp', 'payment_format', 'recorded_account_number', 'card_number', 'account_balance',
+    'transfer_amount', 'recipient_name', 'account_type', 'transfer_time'))
+HR_FIELDS = frozenset(('name', 'birth_date', 'salary', 'hire_date', 'department', 'title',
+    'identity_number', 'address', 'email', 'leave_start', 'leave_duration', 'leave_reason',
+    'complaint_target', 'complaint_content'))
 
 
 def file_hash(path):
@@ -78,8 +84,8 @@ def load_config(path, overrides=None):
     contrastive = cfg.setdefault('diagnosis_contrastive', {'enabled': False})
     # Do not insert a new default key into legacy CE configs/checkpoint identities.
     loss = cfg.get('loss', {'type': 'ce'})
-    if not isinstance(loss, dict) or loss.get('type') not in ('ce', 'focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
-        raise ValueError('Unknown loss.type; expected ce, focal, ce_focal_birth, birth_focal, birth_focal_split or birth_focal_pcgrad')
+    if not isinstance(loss, dict) or loss.get('type') not in ('ce', 'focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad', 'field_focal_split', 'field_focal_pcgrad'):
+        raise ValueError('Unknown loss.type; expected ce, focal, ce_focal_birth, birth_focal, birth_focal_split, birth_focal_pcgrad, field_focal_split or field_focal_pcgrad')
     allowed = {'type'} if loss['type'] == 'ce' else {'type', 'gamma', 'alpha'}
     if loss['type'] == 'ce_focal_birth':
         allowed = allowed | {'weight'}
@@ -106,8 +112,31 @@ def load_config(path, overrides=None):
             raise ValueError('prompt_partition needs positive other_length/birth_length summing to prompt_length')
         if cfg['question_protocol'] != 'multiscene_privacy_v1' or cfg['scene'] != 'medical':
             raise ValueError('birth_focal_split requires the medical multiscene protocol')
+    elif loss['type'] in ('field_focal_split', 'field_focal_pcgrad'):
+        # Extend only configurable split U. Existing finance PCGrad stays scoped
+        # to finance, and no new defaults enter legacy checkpoint identities.
+        scenes = ('finance', 'hr') if loss['type'] == 'field_focal_split' else ('finance',)
+        if (cfg.get('prompt_initialization') != 'fresh_token_embeddings'
+                or cfg['question_protocol'] != 'multiscene_privacy_v1' or cfg['scene'] not in scenes):
+            suffix = ' or the hr multiscene protocol' if 'hr' in scenes else ''
+            raise ValueError(f"{loss['type']} requires fresh_token_embeddings and the finance multiscene protocol{suffix}")
+        if loss['type'] == 'field_focal_split':
+            if (not isinstance(partition, dict) or set(partition) != {'other_length', 'focal_length'}
+                    or any(type(partition[k]) is not int or partition[k] < 1 for k in partition)
+                    or sum(partition.values()) != cfg['prompt_length']):
+                raise ValueError('prompt_partition needs positive other_length/focal_length summing to prompt_length')
+        elif partition is not None:
+            raise ValueError('field_focal_pcgrad uses one shared U; prompt_partition is not allowed')
+        selected = cfg.get('focal_fields')
+        allowed_fields = HR_FIELDS if cfg['scene'] == 'hr' else FINANCE_FIELDS
+        if (not isinstance(selected, list) or not selected
+                or any(not isinstance(f, str) or f not in allowed_fields for f in selected)
+                or len(set(selected)) != len(selected)):
+            raise ValueError(f"focal_fields must be a nonempty unique list of original {cfg['scene']} fields")
     elif partition is not None:
-        raise ValueError('prompt_partition requires loss.type=birth_focal_split')
+        raise ValueError('prompt_partition requires loss.type=birth_focal_split or field_focal_split')
+    if 'focal_fields' in cfg and loss['type'] not in ('field_focal_split', 'field_focal_pcgrad'):
+        raise ValueError('focal_fields requires field_focal_split or field_focal_pcgrad; legacy medical field routing is fixed')
     if cfg['question_protocol'] == 'multiscene_privacy_v1':
         if cfg['name_mode'] != 'parts' or cfg['birth_date_mode'] != 'parts':
             raise ValueError('Multiscene name_mode and birth_date_mode must be parts')

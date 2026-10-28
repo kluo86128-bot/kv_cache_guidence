@@ -1,0 +1,13 @@
+{
+  "schema": "reviewed_scalar_to_cache_batch_v1",
+  "source_scripts": {
+    "map_soft_u_cosine.py": "2be4f312efcb99019ab395eceb72c07eb7ec1180dff22023332e0d6984bcfcc4",
+    "evaluate_mapped_u.py": "c4dd0f44d80e7fb6abaa112bdf6943c1fe54ddb9cf220195a21c9666db7ea762"
+  },
+  "target_scripts": {
+    "map_soft_u_cosine.py": "256818c71c133668661f3262e6e4c3d5778bc2b0470d28d0c3aa77a39a69bdf7",
+    "evaluate_mapped_u.py": "80424fa7b0342a65c577ec6ce6723ed60f4c3d2db7632354da9543d971b3ab5c",
+    "mapped_cache_batch.py": "dee21c5a6d004f101a6dc2097873e2abb9953c59ce280fd4f10ec0665df32c8f"
+  },
+  "preserve": "Original job/evaluation signatures, mapping artifacts and committed records. Core medical_kv hashes and all non-code identities must match."
+}

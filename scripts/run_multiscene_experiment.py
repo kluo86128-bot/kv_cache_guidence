@@ -51,7 +51,7 @@ def require_completed_training(run_directory, epochs):
 
 def experiment_paths(root, scene=None, loss='ce'):
     root = Path(root)
-    if loss not in ('ce', 'focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+    if loss not in ('ce', 'focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad', 'field_focal_split', 'field_focal_pcgrad'):
         raise ValueError('Unknown loss')
     if loss == 'focal':
         if scene != 'medical':
@@ -82,6 +82,34 @@ def experiment_paths(root, scene=None, loss='ce'):
                       else 'runs/soft_medical_v2_clean_pcgrad_u32_seed17_100epochs')
         test = root / (read_json(test_config)['output_directory'] if test_config.exists()
                        else 'runs/test_medical_v2_clean_pcgrad_u32_best')
+        return train_config, test_config, run, test, root / 'logs' / (test.name + '.log')
+    if loss == 'field_focal_pcgrad':
+        if scene != 'finance':
+            raise ValueError('The finance PCGrad experiment requires scene=finance')
+        train_config = root / 'configs/experiment_v13_finance_pcgrad.json'
+        test_config = root / 'configs/evaluation_v9_finance_pcgrad.json'
+        run = root / (read_json(train_config)['output_directory'] if train_config.exists()
+                      else 'runs/soft_finance_v2_clean_pcgrad_u32_focal5_seed17_100epochs')
+        test = root / (read_json(test_config)['output_directory'] if test_config.exists()
+                       else 'runs/test_finance_v2_clean_pcgrad_u32_focal5_best')
+        return train_config, test_config, run, test, root / 'logs' / (test.name + '.log')
+    if loss == 'field_focal_split':
+        if scene == 'hr':
+            train_config = root / 'configs/experiment_v14_hr_split_u.json'
+            test_config = root / 'configs/evaluation_v10_hr_split_u.json'
+            run = root / (read_json(train_config)['output_directory'] if train_config.exists()
+                          else 'runs/soft_hr_v3_balanced_split_u32_16_focal6_seed17_100epochs')
+            test = root / (read_json(test_config)['output_directory'] if test_config.exists()
+                           else 'runs/test_hr_v3_balanced_split_u32_16_focal6_best')
+            return train_config, test_config, run, test, root / 'logs' / (test.name + '.log')
+        if scene != 'finance':
+            raise ValueError('The configurable-field partitioned experiment requires scene=finance or hr')
+        train_config = root / 'configs/experiment_v12_finance_split_u.json'
+        test_config = root / 'configs/evaluation_v8_finance_split_u.json'
+        run = root / (read_json(train_config)['output_directory'] if train_config.exists()
+                      else 'runs/soft_finance_v2_clean_split_u32_16_focal5_seed17_100epochs')
+        test = root / (read_json(test_config)['output_directory'] if test_config.exists()
+                       else 'runs/test_finance_v2_clean_split_u32_16_focal5_best')
         return train_config, test_config, run, test, root / 'logs' / (test.name + '.log')
     if loss == 'birth_focal_split':
         if scene != 'medical':
@@ -176,7 +204,7 @@ def main():
     parser.add_argument('--resume', action='store_true', help='Resume latest.pt, then automatically test on completion')
     parser.add_argument('--run-root', type=Path)
     parser.add_argument('--scene', choices=['medical', 'finance', 'hr'])
-    parser.add_argument('--loss', choices=['ce', 'focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'], default='ce')
+    parser.add_argument('--loss', choices=['ce', 'focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad', 'field_focal_split', 'field_focal_pcgrad'], default='ce')
     parser.add_argument('--epoch-validation', action=argparse.BooleanOptionalAction, default=None)
     args = parser.parse_args()
     try:

@@ -12,7 +12,8 @@ from .distributed import Runtime
 from .control import PauseController
 from .resume import training_contract, validate_resume, restore_training_rng
 from .prompt_partition import (is_partitioned, routed_gradient,
-                               optimizer_parameters, assign_partition_gradients)
+                               optimizer_parameters, assign_partition_gradients,
+                               is_field_partitioned, partition_focal_fields, focal_prompt_length)
 from .pcgrad import is_pcgrad, global_pcgrad_backward
 from .io import (append_json, code_identity, elapsed, inference_identity, read_checkpoint,
                  restore_rng, rng_state, run_lock, save_checkpoint, seed_all, stop_at_boundary, write_json)
@@ -136,7 +137,12 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
             backend.serialized_ids(record, initial_ids)
         initial = backend.embedding(backend.tensor(initial_ids))[0].detach().float()
         initialization = None
-        if is_partitioned(cfg):
+        if is_field_partitioned(cfg):
+            initialization = {'mode': 'fresh_token_embeddings', 'seed': cfg['seed'],
+                              'other_length': cfg['prompt_partition']['other_length'],
+                              'focal_length': focal_prompt_length(cfg),
+                              'policy': 'Initialize both segments from seed-selected frozen token embeddings; train all U from scratch.'}
+        elif is_partitioned(cfg):
             initialization = {'mode': 'fresh_token_embeddings', 'seed': cfg['seed'],
                               'other_length': cfg['prompt_partition']['other_length'],
                               'birth_length': cfg['prompt_partition']['birth_length'],
@@ -207,7 +213,11 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
                     'resume_history': resume_history,
                     'inference_signature': inference_identity(backend), 'initial_ids': initial_ids,
                     'parallelism': runtime.metadata(),
-                    'loss_definition': ('Birth-date Focal and other-field CE; global original-field gradients projected with PCGrad then summed before clipping/Adam; logged loss is the sum of unprojected objectives; EOS included; '
+                    'loss_definition': ('Configured-field Focal sum updates appended U only; other-field CE sum updates original U only; divide both by available ORIGINAL field count, never by selected-field count; one shared C KV; logged loss is the sum of the two routed objectives; EOS included; '
+                        if is_field_partitioned(cfg) else
+                        'Configured-field Focal and other-field CE; one shared U/C KV; global original-field gradients projected with PCGrad then summed before clipping/Adam; logged loss is the unprojected objective; EOS included; '
+                        if cfg.get('loss', {}).get('type') == 'field_focal_pcgrad' else
+                        'Birth-date Focal and other-field CE; global original-field gradients projected with PCGrad then summed before clipping/Adam; logged loss is the sum of unprojected objectives; EOS included; '
                         if is_pcgrad(cfg) else
                         'Other-field CE updates original U only; birth-date Focal updates appended U only; one shared C KV; logged loss is the sum of field-weighted objectives, not an unrestricted joint gradient; EOS included; '
                         if is_partitioned(cfg) else
@@ -225,10 +235,16 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
                                                'warmup_updates': warmup},
                     'validation_predictions_directory': 'validation_predictions',
                     'partial_dataset': bool(cfg['train_limit'] or cfg['validation_limit'] or subsets['development_only'])}
-        if is_partitioned(cfg):
+        if is_field_partitioned(cfg):
+            run_info.update(prompt_initialization=initialization, prompt_partition=cfg['prompt_partition'],
+                            focal_fields=list(cfg['focal_fields']), shared_public_cache=True,
+                            gradient_routing={'other_fields': 'original_segment', 'configured_focal_fields': 'appended_segment'})
+        elif is_partitioned(cfg):
             run_info.update(prompt_initialization=initialization, prompt_partition=cfg['prompt_partition'],
                             gradient_routing={'other_fields': 'original_segment', 'birth_date': 'appended_segment'},
                             shared_public_cache=True)
+        if cfg.get('loss', {}).get('type') == 'field_focal_pcgrad':
+            run_info['focal_fields'] = list(cfg['focal_fields'])
         if is_pcgrad(cfg):
             run_info.update(prompt_initialization=initialization, shared_public_cache=True,
                             gradient_surgery={'type': 'pcgrad', 'task_level': 'original_field',
@@ -315,7 +331,8 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
                         raise FloatingPointError('Missing or non-finite prompt gradient')
                     norm = float(torch.nn.utils.clip_grad_norm_([prompt], cfg['grad_clip']))
                     if is_partitioned(cfg):
-                        assign_partition_gradients(parameters, prompt.grad, train, indices)
+                        assign_partition_gradients(parameters, prompt.grad, train, indices,
+                                                   focal_fields=partition_focal_fields(cfg))
                     if any(p.grad is not None for p in backend.model.parameters()):
                         raise AssertionError('Frozen model received parameter gradients')
                     optimizer.step()
@@ -337,12 +354,14 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
                            'learning_rate_next_step': scheduler.get_last_lr()[0],
                            'elapsed_seconds': previous_elapsed + elapsed(started),
                            'cuda_peak_allocated_bytes': peak_memory}
-                    if cfg.get('loss', {}).get('type') in ('focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+                    if cfg.get('loss', {}).get('type') in ('focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad', 'field_focal_split', 'field_focal_pcgrad'):
                         loss_type = cfg['loss']['type']
                         keys = ('ce_loss', 'focal_loss') + (('birth_date_focal_loss', 'focal_weighted_loss')
                                                           if loss_type == 'ce_focal_birth' else ())
                         if loss_type in ('birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
                             keys += ('birth_date_focal_loss', 'ce_other_loss')
+                        elif loss_type in ('field_focal_split', 'field_focal_pcgrad'):
+                            keys += ('ce_other_loss', 'focal_group_loss', 'focal_fields_per_record')
                         sums = torch.tensor([sum(row[k] for row in diagnostics) for k in keys],
                                             device=backend.device, dtype=torch.float64)
                         log.update(dict(zip(keys, (runtime.sum_(sums) / len(indices)).tolist())))
@@ -351,9 +370,18 @@ def train_soft(backend, cfg, train, validation, dataset_identity, subsets, *, re
                             log.update(focal_weight=cfg['loss']['weight'], focal_scope='birth_date')
                         elif loss_type in ('birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
                             log.update(focal_scope='birth_date', ce_objective_scope='other_fields')
+                        elif loss_type in ('field_focal_split', 'field_focal_pcgrad'):
+                            log.update(focal_scope='configured_fields', focal_fields=list(cfg['focal_fields']),
+                                       ce_objective_scope='other_fields')
                         if pcgrad_statistics is not None:
                             log.update(pcgrad_statistics, gradient_surgery='pcgrad', pcgrad_task_level='original_field')
-                        if is_partitioned(cfg):
+                        if is_field_partitioned(cfg):
+                            log.update(other_prompt_length=cfg['prompt_partition']['other_length'],
+                                       focal_prompt_length=focal_prompt_length(cfg),
+                                       gradient_routing='other_ce_to_original__field_focal_to_appended',
+                                       other_gradient_norm=float(parameters[0].grad.norm()) if parameters[0].grad is not None else 0.,
+                                       focal_gradient_norm=float(parameters[1].grad.norm()) if parameters[1].grad is not None else 0.)
+                        elif is_partitioned(cfg):
                             split = cfg['prompt_partition']['other_length']
                             log.update(other_prompt_length=split, birth_prompt_length=cfg['prompt_partition']['birth_length'],
                                        gradient_routing='other_ce_to_original__birth_focal_to_appended',

@@ -11,8 +11,11 @@ sys.path.insert(0,str(ROOT))
 from medical_kv.config import file_hash
 
 
-def prepare(directory,rebuild=False):
-    dataset=ROOT/'data/dataset_multiscene_v2_reduced'
+def prepare(directory,rebuild=False,*,dataset_directory='data/dataset_multiscene_v2_reduced',scene=None):
+    dataset=ROOT/dataset_directory
+    if (dataset.resolve() != (ROOT/'data/dataset_multiscene_v2_reduced').resolve()
+            and Path(directory).resolve() == (ROOT/'data/input_cache_multiscene_v2_clean').resolve()):
+        raise ValueError('A new dataset requires a distinct input-cache directory')
     manifest=json.loads((dataset/'manifest.json').read_text(encoding='utf-8'))
     if manifest.get('input_revision') != 'private_fields_removed_v1':
         raise ValueError('Upload the cleaned v2 dataset before preparing new scene caches')
@@ -23,7 +26,7 @@ def prepare(directory,rebuild=False):
     directory=Path(directory); directory.mkdir(parents=True,exist_ok=True)
     if (directory/'manifest.json').exists() and not rebuild:
         raise FileExistsError('Cache already exists; use a new directory for a new input revision')
-    counts={s:{} for s in ('medical','finance','hr')}
+    counts={s:{} for s in ((scene,) if scene else ('medical','finance','hr'))}
     hashes={}
     for split in ('train','validation','test'):
         streams={}; paths={}
@@ -33,7 +36,9 @@ def prepare(directory,rebuild=False):
                 paths[scene]=target; streams[scene]=target.with_suffix('.jsonl.tmp').open('w',encoding='utf-8',newline='\n')
                 counts[scene][split]=0
             for line in (dataset/(split+'.jsonl')).open(encoding='utf-8'):
-                r=json.loads(line); text=r['private_prefix']+cfg['separator']
+                r=json.loads(line)
+                if r['scene'] not in counts:continue
+                text=r['private_prefix']+cfg['separator']
                 item={'record_id':r['record_id'],'input_sha256':hashlib.sha256(text.encode()).hexdigest(),
                       'ids':tokenizer.encode(text,add_special_tokens=False).ids}
                 streams[r['scene']].write(json.dumps(item)+'\n'); counts[r['scene']][split]+=1
@@ -56,8 +61,10 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output-directory',default='data/input_cache_multiscene_v2_clean')
     parser.add_argument('--rebuild',action='store_true')
+    parser.add_argument('--dataset-directory',default='data/dataset_multiscene_v2_reduced')
+    parser.add_argument('--scene',choices=['medical','finance','hr'])
     args=parser.parse_args()
     directory=ROOT/args.output_directory; directory.mkdir(parents=True,exist_ok=True)
     from filelock import FileLock
     with FileLock(str(directory/'.prepare.lock'),timeout=0):
-        prepare(directory,args.rebuild)
+        prepare(directory,args.rebuild,dataset_directory=args.dataset_directory,scene=args.scene)

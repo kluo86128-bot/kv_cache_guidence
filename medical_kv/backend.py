@@ -222,7 +222,7 @@ class Backend:
         if not training:
             return nll
         options = self.cfg.get('loss', {'type': 'ce'})
-        if options['type'] in ('focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+        if options['type'] in ('focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad', 'field_focal_split', 'field_focal_pcgrad'):
             # -expm1(-CE) = 1 - p_gold, stable even when p_gold is near one.
             # Keep this factor in the graph: detaching it is not focal loss.
             gamma = options['gamma']
@@ -233,7 +233,7 @@ class Backend:
         else:
             objective = nll
         # Joint training needs the original CE gradient as well as the focal one.
-        return torch.stack((objective, nll if options['type'] in ('ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad') else nll.detach()), dim=1)
+        return torch.stack((objective, nll if options['type'] in ('ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad', 'field_focal_split', 'field_focal_pcgrad') else nll.detach()), dim=1)
 
     def answer_loss(self, context, qa, *, training=False):
         q, target = self.question_and_target(qa)
@@ -243,7 +243,7 @@ class Backend:
         return self._mean_answer_losses(logits, self.tensor(target), training=training)[0]
 
     def record_loss(self, record, *, vectors=None, prompt_ids=None):
-        if self.cfg.get('loss', {}).get('type') in ('focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
+        if self.cfg.get('loss', {}).get('type') in ('focal', 'ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad', 'field_focal_split', 'field_focal_pcgrad'):
             return self.record_loss_components(record, vectors=vectors, prompt_ids=prompt_ids)[0]
         context = self.context(record, vectors=vectors, prompt_ids=prompt_ids)
         questions = questions_for(record, self.cfg)
@@ -256,6 +256,28 @@ class Backend:
         objective = grouped_loss(values[:, 0], questions)
         ce = grouped_loss(values[:, 1], questions)
         options = self.cfg.get('loss', {'type': 'ce'})
+        if options['type'] in ('field_focal_split', 'field_focal_pcgrad'):
+            groups = [q.get('group', q['field']) for q in questions]
+            chosen = set(self.cfg['focal_fields'])
+            selected = torch.tensor([g in chosen for g in groups], device=values.device)
+            # Each selected ORIGINAL field gets its own share of the record loss.
+            # Never average the five Focal fields into a single artificial field.
+            focal = grouped_loss(values[:, 0].masked_fill(~selected, 0), questions)
+            other = grouped_loss(values[:, 1].masked_fill(selected, 0), questions)
+            active = len(set(groups).intersection(chosen))
+            raw = focal * (len(set(groups)) / active) if active else focal
+            result = (other + focal, {'ce_loss': ce.detach(), 'ce_other_loss': other.detach(),
+                'focal_loss': focal.detach(), 'focal_group_loss': raw.detach(),
+                'focal_fields_per_record': focal.new_tensor(active)})
+            if return_fields:
+                mixed = torch.where(selected, values[:, 0], values[:, 1])
+                # Retain the per-record original-field denominator for each task;
+                # global batch scaling and reduction happen before PCGrad.
+                fields = {field: grouped_loss(mixed.masked_fill(
+                    torch.tensor([g != field for g in groups], device=values.device), 0), questions)
+                          for field in sorted(set(groups))}
+                return *result, fields
+            return (*result, (other, focal)) if return_partition else result
         if options['type'] in ('ce_focal_birth', 'birth_focal', 'birth_focal_split', 'birth_focal_pcgrad'):
             selected = torch.tensor([q.get('group', q['field']) == 'birth_date'
                                      or q['field'] in ('birth_year', 'birth_month', 'birth_day')

@@ -9,7 +9,7 @@ import torch
 
 
 def is_pcgrad(cfg):
-    return cfg.get('loss', {}).get('type') == 'birth_focal_pcgrad'
+    return cfg.get('loss', {}).get('type') in ('birth_focal_pcgrad', 'field_focal_pcgrad')
 
 
 def local_field_gradients(backend, prompt, records, indices, rank, world_size, fields, *, diagnostics=None):

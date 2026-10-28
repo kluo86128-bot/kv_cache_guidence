@@ -50,11 +50,15 @@ class LossCurve:
         contrastive = any('diagnosis_contrastive_loss' in row for row in self.training)
         focal = any(row.get('loss_type') == 'focal' for row in self.training)
         joint = any(row.get('loss_type') == 'ce_focal_birth' for row in self.training)
-        birth_focal = any(row.get('loss_type') in ('birth_focal', 'birth_focal_split', 'birth_focal_pcgrad') for row in self.training)
+        birth_focal = any(row.get('loss_type') in ('birth_focal', 'birth_focal_split', 'birth_focal_pcgrad', 'field_focal_split', 'field_focal_pcgrad') for row in self.training)
         partitioned = any(row.get('loss_type') == 'birth_focal_split' for row in self.training)
         pcgrad = any(row.get('loss_type') == 'birth_focal_pcgrad' for row in self.training)
+        field_pcgrad = any(row.get('loss_type') == 'field_focal_pcgrad' for row in self.training)
+        field_partitioned = any(row.get('loss_type') == 'field_focal_split' for row in self.training)
         ax.plot(steps, values, color='#93b4de', alpha=.65, linewidth=1, marker='.', markersize=3,
-                label='PCGrad: CE / birthday Focal (unprojected objective)' if pcgrad else
+                label='PCGrad: CE / selected-field Focal (unprojected objective)' if field_pcgrad else
+                      'Routed other-field CE / selected-field Focal (sum for logging)' if field_partitioned else
+                      'PCGrad: CE / birthday Focal (unprojected objective)' if pcgrad else
                       'Routed CE / birthday Focal (sum for logging)' if partitioned else
                       'Training other-field CE / birth-date Focal' if birth_focal else
                       'Training CE + birth-date Focal' if joint else
